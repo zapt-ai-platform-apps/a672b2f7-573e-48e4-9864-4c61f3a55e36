@@ -9,6 +9,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 - **Game Setup**: Input the list of players (persisted between sessions), number of players on the field at a time, and match length.
 - **Select Starting Line-up**: Choose which players will start on the field.
 - **Substitution Management**: Advises when to make substitutions and who to substitute.
+- **Next Substitutions Display**: Clearly shows which player is next to come off and who is next to come on.
 - **Real-Time Tracking**: Records how long each player has played during the match, excluding the goalkeeper's time in goal.
 - **Analytics**: Provides visual analytics on each player's playing time.
 - **Pause Functionality**: Ability to pause the game clock during stoppages like half-time.
@@ -45,15 +46,15 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
    - Click the "Assign Goalkeeper" button.
    - Select the player to be the goalkeeper.
    - The goalkeeper's playtime will not be counted while they are in goal.
-4. **Changing the Goalkeeper**:
-   - You can reassign the goalkeeper at any time by selecting another player.
-   - Changing the goalkeeper does not require a substitution and does not affect on-field/off-field status of any player.
-5. **Viewing On-Field Players**:
-   - View the list of players currently on the field.
-6. **Making Substitutions**:
+4. **Viewing Next Substitutions**:
+   - The app displays the next player to be substituted off and the next player to come on.
+   - This helps the coach prepare for the substitution and informs players who will be involved.
+5. **Making Substitutions**:
    - Click the "Substitute" button when you want to make a substitution.
    - The app suggests the next player to sub out and the player to sub in, ensuring equal playtime.
    - Substitutions do not affect the goalkeeper assignment.
+6. **Highlighting Next Player to Come On**:
+   - The player next to come on is highlighted in the substitution queue for easy identification.
 7. **Pausing the Timer**:
    - Click the "Pause" button to pause the game clock during stoppages like half-time.
    - Click "Start" again to resume the game.

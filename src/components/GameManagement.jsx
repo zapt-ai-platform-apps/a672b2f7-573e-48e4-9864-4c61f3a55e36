@@ -1,4 +1,4 @@
-import { createSignal, onCleanup, createEffect } from 'solid-js';
+import { createSignal, onCleanup, createEffect, createMemo } from 'solid-js';
 import { For, Show } from 'solid-js/web';
 import PlayerList from './PlayerList';
 import Analytics from './Analytics';
@@ -44,17 +44,27 @@ function GameManagement(props) {
     }
   });
 
+  // Compute next player to sub off (excluding goalkeeper)
+  const nextPlayerOut = createMemo(() => {
+    return onFieldPlayers().find(name => name !== goalkeeper());
+  });
+
+  // Compute next player to sub in
+  const nextPlayerIn = createMemo(() => {
+    return substitutionQueue()[0];
+  });
+
   const makeSubstitution = () => {
     if (substitutionQueue().length === 0) {
       alert('No players available for substitution.');
       return;
     }
-    const playerOut = onFieldPlayers().find(name => name !== goalkeeper());
+    const playerOut = nextPlayerOut();
     if (!playerOut) {
       alert('No outfield players available for substitution.');
       return;
     }
-    const playerIn = substitutionQueue()[0];
+    const playerIn = nextPlayerIn();
 
     // Update playerData
     const updatedData = props.playerData().map((player) => {
@@ -147,6 +157,24 @@ function GameManagement(props) {
               End Game
             </button>
           </div>
+
+          {/* Display Next Substitutions */}
+          <div class="mb-4">
+            <h3 class="text-xl font-bold mb-2 text-green-600">Next Substitutions</h3>
+            <p class="mb-2">
+              <span class="font-semibold">Next Player to Sub Off:</span>{' '}
+              <Show when={nextPlayerOut()} fallback={<span>None</span>}>
+                <span>{nextPlayerOut()}</span>
+              </Show>
+            </p>
+            <p>
+              <span class="font-semibold">Next Player to Sub On:</span>{' '}
+              <Show when={nextPlayerIn()} fallback={<span>None</span>}>
+                <span>{nextPlayerIn()}</span>
+              </Show>
+            </p>
+          </div>
+
           <Show when={goalkeeper()}>
             <h3 class="text-xl font-bold mb-2 text-green-600">Goalkeeper: {goalkeeper()}</h3>
           </Show>
@@ -154,9 +182,18 @@ function GameManagement(props) {
           <ul>
             <For each={onFieldPlayers()}>
               {(playerName) => (
-                <li class="mb-1">
+                <li
+                  class={`mb-1 ${
+                    playerName === nextPlayerOut() && playerName !== goalkeeper()
+                      ? 'font-bold text-red-500'
+                      : ''
+                  }`}
+                >
                   {playerName}
                   {playerName === goalkeeper() ? ' (GK)' : ''}
+                  {playerName === nextPlayerOut() && playerName !== goalkeeper()
+                    ? ' (Next to Sub Off)'
+                    : ''}
                 </li>
               )}
             </For>
@@ -164,7 +201,16 @@ function GameManagement(props) {
           <h3 class="text-xl font-bold mb-2 text-green-600 mt-4">Substitution Queue</h3>
           <ul>
             <For each={substitutionQueue()}>
-              {(playerName) => <li class="mb-1">{playerName}</li>}
+              {(playerName) => (
+                <li
+                  class={`mb-1 ${
+                    playerName === nextPlayerIn() ? 'font-bold text-blue-500' : ''
+                  }`}
+                >
+                  {playerName}
+                  {playerName === nextPlayerIn() ? ' (Next to Sub On)' : ''}
+                </li>
+              )}
             </For>
           </ul>
         </div>
