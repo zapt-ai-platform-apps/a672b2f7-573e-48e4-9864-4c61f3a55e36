@@ -11,6 +11,7 @@ function PlayerList(props) {
               {player.name}: {Math.floor(player.totalPlayTime / 60)}:
               {player.totalPlayTime % 60 < 10 ? '0' : ''}
               {player.totalPlayTime % 60} minutes
+              {player.name === props.goalkeeper() ? ' (GK)' : ''}
             </li>
           )}
         </For>

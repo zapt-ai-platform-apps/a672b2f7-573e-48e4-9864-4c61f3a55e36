@@ -20,9 +20,15 @@ function App() {
         name,
         totalPlayTime: 0,
         isOnField: startingLineup.includes(name),
+        isGoalkeeper: false,
       }))
     );
     setGameStarted(true);
+  };
+
+  // Function to reset the game
+  const resetGame = () => {
+    setGameStarted(false);
   };
 
   return (
@@ -36,6 +42,7 @@ function App() {
             matchLength={matchLength}
             playerData={playerData}
             setPlayerData={setPlayerData}
+            onEndGame={resetGame}
           />
         }
       >

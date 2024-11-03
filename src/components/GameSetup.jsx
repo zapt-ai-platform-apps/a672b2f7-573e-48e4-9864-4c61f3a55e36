@@ -1,4 +1,4 @@
-import { createSignal, createEffect } from 'solid-js';
+import { createSignal, createEffect, onMount } from 'solid-js';
 import { For } from 'solid-js/web';
 
 function GameSetup(props) {
@@ -7,6 +7,19 @@ function GameSetup(props) {
   const [numPlayersOnField, setNumPlayersOnField] = createSignal(5);
   const [matchDuration, setMatchDuration] = createSignal(60);
   const [startingLineup, setStartingLineup] = createSignal([]);
+
+  // Load players from localStorage on mount
+  onMount(() => {
+    const storedPlayers = localStorage.getItem('playerNames');
+    if (storedPlayers) {
+      setPlayerNames(JSON.parse(storedPlayers));
+    }
+  });
+
+  // Save players to localStorage whenever playerNames changes
+  createEffect(() => {
+    localStorage.setItem('playerNames', JSON.stringify(playerNames()));
+  });
 
   const addPlayer = () => {
     if (currentPlayerName().trim() !== '') {

@@ -23,7 +23,9 @@ function Analytics(props) {
       {
         label: 'Total Play Time (minutes)',
         data: props.playerData().map((player) => (player.totalPlayTime / 60).toFixed(2)),
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+        backgroundColor: props.playerData().map((player) =>
+          player.isGoalkeeper ? 'rgba(255, 206, 86, 0.6)' : 'rgba(75, 192, 192, 0.6)'
+        ),
       },
     ],
   }));
