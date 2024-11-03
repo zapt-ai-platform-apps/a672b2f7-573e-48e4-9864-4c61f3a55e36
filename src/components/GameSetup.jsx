@@ -35,18 +35,18 @@ function GameSetup(props) {
   };
 
   const removePlayer = (name) => {
-    setPlayers(players().filter(player => player.name !== name));
+    setPlayers(players().filter((player) => player.name !== name));
   };
 
   const toggleStartingPlayer = (name) => {
-    const selectedCount = players().filter(player => player.isStartingPlayer).length;
-    const player = players().find(player => player.name === name);
+    const selectedCount = players().filter((player) => player.isStartingPlayer).length;
+    const player = players().find((player) => player.name === name);
     if (!player.isStartingPlayer && selectedCount >= numPlayersOnField()) {
       alert(`You can only select ${numPlayersOnField()} starting players.`);
       return;
     }
     setPlayers(
-      players().map(player =>
+      players().map((player) =>
         player.name === name
           ? { ...player, isStartingPlayer: !player.isStartingPlayer }
           : player
@@ -56,17 +56,15 @@ function GameSetup(props) {
 
   const toggleStarPlayer = (name) => {
     setPlayers(
-      players().map(player =>
-        player.name === name
-          ? { ...player, isStarPlayer: !player.isStarPlayer }
-          : player
+      players().map((player) =>
+        player.name === name ? { ...player, isStarPlayer: !player.isStarPlayer } : player
       )
     );
   };
 
   const startGame = () => {
     const totalPlayers = players().length;
-    const startingPlayers = players().filter(player => player.isStartingPlayer);
+    const startingPlayers = players().filter((player) => player.isStartingPlayer);
     if (totalPlayers < numPlayersOnField()) {
       alert('Not enough players to start the game.');
       return;
@@ -115,7 +113,9 @@ function GameSetup(props) {
                     />
                     <span>{player.name}</span>
                     <button
-                      class={`ml-2 ${player.isStarPlayer ? 'text-yellow-500' : 'text-gray-400'} cursor-pointer`}
+                      class={`ml-2 ${
+                        player.isStarPlayer ? 'text-yellow-500' : 'text-gray-400'
+                      } cursor-pointer`}
                       onClick={() => toggleStarPlayer(player.name)}
                       title="Toggle Star Player"
                     >
