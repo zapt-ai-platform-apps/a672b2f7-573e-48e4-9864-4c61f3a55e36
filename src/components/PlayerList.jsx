@@ -5,10 +5,12 @@ function PlayerList(props) {
     <div>
       <h3 class="text-xl font-bold mb-2 text-green-600">Player Play Times</h3>
       <ul>
-        <For each={props.playerData}>
+        <For each={props.playerData()}>
           {(player) => (
             <li class="mb-1">
-              {player.name}: {Math.floor(player.totalPlayTime / 60)}:{player.totalPlayTime % 60 < 10 ? '0' : ''}{player.totalPlayTime % 60} minutes
+              {player.name}: {Math.floor(player.totalPlayTime / 60)}:
+              {player.totalPlayTime % 60 < 10 ? '0' : ''}
+              {player.totalPlayTime % 60} minutes
             </li>
           )}
         </For>

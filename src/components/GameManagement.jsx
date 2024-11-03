@@ -16,7 +16,7 @@ function GameManagement(props) {
     const id = setInterval(() => {
       setCurrentTime(currentTime() + 1);
       // Update playtime for players on field
-      const updatedData = props.playerData().map(player => {
+      const updatedData = props.playerData().map((player) => {
         if (player.isOnField) {
           return { ...player, totalPlayTime: player.totalPlayTime + 1 };
         }
@@ -40,17 +40,21 @@ function GameManagement(props) {
 
   onMount(() => {
     // Initialize on-field players
-    const initialOnFieldPlayers = props.playerData().slice(0, props.numOnField()).map(player => ({
-      ...player,
-      isOnField: true
-    }));
-    const restPlayers = props.playerData().slice(props.numOnField()).map(player => ({
-      ...player,
-      isOnField: false
-    }));
+    const initialOnFieldPlayers = props.playerData()
+      .slice(0, props.numOnField())
+      .map((player) => ({
+        ...player,
+        isOnField: true,
+      }));
+    const restPlayers = props.playerData()
+      .slice(props.numOnField())
+      .map((player) => ({
+        ...player,
+        isOnField: false,
+      }));
     props.setPlayerData([...initialOnFieldPlayers, ...restPlayers]);
-    setOnFieldPlayers(initialOnFieldPlayers.map(player => player.name));
-    setSubstitutionQueue(restPlayers.map(player => player.name));
+    setOnFieldPlayers(initialOnFieldPlayers.map((player) => player.name));
+    setSubstitutionQueue(restPlayers.map((player) => player.name));
   });
 
   const makeSubstitution = () => {
@@ -62,7 +66,7 @@ function GameManagement(props) {
     const playerIn = substitutionQueue()[0];
 
     // Update playerData
-    const updatedData = props.playerData().map(player => {
+    const updatedData = props.playerData().map((player) => {
       if (player.name === playerOut) {
         return { ...player, isOnField: false };
       } else if (player.name === playerIn) {
@@ -82,17 +86,25 @@ function GameManagement(props) {
       <h1 class="text-3xl font-bold mb-4 text-green-600">Football Subs</h1>
       <div class="flex flex-col md:flex-row flex-grow">
         <div class="bg-white p-4 rounded-lg shadow-lg w-full md:w-1/2 mb-4 md:mb-0">
-          <h2 class="text-2xl font-bold mb-2 text-green-600">Game Time: {Math.floor(currentTime() / 60)}:{currentTime() % 60 < 10 ? '0' : ''}{currentTime() % 60}</h2>
+          <h2 class="text-2xl font-bold mb-2 text-green-600">
+            Game Time: {Math.floor(currentTime() / 60)}:
+            {currentTime() % 60 < 10 ? '0' : ''}
+            {currentTime() % 60}
+          </h2>
           <div class="flex space-x-4 mb-4">
             <button
-              class={`px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${timerRunning() ? 'opacity-50 cursor-not-allowed' : ''}`}
+              class={`px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${
+                timerRunning() ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
               onClick={startTimer}
               disabled={timerRunning()}
             >
               Start
             </button>
             <button
-              class={`px-4 py-2 bg-yellow-500 text-white rounded-lg cursor-pointer hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 ${!timerRunning() ? 'opacity-50 cursor-not-allowed' : ''}`}
+              class={`px-4 py-2 bg-yellow-500 text-white rounded-lg cursor-pointer hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 ${
+                !timerRunning() ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
               onClick={pauseTimer}
               disabled={!timerRunning()}
             >
@@ -114,30 +126,26 @@ function GameManagement(props) {
           <h3 class="text-xl font-bold mb-2 text-green-600">Players on Field</h3>
           <ul>
             <For each={onFieldPlayers()}>
-              {(playerName) => (
-                <li class="mb-1">{playerName}</li>
-              )}
+              {(playerName) => <li class="mb-1">{playerName}</li>}
             </For>
           </ul>
           <h3 class="text-xl font-bold mb-2 text-green-600 mt-4">Substitution Queue</h3>
           <ul>
             <For each={substitutionQueue()}>
-              {(playerName) => (
-                <li class="mb-1">{playerName}</li>
-              )}
+              {(playerName) => <li class="mb-1">{playerName}</li>}
             </For>
           </ul>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-lg w-full md:w-1/2">
           <h2 class="text-2xl font-bold mb-2 text-green-600">Player Data</h2>
-          <PlayerList playerData={props.playerData()} />
+          <PlayerList playerData={props.playerData} />
         </div>
       </div>
       <Analytics
         show={showAnalytics()}
         onClose={() => setShowAnalytics(false)}
-        playerData={props.playerData()}
-        matchLength={props.matchLength()}
+        playerData={props.playerData}
+        matchLength={props.matchLength}
       />
     </div>
   );

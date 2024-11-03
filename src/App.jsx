@@ -16,25 +16,30 @@ function App() {
     setNumOnField(numPlayers);
     setMatchLength(matchDuration);
     // Initialize player data
-    setPlayerData(playerNames.map(name => ({
-      name,
-      totalPlayTime: 0,
-      isOnField: false
-    })));
+    setPlayerData(
+      playerNames.map((name) => ({
+        name,
+        totalPlayTime: 0,
+        isOnField: false,
+      }))
+    );
     setGameStarted(true);
   };
 
   return (
     <div class="min-h-screen h-full bg-gradient-to-br from-green-100 to-blue-100 p-4 text-gray-800">
-      <Show when={!gameStarted()} fallback={
-        <GameManagement
-          players={players()}
-          numOnField={numOnField()}
-          matchLength={matchLength()}
-          playerData={playerData()}
-          setPlayerData={setPlayerData}
-        />
-      }>
+      <Show
+        when={!gameStarted()}
+        fallback={
+          <GameManagement
+            players={players}
+            numOnField={numOnField}
+            matchLength={matchLength}
+            playerData={playerData}
+            setPlayerData={setPlayerData}
+          />
+        }
+      >
         <GameSetup onStartGame={handleStartGame} />
       </Show>
     </div>
