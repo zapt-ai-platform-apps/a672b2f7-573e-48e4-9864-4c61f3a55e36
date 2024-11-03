@@ -44,26 +44,46 @@ function GameManagement(props) {
     }
   });
 
-  // Compute next player to sub off (excluding goalkeeper)
+  // Compute substitution candidates, excluding goalkeeper and ensuring max two star players off-field
   const nextPlayerOut = createMemo(() => {
-    return onFieldPlayers().find(name => name !== goalkeeper());
+    // Get star players off-field count
+    const starPlayersOffField = props.playerData().filter(
+      (player) => !player.isOnField && player.isStarPlayer
+    ).length;
+
+    // Filter on-field players who can be subbed off
+    const candidates = props.playerData().filter(
+      (player) =>
+        player.isOnField &&
+        player.name !== goalkeeper() &&
+        // If more than two star players are off, cannot sub off another star player
+        (!player.isStarPlayer || starPlayersOffField < 2)
+    );
+
+    // Select the player with the highest playtime
+    return candidates.sort((a, b) => b.totalPlayTime - a.totalPlayTime)[0]?.name;
   });
 
-  // Compute next player to sub in
   const nextPlayerIn = createMemo(() => {
-    return substitutionQueue()[0];
+    // Filter off-field players who can be subbed in
+    const candidates = props.playerData().filter(
+      (player) => 
+        !player.isOnField &&
+        // If less than two star players off, prioritize star players
+        (player.isStarPlayer || 
+          props.playerData().filter(p => !p.isOnField && p.isStarPlayer).length >= 2)
+    );
+
+    // Select the player with the lowest playtime
+    return candidates.sort((a, b) => a.totalPlayTime - b.totalPlayTime)[0]?.name;
   });
 
   const makeSubstitution = () => {
-    if (substitutionQueue().length === 0) {
-      alert('No players available for substitution.');
+    if (!nextPlayerIn() || !nextPlayerOut()) {
+      alert('No valid substitutions available respecting star player constraints.');
       return;
     }
     const playerOut = nextPlayerOut();
-    if (!playerOut) {
-      alert('No outfield players available for substitution.');
-      return;
-    }
     const playerIn = nextPlayerIn();
 
     // Update playerData
@@ -79,7 +99,7 @@ function GameManagement(props) {
 
     // Update onFieldPlayers and substitutionQueue
     setOnFieldPlayers([...onFieldPlayers().filter(name => name !== playerOut), playerIn]);
-    setSubstitutionQueue([...substitutionQueue().slice(1), playerOut]);
+    setSubstitutionQueue([...substitutionQueue().filter(name => name !== playerIn), playerOut]);
   };
 
   const openGoalkeeperModal = () => {
@@ -190,6 +210,7 @@ function GameManagement(props) {
                   }`}
                 >
                   {playerName}
+                  {props.playerData().find(p => p.name === playerName)?.isStarPlayer ? ' ⭐' : ''}
                   {playerName === goalkeeper() ? ' (GK)' : ''}
                   {playerName === nextPlayerOut() && playerName !== goalkeeper()
                     ? ' (Next to Sub Off)'
@@ -208,6 +229,7 @@ function GameManagement(props) {
                   }`}
                 >
                   {playerName}
+                  {props.playerData().find(p => p.name === playerName)?.isStarPlayer ? ' ⭐' : ''}
                   {playerName === nextPlayerIn() ? ' (Next to Sub On)' : ''}
                 </li>
               )}
@@ -239,6 +261,7 @@ function GameManagement(props) {
                       onClick={() => assignGoalkeeper(name)}
                     >
                       {name}
+                      {props.playerData().find(p => p.name === name)?.isStarPlayer ? ' ⭐' : ''}
                     </button>
                   </li>
                 )}

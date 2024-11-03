@@ -7,18 +7,26 @@ function GameSetup(props) {
   const [numPlayersOnField, setNumPlayersOnField] = createSignal(5);
   const [matchDuration, setMatchDuration] = createSignal(60);
   const [startingLineup, setStartingLineup] = createSignal([]);
+  const [starPlayers, setStarPlayers] = createSignal([]);
 
-  // Load players from localStorage on mount
+  // Load players and star players from localStorage on mount
   onMount(() => {
     const storedPlayers = localStorage.getItem('playerNames');
     if (storedPlayers) {
       setPlayerNames(JSON.parse(storedPlayers));
     }
+    const storedStars = localStorage.getItem('starPlayers');
+    if (storedStars) {
+      setStarPlayers(JSON.parse(storedStars));
+    }
   });
 
-  // Save players to localStorage whenever playerNames changes
+  // Save players and star players to localStorage whenever they change
   createEffect(() => {
     localStorage.setItem('playerNames', JSON.stringify(playerNames()));
+  });
+  createEffect(() => {
+    localStorage.setItem('starPlayers', JSON.stringify(starPlayers()));
   });
 
   const addPlayer = () => {
@@ -31,6 +39,7 @@ function GameSetup(props) {
   const removePlayer = (name) => {
     setPlayerNames(playerNames().filter(player => player !== name));
     setStartingLineup(startingLineup().filter(player => player !== name));
+    setStarPlayers(starPlayers().filter(player => player !== name));
   };
 
   const toggleStartingPlayer = (name) => {
@@ -45,6 +54,14 @@ function GameSetup(props) {
     }
   };
 
+  const toggleStarPlayer = (name) => {
+    if (starPlayers().includes(name)) {
+      setStarPlayers(starPlayers().filter(player => player !== name));
+    } else {
+      setStarPlayers([...starPlayers(), name]);
+    }
+  };
+
   const startGame = () => {
     if (playerNames().length < numPlayersOnField()) {
       alert('Not enough players to start the game.');
@@ -54,7 +71,7 @@ function GameSetup(props) {
       alert(`Please select exactly ${numPlayersOnField()} starting players.`);
       return;
     }
-    props.onStartGame(playerNames(), numPlayersOnField(), matchDuration(), startingLineup());
+    props.onStartGame(playerNames(), starPlayers(), numPlayersOnField(), matchDuration(), startingLineup());
   };
 
   createEffect(() => {
@@ -87,7 +104,7 @@ function GameSetup(props) {
           </div>
         </div>
         <div class="mb-4">
-          <label class="block text-gray-700 mb-2">Players (Select Starting Line-up)</label>
+          <label class="block text-gray-700 mb-2">Players (Select Starting Line-up and Star Players)</label>
           <ul>
             <For each={playerNames()}>
               {(name) => (
@@ -100,6 +117,13 @@ function GameSetup(props) {
                       class="cursor-pointer mr-2"
                     />
                     <span>{name}</span>
+                    <button
+                      class={`ml-2 ${starPlayers().includes(name) ? 'text-yellow-500' : 'text-gray-400'} cursor-pointer`}
+                      onClick={() => toggleStarPlayer(name)}
+                      title="Toggle Star Player"
+                    >
+                      ⭐
+                    </button>
                   </div>
                   <button
                     class="text-red-500 cursor-pointer hover:text-red-600"

@@ -12,6 +12,7 @@ function PlayerList(props) {
               {player.totalPlayTime % 60 < 10 ? '0' : ''}
               {player.totalPlayTime % 60} minutes
               {player.name === props.goalkeeper() ? ' (GK)' : ''}
+              {player.isStarPlayer ? ' ⭐' : ''}
             </li>
           )}
         </For>
