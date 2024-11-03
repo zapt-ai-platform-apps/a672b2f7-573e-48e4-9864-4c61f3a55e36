@@ -5,6 +5,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 ## Features
 
 - **Game Setup**: Input the list of players, number of players on the field at a time, and match length.
+- **Select Starting Line-up**: Choose which players will start on the field.
 - **Substitution Management**: Advises when to make substitutions and who to substitute.
 - **Real-Time Tracking**: Records how long each player has played during the match.
 - **Analytics**: Provides visual analytics on each player's playing time.
@@ -24,9 +25,12 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
    - Enter the number of players that can play at one time (e.g., 5 for 5-a-side).
 5. **Set Match Length**:
    - Enter the total duration of the match in minutes.
-6. **Start Game**:
+6. **Select Starting Line-up**:
+   - From the list of added players, select the players who will start on the field.
+   - You can select up to the number of players allowed on the field.
+7. **Start Game**:
    - Click the "Start Game" button.
-   - If the number of players added is less than the number of players on the field, you'll be prompted to add more players.
+   - If the number of players added is less than the number of players on the field, or if you haven't selected enough starting players, you'll be prompted accordingly.
 
 ### 2. Managing the Game
 
@@ -34,7 +38,6 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 2. **Starting the Timer**:
    - Click the "Start" button to begin the game clock.
 3. **Viewing On-Field Players**:
-   - The app automatically assigns the first set of players to be on the field.
    - View the list of players currently on the field.
 4. **Making Substitutions**:
    - Click the "Substitute" button when you want to make a substitution.

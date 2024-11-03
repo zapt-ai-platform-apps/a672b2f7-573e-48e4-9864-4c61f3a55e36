@@ -1,4 +1,4 @@
-import { createSignal, onCleanup, onMount } from 'solid-js';
+import { createSignal, onCleanup } from 'solid-js';
 import { For } from 'solid-js/web';
 import PlayerList from './PlayerList';
 import Analytics from './Analytics';
@@ -7,8 +7,12 @@ function GameManagement(props) {
   const [currentTime, setCurrentTime] = createSignal(0);
   const [timerRunning, setTimerRunning] = createSignal(false);
   const [intervalId, setIntervalId] = createSignal(null);
-  const [onFieldPlayers, setOnFieldPlayers] = createSignal([]);
-  const [substitutionQueue, setSubstitutionQueue] = createSignal([]);
+  const [onFieldPlayers, setOnFieldPlayers] = createSignal(
+    props.playerData().filter(player => player.isOnField).map(player => player.name)
+  );
+  const [substitutionQueue, setSubstitutionQueue] = createSignal(
+    props.playerData().filter(player => !player.isOnField).map(player => player.name)
+  );
   const [showAnalytics, setShowAnalytics] = createSignal(false);
 
   const startTimer = () => {
@@ -36,25 +40,6 @@ function GameManagement(props) {
     if (intervalId()) {
       clearInterval(intervalId());
     }
-  });
-
-  onMount(() => {
-    // Initialize on-field players
-    const initialOnFieldPlayers = props.playerData()
-      .slice(0, props.numOnField())
-      .map((player) => ({
-        ...player,
-        isOnField: true,
-      }));
-    const restPlayers = props.playerData()
-      .slice(props.numOnField())
-      .map((player) => ({
-        ...player,
-        isOnField: false,
-      }));
-    props.setPlayerData([...initialOnFieldPlayers, ...restPlayers]);
-    setOnFieldPlayers(initialOnFieldPlayers.map((player) => player.name));
-    setSubstitutionQueue(restPlayers.map((player) => player.name));
   });
 
   const makeSubstitution = () => {

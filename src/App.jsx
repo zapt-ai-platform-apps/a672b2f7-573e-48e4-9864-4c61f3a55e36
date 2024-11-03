@@ -8,10 +8,9 @@ function App() {
   const [players, setPlayers] = createSignal([]);
   const [numOnField, setNumOnField] = createSignal(5);
   const [matchLength, setMatchLength] = createSignal(60); // match length in minutes
-
   const [playerData, setPlayerData] = createSignal([]);
 
-  const handleStartGame = (playerNames, numPlayers, matchDuration) => {
+  const handleStartGame = (playerNames, numPlayers, matchDuration, startingLineup) => {
     setPlayers(playerNames);
     setNumOnField(numPlayers);
     setMatchLength(matchDuration);
@@ -20,7 +19,7 @@ function App() {
       playerNames.map((name) => ({
         name,
         totalPlayTime: 0,
-        isOnField: false,
+        isOnField: startingLineup.includes(name),
       }))
     );
     setGameStarted(true);

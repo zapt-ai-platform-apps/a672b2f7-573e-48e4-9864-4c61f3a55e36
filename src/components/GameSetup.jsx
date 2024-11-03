@@ -1,10 +1,12 @@
-import { createSignal } from 'solid-js';
+import { createSignal, createEffect } from 'solid-js';
+import { For } from 'solid-js/web';
 
 function GameSetup(props) {
   const [playerNames, setPlayerNames] = createSignal([]);
   const [currentPlayerName, setCurrentPlayerName] = createSignal('');
   const [numPlayersOnField, setNumPlayersOnField] = createSignal(5);
   const [matchDuration, setMatchDuration] = createSignal(60);
+  const [startingLineup, setStartingLineup] = createSignal([]);
 
   const addPlayer = () => {
     if (currentPlayerName().trim() !== '') {
@@ -15,15 +17,39 @@ function GameSetup(props) {
 
   const removePlayer = (name) => {
     setPlayerNames(playerNames().filter(player => player !== name));
+    setStartingLineup(startingLineup().filter(player => player !== name));
+  };
+
+  const toggleStartingPlayer = (name) => {
+    if (startingLineup().includes(name)) {
+      setStartingLineup(startingLineup().filter(player => player !== name));
+    } else {
+      if (startingLineup().length < numPlayersOnField()) {
+        setStartingLineup([...startingLineup(), name]);
+      } else {
+        alert(`You can only select ${numPlayersOnField()} starting players.`);
+      }
+    }
   };
 
   const startGame = () => {
-    if (playerNames().length >= numPlayersOnField()) {
-      props.onStartGame(playerNames(), numPlayersOnField(), matchDuration());
-    } else {
+    if (playerNames().length < numPlayersOnField()) {
       alert('Not enough players to start the game.');
+      return;
     }
+    if (startingLineup().length !== numPlayersOnField()) {
+      alert(`Please select exactly ${numPlayersOnField()} starting players.`);
+      return;
+    }
+    props.onStartGame(playerNames(), numPlayersOnField(), matchDuration(), startingLineup());
   };
+
+  createEffect(() => {
+    // Ensure starting lineup doesn't exceed numPlayersOnField
+    if (startingLineup().length > numPlayersOnField()) {
+      setStartingLineup(startingLineup().slice(0, numPlayersOnField()));
+    }
+  });
 
   return (
     <div class="h-full flex flex-col items-center justify-center">
@@ -48,19 +74,29 @@ function GameSetup(props) {
           </div>
         </div>
         <div class="mb-4">
-          <label class="block text-gray-700 mb-2">Players</label>
+          <label class="block text-gray-700 mb-2">Players (Select Starting Line-up)</label>
           <ul>
-            {playerNames().map(name => (
-              <li class="flex justify-between items-center mb-2">
-                <span>{name}</span>
-                <button
-                  class="text-red-500 cursor-pointer hover:text-red-600"
-                  onClick={() => removePlayer(name)}
-                >
-                  Remove
-                </button>
-              </li>
-            ))}
+            <For each={playerNames()}>
+              {(name) => (
+                <li class="flex justify-between items-center mb-2">
+                  <div class="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={startingLineup().includes(name)}
+                      onChange={() => toggleStartingPlayer(name)}
+                      class="cursor-pointer mr-2"
+                    />
+                    <span>{name}</span>
+                  </div>
+                  <button
+                    class="text-red-500 cursor-pointer hover:text-red-600"
+                    onClick={() => removePlayer(name)}
+                  >
+                    Remove
+                  </button>
+                </li>
+              )}
+            </For>
           </ul>
         </div>
         <div class="mb-4">
