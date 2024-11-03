@@ -40,7 +40,7 @@ function GameSetup(props) {
               onInput={(e) => setCurrentPlayerName(e.target.value)}
             />
             <button
-              class="p-2 bg-green-500 text-white rounded-r-lg cursor-pointer hover:bg-green-600 transition"
+              class="p-2 bg-green-500 text-white rounded-r-lg cursor-pointer hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105"
               onClick={addPlayer}
             >
               Add
@@ -84,7 +84,7 @@ function GameSetup(props) {
           />
         </div>
         <button
-          class="w-full py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition"
+          class="w-full py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105"
           onClick={startGame}
         >
           Start Game

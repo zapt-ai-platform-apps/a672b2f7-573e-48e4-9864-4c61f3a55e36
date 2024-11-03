@@ -85,27 +85,27 @@ function GameManagement(props) {
           <h2 class="text-2xl font-bold mb-2 text-green-600">Game Time: {Math.floor(currentTime() / 60)}:{currentTime() % 60 < 10 ? '0' : ''}{currentTime() % 60}</h2>
           <div class="flex space-x-4 mb-4">
             <button
-              class={`px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition ${timerRunning() ? 'opacity-50 cursor-not-allowed' : ''}`}
+              class={`px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 ${timerRunning() ? 'opacity-50 cursor-not-allowed' : ''}`}
               onClick={startTimer}
               disabled={timerRunning()}
             >
               Start
             </button>
             <button
-              class={`px-4 py-2 bg-yellow-500 text-white rounded-lg cursor-pointer hover:bg-yellow-600 transition ${!timerRunning() ? 'opacity-50 cursor-not-allowed' : ''}`}
+              class={`px-4 py-2 bg-yellow-500 text-white rounded-lg cursor-pointer hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 ${!timerRunning() ? 'opacity-50 cursor-not-allowed' : ''}`}
               onClick={pauseTimer}
               disabled={!timerRunning()}
             >
               Pause
             </button>
             <button
-              class="px-4 py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 transition"
+              class="px-4 py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105"
               onClick={makeSubstitution}
             >
               Substitute
             </button>
             <button
-              class="px-4 py-2 bg-indigo-500 text-white rounded-lg cursor-pointer hover:bg-indigo-600 transition"
+              class="px-4 py-2 bg-indigo-500 text-white rounded-lg cursor-pointer hover:bg-indigo-600 transition duration-300 ease-in-out transform hover:scale-105"
               onClick={() => setShowAnalytics(true)}
             >
               View Analytics

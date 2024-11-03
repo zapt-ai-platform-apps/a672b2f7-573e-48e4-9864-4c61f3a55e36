@@ -34,12 +34,12 @@ function Analytics(props) {
     <div class={`fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center ${props.show ? 'block' : 'hidden'}`}>
       <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl h-full overflow-auto">
         <button
-          class="px-4 py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 transition mb-4"
+          class="px-4 py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 mb-4"
           onClick={props.onClose}
         >
           Close
         </button>
-        <Bar data={chartData()} options={chartOptions} />
+        <Bar data={chartData()} options={chartOptions} width={500} height={500} />
       </div>
     </div>
   );
