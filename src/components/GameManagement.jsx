@@ -1,7 +1,21 @@
-import { createSignal, onCleanup, For, Show, createEffect, onMount } from 'solid-js';
+import {
+  createSignal,
+  onCleanup,
+  For,
+  Show,
+  createEffect,
+  onMount,
+} from 'solid-js';
 
 function GameManagement(props) {
-  const { numOnField, playerData, setPlayerData, goalkeeper, setGoalkeeper, onEndGame } = props;
+  const {
+    numOnField,
+    playerData,
+    setPlayerData,
+    goalkeeper,
+    setGoalkeeper,
+    onEndGame,
+  } = props;
   const [isRunning, setIsRunning] = createSignal(false);
   const [timeElapsed, setTimeElapsed] = createSignal(0);
 
@@ -10,7 +24,6 @@ function GameManagement(props) {
   const [onFieldPlayers, setOnFieldPlayers] = createSignal([]);
   const [offFieldPlayers, setOffFieldPlayers] = createSignal([]);
 
-  const [isSubstitutionMode, setIsSubstitutionMode] = createSignal(false);
   const [selectedSubOffPlayer, setSelectedSubOffPlayer] = createSignal(null);
 
   const [showGKModal, setShowGKModal] = createSignal(false);
@@ -19,11 +32,15 @@ function GameManagement(props) {
 
   onMount(() => {
     updatePlayerLists();
+    startUITimer();
   });
 
   onCleanup(() => {
     if (timer !== null) {
       clearInterval(timer);
+    }
+    if (uiTimer !== null) {
+      clearInterval(uiTimer);
     }
   });
 
@@ -65,6 +82,14 @@ function GameManagement(props) {
     );
   };
 
+  // UI Timer to update the interface every second
+  let uiTimer = null;
+  const startUITimer = () => {
+    uiTimer = setInterval(() => {
+      updatePlayerLists();
+    }, 1000);
+  };
+
   const makeSubstitution = () => {
     if (selectedSubOffPlayer() && selectedOnPlayer()) {
       const offPlayer = selectedSubOffPlayer();
@@ -84,8 +109,8 @@ function GameManagement(props) {
         );
         setSelectedSubOffPlayer(null);
         setSelectedOnPlayer('');
-        setIsSubstitutionMode(false);
-        updatePlayerLists(); // Update the substitution lists
+        // Update the substitution lists
+        updatePlayerLists();
       }
     } else {
       alert('Please select a player to sub off and on.');
@@ -93,23 +118,7 @@ function GameManagement(props) {
   };
 
   const handlePlayerClick = (player) => {
-    if (isSubstitutionMode()) {
-      setSelectedSubOffPlayer(player);
-    }
-  };
-
-  const openSubstitutionMode = () => {
-    if (offFieldPlayers().length === 0) {
-      alert('No players available to substitute on.');
-      return;
-    }
-    // Set default player to sub on (player with least playtime)
-    const defaultSubOnPlayer = offFieldPlayers().reduce(
-      (prev, current) => (current.totalPlayTime < prev.totalPlayTime ? current : prev),
-      offFieldPlayers()[0]
-    );
-    setSelectedOnPlayer(defaultSubOnPlayer.name);
-    setIsSubstitutionMode(true);
+    setSelectedSubOffPlayer(player);
   };
 
   const assignGoalkeeper = () => {
@@ -137,21 +146,36 @@ function GameManagement(props) {
     setIsRunning(!isRunning());
   };
 
+  // Set default player to sub on
+  createEffect(() => {
+    if (offFieldPlayers().length > 0) {
+      const defaultSubOnPlayer = offFieldPlayers().reduce(
+        (prev, current) =>
+          current.totalPlayTime < prev.totalPlayTime ? current : prev,
+        offFieldPlayers()[0]
+      );
+      setSelectedOnPlayer(defaultSubOnPlayer.name);
+    } else {
+      setSelectedOnPlayer('');
+    }
+  });
+
   return (
-    <div class="min-h-screen flex flex-col h-full">
+    <div class="h-full flex flex-col">
       <h1 class="text-3xl font-bold mb-4 text-green-600">Game Management</h1>
       <div class="flex justify-between items-center mb-4">
         <div>
           <span class="font-semibold">Time Elapsed: </span>
-          {Math.floor(timeElapsed() / 60)}:{('0' + (timeElapsed() % 60)).slice(-2)}
+          {Math.floor(timeElapsed() / 60)}:
+          {('0' + (timeElapsed() % 60)).slice(-2)}
         </div>
         <div>
           <button
-            class={`px-4 py-2 mr-2 ${
+            class={`px-4 py-2 mr-2 cursor-pointer ${
               isRunning()
                 ? 'bg-yellow-500 hover:bg-yellow-600'
                 : 'bg-green-500 hover:bg-green-600'
-            } text-white rounded-lg cursor-pointer hover:scale-105 transition duration-300 ease-in-out`}
+            } text-white rounded-lg hover:scale-105 transition duration-300 ease-in-out`}
             onClick={toggleTimer}
           >
             {isRunning() ? 'Pause' : 'Start'}
@@ -172,7 +196,8 @@ function GameManagement(props) {
               {(player) => (
                 <li
                   class={`flex justify-between items-center mb-2 cursor-pointer ${
-                    selectedSubOffPlayer() && selectedSubOffPlayer().name === player.name
+                    selectedSubOffPlayer() &&
+                    selectedSubOffPlayer().name === player.name
                       ? 'bg-blue-200'
                       : ''
                   }`}
@@ -193,7 +218,9 @@ function GameManagement(props) {
           </ul>
         </div>
         <div class="md:w-1/2 md:pl-4">
-          <h2 class="text-2xl font-bold mb-2 text-green-600">Players Off Field</h2>
+          <h2 class="text-2xl font-bold mb-2 text-green-600">
+            Players Off Field
+          </h2>
           <ul>
             <For each={offFieldPlayers()}>
               {(player) => (
@@ -209,49 +236,39 @@ function GameManagement(props) {
         </div>
       </div>
       <div class="my-4">
-        <button
-          class="w-full py-2 bg-purple-500 text-white rounded-lg cursor-pointer hover:bg-purple-600 hover:scale-105 transition duration-300 ease-in-out"
-          onClick={openSubstitutionMode}
-        >
-          Substitute
-        </button>
-        <Show when={isSubstitutionMode()}>
-          <div class="mt-4">
-            <h2 class="text-2xl font-bold mb-2 text-green-600">Substitution</h2>
-            <div class="flex flex-col md:flex-row items-start md:items-center">
-              <div class="md:w-1/2 md:pr-4">
-                <label class="block font-semibold mb-2">Player to Sub Off:</label>
-                <div class="p-2 border border-gray-300 rounded-lg">
-                  {selectedSubOffPlayer() ? selectedSubOffPlayer().name : 'Select a player'}
-                </div>
-              </div>
-              <div class="md:w-1/2 md:pl-4 mt-4 md:mt-0">
-                <label class="block font-semibold mb-2">Select Player to Sub On:</label>
-                <select
-                  class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer box-border"
-                  value={selectedOnPlayer()}
-                  onChange={(e) => setSelectedOnPlayer(e.target.value)}
-                >
-                  <For each={offFieldPlayers()}>
-                    {(player) => (
-                      <option value={player.name}>{player.name}</option>
-                    )}
-                  </For>
-                </select>
-              </div>
+        <h2 class="text-2xl font-bold mb-2 text-green-600">Substitution</h2>
+        <div class="flex flex-col md:flex-row items-start md:items-center">
+          <div class="md:w-1/2 md:pr-4">
+            <label class="block font-semibold mb-2">Player to Sub Off:</label>
+            <div class="p-2 border border-gray-300 rounded-lg">
+              {selectedSubOffPlayer()
+                ? selectedSubOffPlayer().name
+                : 'Select a player'}
             </div>
-            <button
-              class="mt-4 w-full py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 hover:scale-105 transition duration-300 ease-in-out"
-              onClick={makeSubstitution}
-            >
-              Confirm Substitution
-            </button>
           </div>
-        </Show>
+          <div class="md:w-1/2 md:pl-4 mt-4 md:mt-0">
+            <label class="block font-semibold mb-2">Select Player to Sub On:</label>
+            <select
+              class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer box-border"
+              value={selectedOnPlayer()}
+              onChange={(e) => setSelectedOnPlayer(e.target.value)}
+            >
+              <For each={offFieldPlayers()}>
+                {(player) => <option value={player.name}>{player.name}</option>}
+              </For>
+            </select>
+          </div>
+        </div>
+        <button
+          class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 hover:scale-105 transition duration-300 ease-in-out"
+          onClick={makeSubstitution}
+        >
+          Make Substitution
+        </button>
       </div>
       <div class="my-4">
         <button
-          class="w-full py-2 bg-yellow-500 text-white rounded-lg cursor-pointer hover:bg-yellow-600 hover:scale-105 transition duration-300 ease-in-out"
+          class="px-4 py-2 bg-yellow-500 text-white rounded-lg cursor-pointer hover:bg-yellow-600 hover:scale-105 transition duration-300 ease-in-out"
           onClick={assignGoalkeeper}
         >
           Change Goalkeeper
@@ -259,7 +276,9 @@ function GameManagement(props) {
         <Show when={showGKModal()}>
           <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div class="bg-white p-6 rounded-lg">
-              <h2 class="text-2xl font-bold mb-4 text-green-600">Assign Goalkeeper</h2>
+              <h2 class="text-2xl font-bold mb-4 text-green-600">
+                Assign Goalkeeper
+              </h2>
               <ul>
                 <For each={onFieldPlayers()}>
                   {(player) => (

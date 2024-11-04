@@ -1,5 +1,5 @@
 import { createSignal, createEffect, onMount } from 'solid-js';
-import { For, Show } from 'solid-js/web';
+import { For } from 'solid-js/web';
 
 function GameSetup(props) {
   const [players, setPlayers] = createSignal([]);
@@ -38,7 +38,8 @@ function GameSetup(props) {
   };
 
   const toggleStartingPlayer = (name) => {
-    const selectedCount = players().filter((player) => player.isStartingPlayer).length;
+    const selectedCount = players().filter((player) => player.isStartingPlayer)
+      .length;
     const player = players().find((player) => player.name === name);
     if (!player.isStartingPlayer && selectedCount >= numPlayersOnField()) {
       alert(`You can only select ${numPlayersOnField()} starting players.`);
@@ -126,7 +127,9 @@ function GameSetup(props) {
           </ul>
         </div>
         <div class="mb-4">
-          <label class="block text-gray-700 mb-2">Number of Players on Field</label>
+          <label class="block text-gray-700 mb-2">
+            Number of Players on Field
+          </label>
           <input
             type="number"
             min="1"
@@ -146,9 +149,7 @@ function GameSetup(props) {
               Select Goalkeeper
             </option>
             <For each={players().filter((player) => player.isStartingPlayer)}>
-              {(player) => (
-                <option value={player.name}>{player.name}</option>
-              )}
+              {(player) => <option value={player.name}>{player.name}</option>}
             </For>
           </select>
         </div>
