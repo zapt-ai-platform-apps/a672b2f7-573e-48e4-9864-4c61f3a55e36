@@ -8,7 +8,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 - **Star Players Management**: Mark players as star players during the game setup. Star players are indicated by a filled star icon (★), while non-star players have an outlined star icon (☆). An explanation is provided about the effect of being a star player.
 - **Goalkeeper Management**: Allows the coach to assign and reassign the goalkeeper at any time without affecting substitutions. The goalkeeper's playing time is not counted while they are in goal.
 - **Game Setup**: Input the list of players, number of players on the field at a time, and match length.
-- **Select Starting Line-up**: Choose which players will start on the field.
+- **Select Starting Line-up**: Choose which players will start on the field by checking the box next to their name.
 - **Substitution Management**: Advises when to make substitutions and who to substitute while respecting star player rules and playtime ratios.
 - **Next Substitutions Display**: Clearly shows which player is next to come off and who is next to come on.
 - **Real-Time Tracking**: Records how long each player has played during the match, excluding the goalkeeper's time in goal.
@@ -37,7 +37,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
    - Enter the total duration of the match in minutes.
 7. **Select Starting Line-up**:
    - From the list of added players, select the players who will start on the field by checking the box next to their name.
-   - You can select up to the number of players allowed on the field.
+   - You must select exactly the number of players allowed on the field.
 8. **Start Game**:
    - Click the "Start Game" button.
    - If the number of players added is less than the number of players on the field, or if you haven't selected enough starting players, you'll be prompted accordingly.
@@ -67,7 +67,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
    - Monitor each player's total playtime in real-time.
    - The playtime updates every second for players on the field, excluding the goalkeeper.
 9. **Viewing Analytics**:
-   - Click the "View Analytics" button to see a graphical representation of each player's playtime.
+   - Click the "View Analytics" button to see a graphical representation of each player's playing time.
    - The analytics display a bar chart comparing playtimes.
 
 ### 3. Ending the Game
@@ -94,3 +94,4 @@ No external environment variables are required for this app.
 - Non-star players are substituted off first to maximize the time star players spend on the field.
 - When adding a player, the star button now has an outlined star icon (☆) by default. Clicking the star fills it in (★), indicating the player is a star player.
 - An explanation about the effect of being a star player is provided in the game setup screen.
+- **Important**: Ensure that you select exactly the number of starting players required before starting the game. If you do not select the starting lineup or have insufficient players, the "Start Game" button will alert you accordingly.

@@ -77,7 +77,7 @@ function GameSetup(props) {
   };
 
   return (
-    <div class="h-full flex flex-col items-center justify-center">
+    <div class="min-h-screen flex flex-col items-center justify-center">
       <h1 class="text-3xl font-bold mb-4 text-green-600">Football Subs</h1>
       <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 class="text-2xl font-bold mb-4 text-green-600">Game Setup</h2>
@@ -99,7 +99,9 @@ function GameSetup(props) {
           </div>
         </div>
         <div class="mb-4">
-          <label class="block text-gray-700 mb-2">Players (Select Starting Line-up and Star Players)</label>
+          <label class="block text-gray-700 mb-2">
+            Players (Select Starting Line-up and Star Players)
+          </label>
           <ul>
             <For each={players()}>
               {(player) => (
@@ -108,7 +110,7 @@ function GameSetup(props) {
                     <input
                       type="checkbox"
                       checked={player.isStartingPlayer}
-                      onChange={() => toggleStartingPlayer(player.name)}
+                      onInput={() => toggleStartingPlayer(player.name)}
                       class="cursor-pointer mr-2"
                     />
                     <span>{player.name}</span>
@@ -131,7 +133,9 @@ function GameSetup(props) {
             </For>
           </ul>
           <p class="mt-2 text-sm text-gray-600">
-            <span class="text-yellow-500">★</span> Star players are key players. During substitutions, the app ensures that star players receive more playing time in a 3:2 ratio over non-star players.
+            <span class="text-yellow-500">★</span> Star players are key players. During
+            substitutions, the app ensures that star players receive more playing time in a
+            3:2 ratio over non-star players.
           </p>
         </div>
         <div class="mb-4">
@@ -157,6 +161,7 @@ function GameSetup(props) {
         <button
           class="w-full py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105"
           onClick={startGame}
+          disabled={players().length < numPlayersOnField()}
         >
           Start Game
         </button>
