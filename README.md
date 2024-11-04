@@ -75,11 +75,17 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 
 ## External APIs and Services
 
-This app does not utilize any external APIs. All data is managed locally within the app during the session.
+This app uses **Sentry** for error tracking and performance monitoring. Sentry helps in identifying and fixing errors in the application by providing real-time error reports.
 
 ## Environment Variables
 
-No external environment variables are required for this app.
+The following environment variables are required for Sentry integration:
+
+- **VITE_PUBLIC_SENTRY_DSN**: Your Sentry Data Source Name.
+- **VITE_PUBLIC_APP_ENV**: The environment in which the app is running (e.g., development, production).
+- **VITE_PUBLIC_APP_ID**: The ID of the app for tagging purposes.
+
+These variables should be defined in a `.env` file at the root of your project.
 
 ## Notes
 
