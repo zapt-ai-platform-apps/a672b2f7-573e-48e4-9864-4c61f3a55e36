@@ -1,4 +1,3 @@
-```jsx
 import { createSignal, createEffect, onCleanup, createMemo } from 'solid-js';
 import { For, Show } from 'solid-js/web';
 import Analytics from './Analytics';
@@ -233,33 +232,35 @@ function GameManagement(props) {
               <h2 class="text-xl font-bold mb-2 text-green-600">Players</h2>
               <div class="overflow-y-auto max-h-96 pr-2">
                 <For each={props.playerData()}>
-                  {(player) => (
-                    <div
-                      class={`flex items-center justify-between mb-2 p-2 rounded ${
-                        player.isOnField ? 'bg-green-100' : 'bg-red-100'
-                      } ${
-                        player.name === nextSubstitutions().nextPlayerIn?.name ? 'border-2 border-blue-500' : ''
-                      }`}
-                    >
-                      <div>
-                        <p class="font-semibold">
-                          {player.name}{' '}
-                          {player.isStarPlayer && <span class="text-yellow-500">⭐</span>}
-                          {player.isGoalkeeper && <span class="text-blue-500 ml-1">(GK)</span>}
-                        </p>
-                        <p class="text-sm">
-                          Play Time: {Math.floor(player.totalPlayTime / 60)}:
-                          {('0' + (player.totalPlayTime % 60)).slice(-2)}
-                        </p>
-                      </div>
-                      <button
-                        class="text-sm text-blue-500 cursor-pointer hover:text-blue-600"
-                        onClick={() => setShowGoalkeeperModal(true)}
+                  {(player) => {
+                    const nextPlayerIn = nextSubstitutions().nextPlayerIn;
+                    const isNextPlayerIn = nextPlayerIn && player.name === nextPlayerIn.name;
+                    return (
+                      <div
+                        class={`flex items-center justify-between mb-2 p-2 rounded ${
+                          player.isOnField ? 'bg-green-100' : 'bg-red-100'
+                        } ${isNextPlayerIn ? 'border-2 border-blue-500' : ''}`}
                       >
-                        {player.isGoalkeeper ? 'Change GK' : 'Assign GK'}
-                      </button>
-                    </div>
-                  )}
+                        <div>
+                          <p class="font-semibold">
+                            {player.name}{' '}
+                            {player.isStarPlayer && <span class="text-yellow-500">⭐</span>}
+                            {player.isGoalkeeper && <span class="text-blue-500 ml-1">(GK)</span>}
+                          </p>
+                          <p class="text-sm">
+                            Play Time: {Math.floor(player.totalPlayTime / 60)}:
+                            {('0' + (player.totalPlayTime % 60)).slice(-2)}
+                          </p>
+                        </div>
+                        <button
+                          class="text-sm text-blue-500 cursor-pointer hover:text-blue-600"
+                          onClick={() => setShowGoalkeeperModal(true)}
+                        >
+                          {player.isGoalkeeper ? 'Change GK' : 'Assign GK'}
+                        </button>
+                      </div>
+                    );
+                  }}
                 </For>
               </div>
             </div>
@@ -298,4 +299,3 @@ function GameManagement(props) {
 }
 
 export default GameManagement;
-```
