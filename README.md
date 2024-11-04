@@ -8,10 +8,15 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 - **Goalkeeper Management**: Allows the coach to assign and reassign the goalkeeper at any time without affecting substitutions. The goalkeeper's playing time is not counted while they are in goal.
 - **Game Setup**: Input the list of players and number of players on the field at a time.
 - **Select Starting Line-up**: Choose which players will start on the field by checking the box next to their name.
-- **Substitution Management**: Coaches can select which players to substitute, making informed decisions to ensure equitable playtime.
+- **Substitution Management**: Coaches can select which players to substitute by simply clicking on them, making informed decisions to ensure equitable playtime.
 - **Real-Time Tracking**: Records how long each player has played during the match, excluding the goalkeeper's time in goal.
 - **Player Ordering**: Players are ordered by their total playing time, helping coaches identify who needs more time on the field.
 - **Pause Functionality**: Ability to pause the game clock during stoppages like half-time.
+- **Simplified Goalkeeper Assignment**: Goalkeeper assignment has been moved to a separate section to reduce clutter during gameplay.
+- **Optimized Substitutions**:
+  - **Players Off Field Ordered**: Players off the field are ordered by descending total playtime.
+  - **Default Substitute On**: The player off-field with the least playtime is automatically selected to come on.
+  - **Click-to-Select Substitution**: Click on a player on the field to select them as the player to substitute off.
 
 ## User Journeys
 
@@ -30,7 +35,10 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 5. **Select Starting Line-up**:
    - From the list of added players, select the players who will start on the field by checking the box next to their name.
    - You must select exactly the number of players allowed on the field.
-6. **Start Game**:
+6. **Assign Goalkeeper**:
+   - Click the "Assign Goalkeeper" button.
+   - Select a player from the list to be the goalkeeper.
+7. **Start Game**:
    - Click the "Start Game" button.
    - If the number of players added is less than the number of players on the field, or if you haven't selected enough starting players, you'll be prompted accordingly.
 
@@ -39,24 +47,22 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 1. **Game Management Screen**: Once the game starts, you're taken to the Game Management screen.
 2. **Starting the Timer**:
    - Click the "Start" button to begin the game clock.
-3. **Assigning the Goalkeeper**:
-   - Click the "Assign GK" or "Remove GK" button next to a player's name to assign or unassign the goalkeeper.
-   - The goalkeeper's playtime will not be counted while they are in goal.
-4. **Viewing Player Status**:
+3. **Viewing Player Status**:
    - The app displays each player's total playing time in seconds.
    - Players are ordered by their total playing time, with those who have played the least time at the top.
    - Players currently on the field have their playtime increment every second (excluding the goalkeeper).
-5. **Making Substitutions**:
-   - Click the "Substitute" button when you want to make a substitution.
-   - A substitution interface appears, showing:
-     - **Players on Field**: A list of players currently on the field.
-     - **Players Off Field**: A list of players currently off the field.
-   - **Selecting Players**:
-     - Choose the player you wish to substitute off from the "Players on Field" list.
-     - Choose the player you wish to substitute on from the "Players Off Field" list.
-     - The lists display only player names for easy selection.
-   - Click the "Confirm Substitution" button to make the substitution.
-   - **Note**: The substitution lists are stable and update only when a substitution is made, ensuring smooth selection.
+4. **Making Substitutions**:
+   - **Select Player to Sub Off**:
+     - Click directly on a player in the "Players on Field" list to select them as the player to substitute off.
+   - **Select Player to Sub On**:
+     - The player off-field with the least total playtime is automatically selected as the player to substitute on.
+     - You can change this selection if desired.
+   - **Confirm Substitution**:
+     - Click the "Confirm Substitution" button to make the substitution.
+     - The substitution lists update accordingly.
+5. **Changing the Goalkeeper (Optional)**:
+   - Click the "Change Goalkeeper" button.
+   - Select a different player to assign as the goalkeeper.
 6. **Pause/Resume the Timer**:
    - Click the "Pause" button to pause the game clock during stoppages like half-time.
    - Click "Start" again to resume the game.

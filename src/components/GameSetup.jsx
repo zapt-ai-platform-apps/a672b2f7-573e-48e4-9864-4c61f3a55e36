@@ -1,10 +1,11 @@
 import { createSignal, createEffect, onMount } from 'solid-js';
-import { For } from 'solid-js/web';
+import { For, Show } from 'solid-js/web';
 
 function GameSetup(props) {
   const [players, setPlayers] = createSignal([]);
   const [currentPlayerName, setCurrentPlayerName] = createSignal('');
   const [numPlayersOnField, setNumPlayersOnField] = createSignal(5);
+  const [goalkeeper, setGoalkeeper] = createSignal('');
 
   // Load players from localStorage on mount
   onMount(() => {
@@ -52,6 +53,10 @@ function GameSetup(props) {
     );
   };
 
+  const selectGoalkeeper = (name) => {
+    setGoalkeeper(name);
+  };
+
   const startGame = () => {
     const totalPlayers = players().length;
     const startingPlayers = players().filter((player) => player.isStartingPlayer);
@@ -63,11 +68,15 @@ function GameSetup(props) {
       alert(`Please select exactly ${numPlayersOnField()} starting players.`);
       return;
     }
-    props.onStartGame(players(), numPlayersOnField());
+    if (!goalkeeper()) {
+      alert('Please assign a goalkeeper.');
+      return;
+    }
+    props.onStartGame(players(), numPlayersOnField(), goalkeeper());
   };
 
   return (
-    <div class="min-h-screen flex flex-col items-center justify-center">
+    <div class="h-full flex flex-col items-center justify-center">
       <h1 class="text-3xl font-bold mb-4 text-green-600">Football Subs</h1>
       <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 class="text-2xl font-bold mb-4 text-green-600">Game Setup</h2>
@@ -125,6 +134,23 @@ function GameSetup(props) {
             value={numPlayersOnField()}
             onInput={(e) => setNumPlayersOnField(parseInt(e.target.value))}
           />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2">Assign Goalkeeper</label>
+          <select
+            class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer box-border"
+            value={goalkeeper()}
+            onChange={(e) => selectGoalkeeper(e.target.value)}
+          >
+            <option value="" disabled>
+              Select Goalkeeper
+            </option>
+            <For each={players().filter((player) => player.isStartingPlayer)}>
+              {(player) => (
+                <option value={player.name}>{player.name}</option>
+              )}
+            </For>
+          </select>
         </div>
         <button
           class="w-full py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105"
