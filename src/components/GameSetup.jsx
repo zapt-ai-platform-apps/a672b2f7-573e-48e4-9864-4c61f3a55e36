@@ -5,7 +5,6 @@ function GameSetup(props) {
   const [players, setPlayers] = createSignal([]);
   const [currentPlayerName, setCurrentPlayerName] = createSignal('');
   const [numPlayersOnField, setNumPlayersOnField] = createSignal(5);
-  const [matchDuration, setMatchDuration] = createSignal(60);
 
   // Load players from localStorage on mount
   onMount(() => {
@@ -64,7 +63,7 @@ function GameSetup(props) {
       alert(`Please select exactly ${numPlayersOnField()} starting players.`);
       return;
     }
-    props.onStartGame(players(), numPlayersOnField(), matchDuration());
+    props.onStartGame(players(), numPlayersOnField());
   };
 
   return (
@@ -125,16 +124,6 @@ function GameSetup(props) {
             class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 box-border"
             value={numPlayersOnField()}
             onInput={(e) => setNumPlayersOnField(parseInt(e.target.value))}
-          />
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700 mb-2">Match Length (minutes)</label>
-          <input
-            type="number"
-            min="1"
-            class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 box-border"
-            value={matchDuration()}
-            onInput={(e) => setMatchDuration(parseInt(e.target.value))}
           />
         </div>
         <button

@@ -6,10 +6,11 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 
 - **Persistent Player List**: Stores players so they are available for every game. Player lists are saved locally on your device.
 - **Goalkeeper Management**: Allows the coach to assign and reassign the goalkeeper at any time without affecting substitutions. The goalkeeper's playing time is not counted while they are in goal.
-- **Game Setup**: Input the list of players, number of players on the field at a time, and match length.
+- **Game Setup**: Input the list of players and number of players on the field at a time.
 - **Select Starting Line-up**: Choose which players will start on the field by checking the box next to their name.
 - **Substitution Management**: Coaches can select which players to substitute, making informed decisions to ensure equitable playtime.
 - **Real-Time Tracking**: Records how long each player has played during the match, excluding the goalkeeper's time in goal.
+- **Player Ordering**: Players are ordered by their total playing time, helping coaches identify who needs more time on the field.
 - **Pause Functionality**: Ability to pause the game clock during stoppages like half-time.
 
 ## User Journeys
@@ -26,12 +27,10 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
    - Repeat this process until all players are added.
 4. **Set Number of Players on Field**:
    - Enter the number of players that can play at one time (e.g., 5 for 5-a-side).
-5. **Set Match Length**:
-   - Enter the total duration of the match in minutes.
-6. **Select Starting Line-up**:
+5. **Select Starting Line-up**:
    - From the list of added players, select the players who will start on the field by checking the box next to their name.
    - You must select exactly the number of players allowed on the field.
-7. **Start Game**:
+6. **Start Game**:
    - Click the "Start Game" button.
    - If the number of players added is less than the number of players on the field, or if you haven't selected enough starting players, you'll be prompted accordingly.
 
@@ -45,6 +44,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
    - The goalkeeper's playtime will not be counted while they are in goal.
 4. **Viewing Player Status**:
    - The app displays each player's total playing time in seconds.
+   - Players are ordered by their total playing time, with those who have played the least time at the top.
    - Players currently on the field have their playtime increment every second (excluding the goalkeeper).
 5. **Making Substitutions**:
    - Click the "Substitute" button when you want to make a substitution.
@@ -56,6 +56,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
      - Choose the player you wish to substitute on from the "Players Off Field" list.
      - The lists display only player names for easy selection.
    - Click the "Confirm Substitution" button to make the substitution.
+   - **Note**: The substitution lists are stable and update only when a substitution is made, ensuring smooth selection.
 6. **Pause/Resume the Timer**:
    - Click the "Pause" button to pause the game clock during stoppages like half-time.
    - Click "Start" again to resume the game.
@@ -63,7 +64,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 ### 3. Ending the Game
 
 - **Game Completion**:
-  - Once the match duration is reached, you can stop making substitutions.
+  - When you decide to end the game, click the "End Game" button.
   - Review each player's playtime to ensure that every player received equitable playtime.
 
 ## External APIs and Services

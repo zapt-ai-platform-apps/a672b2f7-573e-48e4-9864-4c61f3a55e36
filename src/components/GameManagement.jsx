@@ -1,7 +1,7 @@
-import { createSignal, onCleanup, For, Show, createEffect } from 'solid-js';
+import { createSignal, onCleanup, For, Show, createEffect, createMemo, onMount } from 'solid-js';
 
 function GameManagement(props) {
-  const { numOnField, matchLength, playerData, setPlayerData, onEndGame } = props;
+  const { numOnField, playerData, setPlayerData, onEndGame } = props;
   const [isRunning, setIsRunning] = createSignal(false);
   const [timeElapsed, setTimeElapsed] = createSignal(0);
   const [goalkeeper, setGoalkeeper] = createSignal(null);
@@ -9,7 +9,14 @@ function GameManagement(props) {
   const [selectedOffPlayer, setSelectedOffPlayer] = createSignal('');
   const [selectedOnPlayer, setSelectedOnPlayer] = createSignal('');
 
+  const [onFieldPlayers, setOnFieldPlayers] = createSignal([]);
+  const [offFieldPlayers, setOffFieldPlayers] = createSignal([]);
+
   let timer = null;
+
+  onMount(() => {
+    updatePlayerLists();
+  });
 
   onCleanup(() => {
     if (timer !== null) {
@@ -42,6 +49,11 @@ function GameManagement(props) {
     );
   };
 
+  const updatePlayerLists = () => {
+    setOnFieldPlayers(playerData().filter((player) => player.isOnField && !player.isGoalkeeper));
+    setOffFieldPlayers(playerData().filter((player) => !player.isOnField));
+  };
+
   const makeSubstitution = () => {
     if (selectedOffPlayer() && selectedOnPlayer()) {
       const offPlayer = playerData().find((p) => p.name === selectedOffPlayer());
@@ -61,6 +73,7 @@ function GameManagement(props) {
         );
         setSelectedOffPlayer('');
         setSelectedOnPlayer('');
+        updatePlayerLists(); // Update the substitution lists
       }
     } else {
       alert('Please select both players for substitution.');
@@ -80,7 +93,7 @@ function GameManagement(props) {
         setPlayerData(
           playerData().map((p) =>
             p.name === goalkeeper().name ? { ...p, isGoalkeeper: false } : p
-          )
+        )
         );
       }
       setPlayerData(
@@ -90,6 +103,7 @@ function GameManagement(props) {
       );
       setGoalkeeper(player);
     }
+    updatePlayerLists();
   };
 
   const handleEndGame = () => {
@@ -101,14 +115,17 @@ function GameManagement(props) {
     setIsRunning(!isRunning());
   };
 
+  const sortedPlayerData = createMemo(() =>
+    [...playerData()].sort((a, b) => a.totalPlayTime - b.totalPlayTime)
+  );
+
   return (
-    <div class="min-h-screen flex flex-col">
+    <div class="min-h-screen flex flex-col h-full">
       <h1 class="text-3xl font-bold mb-4 text-green-600">Game Management</h1>
       <div class="flex justify-between items-center mb-4">
         <div>
           <span class="font-semibold">Time Elapsed: </span>
-          {Math.floor(timeElapsed() / 60)}:{('0' + (timeElapsed() % 60)).slice(-2)} /{' '}
-          {matchLength()} minutes
+          {Math.floor(timeElapsed() / 60)}:{('0' + (timeElapsed() % 60)).slice(-2)}
         </div>
         <div>
           <button
@@ -133,7 +150,7 @@ function GameManagement(props) {
         <div class="md:w-1/2 md:pr-4">
           <h2 class="text-2xl font-bold mb-2 text-green-600">Players on Field</h2>
           <ul>
-            <For each={playerData().filter((player) => player.isOnField)}>
+            <For each={sortedPlayerData().filter((player) => player.isOnField)}>
               {(player) => (
                 <li class="flex justify-between items-center mb-2">
                   <div>
@@ -159,7 +176,7 @@ function GameManagement(props) {
         <div class="md:w-1/2 md:pl-4">
           <h2 class="text-2xl font-bold mb-2 text-green-600">Players Off Field</h2>
           <ul>
-            <For each={playerData().filter((player) => !player.isOnField)}>
+            <For each={sortedPlayerData().filter((player) => !player.isOnField)}>
               {(player) => (
                 <li class="flex justify-between items-center mb-2">
                   <div>{player.name}</div>
@@ -185,7 +202,7 @@ function GameManagement(props) {
               <option value="" disabled>
                 Select Player
               </option>
-              <For each={playerData().filter((player) => player.isOnField && !player.isGoalkeeper)}>
+              <For each={onFieldPlayers()}>
                 {(player) => (
                   <option value={player.name}>{player.name}</option>
                 )}
@@ -202,7 +219,7 @@ function GameManagement(props) {
               <option value="" disabled>
                 Select Player
               </option>
-              <For each={playerData().filter((player) => !player.isOnField)}>
+              <For each={offFieldPlayers()}>
                 {(player) => (
                   <option value={player.name}>{player.name}</option>
                 )}

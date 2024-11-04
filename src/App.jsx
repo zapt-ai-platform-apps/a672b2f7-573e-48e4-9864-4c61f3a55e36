@@ -6,10 +6,9 @@ import GameManagement from './components/GameManagement';
 function App() {
   const [gameStarted, setGameStarted] = createSignal(false);
   const [numOnField, setNumOnField] = createSignal(5);
-  const [matchLength, setMatchLength] = createSignal(60); // match length in minutes
   const [playerData, setPlayerData] = createSignal([]);
 
-  const handleStartGame = (players, numPlayers, matchDuration) => {
+  const handleStartGame = (players, numPlayers) => {
     // Initialize player data
     setPlayerData(
       players.map((player) => ({
@@ -20,7 +19,6 @@ function App() {
       }))
     );
     setNumOnField(numPlayers);
-    setMatchLength(matchDuration);
     setGameStarted(true);
   };
 
@@ -36,7 +34,6 @@ function App() {
         fallback={
           <GameManagement
             numOnField={numOnField}
-            matchLength={matchLength}
             playerData={playerData}
             setPlayerData={setPlayerData}
             onEndGame={resetGame}
