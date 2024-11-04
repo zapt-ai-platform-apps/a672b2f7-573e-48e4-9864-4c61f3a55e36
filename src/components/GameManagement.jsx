@@ -1,35 +1,31 @@
-import { createSignal, onMount, onCleanup, For, Show } from 'solid-js';
-import Analytics from './Analytics';
+import { createSignal, onCleanup, createEffect, For, Show } from 'solid-js';
 
 function GameManagement(props) {
   const { numOnField, matchLength, playerData, setPlayerData, onEndGame } = props;
   const [isRunning, setIsRunning] = createSignal(false);
   const [timeElapsed, setTimeElapsed] = createSignal(0);
   const [goalkeeper, setGoalkeeper] = createSignal(null);
-  const [showAnalytics, setShowAnalytics] = createSignal(false);
+  const [selectedOffPlayer, setSelectedOffPlayer] = createSignal('');
+  const [selectedOnPlayer, setSelectedOnPlayer] = createSignal('');
+  const [loading, setLoading] = createSignal(false);
 
-  const [selectedOffPlayer, setSelectedOffPlayer] = createSignal(null);
-  const [selectedOnPlayer, setSelectedOnPlayer] = createSignal(null);
-
-  let timer;
-
-  onCleanup(() => {
-    clearInterval(timer);
-  });
-
-  const startTimer = () => {
-    if (!isRunning()) {
-      setIsRunning(true);
-      timer = setInterval(() => {
+  createEffect(() => {
+    let timerId;
+    if (isRunning()) {
+      timerId = setInterval(() => {
         setTimeElapsed((prev) => prev + 1);
         updatePlayTimes();
       }, 1000);
     }
+    onCleanup(() => clearInterval(timerId));
+  });
+
+  const startTimer = () => {
+    setIsRunning(true);
   };
 
   const pauseTimer = () => {
     setIsRunning(false);
-    clearInterval(timer);
   };
 
   const updatePlayTimes = () => {
@@ -47,17 +43,17 @@ function GameManagement(props) {
     if (selectedOffPlayer() && selectedOnPlayer()) {
       setPlayerData(
         playerData().map((player) => {
-          if (player.name === selectedOffPlayer().name) {
+          if (player.name === selectedOffPlayer()) {
             return { ...player, isOnField: false };
           }
-          if (player.name === selectedOnPlayer().name) {
+          if (player.name === selectedOnPlayer()) {
             return { ...player, isOnField: true };
           }
           return player;
         })
       );
-      setSelectedOffPlayer(null);
-      setSelectedOnPlayer(null);
+      setSelectedOffPlayer('');
+      setSelectedOnPlayer('');
     } else {
       alert('Please select both players for substitution.');
     }
@@ -94,7 +90,7 @@ function GameManagement(props) {
   };
 
   return (
-    <div class="min-h-screen flex flex-col">
+    <div class="h-full flex flex-col">
       <h1 class="text-3xl font-bold mb-4 text-green-600">Game Management</h1>
       <div class="flex justify-between items-center mb-4">
         <div>
@@ -135,7 +131,6 @@ function GameManagement(props) {
                     )}
                   </div>
                   <div class="flex items-center">
-                    <span class="mr-4">{player.totalPlayTime} sec</span>
                     <button
                       class="px-2 py-1 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 hover:scale-105 transition duration-300 ease-in-out"
                       onClick={() => assignGoalkeeper(player)}
@@ -155,9 +150,6 @@ function GameManagement(props) {
               {(player) => (
                 <li class="flex justify-between items-center mb-2">
                   <div>{player.name}</div>
-                  <div>
-                    <span>{player.totalPlayTime} sec</span>
-                  </div>
                 </li>
               )}
             </For>
@@ -171,22 +163,21 @@ function GameManagement(props) {
             <label class="block font-semibold mb-2">Select Player to Sub Off:</label>
             <select
               class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer box-border"
-              value={selectedOffPlayer() ? selectedOffPlayer().name : ''}
+              value={selectedOffPlayer()}
               onChange={(e) => {
-                const player = playerData().find(
-                  (p) => p.name === e.target.value
-                );
-                setSelectedOffPlayer(player);
+                setSelectedOffPlayer(e.target.value);
               }}
             >
-              <option value="" disabled>Select Player</option>
-              <For each={playerData()
-                .filter((player) => player.isOnField && !player.isGoalkeeper)
-                .sort((a, b) => b.totalPlayTime - a.totalPlayTime)}>
+              <option value="" disabled>
+                Select Player
+              </option>
+              <For
+                each={playerData()
+                  .filter((player) => player.isOnField && !player.isGoalkeeper)
+                  .sort((a, b) => b.totalPlayTime - a.totalPlayTime)}
+              >
                 {(player) => (
-                  <option value={player.name}>
-                    {player.name} ({player.totalPlayTime} sec)
-                  </option>
+                  <option value={player.name}>{player.name}</option>
                 )}
               </For>
             </select>
@@ -195,59 +186,41 @@ function GameManagement(props) {
             <label class="block font-semibold mb-2">Select Player to Sub On:</label>
             <select
               class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer box-border"
-              value={selectedOnPlayer() ? selectedOnPlayer().name : ''}
+              value={selectedOnPlayer()}
               onChange={(e) => {
-                const player = playerData().find(
-                  (p) => p.name === e.target.value
-                );
-                setSelectedOnPlayer(player);
+                setSelectedOnPlayer(e.target.value);
               }}
             >
-              <option value="" disabled>Select Player</option>
-              <For each={playerData()
-                .filter((player) => !player.isOnField)
-                .sort((a, b) => a.totalPlayTime - b.totalPlayTime)}>
+              <option value="" disabled>
+                Select Player
+              </option>
+              <For
+                each={playerData()
+                  .filter((player) => !player.isOnField)
+                  .sort((a, b) => a.totalPlayTime - b.totalPlayTime)}
+              >
                 {(player) => (
-                  <option value={player.name}>
-                    {player.name} ({player.totalPlayTime} sec)
-                  </option>
+                  <option value={player.name}>{player.name}</option>
                 )}
               </For>
             </select>
           </div>
         </div>
         <button
-          class="mt-4 w-full py-2 bg-purple-500 text-white rounded-lg cursor-pointer hover:bg-purple-600 hover:scale-105 transition duration-300 ease-in-out"
-          onClick={makeSubstitution}
+          class={`mt-4 w-full py-2 bg-purple-500 text-white rounded-lg cursor-pointer hover:bg-purple-600 hover:scale-105 transition duration-300 ease-in-out ${
+            loading() ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+          onClick={() => {
+            if (!loading()) {
+              setLoading(true);
+              makeSubstitution();
+              setLoading(false);
+            }
+          }}
         >
-          Confirm Substitution
+          {loading() ? 'Processing...' : 'Confirm Substitution'}
         </button>
       </div>
-      <div class="my-4">
-        <h2 class="text-2xl font-bold mb-2 text-green-600">Player Play Times</h2>
-        <ul>
-          <For each={playerData()}>
-            {(player) => (
-              <li class="flex justify-between items-center mb-2">
-                <div>{player.name}</div>
-                <div>{player.totalPlayTime} seconds</div>
-              </li>
-            )}
-          </For>
-        </ul>
-        <button
-          class="mt-4 w-full py-2 bg-indigo-500 text-white rounded-lg cursor-pointer hover:bg-indigo-600 hover:scale-105 transition duration-300 ease-in-out"
-          onClick={() => setShowAnalytics(true)}
-        >
-          View Analytics
-        </button>
-      </div>
-      <Show when={showAnalytics()}>
-        <Analytics
-          playerData={playerData()}
-          onClose={() => setShowAnalytics(false)}
-        />
-      </Show>
     </div>
   );
 }
