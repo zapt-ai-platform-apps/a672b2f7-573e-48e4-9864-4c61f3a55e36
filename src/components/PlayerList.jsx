@@ -1,4 +1,4 @@
-import { For } from 'solid-js/web';
+import { For } from 'solid-js';
 
 function PlayerList({ players, toggleStartingPlayer, removePlayer }) {
   return (

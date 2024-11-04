@@ -1,5 +1,5 @@
-import { createSignal, createEffect, onMount } from 'solid-js';
-import { For, useNavigate } from '@solidjs/router';
+import { createSignal, createEffect, onMount, For } from 'solid-js';
+import { useNavigate } from '@solidjs/router';
 
 function GameSetup(props) {
   const [players, setPlayers] = createSignal([]);
