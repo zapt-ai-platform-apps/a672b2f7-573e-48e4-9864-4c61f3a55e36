@@ -5,11 +5,11 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 ## Features
 
 - **Persistent Player List**: Stores players so they are available for every game. Player lists are saved locally on your device.
-- **Add Players During Game**: Allows the coach to add new players even after the game has started. New players are given the same initial playtime as the player with the least playtime when they are added.
+- **Add Players During Game**: Allows the coach to add new players even after the game has started. New players are given the same initial playtime as the player with the least playtime who is not the current goalkeeper when they are added.
 - **Goalkeeper Management**: Allows the coach to assign and reassign the goalkeeper at any time without affecting substitutions. The goalkeeper's playing time is not counted while they are in goal.
 - **Game Setup**: Input the list of players and number of players on the field at a time.
 - **Select Starting Line-up**: Choose which players will start on the field by checking the box next to their name.
-- **Substitution Management**: Coaches can manage substitutions seamlessly, with the substitution interface always available. Players off the field are ordered by descending total playtime, helping coaches identify who needs more time on the field.
+- **Substitution Management**: Coaches can manage substitutions seamlessly, with the substitution interface always available. Players off the field are ordered by ascending total playtime, helping coaches identify who needs more time on the field.
 - **Real-Time Tracking**: Players' playing times update every second during the game, providing accurate and up-to-date information.
 - **Player Ordering**: Players are ordered by their total playing time, with those who have played the least time at the top.
 - **Pause Functionality**: Ability to pause the game clock during stoppages like half-time.
@@ -62,7 +62,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
    - **Add New Player**:
      - In the "Add New Player" section, enter the name of the player who has just arrived.
      - Click the "Add" button.
-     - The new player is added to the list with the same total playtime as the player with the least playtime at that moment.
+     - The new player is added to the list with the same total playtime as the player with the least playtime who is not the current goalkeeper at the moment they are added.
    - **Manage the New Player**:
      - The new player appears in the "Players Off Field" list and can be substituted into the game as needed.
 6. **Changing the Goalkeeper (Optional)**:
@@ -102,4 +102,4 @@ These variables should be defined in a `.env` file at the root of your project.
 - The substitution interface is always visible during the match, allowing for seamless substitutions.
 - Players' playing times update every second, providing real-time data for decision-making.
 - **Important**: Ensure that you select exactly the number of starting players required before starting the game. If you do not select the starting lineup or have insufficient players, the "Start Game" button will alert you accordingly.
-- **Adding Players During Game**: Coaches can add new players even after the game has started. New players are assigned the same total playtime as the player with the least playtime at the moment they are added.
+- **Adding Players During Game**: Coaches can add new players even after the game has started. New players are assigned the same total playtime as the player with the least playtime who is not the current goalkeeper at the moment they are added.

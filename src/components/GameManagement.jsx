@@ -164,8 +164,13 @@ function GameManagement(props) {
 
   const addNewPlayer = () => {
     if (newPlayerName().trim() !== '') {
-      // Find the minimum totalPlayTime among current players
-      const minPlayTime = Math.min(...playerData().map((p) => p.totalPlayTime));
+      // Find the minimum totalPlayTime among current players who are not the current goalkeeper
+      const nonGKPlayers = playerData().filter((p) => !p.isGoalkeeper);
+      const minPlayTime =
+        nonGKPlayers.length > 0
+          ? Math.min(...nonGKPlayers.map((p) => p.totalPlayTime))
+          : 0;
+
       setPlayerData([
         ...playerData(),
         {
@@ -181,7 +186,7 @@ function GameManagement(props) {
   };
 
   return (
-    <div class="h-full flex flex-col">
+    <div class="h-full flex flex-col text-gray-800">
       <h1 class="text-3xl font-bold mb-4 text-green-600">Game Management</h1>
       <div class="flex justify-between items-center mb-4">
         <div>
