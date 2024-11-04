@@ -224,7 +224,7 @@ function GameManagement(props) {
   };
 
   return (
-    <div class="h-full flex flex-col text-gray-800">
+    <div class="min-h-screen flex flex-col text-gray-800">
       <h1 class="text-3xl font-bold mb-4 text-green-600">Game Management</h1>
       <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
         <div>
@@ -232,9 +232,9 @@ function GameManagement(props) {
           {Math.floor(timeElapsed() / 60)}:
           {('0' + (timeElapsed() % 60)).slice(-2)}
         </div>
-        <div class="flex flex-col space-y-2 md:flex-row md:space-x-4 md:space-y-0 mt-2 md:mt-0">
+        <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 mt-2 md:mt-0">
           <button
-            class={`px-4 py-2 cursor-pointer ${
+            class={`px-4 py-2 w-full md:w-auto cursor-pointer ${
               isRunning()
                 ? 'bg-yellow-500 hover:bg-yellow-600'
                 : 'bg-green-500 hover:bg-green-600'
@@ -244,7 +244,7 @@ function GameManagement(props) {
             {isRunning() ? 'Pause' : 'Start'}
           </button>
           <button
-            class="px-4 py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 hover:scale-105 transition duration-300 ease-in-out"
+            class="px-4 py-2 w-full md:w-auto bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 hover:scale-105 transition duration-300 ease-in-out"
             onClick={handleEndGame}
           >
             End Game
