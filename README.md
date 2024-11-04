@@ -95,3 +95,4 @@ These variables should be defined in a `.env` file at the root of your project.
 - Substitution logic allows coaches to select which players to substitute without disruptions.
 - The substitution interface lists remain stable during the match, preventing selection issues.
 - **Important**: Ensure that you select exactly the number of starting players required before starting the game. If you do not select the starting lineup or have insufficient players, the "Start Game" button will alert you accordingly.
+- **Sentry SDK Version Correction**: Updated the Sentry SDK versions to use the latest available versions that are compatible. This resolves issues related to package versions not being found during installation.
