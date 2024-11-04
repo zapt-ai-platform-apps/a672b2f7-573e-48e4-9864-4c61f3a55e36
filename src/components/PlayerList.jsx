@@ -1,6 +1,6 @@
 import { For } from 'solid-js/web';
 
-function PlayerList({ players, toggleStartingPlayer, toggleStarPlayer, removePlayer }) {
+function PlayerList({ players, toggleStartingPlayer, removePlayer }) {
   return (
     <ul>
       <For each={players()}>
@@ -14,13 +14,6 @@ function PlayerList({ players, toggleStartingPlayer, toggleStarPlayer, removePla
                 class="cursor-pointer mr-2"
               />
               <span>{player.name}</span>
-              <button
-                class={`ml-2 text-yellow-500 cursor-pointer`}
-                onClick={() => toggleStarPlayer(player.name)}
-                title="Toggle Star Player"
-              >
-                {player.isStarPlayer ? '★' : '☆'}
-              </button>
             </div>
             <button
               class="text-red-500 cursor-pointer hover:text-red-600"

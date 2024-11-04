@@ -26,7 +26,6 @@ function GameSetup(props) {
         ...players(),
         {
           name: currentPlayerName().trim(),
-          isStarPlayer: false,
           isStartingPlayer: false,
         },
       ]);
@@ -50,14 +49,6 @@ function GameSetup(props) {
         player.name === name
           ? { ...player, isStartingPlayer: !player.isStartingPlayer }
           : player
-      )
-    );
-  };
-
-  const toggleStarPlayer = (name) => {
-    setPlayers(
-      players().map((player) =>
-        player.name === name ? { ...player, isStarPlayer: !player.isStarPlayer } : player
       )
     );
   };
@@ -100,7 +91,7 @@ function GameSetup(props) {
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 mb-2">
-            Players (Select Starting Line-up and Star Players)
+            Players (Select Starting Line-up)
           </label>
           <ul>
             <For each={players()}>
@@ -114,13 +105,6 @@ function GameSetup(props) {
                       class="cursor-pointer mr-2"
                     />
                     <span>{player.name}</span>
-                    <button
-                      class={`ml-2 text-yellow-500 cursor-pointer`}
-                      onClick={() => toggleStarPlayer(player.name)}
-                      title="Toggle Star Player"
-                    >
-                      {player.isStarPlayer ? '★' : '☆'}
-                    </button>
                   </div>
                   <button
                     class="text-red-500 cursor-pointer hover:text-red-600"
@@ -132,11 +116,6 @@ function GameSetup(props) {
               )}
             </For>
           </ul>
-          <p class="mt-2 text-sm text-gray-600">
-            <span class="text-yellow-500">★</span> Star players are key players. During
-            substitutions, the app ensures that star players receive more playing time in a
-            3:2 ratio over non-star players.
-          </p>
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 mb-2">Number of Players on Field</label>

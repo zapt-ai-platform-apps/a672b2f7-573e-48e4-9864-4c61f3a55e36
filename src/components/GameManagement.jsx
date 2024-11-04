@@ -133,9 +133,6 @@ function GameManagement(props) {
                     {player.isGoalkeeper && (
                       <span class="text-yellow-500 font-semibold">(GK)</span>
                     )}
-                    {player.isStarPlayer && (
-                      <span class="text-yellow-500 ml-1">★</span>
-                    )}
                   </div>
                   <div class="flex items-center">
                     <span class="mr-4">{player.totalPlayTime} sec</span>
@@ -157,12 +154,7 @@ function GameManagement(props) {
             <For each={playerData().filter((player) => !player.isOnField)}>
               {(player) => (
                 <li class="flex justify-between items-center mb-2">
-                  <div>
-                    {player.name}
-                    {player.isStarPlayer && (
-                      <span class="text-yellow-500 ml-1">★</span>
-                    )}
-                  </div>
+                  <div>{player.name}</div>
                   <div>
                     <span>{player.totalPlayTime} sec</span>
                   </div>
@@ -194,7 +186,6 @@ function GameManagement(props) {
                 {(player) => (
                   <option value={player.name}>
                     {player.name} ({player.totalPlayTime} sec)
-                    {player.isStarPlayer && ' ★'}
                   </option>
                 )}
               </For>
@@ -219,7 +210,6 @@ function GameManagement(props) {
                 {(player) => (
                   <option value={player.name}>
                     {player.name} ({player.totalPlayTime} sec)
-                    {player.isStarPlayer && ' ★'}
                   </option>
                 )}
               </For>
@@ -239,15 +229,8 @@ function GameManagement(props) {
           <For each={playerData()}>
             {(player) => (
               <li class="flex justify-between items-center mb-2">
-                <div>
-                  {player.name}
-                  {player.isStarPlayer && (
-                    <span class="text-yellow-500 ml-1">★</span>
-                  )}
-                </div>
-                <div>
-                  {player.totalPlayTime} seconds
-                </div>
+                <div>{player.name}</div>
+                <div>{player.totalPlayTime} seconds</div>
               </li>
             )}
           </For>

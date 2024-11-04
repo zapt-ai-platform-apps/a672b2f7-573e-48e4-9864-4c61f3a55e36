@@ -17,7 +17,6 @@ function App() {
         totalPlayTime: 0,
         isOnField: player.isStartingPlayer,
         isGoalkeeper: false,
-        isStarPlayer: player.isStarPlayer,
       }))
     );
     setNumOnField(numPlayers);
