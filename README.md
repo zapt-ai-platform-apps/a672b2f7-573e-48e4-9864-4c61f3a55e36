@@ -5,7 +5,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 ## Features
 
 - **Persistent Player List**: Stores players so they are available for every game. Player lists are saved locally on your device.
-- **Star Players Management**: Mark players as star players, which persist across games. Ensures that no more than two star players are off the field at the same time during the game.
+- **Star Players Management**: Mark players as star players directly in the player list during game setup. By default, players are not star players. Clicking the star icon toggles their star status. Star players are key players who are prioritized in substitutions. The app ensures that no more than two star players are off the field at the same time during the game.
 - **Goalkeeper Management**: Allows the coach to assign and reassign the goalkeeper at any time without affecting substitutions. The goalkeeper's playing time is not counted while they are in goal.
 - **Game Setup**: Input the list of players, number of players on the field at a time, and match length.
 - **Select Starting Line-up**: Choose which players will start on the field.
@@ -28,9 +28,10 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
    - Click the "Add" button to add the player to the list.
    - Repeat this process until all players are added.
 4. **Mark Star Players**:
-   - In the player list, click the star icon next to players you want to designate as star players.
-   - Star players are saved persistently across games.
-   - You can toggle the star status by clicking the star icon.
+   - In the player list, click the outlined star icon (☆) next to players you want to designate as star players.
+   - The star icon will fill in (★) when a player is marked as a star player.
+   - Star players are key players who are prioritized in substitutions. The app ensures that no more than two star players are off the field at the same time during the game.
+   - You can toggle the star status by clicking the star icon again.
 5. **Set Number of Players on Field**:
    - Enter the number of players that can play at one time (e.g., 5 for 5-a-side).
 6. **Set Match Length**:
@@ -67,7 +68,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
    - Monitor each player's total playtime in real-time.
    - The playtime updates every second for players on the field, excluding the goalkeeper.
 9. **Viewing Analytics**:
-   - Click the "View Analytics" button to see a graphical representation of each player's playtime.
+   - Click the "View Analytics" button to see a graphical representation of each player's playing time.
    - The analytics display a bar chart comparing playtimes.
 
 ### 3. Ending the Game
@@ -91,4 +92,5 @@ No external environment variables are required for this app.
 - Player lists and star player selections are persisted between sessions using localStorage.
 - The goalkeeper's playing time is not counted while they are in goal.
 - Substitution logic ensures that no more than two star players are off the field at the same time.
-- Players are no longer shown as star players by default when added, and you can toggle the star status for any player.
+- Players are not marked as star players by default when added. You can toggle the star status for any player by clicking the star icon next to their name.
+- The star icon reflects the star player status, displaying an outlined star (☆) for non-star players and a filled star (★) for star players.
