@@ -1,3 +1,4 @@
+```jsx
 import { createSignal, createEffect, onCleanup, createMemo } from 'solid-js';
 import { For, Show } from 'solid-js/web';
 import Analytics from './Analytics';
@@ -89,10 +90,10 @@ function GameManagement(props) {
   // Timer functions
   const startTimer = () => {
     if (!isRunning()) {
-      const interval = setInterval(() => {
+      const intervalId = setInterval(() => {
         setTimeElapsed((prev) => prev + 1);
       }, 1000);
-      setTimer(interval);
+      setTimer(intervalId);
       setIsRunning(true);
     }
   };
@@ -112,8 +113,9 @@ function GameManagement(props) {
 
   // Update playtime for players on field every second
   createEffect(() => {
+    let interval;
     if (isRunning()) {
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         props.setPlayerData(
           props.playerData().map((player) => {
             if (player.isOnField && !player.isGoalkeeper) {
@@ -123,8 +125,12 @@ function GameManagement(props) {
           })
         );
       }, 1000);
-      return () => clearInterval(interval);
     }
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
   });
 
   const assignGoalkeeper = (name) => {
@@ -292,3 +298,4 @@ function GameManagement(props) {
 }
 
 export default GameManagement;
+```
