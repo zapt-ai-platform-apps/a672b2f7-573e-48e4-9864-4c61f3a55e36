@@ -1,32 +1,35 @@
-import { createSignal, onCleanup, createEffect, For, Show } from 'solid-js';
+import { createSignal, onCleanup, For, Show, createEffect } from 'solid-js';
 
 function GameManagement(props) {
   const { numOnField, matchLength, playerData, setPlayerData, onEndGame } = props;
   const [isRunning, setIsRunning] = createSignal(false);
   const [timeElapsed, setTimeElapsed] = createSignal(0);
   const [goalkeeper, setGoalkeeper] = createSignal(null);
+
   const [selectedOffPlayer, setSelectedOffPlayer] = createSignal('');
   const [selectedOnPlayer, setSelectedOnPlayer] = createSignal('');
-  const [loading, setLoading] = createSignal(false);
+
+  let timer = null;
+
+  onCleanup(() => {
+    if (timer !== null) {
+      clearInterval(timer);
+    }
+  });
 
   createEffect(() => {
-    let timerId;
     if (isRunning()) {
-      timerId = setInterval(() => {
+      timer = setInterval(() => {
         setTimeElapsed((prev) => prev + 1);
         updatePlayTimes();
       }, 1000);
+    } else {
+      if (timer !== null) {
+        clearInterval(timer);
+        timer = null;
+      }
     }
-    onCleanup(() => clearInterval(timerId));
   });
-
-  const startTimer = () => {
-    setIsRunning(true);
-  };
-
-  const pauseTimer = () => {
-    setIsRunning(false);
-  };
 
   const updatePlayTimes = () => {
     setPlayerData(
@@ -41,19 +44,24 @@ function GameManagement(props) {
 
   const makeSubstitution = () => {
     if (selectedOffPlayer() && selectedOnPlayer()) {
-      setPlayerData(
-        playerData().map((player) => {
-          if (player.name === selectedOffPlayer()) {
-            return { ...player, isOnField: false };
-          }
-          if (player.name === selectedOnPlayer()) {
-            return { ...player, isOnField: true };
-          }
-          return player;
-        })
-      );
-      setSelectedOffPlayer('');
-      setSelectedOnPlayer('');
+      const offPlayer = playerData().find((p) => p.name === selectedOffPlayer());
+      const onPlayer = playerData().find((p) => p.name === selectedOnPlayer());
+
+      if (offPlayer && onPlayer) {
+        setPlayerData(
+          playerData().map((player) => {
+            if (player.name === offPlayer.name) {
+              return { ...player, isOnField: false };
+            }
+            if (player.name === onPlayer.name) {
+              return { ...player, isOnField: true };
+            }
+            return player;
+          })
+        );
+        setSelectedOffPlayer('');
+        setSelectedOnPlayer('');
+      }
     } else {
       alert('Please select both players for substitution.');
     }
@@ -85,12 +93,16 @@ function GameManagement(props) {
   };
 
   const handleEndGame = () => {
-    pauseTimer();
+    setIsRunning(false);
     onEndGame();
   };
 
+  const toggleTimer = () => {
+    setIsRunning(!isRunning());
+  };
+
   return (
-    <div class="h-full flex flex-col">
+    <div class="min-h-screen flex flex-col">
       <h1 class="text-3xl font-bold mb-4 text-green-600">Game Management</h1>
       <div class="flex justify-between items-center mb-4">
         <div>
@@ -105,7 +117,7 @@ function GameManagement(props) {
                 ? 'bg-yellow-500 hover:bg-yellow-600'
                 : 'bg-green-500 hover:bg-green-600'
             } text-white rounded-lg cursor-pointer hover:scale-105 transition duration-300 ease-in-out`}
-            onClick={isRunning() ? pauseTimer : startTimer}
+            onClick={toggleTimer}
           >
             {isRunning() ? 'Pause' : 'Start'}
           </button>
@@ -131,6 +143,7 @@ function GameManagement(props) {
                     )}
                   </div>
                   <div class="flex items-center">
+                    <span class="mr-4">{player.totalPlayTime} sec</span>
                     <button
                       class="px-2 py-1 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 hover:scale-105 transition duration-300 ease-in-out"
                       onClick={() => assignGoalkeeper(player)}
@@ -150,6 +163,9 @@ function GameManagement(props) {
               {(player) => (
                 <li class="flex justify-between items-center mb-2">
                   <div>{player.name}</div>
+                  <div>
+                    <span>{player.totalPlayTime} sec</span>
+                  </div>
                 </li>
               )}
             </For>
@@ -164,9 +180,7 @@ function GameManagement(props) {
             <select
               class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer box-border"
               value={selectedOffPlayer()}
-              onChange={(e) => {
-                setSelectedOffPlayer(e.target.value);
-              }}
+              onInput={(e) => setSelectedOffPlayer(e.target.value)}
             >
               <option value="" disabled>
                 Select Player
@@ -177,7 +191,9 @@ function GameManagement(props) {
                   .sort((a, b) => b.totalPlayTime - a.totalPlayTime)}
               >
                 {(player) => (
-                  <option value={player.name}>{player.name}</option>
+                  <option value={player.name}>
+                    {player.name} ({player.totalPlayTime} sec)
+                  </option>
                 )}
               </For>
             </select>
@@ -187,9 +203,7 @@ function GameManagement(props) {
             <select
               class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer box-border"
               value={selectedOnPlayer()}
-              onChange={(e) => {
-                setSelectedOnPlayer(e.target.value);
-              }}
+              onInput={(e) => setSelectedOnPlayer(e.target.value)}
             >
               <option value="" disabled>
                 Select Player
@@ -200,25 +214,19 @@ function GameManagement(props) {
                   .sort((a, b) => a.totalPlayTime - b.totalPlayTime)}
               >
                 {(player) => (
-                  <option value={player.name}>{player.name}</option>
+                  <option value={player.name}>
+                    {player.name} ({player.totalPlayTime} sec)
+                  </option>
                 )}
               </For>
             </select>
           </div>
         </div>
         <button
-          class={`mt-4 w-full py-2 bg-purple-500 text-white rounded-lg cursor-pointer hover:bg-purple-600 hover:scale-105 transition duration-300 ease-in-out ${
-            loading() ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
-          onClick={() => {
-            if (!loading()) {
-              setLoading(true);
-              makeSubstitution();
-              setLoading(false);
-            }
-          }}
+          class="mt-4 w-full py-2 bg-purple-500 text-white rounded-lg cursor-pointer hover:bg-purple-600 hover:scale-105 transition duration-300 ease-in-out"
+          onClick={makeSubstitution}
         >
-          {loading() ? 'Processing...' : 'Confirm Substitution'}
+          Confirm Substitution
         </button>
       </div>
     </div>

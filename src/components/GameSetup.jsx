@@ -68,7 +68,7 @@ function GameSetup(props) {
   };
 
   return (
-    <div class="h-full flex flex-col items-center justify-center">
+    <div class="min-h-screen flex flex-col items-center justify-center">
       <h1 class="text-3xl font-bold mb-4 text-green-600">Football Subs</h1>
       <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 class="text-2xl font-bold mb-4 text-green-600">Game Setup</h2>

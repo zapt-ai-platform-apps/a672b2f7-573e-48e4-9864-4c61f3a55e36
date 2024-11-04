@@ -30,7 +30,7 @@ function App() {
   };
 
   return (
-    <div class="min-h-screen flex flex-col bg-gradient-to-br from-green-100 to-blue-100 p-4 text-gray-800">
+    <div class="min-h-screen bg-gradient-to-br from-green-100 to-blue-100 p-4 text-gray-800">
       <Show
         when={!gameStarted()}
         fallback={
