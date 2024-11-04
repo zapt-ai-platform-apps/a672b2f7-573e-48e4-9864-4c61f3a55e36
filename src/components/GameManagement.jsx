@@ -5,7 +5,6 @@ function GameManagement(props) {
   const [isRunning, setIsRunning] = createSignal(false);
   const [timeElapsed, setTimeElapsed] = createSignal(0);
 
-  const [selectedOffPlayer, setSelectedOffPlayer] = createSignal('');
   const [selectedOnPlayer, setSelectedOnPlayer] = createSignal('');
 
   const [onFieldPlayers, setOnFieldPlayers] = createSignal([]);
