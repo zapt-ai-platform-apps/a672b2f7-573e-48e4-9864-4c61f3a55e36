@@ -13,7 +13,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 - **Real-Time Tracking**: Players' playing times update every second during the game, providing accurate and up-to-date information.
 - **Player Ordering**: Players are ordered by their total playing time, with those who have played the least time at the top.
 - **Pause Functionality**: Ability to pause the game clock during stoppages like half-time.
-- **Responsive Design**: The app is responsive and user-friendly on all screen sizes. The layout has been improved for mobile devices, especially the positioning of the "Pause" and "End Game" buttons to prevent accidental clicks.
+- **Responsive Design**: The app is responsive and user-friendly on all screen sizes. The layout has been improved for mobile devices, especially the positioning and spacing of the "Pause" and "End Game" buttons to prevent accidental clicks.
 - **Confirmation Before Ending Game**: When the coach clicks the "End Game" button, the app asks for confirmation to prevent accidental termination of the game.
 
 ## User Journeys
@@ -75,7 +75,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
    - Click the "Pause" button to pause the game clock during stoppages like half-time.
    - Click "Start" again to resume the game.
    - **Improved Layout on Mobile**:
-     - The "Pause" and "End Game" buttons are better spaced, especially on mobile devices, to prevent accidental clicks.
+     - The "Pause" and "End Game" buttons are now better spaced and vertically stacked on mobile devices to prevent accidental clicks.
 8. **Ending the Game**:
    - Click the "End Game" button when you are ready to finish the game.
    - **Confirmation Prompt**:
@@ -114,4 +114,4 @@ These variables should be defined in a `.env` file at the root of your project.
 - **Important**: Ensure that you select exactly the number of starting players required before starting the game. If you do not select the starting lineup or have insufficient players, the "Start Game" button will alert you accordingly.
 - **Adding Players During Game**: Coaches can add new players even after the game has started. New players are assigned the same total playtime as the player with the least playtime who is not the current goalkeeper at the moment they are added.
 - **Confirmation Before Ending Game**: The app now asks for confirmation when you click the "End Game" button to prevent accidental termination of the game.
-- **Improved Mobile Layout**: The layout has been optimized for mobile devices, especially the positioning and spacing of the "Pause" and "End Game" buttons to ensure they are not too close together.
+- **Improved Mobile Layout**: The layout has been optimized for mobile devices. The "Pause" and "End Game" buttons are stacked vertically and have increased spacing on mobile devices to ensure they are not too close together, preventing accidental clicks.

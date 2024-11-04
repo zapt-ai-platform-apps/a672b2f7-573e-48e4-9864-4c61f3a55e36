@@ -226,13 +226,13 @@ function GameManagement(props) {
   return (
     <div class="h-full flex flex-col text-gray-800">
       <h1 class="text-3xl font-bold mb-4 text-green-600">Game Management</h1>
-      <div class="flex justify-between items-center mb-4">
+      <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
         <div>
           <span class="font-semibold">Time Elapsed: </span>
           {Math.floor(timeElapsed() / 60)}:
           {('0' + (timeElapsed() % 60)).slice(-2)}
         </div>
-        <div class="flex space-x-2 md:space-x-4 mt-2 md:mt-0">
+        <div class="flex flex-col space-y-2 md:flex-row md:space-x-4 md:space-y-0 mt-2 md:mt-0">
           <button
             class={`px-4 py-2 cursor-pointer ${
               isRunning()
