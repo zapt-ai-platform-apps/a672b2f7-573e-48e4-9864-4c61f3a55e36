@@ -113,9 +113,7 @@ function GameSetup(props) {
                     />
                     <span>{player.name}</span>
                     <button
-                      class={`ml-2 cursor-pointer ${
-                        player.isStarPlayer ? 'text-yellow-500' : 'text-gray-500'
-                      }`}
+                      class={`ml-2 text-yellow-500 cursor-pointer`}
                       onClick={() => toggleStarPlayer(player.name)}
                       title="Toggle Star Player"
                     >
@@ -132,12 +130,8 @@ function GameSetup(props) {
               )}
             </For>
           </ul>
-        </div>
-        <div class="mt-4">
-          <h3 class="text-lg font-semibold text-green-600">What is a Star Player?</h3>
-          <p class="text-gray-700">
-            Star players are key players who are prioritized in substitutions.
-            The app ensures that no more than two star players are off the field at the same time during the game.
+          <p class="mt-2 text-sm text-gray-600">
+            <span class="text-yellow-500">★</span> Star players are key players. During substitutions, the app ensures that no more than two star players are off the field at the same time.
           </p>
         </div>
         <div class="mb-4">
