@@ -4,7 +4,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 
 ## Features
 
-- **Landing Page**: A welcoming landing page that introduces the app and its purpose, with a "Get Started" button to begin setting up a game.
+- **Improved Landing Page Design**: A visually engaging landing page featuring dynamic images and a modern layout to welcome users to the app.
 - **Persistent Player List**: Stores players so they are available for every game. Player lists are saved locally on your device.
 - **Add Players During Game**: Allows the coach to add new players even after the game has started. New players are given the same total current playtime as the player with the least playtime who is not the current goalkeeper when they are added.
 - **Goalkeeper Management with Confirmation**: Allows the coach to assign and reassign the goalkeeper at any time without affecting substitutions. When the goalkeeper is changed, the app asks for confirmation before making the change. The previous goalkeeper's total playtime is set to match the player with the least playtime at that moment when they become an outfield player. The goalkeeper's playing time is not counted while they are in goal.
@@ -23,7 +23,8 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 
 1. **Open the App**: Launch the Football Subs app on your device.
 2. **Landing Page**:
-   - You are greeted with a welcoming landing page featuring the app's logo and a brief description.
+   - You are greeted with a visually engaging landing page featuring dynamic images and a modern layout.
+   - The app's logo is prominently displayed.
    - Click the "Get Started" button to proceed to the game setup.
 
 ### 2. Setting Up the Game
@@ -129,3 +130,4 @@ These variables should be defined in a `.env` file at the root of your project.
 - **Adding Players During Game**: Coaches can add new players even after the game has started. New players are assigned the same total playtime as the player with the least playtime who is not the current goalkeeper at the moment they are added.
 - **Confirmation Before Ending Game**: The app asks for confirmation when you click the "End Game" button to prevent accidental termination of the game.
 - **Improved Mobile Layout**: The layout has been optimized for mobile devices, especially the positioning and spacing of the "Pause" and "End Game" buttons to ensure they are not too close together.
+- **Improved Design**: The landing page now features dynamic images and a modern design to provide a welcoming and engaging experience for users.
