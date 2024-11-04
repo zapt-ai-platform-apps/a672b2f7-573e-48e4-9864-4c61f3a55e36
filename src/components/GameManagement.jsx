@@ -180,20 +180,14 @@ function GameManagement(props) {
             <select
               class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer box-border"
               value={selectedOffPlayer()}
-              onInput={(e) => setSelectedOffPlayer(e.target.value)}
+              onChange={(e) => setSelectedOffPlayer(e.target.value)}
             >
               <option value="" disabled>
                 Select Player
               </option>
-              <For
-                each={playerData()
-                  .filter((player) => player.isOnField && !player.isGoalkeeper)
-                  .sort((a, b) => b.totalPlayTime - a.totalPlayTime)}
-              >
+              <For each={playerData().filter((player) => player.isOnField && !player.isGoalkeeper)}>
                 {(player) => (
-                  <option value={player.name}>
-                    {player.name} ({player.totalPlayTime} sec)
-                  </option>
+                  <option value={player.name}>{player.name}</option>
                 )}
               </For>
             </select>
@@ -203,20 +197,14 @@ function GameManagement(props) {
             <select
               class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer box-border"
               value={selectedOnPlayer()}
-              onInput={(e) => setSelectedOnPlayer(e.target.value)}
+              onChange={(e) => setSelectedOnPlayer(e.target.value)}
             >
               <option value="" disabled>
                 Select Player
               </option>
-              <For
-                each={playerData()
-                  .filter((player) => !player.isOnField)
-                  .sort((a, b) => a.totalPlayTime - b.totalPlayTime)}
-              >
+              <For each={playerData().filter((player) => !player.isOnField)}>
                 {(player) => (
-                  <option value={player.name}>
-                    {player.name} ({player.totalPlayTime} sec)
-                  </option>
+                  <option value={player.name}>{player.name}</option>
                 )}
               </For>
             </select>
