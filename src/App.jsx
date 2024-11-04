@@ -1,12 +1,12 @@
-import { createSignal } from 'solid-js';
-import { Show } from 'solid-js/web';
+import { Routes, Route } from '@solidjs/router';
+import LandingPage from './components/LandingPage';
 import GameSetup from './components/GameSetup';
 import GameManagement from './components/GameManagement';
+import { createSignal } from 'solid-js';
 
 function App() {
-  const [gameStarted, setGameStarted] = createSignal(false);
-  const [numOnField, setNumOnField] = createSignal(5);
   const [playerData, setPlayerData] = createSignal([]);
+  const [numOnField, setNumOnField] = createSignal(5);
   const [goalkeeper, setGoalkeeper] = createSignal(null);
 
   const handleStartGame = (players, numPlayers, gk) => {
@@ -21,19 +21,24 @@ function App() {
     );
     setNumOnField(numPlayers);
     setGoalkeeper(gk);
-    setGameStarted(true);
   };
 
-  // Function to reset the game
   const resetGame = () => {
-    setGameStarted(false);
+    setPlayerData([]);
+    setNumOnField(5);
+    setGoalkeeper(null);
   };
 
   return (
-    <div class="min-h-screen bg-gradient-to-br from-green-100 to-blue-100 p-4 text-gray-800">
-      <Show
-        when={!gameStarted()}
-        fallback={
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route
+        path="/setup"
+        element={<GameSetup onStartGame={handleStartGame} />}
+      />
+      <Route
+        path="/manage"
+        element={
           <GameManagement
             numOnField={numOnField}
             playerData={playerData}
@@ -43,10 +48,8 @@ function App() {
             onEndGame={resetGame}
           />
         }
-      >
-        <GameSetup onStartGame={handleStartGame} />
-      </Show>
-    </div>
+      />
+    </Routes>
   );
 }
 

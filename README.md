@@ -4,6 +4,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 
 ## Features
 
+- **Landing Page**: A welcoming landing page that introduces the app and its purpose, with a "Get Started" button to begin setting up a game.
 - **Persistent Player List**: Stores players so they are available for every game. Player lists are saved locally on your device.
 - **Add Players During Game**: Allows the coach to add new players even after the game has started. New players are given the same total current playtime as the player with the least playtime who is not the current goalkeeper when they are added.
 - **Goalkeeper Management with Confirmation**: Allows the coach to assign and reassign the goalkeeper at any time without affecting substitutions. When the goalkeeper is changed, the app asks for confirmation before making the change. The previous goalkeeper's total playtime is set to match the player with the least playtime at that moment when they become an outfield player. The goalkeeper's playing time is not counted while they are in goal.
@@ -18,9 +19,16 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 
 ## User Journeys
 
-### 1. Setting Up the App
+### 1. Accessing the App
 
 1. **Open the App**: Launch the Football Subs app on your device.
+2. **Landing Page**:
+   - You are greeted with a welcoming landing page featuring the app's logo and a brief description.
+   - Click the "Get Started" button to proceed to the game setup.
+
+### 2. Setting Up the Game
+
+1. **Game Setup Screen**: After clicking "Get Started," you are taken to the Game Setup screen.
 2. **Player List Persistence**:
    - The app loads the saved list of players from previous sessions.
    - If no players have been added yet, you can add new players.
@@ -39,7 +47,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
    - Click the "Start Game" button.
    - If the number of players added is less than the number of players on the field, or if you haven't selected enough starting players, you'll be prompted accordingly.
 
-### 2. Managing the Game
+### 3. Managing the Game
 
 1. **Game Management Screen**: Once the game starts, you're taken to the Game Management screen.
 2. **Starting the Timer**:
@@ -88,7 +96,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
      - Click "Yes" to confirm and end the game.
      - Click "No" or outside the dialog to cancel and continue the game.
 
-### 3. Reviewing Player Playtimes
+### 4. Reviewing Player Playtimes
 
 - After ending the game, review each player's playtime to ensure that every player received equitable playtime.
 
