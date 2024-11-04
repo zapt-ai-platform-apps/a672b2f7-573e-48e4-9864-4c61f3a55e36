@@ -1,4 +1,4 @@
-import { createSignal, createEffect, onMount, onCleanup, createMemo } from 'solid-js';
+import { createSignal, createEffect, onCleanup, createMemo } from 'solid-js';
 import { For, Show } from 'solid-js/web';
 import Analytics from './Analytics';
 
@@ -169,7 +169,9 @@ function GameManagement(props) {
           <div class="md:w-1/2">
             <div class="bg-white p-4 rounded-lg shadow-lg mb-4">
               <h2 class="text-xl font-bold mb-2 text-green-600">Game Clock</h2>
-              <p class="text-4xl font-mono mb-4">{Math.floor(timeElapsed() / 60)}:{('0' + (timeElapsed() % 60)).slice(-2)}</p>
+              <p class="text-4xl font-mono mb-4">
+                {Math.floor(timeElapsed() / 60)}:{('0' + (timeElapsed() % 60)).slice(-2)}
+              </p>
               <div class="flex space-x-4">
                 <button
                   class="px-4 py-2 bg-green-500 text-white rounded-lg cursor-pointer hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105"

@@ -48,8 +48,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 2. **Starting the Timer**:
    - Click the "Start" button to begin the game clock.
 3. **Assigning the Goalkeeper**:
-   - Click the "Assign Goalkeeper" button.
-   - Select the player to be the goalkeeper.
+   - Click the "Assign GK" or "Change GK" button next to a player's name to assign or reassign the goalkeeper.
    - The goalkeeper's playtime will not be counted while they are in goal.
 4. **Viewing Next Substitutions**:
    - The app displays the next player to be substituted off and the next player to come on.
