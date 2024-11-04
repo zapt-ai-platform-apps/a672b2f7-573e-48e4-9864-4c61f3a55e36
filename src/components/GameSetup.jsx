@@ -1,11 +1,12 @@
 import { createSignal, createEffect, onMount } from 'solid-js';
-import { For } from 'solid-js/web';
+import { For, useNavigate } from '@solidjs/router';
 
 function GameSetup(props) {
   const [players, setPlayers] = createSignal([]);
   const [currentPlayerName, setCurrentPlayerName] = createSignal('');
   const [numPlayersOnField, setNumPlayersOnField] = createSignal(5);
   const [goalkeeper, setGoalkeeper] = createSignal('');
+  const navigate = useNavigate();
 
   // Load players from localStorage on mount
   onMount(() => {
@@ -74,10 +75,11 @@ function GameSetup(props) {
       return;
     }
     props.onStartGame(players(), numPlayersOnField(), goalkeeper());
+    navigate('/manage');
   };
 
   return (
-    <div class="h-full flex flex-col items-center justify-center">
+    <div class="h-full flex flex-col items-center justify-center text-gray-800">
       <h1 class="text-3xl font-bold mb-4 text-green-600">Football Subs</h1>
       <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 class="text-2xl font-bold mb-4 text-green-600">Game Setup</h2>
