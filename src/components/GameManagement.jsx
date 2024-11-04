@@ -28,6 +28,8 @@ function GameManagement(props) {
 
   const [showGKModal, setShowGKModal] = createSignal(false);
 
+  const [newPlayerName, setNewPlayerName] = createSignal('');
+
   let timer = null;
 
   onMount(() => {
@@ -78,7 +80,7 @@ function GameManagement(props) {
     setOffFieldPlayers(
       playerData()
         .filter((player) => !player.isOnField)
-        .sort((a, b) => b.totalPlayTime - a.totalPlayTime)
+        .sort((a, b) => a.totalPlayTime - b.totalPlayTime)
     );
   };
 
@@ -160,6 +162,24 @@ function GameManagement(props) {
     }
   });
 
+  const addNewPlayer = () => {
+    if (newPlayerName().trim() !== '') {
+      // Find the minimum totalPlayTime among current players
+      const minPlayTime = Math.min(...playerData().map((p) => p.totalPlayTime));
+      setPlayerData([
+        ...playerData(),
+        {
+          name: newPlayerName().trim(),
+          totalPlayTime: minPlayTime,
+          isOnField: false,
+          isGoalkeeper: false,
+        },
+      ]);
+      setNewPlayerName('');
+      updatePlayerLists();
+    }
+  };
+
   return (
     <div class="h-full flex flex-col">
       <h1 class="text-3xl font-bold mb-4 text-green-600">Game Management</h1>
@@ -196,8 +216,7 @@ function GameManagement(props) {
               {(player) => (
                 <li
                   class={`flex justify-between items-center mb-2 cursor-pointer ${
-                    selectedSubOffPlayer() &&
-                    selectedSubOffPlayer().name === player.name
+                    selectedSubOffPlayer() && selectedSubOffPlayer().name === player.name
                       ? 'bg-blue-200'
                       : ''
                   }`}
@@ -240,21 +259,25 @@ function GameManagement(props) {
         <div class="flex flex-col md:flex-row items-start md:items-center">
           <div class="md:w-1/2 md:pr-4">
             <label class="block font-semibold mb-2">Player to Sub Off:</label>
-            <div class="p-2 border border-gray-300 rounded-lg">
+            <div class="p-2 border border-gray-300 rounded-lg box-border">
               {selectedSubOffPlayer()
                 ? selectedSubOffPlayer().name
                 : 'Select a player'}
             </div>
           </div>
           <div class="md:w-1/2 md:pl-4 mt-4 md:mt-0">
-            <label class="block font-semibold mb-2">Select Player to Sub On:</label>
+            <label class="block font-semibold mb-2">
+              Select Player to Sub On:
+            </label>
             <select
               class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer box-border"
               value={selectedOnPlayer()}
               onChange={(e) => setSelectedOnPlayer(e.target.value)}
             >
               <For each={offFieldPlayers()}>
-                {(player) => <option value={player.name}>{player.name}</option>}
+                {(player) => (
+                  <option value={player.name}>{player.name}</option>
+                )}
               </For>
             </select>
           </div>
@@ -305,6 +328,24 @@ function GameManagement(props) {
             </div>
           </div>
         </Show>
+      </div>
+      <div class="my-4">
+        <h2 class="text-2xl font-bold mb-2 text-green-600">Add New Player</h2>
+        <div class="flex">
+          <input
+            type="text"
+            class="flex-1 p-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer box-border"
+            placeholder="Player Name"
+            value={newPlayerName()}
+            onInput={(e) => setNewPlayerName(e.target.value)}
+          />
+          <button
+            class="p-2 bg-green-500 text-white rounded-r-lg cursor-pointer hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105"
+            onClick={addNewPlayer}
+          >
+            Add
+          </button>
+        </div>
       </div>
     </div>
   );
