@@ -5,8 +5,8 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 ## Features
 
 - **Persistent Player List**: Stores players so they are available for every game. Player lists are saved locally on your device.
-- **Add Players During Game**: Allows the coach to add new players even after the game has started. New players are given the same initial playtime as the player with the least playtime who is not the current goalkeeper when they are added.
-- **Goalkeeper Management**: Allows the coach to assign and reassign the goalkeeper at any time without affecting substitutions. The goalkeeper's playing time is not counted while they are in goal.
+- **Add Players During Game**: Allows the coach to add new players even after the game has started. New players are given the same total current playtime as the player with the least playtime who is not the current goalkeeper when they are added.
+- **Goalkeeper Management**: Allows the coach to assign and reassign the goalkeeper at any time without affecting substitutions. When the goalkeeper is changed and the previous goalkeeper becomes an outfield player, their total playtime is set to match the player with the least playtime at that moment. The goalkeeper's playing time is not counted while they are in goal.
 - **Game Setup**: Input the list of players and number of players on the field at a time.
 - **Select Starting Line-up**: Choose which players will start on the field by checking the box next to their name.
 - **Substitution Management**: Coaches can manage substitutions seamlessly, with the substitution interface always available. Players off the field are ordered by ascending total playtime, helping coaches identify who needs more time on the field.
@@ -68,6 +68,8 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 6. **Changing the Goalkeeper (Optional)**:
    - Click the "Change Goalkeeper" button.
    - Select a different player to assign as the goalkeeper.
+   - **Previous Goalkeeper's Playtime Adjustment**:
+     - When the goalkeeper is changed and the previous goalkeeper becomes an outfield player, their total playtime is set to match the player with the least playtime at that moment.
 7. **Pause/Resume the Timer**:
    - Click the "Pause" button to pause the game clock during stoppages like half-time.
    - Click "Start" again to resume the game.
@@ -98,6 +100,7 @@ These variables should be defined in a `.env` file at the root of your project.
 - No authentication is required to use the app.
 - Player lists are persisted between sessions using localStorage.
 - The goalkeeper's playing time is not counted while they are in goal.
+- When the goalkeeper is changed and the previous goalkeeper becomes an outfield player, their total playtime is set to match the player with the least playtime at that moment.
 - Substitution logic allows coaches to select which players to substitute without disruptions.
 - The substitution interface is always visible during the match, allowing for seamless substitutions.
 - Players' playing times update every second, providing real-time data for decision-making.

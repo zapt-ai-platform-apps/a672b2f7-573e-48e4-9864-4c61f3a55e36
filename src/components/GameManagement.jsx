@@ -128,6 +128,9 @@ function GameManagement(props) {
   };
 
   const confirmGoalkeeper = (playerName) => {
+    const previousGoalkeeperName = goalkeeper();
+
+    // Update the player data to set the new goalkeeper
     setPlayerData(
       playerData().map((player) => ({
         ...player,
@@ -136,6 +139,31 @@ function GameManagement(props) {
     );
     setGoalkeeper(playerName);
     setShowGKModal(false);
+
+    // Check if the previous goalkeeper is now an outfield player
+    if (previousGoalkeeperName && previousGoalkeeperName !== playerName) {
+      // The previous goalkeeper is now an outfield player
+      // Need to update their totalPlayTime
+
+      // Find the minimum totalPlayTime among current players who are not the goalkeeper
+      const nonGKPlayers = playerData().filter(
+        (p) => p.name !== previousGoalkeeperName && !p.isGoalkeeper
+      );
+      const minPlayTime = Math.min(...nonGKPlayers.map((p) => p.totalPlayTime));
+
+      // Update the previous goalkeeper's totalPlayTime
+      setPlayerData(
+        playerData().map((player) => {
+          if (player.name === previousGoalkeeperName) {
+            return {
+              ...player,
+              totalPlayTime: minPlayTime,
+            };
+          }
+          return player;
+        })
+      );
+    }
     updatePlayerLists();
   };
 
