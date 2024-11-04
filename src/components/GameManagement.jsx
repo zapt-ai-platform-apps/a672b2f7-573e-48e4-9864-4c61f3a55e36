@@ -7,15 +7,11 @@ function GameManagement(props) {
   const [timeElapsed, setTimeElapsed] = createSignal(0);
   const [goalkeeper, setGoalkeeper] = createSignal(null);
   const [showAnalytics, setShowAnalytics] = createSignal(false);
-  const [subQueue, setSubQueue] = createSignal([]);
-  const [nextOff, setNextOff] = createSignal(null);
-  const [nextOn, setNextOn] = createSignal(null);
+
+  const [selectedOffPlayer, setSelectedOffPlayer] = createSignal(null);
+  const [selectedOnPlayer, setSelectedOnPlayer] = createSignal(null);
 
   let timer;
-
-  onMount(() => {
-    initializeSubQueue();
-  });
 
   onCleanup(() => {
     clearInterval(timer);
@@ -47,34 +43,23 @@ function GameManagement(props) {
     );
   };
 
-  const initializeSubQueue = () => {
-    const offQueue = playerData()
-      .filter((player) => player.isOnField)
-      .sort((a, b) => (a.isStarPlayer === b.isStarPlayer ? 0 : a.isStarPlayer ? -1 : 1));
-    const onQueue = playerData()
-      .filter((player) => !player.isOnField)
-      .sort((a, b) => (a.isStarPlayer === b.isStarPlayer ? 0 : a.isStarPlayer ? -1 : 1));
-    setSubQueue({ offQueue, onQueue });
-    setNextOff(offQueue[0] || null);
-    setNextOn(onQueue[0] || null);
-  };
-
   const makeSubstitution = () => {
-    if (nextOff() && nextOn()) {
+    if (selectedOffPlayer() && selectedOnPlayer()) {
       setPlayerData(
         playerData().map((player) => {
-          if (player.name === nextOff().name) {
+          if (player.name === selectedOffPlayer().name) {
             return { ...player, isOnField: false };
           }
-          if (player.name === nextOn().name) {
+          if (player.name === selectedOnPlayer().name) {
             return { ...player, isOnField: true };
           }
           return player;
         })
       );
-      initializeSubQueue();
+      setSelectedOffPlayer(null);
+      setSelectedOnPlayer(null);
     } else {
-      alert('No substitutions available.');
+      alert('Please select both players for substitution.');
     }
   };
 
@@ -123,13 +108,13 @@ function GameManagement(props) {
               isRunning()
                 ? 'bg-yellow-500 hover:bg-yellow-600'
                 : 'bg-green-500 hover:bg-green-600'
-            } text-white rounded-lg cursor-pointer transition duration-300 ease-in-out transform hover:scale-105`}
+            } text-white rounded-lg cursor-pointer hover:scale-105 transition duration-300 ease-in-out`}
             onClick={isRunning() ? pauseTimer : startTimer}
           >
             {isRunning() ? 'Pause' : 'Start'}
           </button>
           <button
-            class="px-4 py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105"
+            class="px-4 py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 hover:scale-105 transition duration-300 ease-in-out"
             onClick={handleEndGame}
           >
             End Game
@@ -152,9 +137,10 @@ function GameManagement(props) {
                       <span class="text-yellow-500 ml-1">★</span>
                     )}
                   </div>
-                  <div>
+                  <div class="flex items-center">
+                    <span class="mr-4">{player.totalPlayTime} sec</span>
                     <button
-                      class="px-2 py-1 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 mr-2"
+                      class="px-2 py-1 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 hover:scale-105 transition duration-300 ease-in-out"
                       onClick={() => assignGoalkeeper(player)}
                     >
                       {player.isGoalkeeper ? 'Remove GK' : 'Assign GK'}
@@ -177,6 +163,9 @@ function GameManagement(props) {
                       <span class="text-yellow-500 ml-1">★</span>
                     )}
                   </div>
+                  <div>
+                    <span>{player.totalPlayTime} sec</span>
+                  </div>
                 </li>
               )}
             </For>
@@ -184,46 +173,64 @@ function GameManagement(props) {
         </div>
       </div>
       <div class="my-4">
-        <h2 class="text-2xl font-bold mb-2 text-green-600">Next Substitution</h2>
-        <div class="flex flex-col md:flex-row items-center">
+        <h2 class="text-2xl font-bold mb-2 text-green-600">Substitution</h2>
+        <div class="flex flex-col md:flex-row items-start md:items-center">
           <div class="md:w-1/2 md:pr-4">
-            <div class="bg-white p-4 rounded-lg shadow-lg">
-              <h3 class="font-semibold mb-2">Player to Come Off:</h3>
-              <Show
-                when={nextOff()}
-                fallback={<p class="text-gray-500">No available substitutions.</p>}
-              >
-                <p class="text-lg">
-                  {nextOff()?.name}{' '}
-                  {nextOff()?.isStarPlayer && (
-                    <span class="text-yellow-500">★</span>
-                  )}
-                </p>
-              </Show>
-            </div>
+            <label class="block font-semibold mb-2">Select Player to Sub Off:</label>
+            <select
+              class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer box-border"
+              value={selectedOffPlayer() ? selectedOffPlayer().name : ''}
+              onChange={(e) => {
+                const player = playerData().find(
+                  (p) => p.name === e.target.value
+                );
+                setSelectedOffPlayer(player);
+              }}
+            >
+              <option value="" disabled>Select Player</option>
+              <For each={playerData()
+                .filter((player) => player.isOnField && !player.isGoalkeeper)
+                .sort((a, b) => b.totalPlayTime - a.totalPlayTime)}>
+                {(player) => (
+                  <option value={player.name}>
+                    {player.name} ({player.totalPlayTime} sec)
+                    {player.isStarPlayer && ' ★'}
+                  </option>
+                )}
+              </For>
+            </select>
           </div>
           <div class="md:w-1/2 md:pl-4 mt-4 md:mt-0">
-            <div class="bg-white p-4 rounded-lg shadow-lg">
-              <h3 class="font-semibold mb-2">Player to Come On:</h3>
-              <Show
-                when={nextOn()}
-                fallback={<p class="text-gray-500">No available substitutions.</p>}
-              >
-                <p class="text-lg">
-                  {nextOn()?.name}{' '}
-                  {nextOn()?.isStarPlayer && (
-                    <span class="text-yellow-500">★</span>
-                  )}
-                </p>
-              </Show>
-            </div>
+            <label class="block font-semibold mb-2">Select Player to Sub On:</label>
+            <select
+              class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer box-border"
+              value={selectedOnPlayer() ? selectedOnPlayer().name : ''}
+              onChange={(e) => {
+                const player = playerData().find(
+                  (p) => p.name === e.target.value
+                );
+                setSelectedOnPlayer(player);
+              }}
+            >
+              <option value="" disabled>Select Player</option>
+              <For each={playerData()
+                .filter((player) => !player.isOnField)
+                .sort((a, b) => a.totalPlayTime - b.totalPlayTime)}>
+                {(player) => (
+                  <option value={player.name}>
+                    {player.name} ({player.totalPlayTime} sec)
+                    {player.isStarPlayer && ' ★'}
+                  </option>
+                )}
+              </For>
+            </select>
           </div>
         </div>
         <button
-          class="mt-4 w-full py-2 bg-purple-500 text-white rounded-lg cursor-pointer hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105"
+          class="mt-4 w-full py-2 bg-purple-500 text-white rounded-lg cursor-pointer hover:bg-purple-600 hover:scale-105 transition duration-300 ease-in-out"
           onClick={makeSubstitution}
         >
-          Substitute
+          Confirm Substitution
         </button>
       </div>
       <div class="my-4">
@@ -246,7 +253,7 @@ function GameManagement(props) {
           </For>
         </ul>
         <button
-          class="mt-4 w-full py-2 bg-indigo-500 text-white rounded-lg cursor-pointer hover:bg-indigo-600 transition duration-300 ease-in-out transform hover:scale-105"
+          class="mt-4 w-full py-2 bg-indigo-500 text-white rounded-lg cursor-pointer hover:bg-indigo-600 hover:scale-105 transition duration-300 ease-in-out"
           onClick={() => setShowAnalytics(true)}
         >
           View Analytics

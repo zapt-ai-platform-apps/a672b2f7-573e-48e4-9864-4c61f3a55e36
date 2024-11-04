@@ -1,6 +1,6 @@
 # Football Subs
 
-Football Subs is an app designed to help coaches manage substitutions for kids' football teams. It ensures that each player gets a fair amount of game time while keeping all players engaged and involved. The app prioritizes star players to give them more playing time in a 3:2 ratio over non-star players.
+Football Subs is an app designed to help coaches manage substitutions for kids' football teams. It ensures that each player gets a fair amount of game time while keeping all players engaged and involved. The app allows coaches to monitor player playtimes and make informed substitution decisions.
 
 ## Features
 
@@ -9,8 +9,8 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 - **Goalkeeper Management**: Allows the coach to assign and reassign the goalkeeper at any time without affecting substitutions. The goalkeeper's playing time is not counted while they are in goal.
 - **Game Setup**: Input the list of players, number of players on the field at a time, and match length.
 - **Select Starting Line-up**: Choose which players will start on the field by checking the box next to their name.
-- **Substitution Management**: Advises when to make substitutions and who to substitute while respecting star player rules and playtime ratios.
-- **Next Substitutions Display**: Clearly shows which player is next to come off and who is next to come on.
+- **Substitution Management**: Coaches can view total playtimes and select which players to substitute, making informed decisions to ensure equitable playtime.
+- **Player Playtime Display**: Displays each player's total playtime, allowing coaches to make equitable substitution decisions.
 - **Real-Time Tracking**: Records how long each player has played during the match, excluding the goalkeeper's time in goal.
 - **Analytics**: Provides visual analytics on each player's playing time.
 - **Pause Functionality**: Ability to pause the game clock during stoppages like half-time.
@@ -48,25 +48,26 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 2. **Starting the Timer**:
    - Click the "Start" button to begin the game clock.
 3. **Assigning the Goalkeeper**:
-   - Click the "Assign GK" or "Change GK" button next to a player's name to assign or reassign the goalkeeper.
+   - Click the "Assign GK" or "Remove GK" button next to a player's name to assign or unassign the goalkeeper.
    - The goalkeeper's playtime will not be counted while they are in goal.
-4. **Viewing Next Substitutions**:
-   - The app displays the next player to be substituted off and the next player to come on.
-   - The substitution logic ensures that star players get more playing time in a 3:2 ratio over non-star players.
-   - Non-star players are substituted off first to maximize star players' time on the field.
+4. **Viewing Player Play Times**:
+   - The app displays each player's total playing time in seconds.
+   - Players currently on the field have their playtime increment every second (excluding the goalkeeper).
 5. **Making Substitutions**:
    - Click the "Substitute" button when you want to make a substitution.
-   - The app suggests the next player to sub out and the player to sub in, ensuring the 3:2 playtime ratio and respecting the star player constraint.
-   - Substitutions do not affect the goalkeeper assignment.
-6. **Highlighting Next Player to Come On**:
-   - The player next to come on is highlighted in the substitution queue for easy identification.
-7. **Pausing the Timer**:
+   - A substitution interface appears, showing:
+     - **Players on Field**: A list of players currently on the field, along with their total playtimes.
+     - **Players Off Field**: A list of players currently off the field, along with their total playtimes.
+   - The players are ordered by total playtime, with the player who has played the most at the top.
+   - **Selecting Players**:
+     - Choose the player you wish to substitute off from the "Players on Field" list.
+     - Choose the player you wish to substitute on from the "Players Off Field" list.
+     - The app suggests substituting off the player with the most playtime and substituting on the player with the least playtime, but you can select any player.
+   - Click the "Confirm Substitution" button to make the substitution.
+6. **Pause/Resume the Timer**:
    - Click the "Pause" button to pause the game clock during stoppages like half-time.
    - Click "Start" again to resume the game.
-8. **Viewing Player Data**:
-   - Monitor each player's total playtime in real-time.
-   - The playtime updates every second for players on the field, excluding the goalkeeper.
-9. **Viewing Analytics**:
+7. **Viewing Analytics**:
    - Click the "View Analytics" button to see a graphical representation of each player's playing time.
    - The analytics display a bar chart comparing playtimes.
 
@@ -74,7 +75,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 
 - **Game Completion**:
   - Once the match duration is reached, you can stop making substitutions.
-  - Use the analytics to review and ensure that each player received appropriate playtime according to the 3:2 ratio.
+  - Use the analytics to review and ensure that each player received appropriate playtime.
 
 ## External APIs and Services
 
@@ -90,8 +91,6 @@ No external environment variables are required for this app.
 - No authentication is required to use the app.
 - Player lists and star player selections are persisted between sessions using localStorage.
 - The goalkeeper's playing time is not counted while they are in goal.
-- Substitution logic ensures that star players receive more playing time in a 3:2 ratio over non-star players.
-- Non-star players are substituted off first to maximize the time star players spend on the field.
-- When adding a player, the star button now has an outlined star icon (☆) by default. Clicking the star fills it in (★), indicating the player is a star player.
-- An explanation about the effect of being a star player is provided in the game setup screen.
+- Substitution logic now allows coaches to select which players to substitute, with suggestions based on total playtime.
+- Players are ordered by total playtime in the substitution interface, aiding in making equitable substitution decisions.
 - **Important**: Ensure that you select exactly the number of starting players required before starting the game. If you do not select the starting lineup or have insufficient players, the "Start Game" button will alert you accordingly.
