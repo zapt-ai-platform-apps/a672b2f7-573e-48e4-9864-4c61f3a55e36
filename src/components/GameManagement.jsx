@@ -27,10 +27,9 @@ function GameManagement(props) {
   const [selectedSubOffPlayer, setSelectedSubOffPlayer] = createSignal(null);
 
   const [showGKModal, setShowGKModal] = createSignal(false);
+  const [showEndGameConfirm, setShowEndGameConfirm] = createSignal(false);
 
   const [newPlayerName, setNewPlayerName] = createSignal('');
-
-  const [showEndGameConfirm, setShowEndGameConfirm] = createSignal(false);
 
   let timer = null;
 
@@ -225,15 +224,15 @@ function GameManagement(props) {
   };
 
   return (
-    <div class="min-h-screen bg-gradient-to-br from-green-100 to-blue-100 p-4 text-gray-800">
+    <div class="h-full flex flex-col text-gray-800">
       <h1 class="text-3xl font-bold mb-4 text-green-600">Game Management</h1>
-      <div class="flex flex-col md:flex-row justify-between items-center mb-4">
-        <div class="mb-2 md:mb-0">
+      <div class="flex justify-between items-center mb-4">
+        <div>
           <span class="font-semibold">Time Elapsed: </span>
           {Math.floor(timeElapsed() / 60)}:
           {('0' + (timeElapsed() % 60)).slice(-2)}
         </div>
-        <div class="flex flex-col md:flex-row gap-2">
+        <div class="flex space-x-2 md:space-x-4 mt-2 md:mt-0">
           <button
             class={`px-4 py-2 cursor-pointer ${
               isRunning()
@@ -252,6 +251,31 @@ function GameManagement(props) {
           </button>
         </div>
       </div>
+      {/* End Game Confirmation Modal */}
+      <Show when={showEndGameConfirm()}>
+        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div class="bg-white p-6 rounded-lg">
+            <h2 class="text-2xl font-bold mb-4 text-green-600">
+              Confirm End Game
+            </h2>
+            <p class="mb-4">Are you sure you want to end the game?</p>
+            <div class="flex justify-end space-x-4">
+              <button
+                class="px-4 py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out"
+                onClick={confirmEndGame}
+              >
+                Yes
+              </button>
+              <button
+                class="px-4 py-2 bg-gray-500 text-white rounded-lg cursor-pointer hover:bg-gray-600 transition duration-300 ease-in-out"
+                onClick={cancelEndGame}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      </Show>
       <div class="flex flex-col md:flex-row">
         <div class="md:w-1/2 md:pr-4">
           <h2 class="text-2xl font-bold mb-2 text-green-600">
@@ -271,9 +295,9 @@ function GameManagement(props) {
                 >
                   <div>
                     {player.name}{' '}
-                    <Show when={player.isGoalkeeper}>
+                    {player.isGoalkeeper && (
                       <span class="text-yellow-500 font-semibold">(GK)</span>
-                    </Show>
+                    )}
                   </div>
                   <div class="flex items-center">
                     <span class="mr-4">{player.totalPlayTime} sec</span>
@@ -322,9 +346,7 @@ function GameManagement(props) {
               onChange={(e) => setSelectedOnPlayer(e.target.value)}
             >
               <For each={offFieldPlayers()}>
-                {(player) => (
-                  <option value={player.name}>{player.name}</option>
-                )}
+                {(player) => <option value={player.name}>{player.name}</option>}
               </For>
             </select>
           </div>
@@ -359,9 +381,7 @@ function GameManagement(props) {
                       <div>{player.name}</div>
                       <div>
                         {player.isGoalkeeper && (
-                          <span class="text-yellow-500 font-semibold">
-                            (GK)
-                          </span>
+                          <span class="text-yellow-500 font-semibold">(GK)</span>
                         )}
                       </div>
                     </li>
@@ -396,28 +416,6 @@ function GameManagement(props) {
           </button>
         </div>
       </div>
-      <Show when={showEndGameConfirm()}>
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div class="bg-white p-6 rounded-lg">
-            <h2 class="text-2xl font-bold mb-4 text-red-600">Confirm End Game</h2>
-            <p class="mb-4">Are you sure you want to end the game?</p>
-            <div class="flex justify-end gap-4">
-              <button
-                class="px-4 py-2 bg-gray-500 text-white rounded-lg cursor-pointer hover:bg-gray-600 transition duration-300 ease-in-out"
-                onClick={cancelEndGame}
-              >
-                Cancel
-              </button>
-              <button
-                class="px-4 py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out"
-                onClick={confirmEndGame}
-              >
-                Yes, End Game
-              </button>
-            </div>
-          </div>
-        </div>
-      </Show>
     </div>
   );
 }
