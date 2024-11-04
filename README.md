@@ -1,6 +1,6 @@
 # Football Subs
 
-Football Subs is an app designed to help coaches manage substitutions for kids' football teams. It ensures that each player gets a similar amount of game time while keeping all players engaged and involved.
+Football Subs is an app designed to help coaches manage substitutions for kids' football teams. It ensures that each player gets a fair amount of game time while keeping all players engaged and involved. The app prioritizes star players to give them more playing time in a 3:2 ratio over non-star players.
 
 ## Features
 
@@ -9,7 +9,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 - **Goalkeeper Management**: Allows the coach to assign and reassign the goalkeeper at any time without affecting substitutions. The goalkeeper's playing time is not counted while they are in goal.
 - **Game Setup**: Input the list of players, number of players on the field at a time, and match length.
 - **Select Starting Line-up**: Choose which players will start on the field.
-- **Substitution Management**: Advises when to make substitutions and who to substitute while respecting star player rules.
+- **Substitution Management**: Advises when to make substitutions and who to substitute while respecting star player rules and playtime ratios.
 - **Next Substitutions Display**: Clearly shows which player is next to come off and who is next to come on.
 - **Real-Time Tracking**: Records how long each player has played during the match, excluding the goalkeeper's time in goal.
 - **Analytics**: Provides visual analytics on each player's playing time.
@@ -53,10 +53,11 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
    - The goalkeeper's playtime will not be counted while they are in goal.
 4. **Viewing Next Substitutions**:
    - The app displays the next player to be substituted off and the next player to come on.
-   - The substitution logic ensures that no more than two star players are off the field at the same time.
+   - The substitution logic ensures that star players get more playing time in a 3:2 ratio over non-star players.
+   - Non-star players are substituted off first to maximize star players' time on the field.
 5. **Making Substitutions**:
    - Click the "Substitute" button when you want to make a substitution.
-   - The app suggests the next player to sub out and the player to sub in, ensuring equal playtime and respecting the star player constraint.
+   - The app suggests the next player to sub out and the player to sub in, ensuring the 3:2 playtime ratio and respecting the star player constraint.
    - Substitutions do not affect the goalkeeper assignment.
 6. **Highlighting Next Player to Come On**:
    - The player next to come on is highlighted in the substitution queue for easy identification.
@@ -74,7 +75,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 
 - **Game Completion**:
   - Once the match duration is reached, you can stop making substitutions.
-  - Use the analytics to review and ensure that each player received appropriate playtime.
+  - Use the analytics to review and ensure that each player received appropriate playtime according to the 3:2 ratio.
 
 ## External APIs and Services
 
@@ -90,6 +91,7 @@ No external environment variables are required for this app.
 - No authentication is required to use the app.
 - Player lists and star player selections are persisted between sessions using localStorage.
 - The goalkeeper's playing time is not counted while they are in goal.
-- Substitution logic ensures that no more than two star players are off the field at the same time.
+- Substitution logic ensures that star players receive more playing time in a 3:2 ratio over non-star players.
+- Non-star players are substituted off first to maximize the time star players spend on the field.
 - When adding a player, the star button now has an outlined star icon (☆) by default. Clicking the star fills it in (★), indicating the player is a star player.
 - An explanation about the effect of being a star player is provided in the game setup screen.

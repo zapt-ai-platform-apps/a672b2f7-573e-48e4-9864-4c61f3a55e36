@@ -1,4 +1,4 @@
-import { createSignal, createEffect, onMount, onCleanup } from 'solid-js';
+import { createSignal, createEffect, onMount, onCleanup, createMemo } from 'solid-js';
 import { For, Show } from 'solid-js/web';
 import Analytics from './Analytics';
 
@@ -12,7 +12,19 @@ function GameManagement(props) {
 
   const maxStarPlayersOff = 2;
 
-  // Calculate next substitutions
+  // Calculate desired playtime per player based on 3:2 ratio
+  const totalMatchTime = props.matchLength * 60; // Convert minutes to seconds
+  const starPlayers = createMemo(() => props.playerData().filter((player) => player.isStarPlayer));
+  const nonStarPlayers = createMemo(() => props.playerData().filter((player) => !player.isStarPlayer));
+  const desiredStarPlaytime = (totalMatchTime * 3) / 5;
+  const desiredNonStarPlaytime = (totalMatchTime * 2) / 5;
+  const desiredPlaytimePerStarPlayer = desiredStarPlaytime / starPlayers().length;
+  const desiredPlaytimePerNonStarPlayer = desiredNonStarPlaytime / nonStarPlayers().length;
+
+  // Memoized next substitutions
+  const nextSubstitutions = createMemo(() => getNextSubstitutions());
+
+  // Get next substitutions based on playtime and player status
   const getNextSubstitutions = () => {
     // Players not on field and not goalkeeper
     const offFieldPlayers = props.playerData().filter(
@@ -23,52 +35,56 @@ function GameManagement(props) {
       (player) => player.isOnField && !player.isGoalkeeper
     );
 
-    // Sort by total playtime
-    offFieldPlayers.sort((a, b) => a.totalPlayTime - b.totalPlayTime);
-    onFieldPlayers.sort((a, b) => b.totalPlayTime - a.totalPlayTime);
+    // Calculate playtime differences
+    const playersWithPlaytimeDiff = props.playerData().map((player) => {
+      const desiredPlaytime = player.isStarPlayer
+        ? desiredPlaytimePerStarPlayer
+        : desiredPlaytimePerNonStarPlayer;
+      return {
+        ...player,
+        playtimeDiff: player.totalPlayTime - desiredPlaytime,
+      };
+    });
 
-    // Ensure that no more than maxStarPlayersOff star players are off the field
-    const starPlayersOffField = props.playerData().filter(
-      (player) => !player.isOnField && player.isStarPlayer && !player.isGoalkeeper
-    ).length;
+    // Potential players to sub in (those who haven't met desired playtime)
+    const potentialIns = playersWithPlaytimeDiff.filter(
+      (player) => !player.isOnField && !player.isGoalkeeper
+    );
 
-    let nextPlayerIn = null;
-    let nextPlayerOut = null;
+    // Potential players to sub out (those who have exceeded desired playtime)
+    const potentialOuts = playersWithPlaytimeDiff.filter(
+      (player) => player.isOnField && !player.isGoalkeeper
+    );
 
-    for (let i = 0; i < offFieldPlayers.length; i++) {
-      const potentialIn = offFieldPlayers[i];
-      let potentialStarPlayersOff = starPlayersOffField;
-      if (potentialIn.isStarPlayer) {
-        potentialStarPlayersOff -= 1;
-      }
+    // Sort potential players to sub in by least playtime
+    potentialIns.sort((a, b) => a.totalPlayTime - b.totalPlayTime);
 
-      for (let j = 0; j < onFieldPlayers.length; j++) {
-        const potentialOut = onFieldPlayers[j];
-        if (potentialOut.name === goalkeeper()) continue;
-        if (potentialOut.isStarPlayer) {
-          potentialStarPlayersOff += 1;
+    // Sort potential players to sub out by most over their desired playtime
+    potentialOuts.sort((a, b) => b.playtimeDiff - a.playtimeDiff);
+
+    for (let inPlayer of potentialIns) {
+      for (let outPlayer of potentialOuts) {
+        // Check if substitution maintains star player ratio
+        const currentStarPlayersOnField = props.playerData().filter(
+          (player) => player.isOnField && !player.isGoalkeeper && player.isStarPlayer
+        ).length;
+
+        let newStarPlayersOnField = currentStarPlayersOnField;
+        if (inPlayer.isStarPlayer) newStarPlayersOnField += 1;
+        if (outPlayer.isStarPlayer) newStarPlayersOnField -= 1;
+
+        const maxStarPlayersOnField = props.numOnField() - maxStarPlayersOff;
+
+        if (newStarPlayersOnField <= maxStarPlayersOnField) {
+          // Found valid substitution
+          return { nextPlayerIn: inPlayer, nextPlayerOut: outPlayer };
         }
-
-        if (potentialStarPlayersOff <= maxStarPlayersOff) {
-          nextPlayerIn = potentialIn;
-          nextPlayerOut = potentialOut;
-          break;
-        }
-
-        if (potentialOut.isStarPlayer) {
-          potentialStarPlayersOff -= 1;
-        }
-      }
-
-      if (nextPlayerIn && nextPlayerOut) {
-        break;
       }
     }
 
-    return { nextPlayerIn, nextPlayerOut };
+    // If no valid substitution found
+    return { nextPlayerIn: null, nextPlayerOut: null };
   };
-
-  const { nextPlayerIn, nextPlayerOut } = getNextSubstitutions();
 
   // Timer functions
   const startTimer = () => {
@@ -124,6 +140,7 @@ function GameManagement(props) {
   };
 
   const substitutePlayers = () => {
+    const { nextPlayerIn, nextPlayerOut } = nextSubstitutions();
     if (nextPlayerIn && nextPlayerOut) {
       props.setPlayerData(
         props.playerData().map((player) => {
@@ -179,12 +196,12 @@ function GameManagement(props) {
             <div class="bg-white p-4 rounded-lg shadow-lg">
               <h2 class="text-xl font-bold mb-2 text-green-600">Next Substitutions</h2>
               <Show
-                when={nextPlayerIn && nextPlayerOut}
+                when={nextSubstitutions().nextPlayerIn && nextSubstitutions().nextPlayerOut}
                 fallback={<p>No valid substitutions available.</p>}
               >
                 <p>
-                  <span class="font-bold">{nextPlayerOut.name}</span> will come off for{' '}
-                  <span class="font-bold">{nextPlayerIn.name}</span>
+                  <span class="font-bold">{nextSubstitutions().nextPlayerOut.name}</span> will come off for{' '}
+                  <span class="font-bold">{nextSubstitutions().nextPlayerIn.name}</span>
                 </p>
                 <button
                   class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105"
@@ -212,7 +229,9 @@ function GameManagement(props) {
                     <div
                       class={`flex items-center justify-between mb-2 p-2 rounded ${
                         player.isOnField ? 'bg-green-100' : 'bg-red-100'
-                      } ${player.name === nextPlayerIn?.name ? 'border-2 border-blue-500' : ''}`}
+                      } ${
+                        player.name === nextSubstitutions().nextPlayerIn?.name ? 'border-2 border-blue-500' : ''
+                      }`}
                     >
                       <div>
                         <p class="font-semibold">

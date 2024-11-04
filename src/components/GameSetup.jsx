@@ -131,7 +131,7 @@ function GameSetup(props) {
             </For>
           </ul>
           <p class="mt-2 text-sm text-gray-600">
-            <span class="text-yellow-500">★</span> Star players are key players. During substitutions, the app ensures that no more than two star players are off the field at the same time.
+            <span class="text-yellow-500">★</span> Star players are key players. During substitutions, the app ensures that star players receive more playing time in a 3:2 ratio over non-star players.
           </p>
         </div>
         <div class="mb-4">
