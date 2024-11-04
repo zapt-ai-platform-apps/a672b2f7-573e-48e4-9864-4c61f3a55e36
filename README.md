@@ -36,8 +36,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
    - From the list of added players, select the players who will start on the field by checking the box next to their name.
    - You must select exactly the number of players allowed on the field.
 6. **Assign Goalkeeper**:
-   - Click the "Assign Goalkeeper" button.
-   - Select a player from the list to be the goalkeeper.
+   - Use the dropdown to select a player from the starting lineup as the goalkeeper.
 7. **Start Game**:
    - Click the "Start Game" button.
    - If the number of players added is less than the number of players on the field, or if you haven't selected enough starting players, you'll be prompted accordingly.

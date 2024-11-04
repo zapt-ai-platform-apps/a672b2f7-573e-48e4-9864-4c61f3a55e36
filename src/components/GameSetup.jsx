@@ -1,5 +1,5 @@
 import { createSignal, createEffect, onMount } from 'solid-js';
-import { For } from 'solid-js/web';
+import { For, Show } from 'solid-js/web';
 
 function GameSetup(props) {
   const [players, setPlayers] = createSignal([]);

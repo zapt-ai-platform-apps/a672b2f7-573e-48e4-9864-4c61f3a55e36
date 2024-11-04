@@ -1,4 +1,4 @@
-import { createSignal, onCleanup, For, Show, createEffect, createMemo, onMount } from 'solid-js';
+import { createSignal, onCleanup, For, Show, createEffect, onMount } from 'solid-js';
 
 function GameManagement(props) {
   const { numOnField, playerData, setPlayerData, goalkeeper, setGoalkeeper, onEndGame } = props;
@@ -136,10 +136,6 @@ function GameManagement(props) {
   const toggleTimer = () => {
     setIsRunning(!isRunning());
   };
-
-  const sortedPlayerData = createMemo(() =>
-    [...playerData()].sort((a, b) => a.totalPlayTime - b.totalPlayTime)
-  );
 
   return (
     <div class="min-h-screen flex flex-col h-full">
@@ -279,7 +275,7 @@ function GameManagement(props) {
                       </div>
                     </li>
                   )}
-              </For>
+                </For>
               </ul>
               <button
                 class="mt-4 w-full py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out"
