@@ -4,6 +4,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 
 ## Features
 
+- **Progressive Web App (PWA)**: Football Subs is now a Progressive Web App, allowing you to install it on your device for a native app-like experience. You can use the app offline, and it integrates seamlessly with your device.
 - **Improved Landing Page Design**: A visually engaging landing page featuring dynamic images and a modern layout to welcome users to the app.
 - **Persistent Player List**: Stores players so they are available for every game. Player lists are saved locally on your device.
 - **Add Players During Game**: Allows the coach to add new players even after the game has started. New players are given the same total current playtime as the player with the least playtime who is not the current goalkeeper when they are added.
@@ -21,9 +22,13 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 
 ### 1. Accessing the App
 
-1. **Open the App**: Launch the Football Subs app on your device.
-2. **Landing Page**:
+1. **Open the App**:
+   - Visit the Football Subs app URL in your browser.
    - You are greeted with a visually engaging landing page featuring dynamic images and a modern layout.
+2. **Installing the PWA (Optional)**:
+   - On compatible browsers, you will see an option to "Install" the app.
+   - Click "Install" to add Football Subs to your device's home screen for easy access and a native app-like experience.
+3. **Landing Page**:
    - The app's logo is prominently displayed.
    - Click the "Get Started" button to proceed to the game setup.
 
@@ -103,15 +108,18 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 
 ## External APIs and Services
 
-This app uses **Sentry** for error tracking and performance monitoring. Sentry helps in identifying and fixing errors in the application by providing real-time error reports.
+This app uses:
+
+- **Progressier** for adding Progressive Web App (PWA) functionality. Progressier simplifies the process of making the app installable and offline-capable.
+- **Sentry** for error tracking and performance monitoring. Sentry helps in identifying and fixing errors in the application by providing real-time error reports.
 
 ## Environment Variables
 
-The following environment variables are required for Sentry integration:
+The following environment variables are required:
 
 - **VITE_PUBLIC_SENTRY_DSN**: Your Sentry Data Source Name.
 - **VITE_PUBLIC_APP_ENV**: The environment in which the app is running (e.g., development, production).
-- **VITE_PUBLIC_APP_ID**: The ID of the app for tagging purposes.
+- **VITE_PUBLIC_APP_ID**: The ID of the app for tagging purposes and for Progressier PWA integration.
 
 These variables should be defined in a `.env` file at the root of your project.
 
@@ -120,6 +128,7 @@ These variables should be defined in a `.env` file at the root of your project.
 - The app is responsive and works on various screen sizes.
 - No authentication is required to use the app.
 - Player lists are persisted between sessions using localStorage.
+- **PWA Installation**: You can install the app on your device for offline use and a more native experience.
 - The goalkeeper's playing time is not counted while they are in goal.
 - When the goalkeeper is changed and the previous goalkeeper becomes an outfield player, their total playtime is set to match the player with the least playtime at that moment.
 - **Confirmation Before Changing Goalkeeper**: The app asks for confirmation when you select a new goalkeeper to prevent accidental changes.
