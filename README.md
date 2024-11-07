@@ -4,6 +4,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 
 ## Features
 
+- **Made on ZAPT Link**: A "Made on ZAPT" link is displayed on all screens, providing quick access to the ZAPT website.
 - **Improved Game Management Screen Design**: The Game Management screen now has improved padding around the entire screen and enhanced layout, providing a more user-friendly and visually appealing interface.
 - **Progressive Web App (PWA)**: Football Subs is a Progressive Web App, allowing you to install it on your device for a native app-like experience. You can use the app offline, and it integrates seamlessly with your device.
 - **Persistent Player List**: Stores players so they are available for every game. Player lists are saved locally on your device.
@@ -31,38 +32,41 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 3. **Landing Page**:
    - The app's logo is prominently displayed.
    - Click the "Get Started" button to proceed to the game setup.
+   - **Made on ZAPT Link**: At the bottom of the screen, there's a link labeled "Made on ZAPT" that directs you to [www.zapt.ai](https://www.zapt.ai).
 
 ### 2. Setting Up the Game
 
 1. **Game Setup Screen**: After clicking "Get Started," you are taken to the Game Setup screen.
-2. **Player List Persistence**:
+2. **Made on ZAPT Link**: At the bottom of the screen, you will see the "Made on ZAPT" link.
+3. **Player List Persistence**:
    - The app loads the saved list of players from previous sessions.
    - If no players have been added yet, you can add new players.
-3. **Add Players**:
+4. **Add Players**:
    - Enter the name of a player in the input field.
    - Click the "Add" button to add the player to the list.
    - Repeat this process until all players are added.
-4. **Set Number of Players on Field**:
+5. **Set Number of Players on Field**:
    - Enter the number of players that can play at one time (e.g., 5 for 5-a-side).
-5. **Select Starting Line-up**:
+6. **Select Starting Line-up**:
    - From the list of added players, select the players who will start on the field by checking the box next to their name.
    - You must select exactly the number of players allowed on the field.
-6. **Assign Goalkeeper**:
+7. **Assign Goalkeeper**:
    - Use the dropdown to select a player from the starting lineup as the goalkeeper.
-7. **Start Game**:
+8. **Start Game**:
    - Click the "Start Game" button.
    - If the number of players added is less than the number of players on the field, or if you haven't selected enough starting players, you'll be prompted accordingly.
 
 ### 3. Managing the Game
 
 1. **Game Management Screen**: Once the game starts, you're taken to the Game Management screen, which now features improved design with padding around the entire screen and enhanced layout.
-2. **Starting the Timer**:
+2. **Made on ZAPT Link**: At the bottom of the screen, the "Made on ZAPT" link is displayed.
+3. **Starting the Timer**:
    - Click the "Start" button to begin the game clock.
-3. **Viewing Player Status**:
+4. **Viewing Player Status**:
    - The app displays each player's total playing time in seconds.
    - Players are ordered by their total playing time, with those who have played the least time at the top.
    - **Real-Time Updates**: Players' playing times update every second, providing real-time tracking.
-4. **Making Substitutions**:
+5. **Making Substitutions**:
    - **Substitution Interface Always Available**:
      - The substitution options are always visible, allowing for quick and easy substitutions.
    - **Select Player to Sub Off**:
@@ -73,14 +77,14 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
    - **Make Substitution**:
      - Click the "Make Substitution" button to execute the substitution.
      - The substitution lists update accordingly.
-5. **Adding a New Player During the Game**:
+6. **Adding a New Player During the Game**:
    - **Add New Player**:
      - In the "Add New Player" section, enter the name of the player who has just arrived.
      - Click the "Add" button.
      - The new player is added to the list with the same total playtime as the player with the least playtime who is not the current goalkeeper at the moment they are added.
    - **Manage the New Player**:
      - The new player appears in the "Players Off Field" list and can be substituted into the game as needed.
-6. **Changing the Goalkeeper (Optional)**:
+7. **Changing the Goalkeeper (Optional)**:
    - Click the "Change Goalkeeper" button.
    - A modal appears listing the players currently on the field.
    - **Select New Goalkeeper**:
@@ -90,12 +94,12 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
      - Click "No" to cancel and return to the player selection.
    - **Previous Goalkeeper's Playtime Adjustment**:
      - When the goalkeeper is changed and the previous goalkeeper becomes an outfield player, their total playtime is set to match the player with the least playtime at that moment.
-7. **Pause/Resume the Timer**:
+8. **Pause/Resume the Timer**:
    - Click the "Pause" button to pause the game clock during stoppages like half-time.
    - Click "Start" again to resume the game.
    - **Improved Layout on Mobile**:
      - The "Pause" and "End Game" buttons are better spaced, especially on mobile devices, to prevent accidental clicks.
-8. **Ending the Game**:
+9. **Ending the Game**:
    - Click the "End Game" button when you are ready to finish the game.
    - **Confirmation Prompt**:
      - A confirmation dialog appears asking if you are sure you want to end the game.
@@ -140,3 +144,4 @@ These variables should be defined in a `.env` file at the root of your project.
 - **Confirmation Before Ending Game**: The app asks for confirmation when you click the "End Game" button to prevent accidental termination of the game.
 - **Improved Mobile Layout**: The layout has been optimized for mobile devices, especially the positioning and spacing of the "Pause" and "End Game" buttons to ensure they are not too close together.
 - **Improved Design**: The Game Management screen now features improved padding and layout enhancements to provide a more user-friendly experience.
+- **Made on ZAPT Link**: A "Made on ZAPT" link is present on all screens, allowing users to visit [www.zapt.ai](https://www.zapt.ai).

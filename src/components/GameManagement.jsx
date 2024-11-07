@@ -7,6 +7,7 @@ import {
   onMount,
 } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
+import Footer from './Footer';
 
 function GameManagement(props) {
   const {
@@ -245,13 +246,13 @@ function GameManagement(props) {
               isRunning()
                 ? 'bg-yellow-500 hover:bg-yellow-600'
                 : 'bg-green-500 hover:bg-green-600'
-            } text-white rounded-lg cursor-pointer hover:scale-105 transition duration-300 ease-in-out`}
+            } text-white rounded-lg cursor-pointer hover:scale-105 transition duration-300 ease-in-out cursor-pointer`}
             onClick={toggleTimer}
           >
             {isRunning() ? 'Pause' : 'Start'}
           </button>
           <button
-            class="px-4 py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 hover:scale-105 transition duration-300 ease-in-out mt-2 md:mt-0"
+            class="px-4 py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 hover:scale-105 transition duration-300 ease-in-out mt-2 md:mt-0 cursor-pointer"
             onClick={handleEndGame}
           >
             End Game
@@ -268,13 +269,13 @@ function GameManagement(props) {
             <p class="mb-4">Are you sure you want to end the game?</p>
             <div class="flex justify-end space-x-4">
               <button
-                class="px-4 py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out"
+                class="px-4 py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out cursor-pointer"
                 onClick={confirmEndGame}
               >
                 Yes
               </button>
               <button
-                class="px-4 py-2 bg-gray-500 text-white rounded-lg cursor-pointer hover:bg-gray-600 transition duration-300 ease-in-out"
+                class="px-4 py-2 bg-gray-500 text-white rounded-lg cursor-pointer hover:bg-gray-600 transition duration-300 ease-in-out cursor-pointer"
                 onClick={cancelEndGame}
               >
                 No
@@ -326,7 +327,9 @@ function GameManagement(props) {
                 <li class="flex justify-between items-center mb-2 p-2 rounded hover:bg-gray-100">
                   <div class="font-medium">{player.name}</div>
                   <div>
-                    <span class="text-sm text-gray-600">
+                    <span class="text-sm text
+
+-gray-600">
                       {player.totalPlayTime} sec
                     </span>
                   </div>
@@ -340,7 +343,7 @@ function GameManagement(props) {
         <h2 class="text-2xl font-bold mb-2 text-green-600">Substitution</h2>
         <div class="flex flex-col md:flex-row items-start md:items-center">
           <div class="md:w-1/2 md:pr-4">
-            <label class="block font-semibold mb-2">Player to Sub Off:</label>
+            <label class="block font-semibold mb-2 text-gray-700">Player to Sub Off:</label>
             <div class="p-2 border border-gray-300 rounded-lg box-border h-12 flex items-center">
               {selectedSubOffPlayer()
                 ? selectedSubOffPlayer().name
@@ -348,7 +351,7 @@ function GameManagement(props) {
             </div>
           </div>
           <div class="md:w-1/2 md:pl-4 mt-4 md:mt-0">
-            <label class="block font-semibold mb-2">
+            <label class="block font-semibold mb-2 text-gray-700">
               Select Player to Sub On:
             </label>
             <select
@@ -365,7 +368,7 @@ function GameManagement(props) {
           </div>
         </div>
         <button
-          class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 hover:scale-105 transition duration-300 ease-in-out"
+          class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
           onClick={makeSubstitution}
         >
           Make Substitution
@@ -373,7 +376,7 @@ function GameManagement(props) {
       </div>
       <div class="bg-white p-4 rounded-lg shadow-md mb-4">
         <button
-          class="px-4 py-2 bg-yellow-500 text-white rounded-lg cursor-pointer hover:bg-yellow-600 hover:scale-105 transition duration-300 ease-in-out"
+          class="px-4 py-2 bg-yellow-500 text-white rounded-lg cursor-pointer hover:bg-yellow-600 hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
           onClick={assignGoalkeeper}
         >
           Change Goalkeeper
@@ -390,7 +393,7 @@ function GameManagement(props) {
             onInput={(e) => setNewPlayerName(e.target.value)}
           />
           <button
-            class="p-2 bg-green-500 text-white rounded-r-lg cursor-pointer hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105"
+            class="p-2 bg-green-500 text-white rounded-r-lg cursor-pointer hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
             onClick={addNewPlayer}
           >
             Add
@@ -425,7 +428,7 @@ function GameManagement(props) {
               </For>
             </ul>
             <button
-              class="mt-4 w-full py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out"
+              class="mt-4 w-full py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out cursor-pointer"
               onClick={() => setShowGKModal(false)}
             >
               Cancel
@@ -446,7 +449,7 @@ function GameManagement(props) {
             </p>
             <div class="flex justify-end space-x-4">
               <button
-                class="px-4 py-2 bg-green-500 text-white rounded-lg cursor-pointer hover:bg-green-600 transition duration-300 ease-in-out"
+                class="px-4 py-2 bg-green-500 text-white rounded-lg cursor-pointer hover:bg-green-600 transition duration-300 ease-in-out cursor-pointer"
                 onClick={() => {
                   confirmGoalkeeper(selectedNewGoalkeeper());
                 }}
@@ -454,7 +457,7 @@ function GameManagement(props) {
                 Yes
               </button>
               <button
-                class="px-4 py-2 bg-gray-500 text-white rounded-lg cursor-pointer hover:bg-gray-600 transition duration-300 ease-in-out"
+                class="px-4 py-2 bg-gray-500 text-white rounded-lg cursor-pointer hover:bg-gray-600 transition duration-300 ease-in-out cursor-pointer"
                 onClick={() => setShowGKConfirmModal(false)}
               >
                 No
@@ -463,6 +466,7 @@ function GameManagement(props) {
           </div>
         </div>
       </Show>
+      <Footer />
     </div>
   );
 }
