@@ -4,8 +4,8 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 
 ## Features
 
-- **Progressive Web App (PWA)**: Football Subs is now a Progressive Web App, allowing you to install it on your device for a native app-like experience. You can use the app offline, and it integrates seamlessly with your device.
-- **Improved Landing Page Design**: A visually engaging landing page featuring dynamic images and a modern layout to welcome users to the app.
+- **Improved Game Management Screen Design**: The Game Management screen now has improved padding around the entire screen and enhanced layout, providing a more user-friendly and visually appealing interface.
+- **Progressive Web App (PWA)**: Football Subs is a Progressive Web App, allowing you to install it on your device for a native app-like experience. You can use the app offline, and it integrates seamlessly with your device.
 - **Persistent Player List**: Stores players so they are available for every game. Player lists are saved locally on your device.
 - **Add Players During Game**: Allows the coach to add new players even after the game has started. New players are given the same total current playtime as the player with the least playtime who is not the current goalkeeper when they are added.
 - **Goalkeeper Management with Confirmation**: Allows the coach to assign and reassign the goalkeeper at any time without affecting substitutions. When the goalkeeper is changed, the app asks for confirmation before making the change. The previous goalkeeper's total playtime is set to match the player with the least playtime at that moment when they become an outfield player. The goalkeeper's playing time is not counted while they are in goal.
@@ -55,7 +55,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 
 ### 3. Managing the Game
 
-1. **Game Management Screen**: Once the game starts, you're taken to the Game Management screen.
+1. **Game Management Screen**: Once the game starts, you're taken to the Game Management screen, which now features improved design with padding around the entire screen and enhanced layout.
 2. **Starting the Timer**:
    - Click the "Start" button to begin the game clock.
 3. **Viewing Player Status**:
@@ -139,4 +139,4 @@ These variables should be defined in a `.env` file at the root of your project.
 - **Adding Players During Game**: Coaches can add new players even after the game has started. New players are assigned the same total playtime as the player with the least playtime who is not the current goalkeeper at the moment they are added.
 - **Confirmation Before Ending Game**: The app asks for confirmation when you click the "End Game" button to prevent accidental termination of the game.
 - **Improved Mobile Layout**: The layout has been optimized for mobile devices, especially the positioning and spacing of the "Pause" and "End Game" buttons to ensure they are not too close together.
-- **Improved Design**: The landing page now features dynamic images and a modern design to provide a welcoming and engaging experience for users.
+- **Improved Design**: The Game Management screen now features improved padding and layout enhancements to provide a more user-friendly experience.
