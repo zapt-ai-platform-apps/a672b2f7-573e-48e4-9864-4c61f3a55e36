@@ -6,6 +6,7 @@ import {
   createEffect,
   onMount,
 } from 'solid-js';
+import { useNavigate } from '@solidjs/router';
 
 function GameManagement(props) {
   const {
@@ -35,6 +36,7 @@ function GameManagement(props) {
   const [newPlayerName, setNewPlayerName] = createSignal('');
 
   let timer = null;
+  const navigate = useNavigate();
 
   onMount(() => {
     updatePlayerLists();
@@ -180,6 +182,7 @@ function GameManagement(props) {
     setIsRunning(false);
     setShowEndGameConfirm(false);
     onEndGame();
+    navigate('/');
   };
 
   const cancelEndGame = () => {
@@ -354,7 +357,9 @@ function GameManagement(props) {
               onChange={(e) => setSelectedOnPlayer(e.target.value)}
             >
               <For each={offFieldPlayers()}>
-                {(player) => <option value={player.name}>{player.name}</option>}
+                {(player) => (
+                  <option value={player.name}>{player.name}</option>
+                )}
               </For>
             </select>
           </div>

@@ -31,7 +31,7 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<LandingPage />} />
+      <Route path="/" component={LandingPage} />
       <Route
         path="/setup"
         element={<GameSetup onStartGame={handleStartGame} />}
