@@ -8,6 +8,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 - **Improved Game Management Screen Design**: The Game Management screen now has improved padding around the entire screen and enhanced layout, providing a more user-friendly and visually appealing interface.
 - **Progressive Web App (PWA)**: Football Subs is a Progressive Web App, allowing you to install it on your device for a native app-like experience. You can use the app offline, and it integrates seamlessly with your device.
 - **Persistent Player List**: Stores players so they are available for every game. Player lists are saved locally on your device.
+- **All Players Unticked by Default**: When starting a new game, all players are unticked in the list of starting players, ensuring a fresh selection each time.
 - **Add Players During Game**: Allows the coach to add new players even after the game has started. New players are given the same total current playtime as the player with the least playtime who is not the current goalkeeper when they are added.
 - **Goalkeeper Management with Confirmation**: Allows the coach to assign and reassign the goalkeeper at any time without affecting substitutions. When the goalkeeper is changed, the app asks for confirmation before making the change. The previous goalkeeper's total playtime is set to match the player with the least playtime at that moment when they become an outfield player. The goalkeeper's playing time is not counted while they are in goal.
 - **Game Setup**: Input the list of players and number of players on the field at a time.
@@ -40,6 +41,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 2. **Made on ZAPT Link**: At the bottom of the screen, you will see the "Made on ZAPT" link.
 3. **Player List Persistence**:
    - The app loads the saved list of players from previous sessions.
+   - **All Players Unticked**: All players are unticked in the list of starting players when the Game Setup screen loads, regardless of previous selections.
    - If no players have been added yet, you can add new players.
 4. **Add Players**:
    - Enter the name of a player in the input field.
@@ -51,7 +53,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
    - From the list of added players, select the players who will start on the field by checking the box next to their name.
    - You must select exactly the number of players allowed on the field.
 7. **Assign Goalkeeper**:
-   - Use the dropdown to select a player from the starting lineup as the goalkeeper.
+   - Once you've selected the starting lineup, select a player from the starting lineup as the goalkeeper using the dropdown menu.
 8. **Start Game**:
    - Click the "Start Game" button.
    - If the number of players added is less than the number of players on the field, or if you haven't selected enough starting players, you'll be prompted accordingly.
@@ -145,3 +147,4 @@ These variables should be defined in a `.env` file at the root of your project.
 - **Improved Mobile Layout**: The layout has been optimized for mobile devices, especially the positioning and spacing of the "Pause" and "End Game" buttons to ensure they are not too close together.
 - **Improved Design**: The Game Management screen now features improved padding and layout enhancements to provide a more user-friendly experience.
 - **Made on ZAPT Link**: A "Made on ZAPT" link is present on all screens, allowing users to visit [www.zapt.ai](https://www.zapt.ai).
+- **All Players Unticked by Default**: When starting a new game, all players are unticked in the list of starting players, ensuring a fresh selection each time.

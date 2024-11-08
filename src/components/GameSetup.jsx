@@ -16,7 +16,10 @@ function GameSetup(props) {
   onMount(() => {
     const savedPlayers = localStorage.getItem('players');
     if (savedPlayers) {
-      setPlayers(JSON.parse(savedPlayers));
+      const loadedPlayers = JSON.parse(savedPlayers);
+      // Reset isStartingPlayer to false for all players
+      const updatedPlayers = loadedPlayers.map(player => ({ ...player, isStartingPlayer: false }));
+      setPlayers(updatedPlayers);
     }
   });
 
