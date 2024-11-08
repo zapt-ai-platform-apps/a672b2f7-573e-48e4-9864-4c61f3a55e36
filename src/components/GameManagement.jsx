@@ -1,4 +1,3 @@
-```jsx
 import {
   createSignal,
   onCleanup,
@@ -477,4 +476,3 @@ function GameManagement(props) {
 }
 
 export default GameManagement;
-```
