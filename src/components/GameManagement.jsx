@@ -1,3 +1,4 @@
+```jsx
 import {
   createSignal,
   onCleanup,
@@ -20,6 +21,12 @@ function GameManagement(props) {
   } = props;
   const [isRunning, setIsRunning] = createSignal(false);
   const [timeElapsed, setTimeElapsed] = createSignal(0);
+
+  const formatTime = (timeInSeconds) => {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = ('0' + (timeInSeconds % 60)).slice(-2);
+    return `${minutes}:${seconds}`;
+  };
 
   const [selectedOnPlayer, setSelectedOnPlayer] = createSignal('');
 
@@ -309,7 +316,7 @@ function GameManagement(props) {
                   </div>
                   <div class="flex items-center">
                     <span class="mr-4 text-sm text-gray-600">
-                      {player.totalPlayTime} sec
+                      {formatTime(player.totalPlayTime)}
                     </span>
                   </div>
                 </li>
@@ -327,10 +334,8 @@ function GameManagement(props) {
                 <li class="flex justify-between items-center mb-2 p-2 rounded hover:bg-gray-100">
                   <div class="font-medium">{player.name}</div>
                   <div>
-                    <span class="text-sm text
-
--gray-600">
-                      {player.totalPlayTime} sec
+                    <span class="text-sm text-gray-600">
+                      {formatTime(player.totalPlayTime)}
                     </span>
                   </div>
                 </li>
@@ -472,3 +477,4 @@ function GameManagement(props) {
 }
 
 export default GameManagement;
+```
