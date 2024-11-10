@@ -238,7 +238,7 @@ function GameManagement(props) {
   };
 
   return (
-    <div class="h-full p-4 flex flex-col text-gray-800">
+    <div class="min-h-screen p-4 flex flex-col text-gray-800">
       <h1 class="text-3xl font-bold mb-4 text-green-600">Game Management</h1>
       <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
         <div>
