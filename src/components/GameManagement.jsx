@@ -8,6 +8,9 @@ import {
 } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import Footer from './Footer';
+import EndGameConfirmationModal from './EndGameConfirmationModal';
+import AssignGoalkeeperModal from './AssignGoalkeeperModal';
+import ConfirmGoalkeeperModal from './ConfirmGoalkeeperModal';
 
 function GameManagement(props) {
   const {
@@ -265,31 +268,14 @@ function GameManagement(props) {
           </button>
         </div>
       </div>
-      {/* End Game Confirmation Modal */}
-      <Show when={showEndGameConfirm()}>
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div class="bg-white p-6 rounded-lg">
-            <h2 class="text-2xl font-bold mb-4 text-green-600">
-              Confirm End Game
-            </h2>
-            <p class="mb-4">Are you sure you want to end the game?</p>
-            <div class="flex justify-end space-x-4">
-              <button
-                class="px-4 py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out cursor-pointer"
-                onClick={confirmEndGame}
-              >
-                Yes
-              </button>
-              <button
-                class="px-4 py-2 bg-gray-500 text-white rounded-lg cursor-pointer hover:bg-gray-600 transition duration-300 ease-in-out cursor-pointer"
-                onClick={cancelEndGame}
-              >
-                No
-              </button>
-            </div>
-          </div>
-        </div>
-      </Show>
+
+      {/* EndGameConfirmationModal */}
+      <EndGameConfirmationModal
+        showEndGameConfirm={showEndGameConfirm}
+        confirmEndGame={confirmEndGame}
+        cancelEndGame={cancelEndGame}
+      />
+
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div class="bg-white p-4 rounded-lg shadow-md">
           <h2 class="text-2xl font-bold mb-2 text-green-600">
@@ -378,6 +364,7 @@ function GameManagement(props) {
           Make Substitution
         </button>
       </div>
+
       <div class="bg-white p-4 rounded-lg shadow-md mb-4">
         <button
           class="px-4 py-2 bg-yellow-500 text-white rounded-lg cursor-pointer hover:bg-yellow-600 hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
@@ -386,6 +373,24 @@ function GameManagement(props) {
           Change Goalkeeper
         </button>
       </div>
+
+      {/* AssignGoalkeeperModal */}
+      <AssignGoalkeeperModal
+        showGKModal={showGKModal}
+        onFieldPlayers={onFieldPlayers}
+        setSelectedNewGoalkeeper={setSelectedNewGoalkeeper}
+        setShowGKConfirmModal={setShowGKConfirmModal}
+        setShowGKModal={setShowGKModal}
+      />
+
+      {/* ConfirmGoalkeeperModal */}
+      <ConfirmGoalkeeperModal
+        showGKConfirmModal={showGKConfirmModal}
+        selectedNewGoalkeeper={selectedNewGoalkeeper}
+        confirmGoalkeeper={confirmGoalkeeper}
+        setShowGKConfirmModal={setShowGKConfirmModal}
+      />
+
       <div class="bg-white p-4 rounded-lg shadow-md">
         <h2 class="text-2xl font-bold mb-2 text-green-600">Add New Player</h2>
         <div class="flex">
@@ -404,72 +409,7 @@ function GameManagement(props) {
           </button>
         </div>
       </div>
-      {/* Goalkeeper Modal */}
-      <Show when={showGKModal()}>
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div class="bg-white p-6 rounded-lg">
-            <h2 class="text-2xl font-bold mb-4 text-green-600">
-              Assign Goalkeeper
-            </h2>
-            <ul>
-              <For each={onFieldPlayers()}>
-                {(player) => (
-                  <li
-                    class="flex justify-between items-center mb-2 cursor-pointer hover:bg-gray-200 p-2 rounded"
-                    onClick={() => {
-                      setSelectedNewGoalkeeper(player.name);
-                      setShowGKConfirmModal(true);
-                    }}
-                  >
-                    <div>{player.name}</div>
-                    <div>
-                      {player.isGoalkeeper && (
-                        <span class="text-yellow-500 font-semibold">(GK)</span>
-                      )}
-                    </div>
-                  </li>
-                )}
-              </For>
-            </ul>
-            <button
-              class="mt-4 w-full py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out cursor-pointer"
-              onClick={() => setShowGKModal(false)}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      </Show>
-      {/* Goalkeeper Confirm Modal */}
-      <Show when={showGKConfirmModal()}>
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div class="bg-white p-6 rounded-lg">
-            <h2 class="text-2xl font-bold mb-4 text-green-600">
-              Confirm Change Goalkeeper
-            </h2>
-            <p class="mb-4">
-              Are you sure you want to change the goalkeeper to{' '}
-              {selectedNewGoalkeeper()}?
-            </p>
-            <div class="flex justify-end space-x-4">
-              <button
-                class="px-4 py-2 bg-green-500 text-white rounded-lg cursor-pointer hover:bg-green-600 transition duration-300 ease-in-out cursor-pointer"
-                onClick={() => {
-                  confirmGoalkeeper(selectedNewGoalkeeper());
-                }}
-              >
-                Yes
-              </button>
-              <button
-                class="px-4 py-2 bg-gray-500 text-white rounded-lg cursor-pointer hover:bg-gray-600 transition duration-300 ease-in-out cursor-pointer"
-                onClick={() => setShowGKConfirmModal(false)}
-              >
-                No
-              </button>
-            </div>
-          </div>
-        </div>
-      </Show>
+
       <Footer />
     </div>
   );
