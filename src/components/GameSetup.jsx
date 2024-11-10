@@ -34,6 +34,17 @@ function GameSetup(props) {
     }
   };
 
+  const deletePlayer = (playerName) => {
+    // Confirmation before deleting
+    const confirmDelete = window.confirm(`Are you sure you want to delete ${playerName}?`);
+    if (confirmDelete) {
+      const updatedPlayers = players().filter((player) => player.name !== playerName);
+      setPlayers(updatedPlayers);
+      // Update localStorage
+      localStorage.setItem('players', JSON.stringify(updatedPlayers));
+    }
+  };
+
   const toggleStartingPlayer = (playerName) => {
     setPlayers(
       players().map((player) => {
@@ -73,7 +84,7 @@ function GameSetup(props) {
   };
 
   return (
-    <div class="min-h-screen p-4 flex flex-col text-gray-800">
+    <div class="h-full p-4 flex flex-col text-gray-800">
       <h1 class="text-3xl font-bold mb-4 text-green-600">Game Setup</h1>
       <div class="bg-white p-4 rounded-lg shadow-md mb-4">
         <h2 class="text-2xl font-bold mb-2 text-green-600">Add Players</h2>
@@ -122,7 +133,13 @@ function GameSetup(props) {
                   onChange={() => toggleStartingPlayer(player.name)}
                   class="mr-2 cursor-pointer"
                 />
-                <span class="text-gray-800">{player.name}</span>
+                <span class="flex-1 text-gray-800">{player.name}</span>
+                <button
+                  class="ml-2 text-red-500 hover:text-red-700 cursor-pointer"
+                  onClick={() => deletePlayer(player.name)}
+                >
+                  &#128465;
+                </button>
               </li>
             )}
           </For>

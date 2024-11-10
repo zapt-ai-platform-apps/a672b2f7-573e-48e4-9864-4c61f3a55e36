@@ -4,6 +4,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 
 ## Features
 
+- **Delete Players**: Coaches can delete players from the player list, allowing for better management and organization.
 - **Made on ZAPT Link**: A "Made on ZAPT" link is displayed on all screens, providing quick access to the ZAPT website.
 - **Improved Game Management Screen Design**: The Game Management screen now has improved padding around the entire screen and enhanced layout, providing a more user-friendly and visually appealing interface.
 - **Progressive Web App (PWA)**: Football Subs is a Progressive Web App, allowing you to install it on your device for a native app-like experience. You can use the app offline, and it integrates seamlessly with your device.
@@ -17,7 +18,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 - **Real-Time Tracking**: Players' playing times update every second during the game, providing accurate and up-to-date information.
 - **Player Ordering**: Players are ordered by their total playing time, with those who have played the least time at the top.
 - **Pause Functionality**: Ability to pause the game clock during stoppages like half-time.
-- **Responsive Design**: The app is responsive and user-friendly on all screen sizes. The layout has been improved for mobile devices, especially the positioning of the "Pause" and "End Game" buttons to prevent accidental clicks.
+- **Responsive Design**: The app is responsive and user-friendly on all screen sizes. The layout has been improved for mobile devices, especially the positioning of the "Pause" and "End Game" buttons.
 - **Confirmation Before Ending Game**: When the coach clicks the "End Game" button, the app asks for confirmation to prevent accidental termination of the game.
 
 ## User Journeys
@@ -47,6 +48,12 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
    - Enter the name of a player in the input field.
    - Click the "Add" button to add the player to the list.
    - Repeat this process until all players are added.
+   - **Delete Players**:
+     - Next to each player's name, there's a "Delete" button (trash bin icon).
+     - Click the "Delete" button to remove a player from the list.
+     - A confirmation dialog appears asking if you're sure you want to delete the player.
+     - Click "Yes" to confirm and delete the player.
+     - Click "No" to cancel the action.
 5. **Set Number of Players on Field**:
    - Enter the number of players that can play at one time (e.g., 5 for 5-a-side).
 6. **Select Starting Line-up**:
@@ -148,3 +155,4 @@ These variables should be defined in a `.env` file at the root of your project.
 - **Improved Design**: The Game Management screen now features improved padding and layout enhancements to provide a more user-friendly experience.
 - **Made on ZAPT Link**: A "Made on ZAPT" link is present on all screens, allowing users to visit [www.zapt.ai](https://www.zapt.ai).
 - **All Players Unticked by Default**: When starting a new game, all players are unticked in the list of starting players, ensuring a fresh selection each time.
+- **Delete Players**: Coaches can delete players from the player list in the Game Setup screen. When a player is deleted, they are removed from the list and from local storage.
