@@ -22,7 +22,7 @@ function GameManagement(props) {
     onEndGame,
   } = props;
   const [isRunning, setIsRunning] = createSignal(false);
-  const [timeElapsed, setTimeElapsed] = createSignal(0);
+  const [gameIntervals, setGameIntervals] = createSignal([]);
 
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
@@ -47,6 +47,8 @@ function GameManagement(props) {
 
   let uiTimer = null;
   const navigate = useNavigate();
+
+  const [now, setNow] = createSignal(Date.now());
 
   onMount(() => {
     updatePlayerLists();
@@ -73,22 +75,35 @@ function GameManagement(props) {
   };
 
   const getTotalPlayTime = (player) => {
-    timeElapsed(); // Make reactive to timeElapsed
+    now(); // Make reactive
     let total = 0;
     for (const interval of player.playIntervals) {
       if (interval.endTime) {
         total += interval.endTime - interval.startTime;
       } else {
-        total += Date.now() - interval.startTime;
+        total += now() - interval.startTime;
       }
     }
     return Math.floor(total / 1000); // return total playtime in seconds
   };
 
+  const getTimeElapsed = () => {
+    now(); // Make reactive
+    let total = 0;
+    for (const interval of gameIntervals()) {
+      if (interval.endTime) {
+        total += interval.endTime - interval.startTime;
+      } else {
+        total += now() - interval.startTime;
+      }
+    }
+    return Math.floor(total / 1000); // return total time in seconds
+  };
+
   // UI Timer to update the interface every second
   const startUITimer = () => {
     uiTimer = setInterval(() => {
-      setTimeElapsed((prev) => prev + 1);
+      setNow(Date.now());
     }, 1000);
   };
 
@@ -172,7 +187,17 @@ function GameManagement(props) {
   };
 
   const confirmEndGame = () => {
-    setIsRunning(false);
+    if (isRunning()) {
+      // End the current game interval
+      setIsRunning(false);
+      setGameIntervals((prev) =>
+        prev.map((interval, idx) =>
+          idx === prev.length - 1 && interval.endTime === null
+            ? { ...interval, endTime: Date.now() }
+            : interval
+        )
+      );
+    }
     setShowEndGameConfirm(false);
     onEndGame();
     navigate('/');
@@ -183,9 +208,12 @@ function GameManagement(props) {
   };
 
   const toggleTimer = () => {
-    setIsRunning(!isRunning());
-    if (isRunning()) {
+    if (!isRunning()) {
       // Game is starting or resuming
+      setIsRunning(true);
+      // Start a new game interval
+      setGameIntervals((prev) => [...prev, { startTime: Date.now(), endTime: null }]);
+
       // Start play intervals for all on-field players who are not goalkeepers
       setPlayerData(
         playerData().map((player) => {
@@ -202,6 +230,16 @@ function GameManagement(props) {
       );
     } else {
       // Game is pausing
+      setIsRunning(false);
+      // End the current game interval
+      setGameIntervals((prev) =>
+        prev.map((interval, idx) =>
+          idx === prev.length - 1 && interval.endTime === null
+            ? { ...interval, endTime: Date.now() }
+            : interval
+        )
+      );
+
       // End play intervals for all on-field players who are not goalkeepers
       setPlayerData(
         playerData().map((player) => {
@@ -267,8 +305,7 @@ function GameManagement(props) {
       <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
         <div>
           <span class="font-semibold">Time Elapsed: </span>
-          {Math.floor(timeElapsed() / 60)}:
-          {('0' + (timeElapsed() % 60)).slice(-2)}
+          {formatTime(getTimeElapsed())}
         </div>
         <div class="flex space-x-2 md:space-x-4 mt-2 md:mt-0">
           <button

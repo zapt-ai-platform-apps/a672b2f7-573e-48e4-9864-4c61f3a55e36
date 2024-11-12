@@ -5,6 +5,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 ## Features
 
 - **Accurate Playtime Tracking with Real-Time Updates**: Player playtimes are accurately calculated based on when they start and stop playing. Playtimes update every second, even when the game is running, ensuring coaches have up-to-the-second information.
+- **Accurate Game Time Calculation**: The total game time is calculated by recording each interval the game is running, summing up the total elapsed time, and updating every second. This ensures precise tracking of the total game duration, even when the game is paused and resumed.
 - **Real-Time Tracking**: The game clock and player playtimes update every second during the game, allowing for precise management.
 - **Delete Players**: Coaches can delete players from the player list, allowing for better management and organization.
 - **Made on ZAPT Link**: A "Made on ZAPT" link is displayed on all screens, providing quick access to the ZAPT website.
@@ -75,6 +76,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 3. **Starting the Timer**:
    - Click the "Start" button to begin the game clock.
    - **Real-Time Updates**: The game clock and player playtimes update every second during the game.
+   - **Accurate Game Time Calculation**: The total game time is calculated by recording each interval the game is running, summing up the total elapsed time, and updating every second.
 4. **Viewing Player Status**:
    - The app displays each player's total playing time, updating every second.
    - Players are ordered by their total playing time, with those who have played the least time at the top.
@@ -154,6 +156,7 @@ These variables should be defined in a `.env` file at the root of your project.
 - The substitution interface is always visible during the match, allowing for seamless substitutions.
 - Players' playing times are calculated based on when they start and stop playing, ensuring accuracy even if the app is minimized or the device is locked.
 - **Real-Time Updates**: Playtimes are updated every second during the game, providing real-time information to the coach.
+- **Accurate Game Time Calculation**: The total game time is now calculated by recording each interval the game is running, summing up the total elapsed time, and updating every second. This provides precise tracking of the total game duration, even when the game is paused and resumed.
 - **Important**: Ensure that you select exactly the number of starting players required before starting the game. If you do not select the starting lineup or have insufficient players, the "Start Game" button will alert you accordingly.
 - **Adding Players During Game**: Coaches can add new players even after the game has started. New players are assigned the same total playtime as the player with the least playtime who is not the current goalkeeper at the moment they are added.
 - **Confirmation Before Ending Game**: The app asks for confirmation when you click the "End Game" button to prevent accidental termination of the game.
@@ -166,9 +169,9 @@ These variables should be defined in a `.env` file at the root of your project.
 
 ## Known Issues and Solutions
 
-- **Playtime Not Updating in Real-Time**:
-  - **Issue**: Previously, player playtimes only updated when the game was paused.
-  - **Solution**: The app has been updated to refresh player playtimes every second during the game, providing real-time updates without requiring the game to be paused.
+- **Playtime and Game Time Not Updating in Real-Time**:
+  - **Issue**: Previously, player playtimes and the total game time only updated when the game was paused.
+  - **Solution**: The app has been updated to refresh player playtimes and the game time every second during the game. The time elapsed for the match is calculated by recording each start and end time the game is running, summing up the total time, and showing the updated time every second.
 
 # How to Use the App
 
@@ -176,7 +179,7 @@ These variables should be defined in a `.env` file at the root of your project.
    - Add your players and select the number of players on the field.
    - Choose your starting lineup and assign a goalkeeper.
 2. **Manage the Game**:
-   - Start the game and monitor player playtimes, which update in real-time.
+   - Start the game and monitor player playtimes and the total game time, which update in real-time.
    - Make substitutions as needed, and the app will accurately track playtimes.
    - Change the goalkeeper if necessary, with playtime adjustments.
 3. **End the Game**:
