@@ -251,17 +251,17 @@ function GameManagement(props) {
         </div>
         <div class="flex space-x-2 md:space-x-4 mt-2 md:mt-0">
           <button
-            class={`px-4 py-2 ${
+            class={`px-6 py-3 ${
               isRunning()
                 ? 'bg-yellow-500 hover:bg-yellow-600'
                 : 'bg-green-500 hover:bg-green-600'
-            } text-white rounded-lg cursor-pointer hover:scale-105 transition duration-300 ease-in-out cursor-pointer`}
+            } text-white text-lg rounded-lg cursor-pointer hover:scale-105 transition duration-300 ease-in-out cursor-pointer`}
             onClick={toggleTimer}
           >
             {isRunning() ? 'Pause' : 'Start'}
           </button>
           <button
-            class="px-4 py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 hover:scale-105 transition duration-300 ease-in-out mt-2 md:mt-0 cursor-pointer"
+            class="px-6 py-3 bg-red-500 text-white text-lg rounded-lg cursor-pointer hover:bg-red-600 hover:scale-105 transition duration-300 ease-in-out mt-2 md:mt-0 cursor-pointer"
             onClick={handleEndGame}
           >
             End Game
@@ -358,7 +358,7 @@ function GameManagement(props) {
           </div>
         </div>
         <button
-          class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
+          class="mt-4 px-6 py-3 bg-blue-500 text-white text-lg rounded-lg cursor-pointer hover:bg-blue-600 hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
           onClick={makeSubstitution}
         >
           Make Substitution
@@ -367,7 +367,7 @@ function GameManagement(props) {
 
       <div class="bg-white p-4 rounded-lg shadow-md mb-4">
         <button
-          class="px-4 py-2 bg-yellow-500 text-white rounded-lg cursor-pointer hover:bg-yellow-600 hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
+          class="px-6 py-3 bg-yellow-500 text-white text-lg rounded-lg cursor-pointer hover:bg-yellow-600 hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
           onClick={assignGoalkeeper}
         >
           Change Goalkeeper
@@ -402,7 +402,7 @@ function GameManagement(props) {
             onInput={(e) => setNewPlayerName(e.target.value)}
           />
           <button
-            class="p-2 bg-green-500 text-white rounded-r-lg cursor-pointer hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+            class="px-6 py-3 bg-green-500 text-white text-lg rounded-r-lg cursor-pointer hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
             onClick={addNewPlayer}
           >
             Add

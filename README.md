@@ -20,6 +20,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 - **Pause Functionality**: Ability to pause the game clock during stoppages like half-time.
 - **Responsive Design**: The app is responsive and user-friendly on all screen sizes. The layout has been improved for mobile devices, especially the positioning of the "Pause" and "End Game" buttons.
 - **Confirmation Before Ending Game**: When the coach clicks the "End Game" button, the app asks for confirmation to prevent accidental termination of the game.
+- **Large, Easy-to-Press Buttons**: All buttons have been made larger and easier to press, enhancing usability on mobile devices.
 
 ## User Journeys
 
@@ -156,3 +157,4 @@ These variables should be defined in a `.env` file at the root of your project.
 - **Made on ZAPT Link**: A "Made on ZAPT" link is present on all screens, allowing users to visit [www.zapt.ai](https://www.zapt.ai).
 - **All Players Unticked by Default**: When starting a new game, all players are unticked in the list of starting players, ensuring a fresh selection each time.
 - **Delete Players**: Coaches can delete players from the player list in the Game Setup screen. When a player is deleted, they are removed from the list and from local storage.
+- **Large, Easy-to-Press Buttons**: All buttons have been made larger and easier to press, enhancing usability on mobile devices.

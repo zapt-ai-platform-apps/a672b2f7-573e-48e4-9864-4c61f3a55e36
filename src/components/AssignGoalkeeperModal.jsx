@@ -37,7 +37,7 @@ function AssignGoalkeeperModal(props) {
             </For>
           </ul>
           <button
-            class="mt-4 w-full py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out cursor-pointer"
+            class="mt-4 w-full py-3 bg-red-500 text-white text-lg rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out cursor-pointer"
             onClick={() => setShowGKModal(false)}
           >
             Cancel
