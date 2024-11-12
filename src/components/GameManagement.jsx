@@ -63,16 +63,17 @@ function GameManagement(props) {
     setOnFieldPlayers(
       playerData()
         .filter((player) => player.isOnField)
-        .sort((a, b) => getTotalPlayTime(a) - getTotalPlayTime(b))
+        .sort((a, b) => getTotalPlayTime(b) - getTotalPlayTime(a))
     );
     setOffFieldPlayers(
       playerData()
         .filter((player) => !player.isOnField)
-        .sort((a, b) => getTotalPlayTime(a) - getTotalPlayTime(b))
+        .sort((a, b) => getTotalPlayTime(b) - getTotalPlayTime(a))
     );
   };
 
   const getTotalPlayTime = (player) => {
+    timeElapsed(); // Make reactive to timeElapsed
     let total = 0;
     for (const interval of player.playIntervals) {
       if (interval.endTime) {
@@ -88,7 +89,6 @@ function GameManagement(props) {
   const startUITimer = () => {
     uiTimer = setInterval(() => {
       setTimeElapsed((prev) => prev + 1);
-      updatePlayerLists();
     }, 1000);
   };
 
@@ -231,6 +231,10 @@ function GameManagement(props) {
     } else {
       setSelectedOnPlayer('');
     }
+  });
+
+  createEffect(() => {
+    updatePlayerLists();
   });
 
   const addNewPlayer = () => {

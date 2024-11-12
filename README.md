@@ -4,7 +4,8 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 
 ## Features
 
-- **Accurate Playtime Tracking**: Player playtimes are accurately calculated based on when they start and stop playing, ensuring that even if the app is minimized or the device is locked, playtimes remain correct.
+- **Accurate Playtime Tracking with Real-Time Updates**: Player playtimes are accurately calculated based on when they start and stop playing. Playtimes update every second, even when the game is running, ensuring coaches have up-to-the-second information.
+- **Real-Time Tracking**: The game clock and player playtimes update every second during the game, allowing for precise management.
 - **Delete Players**: Coaches can delete players from the player list, allowing for better management and organization.
 - **Made on ZAPT Link**: A "Made on ZAPT" link is displayed on all screens, providing quick access to the ZAPT website.
 - **Improved Game Management Screen Design**: The Game Management screen now has improved padding around the entire screen and enhanced layout, providing a more user-friendly and visually appealing interface.
@@ -16,7 +17,6 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 - **Game Setup**: Input the list of players and number of players on the field at a time.
 - **Select Starting Line-up**: Choose which players will start on the field by checking the box next to their name. The checkboxes and other controls have been made larger and easier to use, especially on mobile devices.
 - **Substitution Management**: Coaches can manage substitutions seamlessly, with the substitution interface always available. Players off the field are ordered by ascending total playtime, helping coaches identify who needs more time on the field.
-- **Real-Time Tracking**: Players' playing times are calculated based on actual playing intervals, providing accurate playtimes even if the app is minimized or the device is locked.
 - **Player Ordering**: Players are ordered by their total playing time, with those who have played the least time at the top.
 - **Pause Functionality**: Ability to pause the game clock during stoppages like half-time.
 - **Responsive Design**: The app is responsive and user-friendly on all screen sizes. The layout has been improved for mobile devices, with larger controls and improved spacing to enhance usability.
@@ -74,10 +74,11 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 2. **Made on ZAPT Link**: At the bottom of the screen, the "Made on ZAPT" link is displayed.
 3. **Starting the Timer**:
    - Click the "Start" button to begin the game clock.
+   - **Real-Time Updates**: The game clock and player playtimes update every second during the game.
 4. **Viewing Player Status**:
-   - The app displays each player's total playing time.
+   - The app displays each player's total playing time, updating every second.
    - Players are ordered by their total playing time, with those who have played the least time at the top.
-   - **Accurate Playtime Tracking**: Players' playing times are calculated based on actual playing intervals, ensuring accurate tracking even if the app is minimized or the device is locked.
+   - **Accurate Playtime Tracking**: Players' playing times are calculated based on actual playing intervals, providing accurate playtimes even if the app is minimized or the device is locked.
 5. **Making Substitutions**:
    - **Substitution Interface Always Available**:
      - The substitution options are always visible, allowing for quick and easy substitutions.
@@ -152,6 +153,7 @@ These variables should be defined in a `.env` file at the root of your project.
 - Substitution logic allows coaches to select which players to substitute without disruptions.
 - The substitution interface is always visible during the match, allowing for seamless substitutions.
 - Players' playing times are calculated based on when they start and stop playing, ensuring accuracy even if the app is minimized or the device is locked.
+- **Real-Time Updates**: Playtimes are updated every second during the game, providing real-time information to the coach.
 - **Important**: Ensure that you select exactly the number of starting players required before starting the game. If you do not select the starting lineup or have insufficient players, the "Start Game" button will alert you accordingly.
 - **Adding Players During Game**: Coaches can add new players even after the game has started. New players are assigned the same total playtime as the player with the least playtime who is not the current goalkeeper at the moment they are added.
 - **Confirmation Before Ending Game**: The app asks for confirmation when you click the "End Game" button to prevent accidental termination of the game.
@@ -164,9 +166,9 @@ These variables should be defined in a `.env` file at the root of your project.
 
 ## Known Issues and Solutions
 
-- **Playtime Not Updating in Background**:
-  - **Issue**: Previously, if the app was minimized or the device was locked, player playtimes and game time would not update.
-  - **Solution**: The app now records the times when each player starts and stops playing. This allows the app to calculate accurate playtimes based on actual playing intervals, regardless of whether the app is active or in the background.
+- **Playtime Not Updating in Real-Time**:
+  - **Issue**: Previously, player playtimes only updated when the game was paused.
+  - **Solution**: The app has been updated to refresh player playtimes every second during the game, providing real-time updates without requiring the game to be paused.
 
 # How to Use the App
 
@@ -174,7 +176,7 @@ These variables should be defined in a `.env` file at the root of your project.
    - Add your players and select the number of players on the field.
    - Choose your starting lineup and assign a goalkeeper.
 2. **Manage the Game**:
-   - Start the game and monitor player playtimes.
+   - Start the game and monitor player playtimes, which update in real-time.
    - Make substitutions as needed, and the app will accurately track playtimes.
    - Change the goalkeeper if necessary, with playtime adjustments.
 3. **End the Game**:
