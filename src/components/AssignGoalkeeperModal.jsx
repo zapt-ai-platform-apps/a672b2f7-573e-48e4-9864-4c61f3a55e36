@@ -20,13 +20,13 @@ function AssignGoalkeeperModal(props) {
             <For each={onFieldPlayers()}>
               {(player) => (
                 <li
-                  class="flex justify-between items-center mb-2 cursor-pointer hover:bg-gray-200 p-2 rounded"
+                  class="flex justify-between items-center mb-2 cursor-pointer hover:bg-gray-200 p-4 rounded-lg"
                   onClick={() => {
                     setSelectedNewGoalkeeper(player.name);
                     setShowGKConfirmModal(true);
                   }}
                 >
-                  <div>{player.name}</div>
+                  <div class="text-lg">{player.name}</div>
                   <div>
                     {player.isGoalkeeper && (
                       <span class="text-yellow-500 font-semibold">(GK)</span>
@@ -37,7 +37,7 @@ function AssignGoalkeeperModal(props) {
             </For>
           </ul>
           <button
-            class="mt-4 w-full py-3 bg-red-500 text-white text-lg rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out cursor-pointer"
+            class="mt-4 w-full py-4 bg-red-500 text-white text-lg rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out"
             onClick={() => setShowGKModal(false)}
           >
             Cancel

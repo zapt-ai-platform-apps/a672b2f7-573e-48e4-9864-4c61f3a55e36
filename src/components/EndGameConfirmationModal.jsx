@@ -10,16 +10,16 @@ function EndGameConfirmationModal(props) {
           <h2 class="text-2xl font-bold mb-4 text-green-600">
             Confirm End Game
           </h2>
-          <p class="mb-4">Are you sure you want to end the game?</p>
+          <p class="mb-4 text-lg">Are you sure you want to end the game?</p>
           <div class="flex justify-end space-x-4">
             <button
-              class="px-6 py-3 bg-red-500 text-white text-lg rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out cursor-pointer"
+              class="px-6 py-3 bg-red-500 text-white text-lg rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out"
               onClick={confirmEndGame}
             >
               Yes
             </button>
             <button
-              class="px-6 py-3 bg-gray-500 text-white text-lg rounded-lg cursor-pointer hover:bg-gray-600 transition duration-300 ease-in-out cursor-pointer"
+              class="px-6 py-3 bg-gray-500 text-white text-lg rounded-lg cursor-pointer hover:bg-gray-600 transition duration-300 ease-in-out"
               onClick={cancelEndGame}
             >
               No
