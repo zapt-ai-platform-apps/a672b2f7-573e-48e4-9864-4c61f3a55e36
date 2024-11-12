@@ -156,7 +156,7 @@ These variables should be defined in a `.env` file at the root of your project.
 - The substitution interface is always visible during the match, allowing for seamless substitutions.
 - Players' playing times are calculated based on when they start and stop playing, ensuring accuracy even if the app is minimized or the device is locked.
 - **Real-Time Updates**: Playtimes are updated every second during the game, providing real-time information to the coach.
-- **Accurate Game Time Calculation**: The total game time is now calculated by recording each interval the game is running, summing up the total elapsed time, and updating every second. This provides precise tracking of the total game duration, even when the game is paused and resumed.
+- **Accurate Game Time Calculation**: The total game time is calculated by recording each interval the game is running, summing up the total elapsed time, and updating every second. This provides precise tracking of the total game duration, even when the game is paused and resumed.
 - **Important**: Ensure that you select exactly the number of starting players required before starting the game. If you do not select the starting lineup or have insufficient players, the "Start Game" button will alert you accordingly.
 - **Adding Players During Game**: Coaches can add new players even after the game has started. New players are assigned the same total playtime as the player with the least playtime who is not the current goalkeeper at the moment they are added.
 - **Confirmation Before Ending Game**: The app asks for confirmation when you click the "End Game" button to prevent accidental termination of the game.
