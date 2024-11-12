@@ -12,14 +12,17 @@ function App() {
   const handleStartGame = (players, numPlayers, gk) => {
     // Initialize player data
     setPlayerData(
-      players.map((player) => ({
-        name: player.name,
-        onFieldIntervals: player.isStartingPlayer && !player.isGoalkeeper
-          ? [{ start: Date.now(), end: null }]
-          : [],
-        isOnField: player.isStartingPlayer,
-        isGoalkeeper: player.name === gk,
-      }))
+      players.map((player) => {
+        const isStarting = player.isStartingPlayer;
+        const isGoalkeeperPlayer = player.name === gk;
+        return {
+          name: player.name,
+          playIntervals: isStarting && !isGoalkeeperPlayer ? [{ startTime: Date.now(), endTime: null }] : [],
+          isOnField: isStarting,
+          isGoalkeeper: isGoalkeeperPlayer,
+          totalPlayTime: 0, // initial total play time is 0
+        };
+      })
     );
     setNumOnField(numPlayers);
     setGoalkeeper(gk);

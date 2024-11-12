@@ -2,24 +2,21 @@
 
 Football Subs is an app designed to help coaches manage substitutions for kids' football teams. It ensures that each player gets a fair amount of game time while keeping all players engaged and involved. The app allows coaches to monitor player playtimes and make informed substitution decisions in real-time.
 
-## Updates
-
-- **Improved Time Tracking**: The app now uses timestamps to calculate each player's total playtime. This ensures that even if the app is running in the background or the device is locked (e.g., when the phone is in your pocket), the playtimes are accurately calculated when you return to the app.
-
 ## Features
 
-- **Real-Time Tracking with Timestamps**: Players' playing times are calculated based on actual start and stop times, ensuring accurate tracking even when the app is in the background.
+- **Accurate Playtime Tracking**: Player playtimes are accurately calculated based on when they start and stop playing, ensuring that even if the app is minimized or the device is locked, playtimes remain correct.
 - **Delete Players**: Coaches can delete players from the player list, allowing for better management and organization.
 - **Made on ZAPT Link**: A "Made on ZAPT" link is displayed on all screens, providing quick access to the ZAPT website.
 - **Improved Game Management Screen Design**: The Game Management screen now has improved padding around the entire screen and enhanced layout, providing a more user-friendly and visually appealing interface.
 - **Progressive Web App (PWA)**: Football Subs is a Progressive Web App, allowing you to install it on your device for a native app-like experience. You can use the app offline, and it integrates seamlessly with your device.
 - **Persistent Player List**: Stores players so they are available for every game. Player lists are saved locally on your device.
 - **All Players Unticked by Default**: When starting a new game, all players are unticked in the list of starting players, ensuring a fresh selection each time.
-- **Add Players During Game**: Allows the coach to add new players even after the game has started.
-- **Goalkeeper Management with Confirmation**: Allows the coach to assign and reassign the goalkeeper at any time without affecting substitutions. When the goalkeeper is changed, the app asks for confirmation before making the change.
+- **Add Players During Game**: Allows the coach to add new players even after the game has started. New players are given the same total current playtime as the player with the least playtime who is not the current goalkeeper when they are added.
+- **Goalkeeper Management with Confirmation**: Allows the coach to assign and reassign the goalkeeper at any time without affecting substitutions. When the goalkeeper is changed, the app asks for confirmation before making the change. The previous goalkeeper's total playtime is adjusted accordingly when they become an outfield player. The goalkeeper's playing time is not counted while they are in goal.
 - **Game Setup**: Input the list of players and number of players on the field at a time.
 - **Select Starting Line-up**: Choose which players will start on the field by checking the box next to their name. The checkboxes and other controls have been made larger and easier to use, especially on mobile devices.
 - **Substitution Management**: Coaches can manage substitutions seamlessly, with the substitution interface always available. Players off the field are ordered by ascending total playtime, helping coaches identify who needs more time on the field.
+- **Real-Time Tracking**: Players' playing times are calculated based on actual playing intervals, providing accurate playtimes even if the app is minimized or the device is locked.
 - **Player Ordering**: Players are ordered by their total playing time, with those who have played the least time at the top.
 - **Pause Functionality**: Ability to pause the game clock during stoppages like half-time.
 - **Responsive Design**: The app is responsive and user-friendly on all screen sizes. The layout has been improved for mobile devices, with larger controls and improved spacing to enhance usability.
@@ -77,11 +74,10 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 2. **Made on ZAPT Link**: At the bottom of the screen, the "Made on ZAPT" link is displayed.
 3. **Starting the Timer**:
    - Click the "Start" button to begin the game clock.
-   - The app records the exact timestamp when the game starts.
 4. **Viewing Player Status**:
    - The app displays each player's total playing time.
    - Players are ordered by their total playing time, with those who have played the least time at the top.
-   - **Real-Time Updates with Timestamps**: Players' playing times are calculated based on actual start and stop times, ensuring accurate tracking even if the app is not in the foreground.
+   - **Accurate Playtime Tracking**: Players' playing times are calculated based on actual playing intervals, ensuring accurate tracking even if the app is minimized or the device is locked.
 5. **Making Substitutions**:
    - **Substitution Interface Always Available**:
      - The substitution options are always visible, allowing for quick and easy substitutions.
@@ -93,12 +89,12 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
      - You can change this selection if desired.
    - **Make Substitution**:
      - Click the "Make Substitution" button to execute the substitution.
-     - The app records the exact time of the substitution, updating the players' playtime intervals accordingly.
+     - The substitution lists update accordingly.
 6. **Adding a New Player During the Game**:
    - **Add New Player**:
      - In the "Add New Player" section, enter the name of the player who has just arrived.
      - Click the "Add" button.
-     - The new player is added to the list with zero playtime.
+     - The new player is added to the list with the same total playtime as the player with the least playtime who is not the current goalkeeper at the moment they are added.
    - **Manage the New Player**:
      - The new player appears in the "Players Off Field" list and can be substituted into the game as needed.
 7. **Changing the Goalkeeper (Optional)**:
@@ -110,12 +106,10 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
      - Click "Yes" to confirm and assign the new goalkeeper.
      - Click "No" to cancel and return to the player selection.
    - **Previous Goalkeeper's Playtime Adjustment**:
-     - When the goalkeeper is changed and the previous goalkeeper becomes an outfield player, their playtime tracking starts from the moment they switch positions.
-     - The app begins a new playing interval for the previous goalkeeper.
+     - When the goalkeeper is changed and the previous goalkeeper becomes an outfield player, their play intervals are adjusted to reflect their time as an outfield player.
 8. **Pause/Resume the Timer**:
    - Click the "Pause" button to pause the game clock during stoppages like half-time.
    - Click "Start" again to resume the game.
-   - **Accurate Timekeeping**: The app accounts for paused durations when calculating player playtimes.
    - **Improved Layout on Mobile**:
      - The "Pause" and "End Game" buttons are better spaced and larger, especially on mobile devices, to prevent accidental clicks.
 9. **Ending the Game**:
@@ -152,14 +146,14 @@ These variables should be defined in a `.env` file at the root of your project.
 - No authentication is required to use the app.
 - Player lists are persisted between sessions using localStorage.
 - **PWA Installation**: You can install the app on your device for offline use and a more native experience.
-- **Accurate Time Tracking**: Players' playing times are calculated using actual timestamps, ensuring accuracy even when the app is in the background or the device is locked.
 - The goalkeeper's playing time is not counted while they are in goal.
-- When the goalkeeper is changed and the previous goalkeeper becomes an outfield player, their playtime tracking starts from the moment they switch positions.
+- When the goalkeeper is changed and the previous goalkeeper becomes an outfield player, their play intervals are adjusted to reflect their time as an outfield player.
 - **Confirmation Before Changing Goalkeeper**: The app asks for confirmation when you select a new goalkeeper to prevent accidental changes.
 - Substitution logic allows coaches to select which players to substitute without disruptions.
 - The substitution interface is always visible during the match, allowing for seamless substitutions.
+- Players' playing times are calculated based on when they start and stop playing, ensuring accuracy even if the app is minimized or the device is locked.
 - **Important**: Ensure that you select exactly the number of starting players required before starting the game. If you do not select the starting lineup or have insufficient players, the "Start Game" button will alert you accordingly.
-- **Adding Players During Game**: Coaches can add new players even after the game has started.
+- **Adding Players During Game**: Coaches can add new players even after the game has started. New players are assigned the same total playtime as the player with the least playtime who is not the current goalkeeper at the moment they are added.
 - **Confirmation Before Ending Game**: The app asks for confirmation when you click the "End Game" button to prevent accidental termination of the game.
 - **Improved Mobile Layout**: The layout has been optimized for mobile devices, especially the positioning and spacing of the "Pause" and "End Game" buttons to ensure they are not too close together.
 - **Improved Design**: The Game Management screen now features improved padding and layout enhancements to provide a more user-friendly experience.
@@ -167,3 +161,24 @@ These variables should be defined in a `.env` file at the root of your project.
 - **All Players Unticked by Default**: When starting a new game, all players are unticked in the list of starting players, ensuring a fresh selection each time.
 - **Delete Players**: Coaches can delete players from the player list in the Game Setup screen. When a player is deleted, they are removed from the list and from local storage.
 - **Large, Easy-to-Press Buttons and Controls**: All buttons, checkboxes, and inputs have been made larger and easier to press, enhancing usability on mobile devices.
+
+## Known Issues and Solutions
+
+- **Playtime Not Updating in Background**:
+  - **Issue**: Previously, if the app was minimized or the device was locked, player playtimes and game time would not update.
+  - **Solution**: The app now records the times when each player starts and stops playing. This allows the app to calculate accurate playtimes based on actual playing intervals, regardless of whether the app is active or in the background.
+
+# How to Use the App
+
+1. **Set Up the Game**:
+   - Add your players and select the number of players on the field.
+   - Choose your starting lineup and assign a goalkeeper.
+2. **Manage the Game**:
+   - Start the game and monitor player playtimes.
+   - Make substitutions as needed, and the app will accurately track playtimes.
+   - Change the goalkeeper if necessary, with playtime adjustments.
+3. **End the Game**:
+   - When the game is over, end the game to finalize playtimes.
+   - Review the playtimes to ensure fair play for all players.
+
+Enjoy a smoother coaching experience with Football Subs!
