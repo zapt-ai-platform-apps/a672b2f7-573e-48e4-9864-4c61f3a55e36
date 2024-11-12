@@ -14,7 +14,9 @@ function App() {
     setPlayerData(
       players.map((player) => ({
         name: player.name,
-        totalPlayTime: 0,
+        onFieldIntervals: player.isStartingPlayer && !player.isGoalkeeper
+          ? [{ start: Date.now(), end: null }]
+          : [],
         isOnField: player.isStartingPlayer,
         isGoalkeeper: player.name === gk,
       }))

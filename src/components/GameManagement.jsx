@@ -21,14 +21,11 @@ function GameManagement(props) {
     setGoalkeeper,
     onEndGame,
   } = props;
-  const [isRunning, setIsRunning] = createSignal(false);
-  const [timeElapsed, setTimeElapsed] = createSignal(0);
 
-  const formatTime = (timeInSeconds) => {
-    const minutes = Math.floor(timeInSeconds / 60);
-    const seconds = ('0' + (timeInSeconds % 60)).slice(-2);
-    return `${minutes}:${seconds}`;
-  };
+  const [isRunning, setIsRunning] = createSignal(false);
+  const [gameStartTime, setGameStartTime] = createSignal(null);
+  const [gamePauseTime, setGamePauseTime] = createSignal(null);
+  const [totalPausedTime, setTotalPausedTime] = createSignal(0);
 
   const [selectedOnPlayer, setSelectedOnPlayer] = createSignal('');
 
@@ -45,91 +42,102 @@ function GameManagement(props) {
 
   const [newPlayerName, setNewPlayerName] = createSignal('');
 
-  let timer = null;
   const navigate = useNavigate();
 
   onMount(() => {
+    initializeOnFieldIntervals();
     updatePlayerLists();
-    startUITimer();
+    // Set default player to sub on
+    setDefaultSubOnPlayer();
   });
 
-  onCleanup(() => {
-    if (timer !== null) {
-      clearInterval(timer);
-    }
-    if (uiTimer !== null) {
-      clearInterval(uiTimer);
-    }
-  });
-
-  createEffect(() => {
-    if (isRunning()) {
-      timer = setInterval(() => {
-        setTimeElapsed((prev) => prev + 1);
-        updatePlayTimes();
-      }, 1000);
-    } else {
-      if (timer !== null) {
-        clearInterval(timer);
-        timer = null;
-      }
-    }
-  });
-
-  const updatePlayTimes = () => {
+  const initializeOnFieldIntervals = () => {
     setPlayerData(
       playerData().map((player) => {
         if (player.isOnField && !player.isGoalkeeper) {
-          return { ...player, totalPlayTime: player.totalPlayTime + 1 };
+          return {
+            ...player,
+            onFieldIntervals: [{ start: Date.now(), end: null }],
+          };
+        } else {
+          return { ...player, onFieldIntervals: [] };
         }
-        return player;
       })
     );
+  };
+
+  const formatTime = (timeInSeconds) => {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = ('0' + (timeInSeconds % 60)).slice(-2);
+    return `${minutes}:${seconds}`;
+  };
+
+  const calculatePlayerPlayTime = (player) => {
+    const intervals = player.onFieldIntervals || [];
+    return intervals.reduce((total, interval) => {
+      const start = interval.start;
+      const end = interval.end || (isRunning() ? Date.now() : gamePauseTime() || Date.now());
+      return total + (end - start);
+    }, 0) / 1000; // Convert milliseconds to seconds
   };
 
   const updatePlayerLists = () => {
     setOnFieldPlayers(
       playerData()
         .filter((player) => player.isOnField)
-        .sort((a, b) => a.totalPlayTime - b.totalPlayTime)
+        .sort((a, b) => calculatePlayerPlayTime(a) - calculatePlayerPlayTime(b))
     );
     setOffFieldPlayers(
       playerData()
         .filter((player) => !player.isOnField)
-        .sort((a, b) => a.totalPlayTime - b.totalPlayTime)
+        .sort((a, b) => calculatePlayerPlayTime(a) - calculatePlayerPlayTime(b))
     );
   };
 
-  // UI Timer to update the interface every second
-  let uiTimer = null;
-  const startUITimer = () => {
-    uiTimer = setInterval(() => {
-      updatePlayerLists();
-    }, 1000);
-  };
+  createEffect(() => {
+    updatePlayerLists();
+  });
 
   const makeSubstitution = () => {
     if (selectedSubOffPlayer() && selectedOnPlayer()) {
-      const offPlayer = selectedSubOffPlayer();
-      const onPlayer = playerData().find((p) => p.name === selectedOnPlayer());
+      const offPlayerName = selectedSubOffPlayer().name;
+      const onPlayerName = selectedOnPlayer();
 
-      if (offPlayer && onPlayer) {
-        setPlayerData(
-          playerData().map((player) => {
-            if (player.name === offPlayer.name) {
-              return { ...player, isOnField: false };
+      setPlayerData(
+        playerData().map((player) => {
+          if (player.name === offPlayerName) {
+            // End the current interval
+            if (player.onFieldIntervals && player.onFieldIntervals.length > 0) {
+              const intervals = player.onFieldIntervals.map((interval) => {
+                if (interval.end === null) {
+                  return { ...interval, end: Date.now() };
+                }
+                return interval;
+              });
+              return {
+                ...player,
+                isOnField: false,
+                onFieldIntervals: intervals,
+              };
             }
-            if (player.name === onPlayer.name) {
-              return { ...player, isOnField: true };
-            }
-            return player;
-          })
-        );
-        setSelectedSubOffPlayer(null);
-        setSelectedOnPlayer('');
-        // Update the substitution lists
-        updatePlayerLists();
-      }
+            return { ...player, isOnField: false };
+          }
+          if (player.name === onPlayerName) {
+            // Start a new interval
+            const intervals = player.onFieldIntervals || [];
+            return {
+              ...player,
+              isOnField: true,
+              onFieldIntervals: [...intervals, { start: Date.now(), end: null }],
+            };
+          }
+          return player;
+        })
+      );
+      setSelectedSubOffPlayer(null);
+      setSelectedOnPlayer('');
+      setDefaultSubOnPlayer();
+      updatePlayerLists();
     } else {
       alert('Please select a player to sub off and on.');
     }
@@ -146,42 +154,52 @@ function GameManagement(props) {
   const confirmGoalkeeper = (playerName) => {
     const previousGoalkeeperName = goalkeeper();
 
-    // Update the player data to set the new goalkeeper
     setPlayerData(
-      playerData().map((player) => ({
-        ...player,
-        isGoalkeeper: player.name === playerName,
-      }))
+      playerData().map((player) => {
+        if (player.name === previousGoalkeeperName) {
+          // Previous goalkeeper becomes an outfield player
+          const minPlayTime = getMinimumPlayTimeExcludingGoalkeeper();
+          return {
+            ...player,
+            isGoalkeeper: false,
+            onFieldIntervals: [
+              ...(player.onFieldIntervals || []),
+              { start: Date.now(), end: null },
+            ],
+          };
+        }
+        if (player.name === playerName) {
+          // New goalkeeper
+          // End any current interval
+          const intervals = (player.onFieldIntervals || []).map((interval) => {
+            if (interval.end === null) {
+              return { ...interval, end: Date.now() };
+            }
+            return interval;
+          });
+          return {
+            ...player,
+            isGoalkeeper: true,
+            onFieldIntervals: intervals,
+          };
+        }
+        return player;
+      })
     );
     setGoalkeeper(playerName);
     setShowGKConfirmModal(false);
     setShowGKModal(false);
-
-    // Check if the previous goalkeeper is now an outfield player
-    if (previousGoalkeeperName && previousGoalkeeperName !== playerName) {
-      // The previous goalkeeper is now an outfield player
-      // Need to update their totalPlayTime
-
-      // Find the minimum totalPlayTime among current players who are not the goalkeeper
-      const nonGKPlayers = playerData().filter(
-        (p) => p.name !== previousGoalkeeperName && !p.isGoalkeeper
-      );
-      const minPlayTime = Math.min(...nonGKPlayers.map((p) => p.totalPlayTime));
-
-      // Update the previous goalkeeper's totalPlayTime
-      setPlayerData(
-        playerData().map((player) => {
-          if (player.name === previousGoalkeeperName) {
-            return {
-              ...player,
-              totalPlayTime: minPlayTime,
-            };
-          }
-          return player;
-        })
-      );
-    }
     updatePlayerLists();
+  };
+
+  const getMinimumPlayTimeExcludingGoalkeeper = () => {
+    const nonGKPlayers = playerData().filter(
+      (p) => !p.isGoalkeeper && p.isOnField
+    );
+    if (nonGKPlayers.length === 0) return 0;
+    return Math.min(
+      ...nonGKPlayers.map((p) => calculatePlayerPlayTime(p))
+    );
   };
 
   const handleEndGame = () => {
@@ -200,43 +218,99 @@ function GameManagement(props) {
   };
 
   const toggleTimer = () => {
-    setIsRunning(!isRunning());
-  };
+    if (!isRunning()) {
+      // Start the game or resume
+      setIsRunning(true);
+      if (!gameStartTime()) {
+        setGameStartTime(Date.now());
+      }
+      if (gamePauseTime()) {
+        // If resuming from pause, accumulate paused time
+        setTotalPausedTime(
+          totalPausedTime() + (Date.now() - gamePauseTime())
+        );
+        setGamePauseTime(null);
+      }
 
-  // Set default player to sub on
-  createEffect(() => {
-    if (offFieldPlayers().length > 0) {
-      const defaultSubOnPlayer = offFieldPlayers().reduce(
-        (prev, current) =>
-          current.totalPlayTime < prev.totalPlayTime ? current : prev,
-        offFieldPlayers()[0]
+      // For players who are on the field and not goalkeeper, adjust their intervals
+      setPlayerData(
+        playerData().map((player) => {
+          if (player.isOnField && !player.isGoalkeeper) {
+            const intervals = player.onFieldIntervals || [];
+            // If their last interval ended when the game was paused, start a new interval
+            if (
+              intervals.length === 0 ||
+              intervals[intervals.length - 1].end !== null
+            ) {
+              return {
+                ...player,
+                onFieldIntervals: [
+                  ...intervals,
+                  { start: Date.now(), end: null },
+                ],
+              };
+            }
+          }
+          return player;
+        })
       );
-      setSelectedOnPlayer(defaultSubOnPlayer.name);
     } else {
-      setSelectedOnPlayer('');
+      // Pause the game
+      setIsRunning(false);
+      setGamePauseTime(Date.now());
+
+      // For players who are on the field and not goalkeeper, end their current intervals
+      setPlayerData(
+        playerData().map((player) => {
+          if (player.isOnField && !player.isGoalkeeper) {
+            const intervals = player.onFieldIntervals || [];
+            if (intervals.length > 0 && intervals[intervals.length - 1].end === null) {
+              return {
+                ...player,
+                onFieldIntervals: intervals.map((interval, index) => {
+                  if (index === intervals.length - 1) {
+                    return { ...interval, end: Date.now() };
+                  }
+                  return interval;
+                }),
+              };
+            }
+          }
+          return player;
+        })
+      );
     }
-  });
+    updatePlayerLists();
+  };
 
   const addNewPlayer = () => {
     if (newPlayerName().trim() !== '') {
-      // Find the minimum totalPlayTime among current players who are not the current goalkeeper
-      const nonGKPlayers = playerData().filter((p) => !p.isGoalkeeper);
-      const minPlayTime =
-        nonGKPlayers.length > 0
-          ? Math.min(...nonGKPlayers.map((p) => p.totalPlayTime))
-          : 0;
-
+      const minPlayTime = getMinimumPlayTimeExcludingGoalkeeper();
       setPlayerData([
         ...playerData(),
         {
           name: newPlayerName().trim(),
-          totalPlayTime: minPlayTime,
+          onFieldIntervals: [],
           isOnField: false,
           isGoalkeeper: false,
         },
       ]);
       setNewPlayerName('');
       updatePlayerLists();
+      setDefaultSubOnPlayer();
+    }
+  };
+
+  const setDefaultSubOnPlayer = () => {
+    if (offFieldPlayers().length > 0) {
+      const defaultSubOnPlayer = offFieldPlayers().reduce(
+        (prev, current) =>
+          calculatePlayerPlayTime(current) < calculatePlayerPlayTime(prev) ? current : prev,
+        offFieldPlayers()[0]
+      );
+      setSelectedOnPlayer(defaultSubOnPlayer.name);
+    } else {
+      setSelectedOnPlayer('');
     }
   };
 
@@ -246,8 +320,14 @@ function GameManagement(props) {
       <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
         <div>
           <span class="font-semibold">Time Elapsed: </span>
-          {Math.floor(timeElapsed() / 60)}:
-          {('0' + (timeElapsed() % 60)).slice(-2)}
+          {formatTime(
+            Math.floor(
+              ((isRunning() ? Date.now() : gamePauseTime() || Date.now()) -
+                (gameStartTime() || Date.now()) -
+                totalPausedTime()) /
+                1000
+            )
+          )}
         </div>
         <div class="flex space-x-2 md:space-x-4 mt-2 md:mt-0">
           <button
@@ -301,7 +381,7 @@ function GameManagement(props) {
                   </div>
                   <div class="flex items-center">
                     <span class="mr-4 text-sm text-gray-600">
-                      {formatTime(player.totalPlayTime)}
+                      {formatTime(Math.floor(calculatePlayerPlayTime(player)))}
                     </span>
                   </div>
                 </li>
@@ -320,7 +400,7 @@ function GameManagement(props) {
                   <div class="font-medium text-lg">{player.name}</div>
                   <div>
                     <span class="text-sm text-gray-600">
-                      {formatTime(player.totalPlayTime)}
+                      {formatTime(Math.floor(calculatePlayerPlayTime(player)))}
                     </span>
                   </div>
                 </li>
