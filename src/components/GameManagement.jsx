@@ -61,12 +61,12 @@ function GameManagement(props) {
     setOnFieldPlayers(
       () => playerData()
         .filter((player) => player.isOnField)
-        .sort((a, b) => getTotalPlayTime(b) - getTotalPlayTime(a))
+        .sort((a, b) => getTotalPlayTime(a) - getTotalPlayTime(b))
     );
     setOffFieldPlayers(
       () => playerData()
         .filter((player) => !player.isOnField)
-        .sort((a, b) => getTotalPlayTime(b) - getTotalPlayTime(a))
+        .sort((a, b) => getTotalPlayTime(a) - getTotalPlayTime(b))
     );
   };
 
@@ -77,7 +77,7 @@ function GameManagement(props) {
       if (interval.endTime) {
         total += interval.endTime - interval.startTime;
       } else {
-        total += now() - interval.startTime;
+        total += isRunning() ? now() - interval.startTime : 0;
       }
     }
     return Math.floor(total / 1000); // return total playtime in seconds
@@ -90,7 +90,7 @@ function GameManagement(props) {
       if (interval.endTime) {
         total += interval.endTime - interval.startTime;
       } else {
-        total += now() - interval.startTime;
+        total += isRunning() ? now() - interval.startTime : 0;
       }
     }
     return Math.floor(total / 1000); // return total time in seconds
@@ -118,15 +118,23 @@ function GameManagement(props) {
             return { ...player, isOnField: false };
           }
           if (player.name === onPlayerName) {
-            // Start a new play interval
-            return {
-              ...player,
-              isOnField: true,
-              playIntervals: [
-                ...player.playIntervals,
-                { startTime: Date.now(), endTime: null },
-              ],
-            };
+            if (isRunning()) {
+              // Start a new play interval
+              return {
+                ...player,
+                isOnField: true,
+                playIntervals: [
+                  ...player.playIntervals,
+                  { startTime: Date.now(), endTime: null },
+                ],
+              };
+            } else {
+              // Game is paused; player is on field but no play interval started
+              return {
+                ...player,
+                isOnField: true,
+              };
+            }
           }
           return player;
         })
@@ -156,14 +164,14 @@ function GameManagement(props) {
       playerData().map((player) => {
         if (player.name === playerName) {
           // New goalkeeper, end their current play interval
-          if (player.playIntervals.length > 0 && player.isOnField) {
+          if (isRunning() && player.playIntervals.length > 0 && player.isOnField) {
             player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();
           }
           return { ...player, isGoalkeeper: true };
         }
         if (player.name === previousGoalkeeperName) {
-          // Previous goalkeeper, start a new play interval if they are on field
-          if (player.isOnField) {
+          // Previous goalkeeper, start a new play interval if they are on field and game is running
+          if (isRunning() && player.isOnField) {
             player.playIntervals.push({ startTime: Date.now(), endTime: null });
           }
           return { ...player, isGoalkeeper: false };

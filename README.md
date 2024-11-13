@@ -4,7 +4,8 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 
 ## Features
 
-- **Accurate Playtime Tracking with Real-Time Updates**: Player playtimes are accurately calculated based on when they start and stop playing. Playtimes update every second, even when the game is running, ensuring coaches have up-to-the-second information.
+- **Accurate Playtime Tracking with Real-Time Updates**: Player playtimes are accurately calculated based on when they start and stop playing. Playtimes update every second during the game, ensuring coaches have up-to-the-second information.
+- **Playtime Increases Only When Game Is Running**: Player playtimes only increase when the game is running. When the game is paused, playtimes are paused as well, ensuring accurate tracking of actual playtime.
 - **Accurate Game Time Calculation**: The total game time is calculated by recording each interval the game is running, summing up the total elapsed time, and updating every second. This ensures precise tracking of the total game duration, even when the game is paused and resumed.
 - **Real-Time Tracking**: The game clock and player playtimes update every second during the game, allowing for precise management.
 - **Delete Players**: Coaches can delete players from the player list, allowing for better management and organization.
@@ -76,6 +77,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 3. **Starting the Timer**:
    - Click the "Start" button to begin the game clock.
    - **Real-Time Updates**: The game clock and player playtimes update every second during the game.
+   - **Playtime Increases Only When Game Is Running**: Player playtimes only increase when the game is running. When the game is paused, playtimes are paused as well.
    - **Accurate Game Time Calculation**: The total game time is calculated by recording each interval the game is running, summing up the total elapsed time, and updating every second.
 4. **Viewing Player Status**:
    - The app displays each player's total playing time, updating every second.
@@ -93,6 +95,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
    - **Make Substitution**:
      - Click the "Make Substitution" button to execute the substitution.
      - The substitution lists update accordingly.
+     - **Note**: If the game is paused when you make a substitution, the playtime for the player coming on will not increase until the game is resumed.
 6. **Adding a New Player During the Game**:
    - **Add New Player**:
      - In the "Add New Player" section, enter the name of the player who has just arrived.
@@ -110,9 +113,11 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
      - Click "No" to cancel and return to the player selection.
    - **Previous Goalkeeper's Playtime Adjustment**:
      - When the goalkeeper is changed and the previous goalkeeper becomes an outfield player, their play intervals are adjusted to reflect their time as an outfield player.
+     - **Note**: The playtime for the new goalkeeper will not increase while they are in goal.
 8. **Pause/Resume the Timer**:
    - Click the "Pause" button to pause the game clock during stoppages like half-time.
    - Click "Start" again to resume the game.
+   - **Playtime Paused**: When the game is paused, the players' playtimes do not increase.
    - **Improved Layout on Mobile**:
      - The "Pause" and "End Game" buttons are better spaced and larger, especially on mobile devices, to prevent accidental clicks.
 9. **Ending the Game**:
@@ -172,6 +177,9 @@ These variables should be defined in a `.env` file at the root of your project.
 - **Playtime and Game Time Not Updating in Real-Time**:
   - **Issue**: Previously, player playtimes and the total game time only updated when the game was paused.
   - **Solution**: The app has been updated to refresh player playtimes and the game time every second during the game. The time elapsed for the match is calculated by recording each start and end time the game is running, summing up the total time, and showing the updated time every second.
+- **Playtime Increments During Game Pause Fixed**:
+  - **Issue**: Previously, when a player was substituted onto the field, their playtime would increase even when the game was paused.
+  - **Solution**: The app has been updated to ensure that players' playtimes only increase when the game is running. When the game is paused, players' playtimes do not increment.
 
 # How to Use the App
 
