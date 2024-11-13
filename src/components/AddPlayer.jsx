@@ -2,7 +2,7 @@ function AddPlayer(props) {
   const { newPlayerName, setNewPlayerName, addNewPlayer } = props;
 
   return (
-    <div class="bg-white p-4 rounded-lg shadow-md">
+    <div class="bg-white p-4 rounded-lg shadow-md mb-4">
       <h2 class="text-2xl font-bold mb-2 text-green-600">Add New Player</h2>
       <div class="flex flex-col sm:flex-row">
         <input

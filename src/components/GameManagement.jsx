@@ -58,14 +58,16 @@ function GameManagement(props) {
 
   const updatePlayerLists = () => {
     setOnFieldPlayers(
-      () => playerData()
-        .filter((player) => player.isOnField)
-        .sort((a, b) => getTotalPlayTime(a) - getTotalPlayTime(b))
+      () =>
+        playerData()
+          .filter((player) => player.isOnField)
+          .sort((a, b) => getTotalPlayTime(a) - getTotalPlayTime(b))
     );
     setOffFieldPlayers(
-      () => playerData()
-        .filter((player) => !player.isOnField)
-        .sort((a, b) => getTotalPlayTime(a) - getTotalPlayTime(b))
+      () =>
+        playerData()
+          .filter((player) => !player.isOnField)
+          .sort((a, b) => getTotalPlayTime(a) - getTotalPlayTime(b))
     );
   };
 
@@ -293,78 +295,79 @@ function GameManagement(props) {
   };
 
   return (
-    <div class="min-h-screen p-4 flex flex-col text-gray-800">
-      <h1 class="text-3xl font-bold mb-4 text-green-600">Game Management</h1>
+    <div class="min-h-screen flex flex-col text-gray-800">
+      <div class="p-4 flex-grow">
+        <h1 class="text-3xl font-bold mb-4 text-green-600">Game Management</h1>
 
-      <Header
-        isRunning={isRunning}
-        toggleTimer={toggleTimer}
-        getTimeElapsed={getTimeElapsed}
-        handleEndGame={handleEndGame}
-      />
-
-      {/* EndGameConfirmationModal */}
-      <EndGameConfirmationModal
-        showEndGameConfirm={showEndGameConfirm}
-        confirmEndGame={confirmEndGame}
-        cancelEndGame={cancelEndGame}
-      />
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <PlayerList
-          players={onFieldPlayers}
-          title="Players on Field"
-          selectedPlayer={selectedSubOffPlayer}
-          handlePlayerClick={handleSubOffPlayerClick}
-          getTotalPlayTime={getTotalPlayTime}
+        <Header
+          isRunning={isRunning}
+          toggleTimer={toggleTimer}
+          getTimeElapsed={getTimeElapsed}
+          handleEndGame={handleEndGame}
         />
-        <PlayerList
-          players={offFieldPlayers}
-          title="Players Off Field"
-          selectedPlayer={selectedSubOnPlayer}
-          handlePlayerClick={handleSubOnPlayerClick}
-          getTotalPlayTime={getTotalPlayTime}
+
+        {/* EndGameConfirmationModal */}
+        <EndGameConfirmationModal
+          showEndGameConfirm={showEndGameConfirm}
+          confirmEndGame={confirmEndGame}
+          cancelEndGame={cancelEndGame}
+        />
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <PlayerList
+            players={onFieldPlayers}
+            title="Players on Field"
+            selectedPlayer={selectedSubOffPlayer}
+            handlePlayerClick={handleSubOffPlayerClick}
+            getTotalPlayTime={getTotalPlayTime}
+          />
+          <PlayerList
+            players={offFieldPlayers}
+            title="Players Off Field"
+            selectedPlayer={selectedSubOnPlayer}
+            handlePlayerClick={handleSubOnPlayerClick}
+            getTotalPlayTime={getTotalPlayTime}
+          />
+        </div>
+
+        <Substitution
+          selectedSubOffPlayer={selectedSubOffPlayer}
+          selectedSubOnPlayer={selectedSubOnPlayer}
+          makeSubstitution={makeSubstitution}
+        />
+
+        <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+          <button
+            class="px-8 py-4 bg-yellow-500 text-white text-lg rounded-lg cursor-pointer hover:bg-yellow-600 hover:scale-105 transition duration-300 ease-in-out"
+            onClick={assignGoalkeeper}
+          >
+            Change Goalkeeper
+          </button>
+        </div>
+
+        {/* AssignGoalkeeperModal */}
+        <AssignGoalkeeperModal
+          showGKModal={showGKModal}
+          onFieldPlayers={onFieldPlayers}
+          setSelectedNewGoalkeeper={setSelectedNewGoalkeeper}
+          setShowGKConfirmModal={setShowGKConfirmModal}
+          setShowGKModal={setShowGKModal}
+        />
+
+        {/* ConfirmGoalkeeperModal */}
+        <ConfirmGoalkeeperModal
+          showGKConfirmModal={showGKConfirmModal}
+          selectedNewGoalkeeper={selectedNewGoalkeeper}
+          confirmGoalkeeper={confirmGoalkeeper}
+          setShowGKConfirmModal={setShowGKConfirmModal}
+        />
+
+        <AddPlayer
+          newPlayerName={newPlayerName}
+          setNewPlayerName={setNewPlayerName}
+          addNewPlayer={addNewPlayer}
         />
       </div>
-
-      <Substitution
-        selectedSubOffPlayer={selectedSubOffPlayer}
-        selectedSubOnPlayer={selectedSubOnPlayer}
-        makeSubstitution={makeSubstitution}
-      />
-
-      <div class="bg-white p-4 rounded-lg shadow-md mb-4">
-        <button
-          class="px-8 py-4 bg-yellow-500 text-white text-lg rounded-lg cursor-pointer hover:bg-yellow-600 hover:scale-105 transition duration-300 ease-in-out"
-          onClick={assignGoalkeeper}
-        >
-          Change Goalkeeper
-        </button>
-      </div>
-
-      {/* AssignGoalkeeperModal */}
-      <AssignGoalkeeperModal
-        showGKModal={showGKModal}
-        onFieldPlayers={onFieldPlayers}
-        setSelectedNewGoalkeeper={setSelectedNewGoalkeeper}
-        setShowGKConfirmModal={setShowGKConfirmModal}
-        setShowGKModal={setShowGKModal}
-      />
-
-      {/* ConfirmGoalkeeperModal */}
-      <ConfirmGoalkeeperModal
-        showGKConfirmModal={showGKConfirmModal}
-        selectedNewGoalkeeper={selectedNewGoalkeeper}
-        confirmGoalkeeper={confirmGoalkeeper}
-        setShowGKConfirmModal={setShowGKConfirmModal}
-      />
-
-      <AddPlayer
-        newPlayerName={newPlayerName}
-        setNewPlayerName={setNewPlayerName}
-        addNewPlayer={addNewPlayer}
-      />
-
       <Footer />
     </div>
   );

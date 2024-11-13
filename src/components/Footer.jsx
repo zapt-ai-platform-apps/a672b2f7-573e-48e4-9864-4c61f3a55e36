@@ -2,7 +2,7 @@ import { FaSolidGlobe, FaSolidEnvelope } from 'solid-icons/fa';
 
 function Footer() {
   return (
-    <footer class="bg-gray-800 text-white py-6">
+    <footer class="bg-gray-800 text-white py-6 mt-auto">
       <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
         <div class="text-center md:text-left">
           <p class="text-xl font-bold">Football Subs</p>
