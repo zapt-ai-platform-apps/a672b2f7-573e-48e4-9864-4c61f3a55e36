@@ -17,7 +17,7 @@ function App() {
         const isGoalkeeperPlayer = player.name === gk;
         return {
           name: player.name,
-          playIntervals: isStarting && !isGoalkeeperPlayer ? [{ startTime: Date.now(), endTime: null }] : [],
+          playIntervals: [], // Start with empty playIntervals
           isOnField: isStarting,
           isGoalkeeper: isGoalkeeperPlayer,
           totalPlayTime: 0, // initial total play time is 0
