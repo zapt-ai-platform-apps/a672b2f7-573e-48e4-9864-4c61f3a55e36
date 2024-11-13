@@ -261,20 +261,6 @@ function GameManagement(props) {
     }
   };
 
-  // Set default player to sub on
-  createEffect(() => {
-    if (offFieldPlayers().length > 0) {
-      const defaultSubOnPlayer = offFieldPlayers().reduce(
-        (prev, current) =>
-          getTotalPlayTime(current) < getTotalPlayTime(prev) ? current : prev,
-        offFieldPlayers()[0]
-      );
-      setSelectedOnPlayer(defaultSubOnPlayer.name);
-    } else {
-      setSelectedOnPlayer('');
-    }
-  });
-
   createEffect(() => {
     updatePlayerLists();
   });
@@ -304,7 +290,7 @@ function GameManagement(props) {
   };
 
   return (
-    <div class="min-h-screen p-4 flex flex-col text-gray-800">
+    <div class="h-full p-4 flex flex-col text-gray-800">
       <h1 class="text-3xl font-bold mb-4 text-green-600">Game Management</h1>
 
       <Header

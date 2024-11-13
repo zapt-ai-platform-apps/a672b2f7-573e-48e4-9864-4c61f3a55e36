@@ -87,7 +87,7 @@ function GameSetup(props) {
   };
 
   return (
-    <div class="min-h-screen p-4 flex flex-col text-gray-800">
+    <div class="h-full p-4 flex flex-col text-gray-800">
       <h1 class="text-3xl font-bold mb-4 text-green-600">Game Setup</h1>
       <div class="bg-white p-4 rounded-lg shadow-md mb-4">
         <h2 class="text-2xl font-bold mb-2 text-green-600">Add Players</h2>

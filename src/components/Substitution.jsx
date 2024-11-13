@@ -32,6 +32,7 @@ function Substitution(props) {
             value={selectedOnPlayer()}
             onChange={(e) => setSelectedOnPlayer(e.target.value)}
           >
+            <option value="">--Select Player--</option>
             <For each={offFieldPlayers()}>
               {(player) => (
                 <option value={player.name}>{player.name}</option>
@@ -41,8 +42,13 @@ function Substitution(props) {
         </div>
       </div>
       <button
-        class="mt-4 px-8 py-4 bg-blue-500 text-white text-lg rounded-lg cursor-pointer hover:bg-blue-600 hover:scale-105 transition duration-300 ease-in-out"
+        class={`mt-4 px-8 py-4 bg-blue-500 text-white text-lg rounded-lg ${
+          !selectedSubOffPlayer() || !selectedOnPlayer()
+            ? 'opacity-50 cursor-not-allowed'
+            : 'cursor-pointer hover:bg-blue-600 hover:scale-105'
+        } transition duration-300 ease-in-out`}
         onClick={makeSubstitution}
+        disabled={!selectedSubOffPlayer() || !selectedOnPlayer()}
       >
         Make Substitution
       </button>

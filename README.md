@@ -24,6 +24,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 - **Responsive Design**: The app is responsive and user-friendly on all screen sizes. The layout has been improved for mobile devices, with larger controls and improved spacing to enhance usability.
 - **Confirmation Before Ending Game**: When the coach clicks the "End Game" button, the app asks for confirmation to prevent accidental termination of the game.
 - **Large, Easy-to-Press Buttons and Controls**: All buttons, checkboxes, and inputs have been made larger and easier to press, enhancing usability on mobile devices.
+- **No Default Selection for 'Select Player to Sub On'**: Coaches must now choose which player to bring on during substitutions, ensuring deliberate decisions and avoiding unintended substitutions.
 
 ## User Journeys
 
@@ -90,10 +91,12 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
      - Click directly on a player in the "Players on Field" list to select them as the player to substitute off.
      - The clickable area is larger, making it easier to select players.
    - **Select Player to Sub On**:
-     - The player off-field with the least total playtime is automatically selected as the player to substitute on.
-     - You can change this selection if desired.
+     - There is no default selection for the "Select Player to Sub On" dropdown.
+     - You must manually select a player from the "Players Off Field" list to bring on.
+     - This ensures that you make deliberate choices and avoid unintended substitutions.
    - **Make Substitution**:
      - Click the "Make Substitution" button to execute the substitution.
+     - The button is disabled until both a player to sub off and a player to sub on have been selected.
      - The substitution lists update accordingly.
      - **Note**: If the game is paused when you make a substitution, the playtime for the player coming on will not increase until the game is resumed.
 6. **Adding a New Player During the Game**:
@@ -171,6 +174,7 @@ These variables should be defined in a `.env` file at the root of your project.
 - **All Players Unticked by Default**: When starting a new game, all players are unticked in the list of starting players, ensuring a fresh selection each time.
 - **Delete Players**: Coaches can delete players from the player list in the Game Setup screen. When a player is deleted, they are removed from the list and from local storage.
 - **Large, Easy-to-Press Buttons and Controls**: All buttons, checkboxes, and inputs have been made larger and easier to press, enhancing usability on mobile devices.
+- **No Default Selection for 'Select Player to Sub On'**: There is no longer a default selection for the player to sub on during substitutions. Coaches must actively select a player from the "Players Off Field" list, ensuring deliberate and accurate substitutions.
 
 ## Known Issues and Solutions
 
