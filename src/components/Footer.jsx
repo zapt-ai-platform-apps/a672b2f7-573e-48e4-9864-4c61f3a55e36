@@ -1,4 +1,4 @@
-import { FaSolidGlobe, FaSolidEnvelope } from 'solid-icons/fa';
+import { FaSolidGlobe } from 'solid-icons/fa';
 
 function Footer() {
   return (
@@ -20,13 +20,9 @@ function Footer() {
             <FaSolidGlobe size={20} />
             <span>Made on ZAPT</span>
           </a>
-          <a
-            href="mailto:footballsubs@zapt.ai"
-            class="flex items-center space-x-2 hover:text-green-400 transition-colors duration-300 cursor-pointer"
-          >
-            <FaSolidEnvelope size={20} />
-            <span>Contact us</span>
-          </a>
+          <div class="flex items-center space-x-2">
+            <span>footballsubs@zapt.ai</span>
+          </div>
         </div>
       </div>
     </footer>
