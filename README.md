@@ -10,10 +10,10 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 - **Real-Time Tracking**: The game clock and player playtimes update every second during the game, allowing for precise management.
 - **Delete Players**: Coaches can delete players from the player list, allowing for better management and organization.
 - **Select Players for Substitution by Clicking**: Both the player to sub off and the player to sub on are selected by clicking on them directly from the respective lists. This intuitive method streamlines the substitution process.
-- **Consistent Selection Method**: The app now uses the same method for selecting both players to sub on and sub off, enhancing the user experience.
+- **Consistent Selection Method**: The app uses the same method for selecting both players to sub on and sub off, enhancing the user experience.
 - **Made on ZAPT Link**: A "Made on ZAPT" link is displayed on all screens, providing quick access to the ZAPT website.
-- **Improved Game Management Screen Design**: The Game Management screen now has improved padding around the entire screen and enhanced layout, providing a more user-friendly and visually appealing interface.
-- **Full Screen Display**: The app now utilizes 'min-h-screen' for all screens, ensuring it occupies the full viewport height and providing a consistent experience across devices.
+- **Improved Game Management Screen Design**: The Game Management screen has improved padding around the entire screen and enhanced layout, providing a more user-friendly and visually appealing interface.
+- **Full Screen Display**: The app utilizes 'min-h-screen' for all screens, ensuring it occupies the full viewport height and provides a consistent experience across devices.
 - **Progressive Web App (PWA)**: Football Subs is a Progressive Web App, allowing you to install it on your device for a native app-like experience. You can use the app offline, and it integrates seamlessly with your device.
 - **Persistent Player List**: Stores players so they are available for every game. Player lists are saved locally on your device.
 - **All Players Unticked by Default**: When starting a new game, all players are unticked in the list of starting players, ensuring a fresh selection each time.
@@ -28,6 +28,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 - **Confirmation Before Ending Game**: When the coach clicks the "End Game" button, the app asks for confirmation to prevent accidental termination of the game.
 - **Large, Easy-to-Press Buttons and Controls**: All buttons, checkboxes, and inputs have been made larger and easier to press, enhancing usability on mobile devices.
 - **No Default Selection for Substitutions**: Coaches must now choose which players to substitute by clicking on them in the lists, ensuring deliberate decisions and avoiding unintended substitutions.
+- **Vercel Analytics Integration**: The app now includes Vercel Analytics to collect analytics data about app usage, helping understand app performance and user engagement.
 
 ## User Journeys
 
@@ -143,6 +144,7 @@ This app uses:
 
 - **Progressier** for adding Progressive Web App (PWA) functionality. Progressier simplifies the process of making the app installable and offline-capable.
 - **Sentry** for error tracking and performance monitoring. Sentry helps in identifying and fixing errors in the application by providing real-time error reports.
+- **Vercel Analytics** for collecting analytics data about app usage. Vercel Analytics helps in understanding app performance and user engagement.
 
 ## Environment Variables
 
@@ -178,6 +180,7 @@ These variables should be defined in a `.env` file at the root of your project.
 - **Delete Players**: Coaches can delete players from the player list in the Game Setup screen. When a player is deleted, they are removed from the list and from local storage.
 - **Large, Easy-to-Press Buttons and Controls**: All buttons, checkboxes, and inputs have been made larger and easier to press, enhancing usability on mobile devices.
 - **No Default Selection for Substitutions**: There is no longer a default selection for players during substitutions. Coaches must actively select players by clicking on them in the lists, ensuring deliberate and accurate substitutions.
+- **Vercel Analytics Integration**: The app includes Vercel Analytics to collect analytics data about app usage, helping understand app performance and user engagement.
 
 ## Known Issues and Solutions
 
