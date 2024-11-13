@@ -26,12 +26,11 @@ function GameManagement(props) {
   const [isRunning, setIsRunning] = createSignal(false);
   const [gameIntervals, setGameIntervals] = createSignal([]);
 
-  const [selectedOnPlayer, setSelectedOnPlayer] = createSignal('');
+  const [selectedSubOffPlayer, setSelectedSubOffPlayer] = createSignal(null);
+  const [selectedSubOnPlayer, setSelectedSubOnPlayer] = createSignal(null);
 
   const [onFieldPlayers, setOnFieldPlayers] = createSignal([]);
   const [offFieldPlayers, setOffFieldPlayers] = createSignal([]);
-
-  const [selectedSubOffPlayer, setSelectedSubOffPlayer] = createSignal(null);
 
   const [showGKModal, setShowGKModal] = createSignal(false);
   const [showGKConfirmModal, setShowGKConfirmModal] = createSignal(false);
@@ -104,9 +103,9 @@ function GameManagement(props) {
   };
 
   const makeSubstitution = () => {
-    if (selectedSubOffPlayer() && selectedOnPlayer()) {
+    if (selectedSubOffPlayer() && selectedSubOnPlayer()) {
       const offPlayerName = selectedSubOffPlayer().name;
-      const onPlayerName = selectedOnPlayer();
+      const onPlayerName = selectedSubOnPlayer().name;
 
       setPlayerData(
         playerData().map((player) => {
@@ -140,16 +139,20 @@ function GameManagement(props) {
         })
       );
       setSelectedSubOffPlayer(null);
-      setSelectedOnPlayer('');
-      // Update the substitution lists
+      setSelectedSubOnPlayer(null);
+      // Update the player lists
       updatePlayerLists();
     } else {
-      alert('Please select a player to sub off and on.');
+      alert('Please select a player to sub off and a player to sub on.');
     }
   };
 
-  const handlePlayerClick = (player) => {
+  const handleSubOffPlayerClick = (player) => {
     setSelectedSubOffPlayer(player);
+  };
+
+  const handleSubOnPlayerClick = (player) => {
+    setSelectedSubOnPlayer(player);
   };
 
   const assignGoalkeeper = () => {
@@ -290,7 +293,7 @@ function GameManagement(props) {
   };
 
   return (
-    <div class="h-full p-4 flex flex-col text-gray-800">
+    <div class="min-h-screen p-4 flex flex-col text-gray-800">
       <h1 class="text-3xl font-bold mb-4 text-green-600">Game Management</h1>
 
       <Header
@@ -311,26 +314,22 @@ function GameManagement(props) {
         <PlayerList
           players={onFieldPlayers}
           title="Players on Field"
-          selectedSubOffPlayer={selectedSubOffPlayer}
-          handlePlayerClick={handlePlayerClick}
+          selectedPlayer={selectedSubOffPlayer}
+          handlePlayerClick={handleSubOffPlayerClick}
           getTotalPlayTime={getTotalPlayTime}
-          isOnField={true}
         />
         <PlayerList
           players={offFieldPlayers}
           title="Players Off Field"
-          selectedSubOffPlayer={selectedSubOffPlayer}
-          handlePlayerClick={handlePlayerClick}
+          selectedPlayer={selectedSubOnPlayer}
+          handlePlayerClick={handleSubOnPlayerClick}
           getTotalPlayTime={getTotalPlayTime}
-          isOnField={false}
         />
       </div>
 
       <Substitution
         selectedSubOffPlayer={selectedSubOffPlayer}
-        offFieldPlayers={offFieldPlayers}
-        selectedOnPlayer={selectedOnPlayer}
-        setSelectedOnPlayer={setSelectedOnPlayer}
+        selectedSubOnPlayer={selectedSubOnPlayer}
         makeSubstitution={makeSubstitution}
       />
 

@@ -1,11 +1,9 @@
-import { For } from 'solid-js';
+import { Show } from 'solid-js';
 
 function Substitution(props) {
   const {
     selectedSubOffPlayer,
-    offFieldPlayers,
-    selectedOnPlayer,
-    setSelectedOnPlayer,
+    selectedSubOnPlayer,
     makeSubstitution,
   } = props;
 
@@ -18,37 +16,30 @@ function Substitution(props) {
             Player to Sub Off:
           </label>
           <div class="p-4 border border-gray-300 rounded-lg box-border h-16 flex items-center text-lg">
-            {selectedSubOffPlayer()
-              ? selectedSubOffPlayer().name
-              : 'Select a player'}
+            <Show when={selectedSubOffPlayer()} fallback="Select a player from the Players on Field list">
+              {selectedSubOffPlayer().name}
+            </Show>
           </div>
         </div>
         <div class="md:w-1/2 md:pl-4">
           <label class="block font-semibold mb-2 text-gray-700 text-lg">
-            Select Player to Sub On:
+            Player to Sub On:
           </label>
-          <select
-            class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer box-border h-16 text-lg"
-            value={selectedOnPlayer()}
-            onChange={(e) => setSelectedOnPlayer(e.target.value)}
-          >
-            <option value="">--Select Player--</option>
-            <For each={offFieldPlayers()}>
-              {(player) => (
-                <option value={player.name}>{player.name}</option>
-              )}
-            </For>
-          </select>
+          <div class="p-4 border border-gray-300 rounded-lg box-border h-16 flex items-center text-lg">
+            <Show when={selectedSubOnPlayer()} fallback="Select a player from the Players Off Field list">
+              {selectedSubOnPlayer().name}
+            </Show>
+          </div>
         </div>
       </div>
       <button
         class={`mt-4 px-8 py-4 bg-blue-500 text-white text-lg rounded-lg ${
-          !selectedSubOffPlayer() || !selectedOnPlayer()
+          !selectedSubOffPlayer() || !selectedSubOnPlayer()
             ? 'opacity-50 cursor-not-allowed'
             : 'cursor-pointer hover:bg-blue-600 hover:scale-105'
         } transition duration-300 ease-in-out`}
         onClick={makeSubstitution}
-        disabled={!selectedSubOffPlayer() || !selectedOnPlayer()}
+        disabled={!selectedSubOffPlayer() || !selectedSubOnPlayer()}
       >
         Make Substitution
       </button>

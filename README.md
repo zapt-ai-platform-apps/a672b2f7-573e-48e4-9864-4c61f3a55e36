@@ -9,8 +9,11 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 - **Accurate Game Time Calculation**: The total game time is calculated by recording each interval the game is running, summing up the total elapsed time, and updating every second. This ensures precise tracking of the total game duration, even when the game is paused and resumed.
 - **Real-Time Tracking**: The game clock and player playtimes update every second during the game, allowing for precise management.
 - **Delete Players**: Coaches can delete players from the player list, allowing for better management and organization.
+- **Select Players for Substitution by Clicking**: Both the player to sub off and the player to sub on are selected by clicking on them directly from the respective lists. This intuitive method streamlines the substitution process.
+- **Consistent Selection Method**: The app now uses the same method for selecting both players to sub on and sub off, enhancing the user experience.
 - **Made on ZAPT Link**: A "Made on ZAPT" link is displayed on all screens, providing quick access to the ZAPT website.
 - **Improved Game Management Screen Design**: The Game Management screen now has improved padding around the entire screen and enhanced layout, providing a more user-friendly and visually appealing interface.
+- **Full Screen Display**: The app now utilizes 'min-h-screen' for all screens, ensuring it occupies the full viewport height and providing a consistent experience across devices.
 - **Progressive Web App (PWA)**: Football Subs is a Progressive Web App, allowing you to install it on your device for a native app-like experience. You can use the app offline, and it integrates seamlessly with your device.
 - **Persistent Player List**: Stores players so they are available for every game. Player lists are saved locally on your device.
 - **All Players Unticked by Default**: When starting a new game, all players are unticked in the list of starting players, ensuring a fresh selection each time.
@@ -24,7 +27,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 - **Responsive Design**: The app is responsive and user-friendly on all screen sizes. The layout has been improved for mobile devices, with larger controls and improved spacing to enhance usability.
 - **Confirmation Before Ending Game**: When the coach clicks the "End Game" button, the app asks for confirmation to prevent accidental termination of the game.
 - **Large, Easy-to-Press Buttons and Controls**: All buttons, checkboxes, and inputs have been made larger and easier to press, enhancing usability on mobile devices.
-- **No Default Selection for 'Select Player to Sub On'**: Coaches must now choose which player to bring on during substitutions, ensuring deliberate decisions and avoiding unintended substitutions.
+- **No Default Selection for Substitutions**: Coaches must now choose which players to substitute by clicking on them in the lists, ensuring deliberate decisions and avoiding unintended substitutions.
 
 ## User Journeys
 
@@ -73,7 +76,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 
 ### 3. Managing the Game
 
-1. **Game Management Screen**: Once the game starts, you're taken to the Game Management screen, which now features improved design with padding around the entire screen and enhanced layout.
+1. **Game Management Screen**: Once the game starts, you're taken to the Game Management screen, which now features improved design with padding around the entire screen and enhanced layout. The app now uses 'min-h-screen' for all screens, ensuring it occupies the full viewport height.
 2. **Made on ZAPT Link**: At the bottom of the screen, the "Made on ZAPT" link is displayed.
 3. **Starting the Timer**:
    - Click the "Start" button to begin the game clock.
@@ -90,10 +93,10 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
    - **Select Player to Sub Off**:
      - Click directly on a player in the "Players on Field" list to select them as the player to substitute off.
      - The clickable area is larger, making it easier to select players.
+     - The selected player is highlighted.
    - **Select Player to Sub On**:
-     - There is no default selection for the "Select Player to Sub On" dropdown.
-     - You must manually select a player from the "Players Off Field" list to bring on.
-     - This ensures that you make deliberate choices and avoid unintended substitutions.
+     - Click directly on a player in the "Players Off Field" list to select them as the player to substitute on.
+     - The selected player is highlighted.
    - **Make Substitution**:
      - Click the "Make Substitution" button to execute the substitution.
      - The button is disabled until both a player to sub off and a player to sub on have been selected.
@@ -161,7 +164,7 @@ These variables should be defined in a `.env` file at the root of your project.
 - When the goalkeeper is changed and the previous goalkeeper becomes an outfield player, their play intervals are adjusted to reflect their time as an outfield player.
 - **Confirmation Before Changing Goalkeeper**: The app asks for confirmation when you select a new goalkeeper to prevent accidental changes.
 - Substitution logic allows coaches to select which players to substitute without disruptions.
-- The substitution interface is always visible during the match, allowing for seamless substitutions.
+- **Consistent Player Selection**: Coaches can now select both players to sub off and players to sub on by clicking on them directly from the respective lists. This change enhances usability and provides a consistent method for player selection.
 - Players' playing times are calculated based on when they start and stop playing, ensuring accuracy even if the app is minimized or the device is locked.
 - **Real-Time Updates**: Playtimes are updated every second during the game, providing real-time information to the coach.
 - **Accurate Game Time Calculation**: The total game time is calculated by recording each interval the game is running, summing up the total elapsed time, and updating every second. This provides precise tracking of the total game duration, even when the game is paused and resumed.
@@ -174,7 +177,7 @@ These variables should be defined in a `.env` file at the root of your project.
 - **All Players Unticked by Default**: When starting a new game, all players are unticked in the list of starting players, ensuring a fresh selection each time.
 - **Delete Players**: Coaches can delete players from the player list in the Game Setup screen. When a player is deleted, they are removed from the list and from local storage.
 - **Large, Easy-to-Press Buttons and Controls**: All buttons, checkboxes, and inputs have been made larger and easier to press, enhancing usability on mobile devices.
-- **No Default Selection for 'Select Player to Sub On'**: There is no longer a default selection for the player to sub on during substitutions. Coaches must actively select a player from the "Players Off Field" list, ensuring deliberate and accurate substitutions.
+- **No Default Selection for Substitutions**: There is no longer a default selection for players during substitutions. Coaches must actively select players by clicking on them in the lists, ensuring deliberate and accurate substitutions.
 
 ## Known Issues and Solutions
 
@@ -192,7 +195,7 @@ These variables should be defined in a `.env` file at the root of your project.
    - Choose your starting lineup and assign a goalkeeper.
 2. **Manage the Game**:
    - Start the game and monitor player playtimes and the total game time, which update in real-time.
-   - Make substitutions as needed, and the app will accurately track playtimes.
+   - Make substitutions by clicking on players in the lists.
    - Change the goalkeeper if necessary, with playtime adjustments.
 3. **End the Game**:
    - When the game is over, end the game to finalize playtimes.
