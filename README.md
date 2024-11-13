@@ -12,6 +12,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 - **Select Players for Substitution by Clicking**: Both the player to sub off and the player to sub on are selected by clicking on them directly from the respective lists. This intuitive method streamlines the substitution process.
 - **Consistent Selection Method**: The app uses the same method for selecting both players to sub on and sub off, enhancing the user experience.
 - **Made on ZAPT Link**: A "Made on ZAPT" link is displayed on all screens, providing quick access to the ZAPT website.
+- **Contact Email**: A contact email address (footballsubs@zapt.ai) is provided near the "Made on ZAPT" link on all screens for easy communication.
 - **Improved Game Management Screen Design**: The Game Management screen has improved padding around the entire screen and enhanced layout, providing a more user-friendly and visually appealing interface.
 - **Full Screen Display**: The app utilizes 'min-h-screen' for all screens, ensuring it occupies the full viewport height and provides a consistent experience across devices.
 - **Progressive Web App (PWA)**: Football Subs is a Progressive Web App, allowing you to install it on your device for a native app-like experience. You can use the app offline, and it integrates seamlessly with your device.
@@ -43,12 +44,13 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 3. **Landing Page**:
    - The app's logo is prominently displayed.
    - Click the "Get Started" button to proceed to the game setup.
-   - **Made on ZAPT Link**: At the bottom of the screen, there's a link labeled "Made on ZAPT" that directs you to [www.zapt.ai](https://www.zapt.ai).
+   - **Made on ZAPT Link**: At the bottom of the screen, there's a link labeled "Made on ZAPT" that directs you to [www.zapt.ai](https://www.zapt.ai). The link is styled to look like a traditional hyperlink.
+   - **Contact Email**: Next to the "Made on ZAPT" link, there's a contact email address [footballsubs@zapt.ai](mailto:footballsubs@zapt.ai) for any inquiries or support.
 
 ### 2. Setting Up the Game
 
 1. **Game Setup Screen**: After clicking "Get Started," you are taken to the Game Setup screen.
-2. **Made on ZAPT Link**: At the bottom of the screen, you will see the "Made on ZAPT" link.
+2. **Made on ZAPT Link and Contact Email**: At the bottom of the screen, you will see the "Made on ZAPT" link styled as a hyperlink, and the contact email address.
 3. **Player List Persistence**:
    - The app loads the saved list of players from previous sessions.
    - **All Players Unticked**: All players are unticked in the list of starting players when the Game Setup screen loads, regardless of previous selections.
@@ -78,7 +80,7 @@ Football Subs is an app designed to help coaches manage substitutions for kids' 
 ### 3. Managing the Game
 
 1. **Game Management Screen**: Once the game starts, you're taken to the Game Management screen, which now features improved design with padding around the entire screen and enhanced layout. The app now uses 'min-h-screen' for all screens, ensuring it occupies the full viewport height.
-2. **Made on ZAPT Link**: At the bottom of the screen, the "Made on ZAPT" link is displayed.
+2. **Made on ZAPT Link and Contact Email**: At the bottom of the screen, the "Made on ZAPT" link styled as a hyperlink, and the contact email address are displayed.
 3. **Starting the Timer**:
    - Click the "Start" button to begin the game clock.
    - **Real-Time Updates**: The game clock and player playtimes update every second during the game.
@@ -175,7 +177,7 @@ These variables should be defined in a `.env` file at the root of your project.
 - **Confirmation Before Ending Game**: The app asks for confirmation when you click the "End Game" button to prevent accidental termination of the game.
 - **Improved Mobile Layout**: The layout has been optimized for mobile devices, especially the positioning and spacing of the "Pause" and "End Game" buttons to ensure they are not too close together.
 - **Improved Design**: The Game Management screen now features improved padding and layout enhancements to provide a more user-friendly experience.
-- **Made on ZAPT Link**: A "Made on ZAPT" link is present on all screens, allowing users to visit [www.zapt.ai](https://www.zapt.ai).
+- **Made on ZAPT Link and Contact Email**: A "Made on ZAPT" link styled as a hyperlink and a contact email address (footballsubs@zapt.ai) are present on all screens, allowing users to visit [www.zapt.ai](https://www.zapt.ai) and contact us directly.
 - **All Players Unticked by Default**: When starting a new game, all players are unticked in the list of starting players, ensuring a fresh selection each time.
 - **Delete Players**: Coaches can delete players from the player list in the Game Setup screen. When a player is deleted, they are removed from the list and from local storage.
 - **Large, Easy-to-Press Buttons and Controls**: All buttons, checkboxes, and inputs have been made larger and easier to press, enhancing usability on mobile devices.
@@ -205,3 +207,7 @@ These variables should be defined in a `.env` file at the root of your project.
    - Review the playtimes to ensure fair play for all players.
 
 Enjoy a smoother coaching experience with Football Subs!
+
+## Contact
+
+For any inquiries or support, please contact us at [footballsubs@zapt.ai](mailto:footballsubs@zapt.ai).
