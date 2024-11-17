@@ -4,9 +4,13 @@ function GoalScoredModal(props) {
   const { showGoalModal, setShowGoalModal, players, recordGoal } = props;
   const [team, setTeam] = createSignal('');
   const [scorerName, setScorerName] = createSignal('');
+  const [confirmOpponentGoal, setConfirmOpponentGoal] = createSignal(false);
 
   const handleTeamSelection = (selectedTeam) => {
     setTeam(selectedTeam);
+    if (selectedTeam === 'opponent') {
+      setConfirmOpponentGoal(true);
+    }
   };
 
   const handlePlayerSelection = (playerName) => {
@@ -17,12 +21,14 @@ function GoalScoredModal(props) {
     recordGoal(team(), scorerName());
     setTeam('');
     setScorerName('');
+    setConfirmOpponentGoal(false);
     setShowGoalModal(false);
   };
 
   const handleCancel = () => {
     setTeam('');
     setScorerName('');
+    setConfirmOpponentGoal(false);
     setShowGoalModal(false);
   };
 
@@ -42,14 +48,26 @@ function GoalScoredModal(props) {
               </button>
               <button
                 class="flex-1 px-6 py-3 bg-red-500 text-white text-lg rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out"
-                onClick={() => {
-                  recordGoal('opponent', '');
-                  setTeam('');
-                  setScorerName('');
-                  setShowGoalModal(false);
-                }}
+                onClick={() => handleTeamSelection('opponent')}
               >
                 Opponent Team
+              </button>
+            </div>
+          </Show>
+          <Show when={team() === 'opponent' && confirmOpponentGoal()}>
+            <p class="mt-4 mb-2 text-lg">Confirm opponent team scored?</p>
+            <div class="mt-4 flex justify-end space-x-4">
+              <button
+                class="px-6 py-3 bg-blue-500 text-white text-lg rounded-lg cursor-pointer hover:bg-blue-600 transition duration-300 ease-in-out"
+                onClick={handleConfirm}
+              >
+                Confirm
+              </button>
+              <button
+                class="px-6 py-3 bg-gray-500 text-white text-lg rounded-lg cursor-pointer hover:bg-gray-600 transition duration-300 ease-in-out"
+                onClick={handleCancel}
+              >
+                Cancel
               </button>
             </div>
           </Show>
@@ -85,6 +103,12 @@ function GoalScoredModal(props) {
                 </button>
               </div>
             </Show>
+            <button
+              class="mt-4 w-full py-3 bg-red-500 text-white text-lg rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out"
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
           </Show>
         </div>
       </div>

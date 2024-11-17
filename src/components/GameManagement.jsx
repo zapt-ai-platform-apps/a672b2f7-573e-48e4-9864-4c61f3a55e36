@@ -52,7 +52,7 @@ function GameManagement(props) {
   let uiTimer = null;
   const navigate = useNavigate();
 
-  const [showGoalModal, setShowGoalModal] = createSignal(false); // Added missing definition
+  const [showGoalModal, setShowGoalModal] = createSignal(false);
 
   onMount(() => {
     updatePlayerLists();
@@ -420,7 +420,7 @@ function GameManagement(props) {
         <GoalScoredModal
           showGoalModal={showGoalModal}
           setShowGoalModal={setShowGoalModal}
-          players={playerData}
+          players={onFieldPlayers}
           recordGoal={recordGoal}
         />
       </div>

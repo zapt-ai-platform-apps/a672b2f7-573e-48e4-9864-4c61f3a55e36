@@ -55,6 +55,19 @@ function GameSummary(props) {
         </div>
 
         <div class="mb-4">
+          <h2 class="text-2xl font-bold mb-2 text-green-600">Goals by Opponent Team</h2>
+          <For each={goals().filter((goal) => goal.team === 'opponent')}>
+            {(goal) => (
+              <div class="mb-2">
+                <p>
+                  Opponent scored at {formatTime(goal.time)} minutes
+                </p>
+              </div>
+            )}
+          </For>
+        </div>
+
+        <div class="mb-4">
           <h2 class="text-2xl font-bold mb-2 text-green-600">Player Playtimes</h2>
           <ul>
             <For each={playerData()}>
