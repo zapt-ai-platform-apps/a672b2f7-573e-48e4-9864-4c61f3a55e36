@@ -29,6 +29,9 @@ function GameSummary(props) {
     navigate('/');
   };
 
+  const sortedPlayerData = () =>
+    [...playerData()].sort((a, b) => getTotalPlayTime(b) - getTotalPlayTime(a));
+
   return (
     <div class="min-h-screen flex flex-col text-gray-800">
       <div class="p-4 flex-grow">
@@ -70,7 +73,7 @@ function GameSummary(props) {
         <div class="mb-4">
           <h2 class="text-2xl font-bold mb-2 text-green-600">Player Playtimes</h2>
           <ul>
-            <For each={playerData()}>
+            <For each={sortedPlayerData()}>
               {(player) => (
                 <li class="flex justify-between items-center mb-2 p-4 bg-white rounded-lg shadow-md">
                   <div class="font-medium text-lg">{player.name}</div>
