@@ -32,10 +32,18 @@ function GoalScoredModal(props) {
     setShowGoalModal(false);
   };
 
+  const modalHeightClass = () => {
+    if (team() === 'our') {
+      return 'h-4/5';
+    } else {
+      return '';
+    }
+  };
+
   return (
     <Show when={showGoalModal()}>
       <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-lg max-w-md w-full h-4/5 flex flex-col">
+        <div class={`bg-white p-6 rounded-lg max-w-md w-full flex flex-col ${modalHeightClass()}`}>
           <h2 class="text-2xl font-bold mb-4 text-green-600">Goal Scored</h2>
           <Show when={!team()}>
             <p class="mb-4 text-lg">Which team scored?</p>
