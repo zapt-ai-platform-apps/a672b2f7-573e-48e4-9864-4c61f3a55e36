@@ -1,10 +1,13 @@
 import { useNavigate } from '@solidjs/router';
 import Footer from './Footer';
 import { For } from 'solid-js';
+import { createSignal } from 'solid-js';
+import * as Sentry from '@sentry/browser';
 
 function GameSummary(props) {
   const { playerData, goals, ourScore, opponentScore, resetGame } = props;
   const navigate = useNavigate();
+  const [isSharing, setIsSharing] = createSignal(false);
 
   const getTotalPlayTime = (player) => {
     let total = 0;
@@ -31,6 +34,48 @@ function GameSummary(props) {
 
   const sortedPlayerData = () =>
     [...playerData()].sort((a, b) => getTotalPlayTime(b) - getTotalPlayTime(a));
+
+  const handleShareSummary = async () => {
+    setIsSharing(true);
+    try {
+      // Generate the summary text
+      let summaryText = `Final Score: Our Team ${ourScore()} - ${opponentScore()} Opponent Team\n\n`;
+
+      summaryText += 'Goals by Our Team:\n';
+      goals()
+        .filter((goal) => goal.team === 'our')
+        .forEach((goal) => {
+          summaryText += `- ${goal.scorerName} scored at ${formatTime(goal.time)} minutes\n`;
+        });
+
+      summaryText += '\nGoals by Opponent Team:\n';
+      goals()
+        .filter((goal) => goal.team === 'opponent')
+        .forEach((goal) => {
+          summaryText += `- Opponent scored at ${formatTime(goal.time)} minutes\n`;
+        });
+
+      summaryText += '\nPlayer Playtimes:\n';
+      sortedPlayerData().forEach((player) => {
+        summaryText += `- ${player.name}: ${formatTime(getTotalPlayTime(player))}\n`;
+      });
+
+      // Use Web Share API
+      if (navigator.share) {
+        await navigator.share({
+          title: 'Match Summary',
+          text: summaryText,
+        });
+      } else {
+        alert('Sharing not supported on this browser.');
+      }
+    } catch (error) {
+      console.error('Error sharing:', error);
+      Sentry.captureException(error);
+    } finally {
+      setIsSharing(false);
+    }
+  };
 
   return (
     <div class="min-h-screen flex flex-col text-gray-800">
@@ -84,12 +129,23 @@ function GameSummary(props) {
           </ul>
         </div>
 
-        <button
-          class="px-8 py-4 bg-blue-500 text-white text-lg rounded-lg cursor-pointer hover:bg-blue-600 transition duration-300 ease-in-out"
-          onClick={handleBackToHome}
-        >
-          Back to Home
-        </button>
+        <div class="flex space-x-4 mt-4">
+          <button
+            class="px-8 py-4 bg-blue-500 text-white text-lg rounded-lg cursor-pointer hover:bg-blue-600 transition duration-300 ease-in-out"
+            onClick={handleBackToHome}
+          >
+            Back to Home
+          </button>
+          <button
+            class={`px-8 py-4 bg-green-500 text-white text-lg rounded-lg ${
+              isSharing() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-green-600'
+            } transition duration-300 ease-in-out`}
+            onClick={handleShareSummary}
+            disabled={isSharing()}
+          >
+            {isSharing() ? 'Sharing...' : 'Share Summary'}
+          </button>
+        </div>
       </div>
       <Footer />
     </div>

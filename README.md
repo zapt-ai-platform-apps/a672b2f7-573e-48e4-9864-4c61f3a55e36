@@ -1,16 +1,17 @@
 # Football Subs
 
-Football Subs is an app designed to help coaches manage substitutions and track game events for kids' football teams. It ensures that each player gets a fair amount of game time while keeping all players engaged and involved. The app allows coaches to monitor player playtimes, manage substitutions, track scores, record goal events, and review detailed game summaries in real-time.
+Football Subs is an app designed to help coaches manage substitutions and track game events for kids' football teams. It ensures that each player gets a fair amount of game time while keeping all players engaged and involved. The app allows coaches to monitor player playtimes, manage substitutions, track scores, record goal events, and review detailed game summaries in real-time. Additionally, the app now allows coaches to share the match summary directly from the app once the match has ended.
 
 ## Features
 
+- **Share Match Summary**: At the end of the game, you can now share the match summary directly from the app. The summary includes the final score, goals scored by both teams with details, and player playtimes. Use the "Share Summary" button on the Game Summary screen to share via supported apps on your device.
 - **Improved Goal Scorer Selection Modal**: When recording a goal for your team, the modal listing the players is now much taller and scrollable. A scrollbar appears when the list exceeds the available space, making it obvious that you can scroll down if the names don't fit. This enhancement makes it easier for coaches to select the correct player quickly, especially when managing teams with many players.
 - **Players Ordered by Total Playtime in Summary**: In the final match summary page, players are ordered by their total time played in descending order. This allows coaches to easily see which players had the most playtime during the game.
 - **Centered Title on Mobile**: The "Football Subs" title on the landing page is centered when viewed on mobile devices, providing a better user experience.
 - **Fixed Duplicate Cancel Button**: Resolved the issue where two cancel buttons appeared when recording a goal and selecting a player. Now, only one cancel button is displayed, ensuring a cleaner interface.
 - **Score Display**: The current score is displayed at the top of the screen during the game, allowing coaches to keep track of both teams' scores easily.
 - **Goal Recording with Time Tracking**: A "Goal Scored" button allows coaches to record when a goal is scored. Coaches can specify if the goal was scored by their team or the opponent, select the player who scored if it was their team, and the app records the exact time the goal was scored.
-- **Comprehensive Game Summary**: At the end of the game, a detailed summary is displayed, showing each player's total playtime, the overall score, and a breakdown of goals scored by both teams, including who scored and the exact time when each goal was scored.
+- **Comprehensive Game Summary**: At the end of the game, a detailed summary is displayed, showing each player's total playtime, the overall score, a breakdown of goals scored by both teams, and now the option to share this summary.
 - **Accurate Playtime Tracking with Real-Time Updates**: Player playtimes are accurately calculated based on when they start and stop playing. Playtimes update every second during the game, ensuring coaches have up-to-the-second information.
 - **Playtime Increases Only When Game Is Running**: Player playtimes only increase when the game is running. When the game is paused, playtimes are paused as well, ensuring accurate tracking of actual playtime.
 - **Accurate Game Time Calculation**: The total game time is calculated by recording each interval the game is running, summing up the total elapsed time, and updating every second. This ensures precise tracking of the total game duration, even when the game is paused and resumed.
@@ -135,7 +136,7 @@ Football Subs is an app designed to help coaches manage substitutions and track 
    - **Updating Score**:
      - The score displayed at the top of the screen updates automatically to reflect the new score.
 
-### 4. Reviewing Game Summary
+### 4. Reviewing Game Summary and Sharing
 
 1. **Game Summary Screen**: After ending the game, you are presented with a comprehensive game summary.
 2. **Final Score**:
@@ -151,7 +152,12 @@ Football Subs is an app designed to help coaches manage substitutions and track 
    - A list of all players with their total playtimes is displayed.
    - Players are ordered by their total playtime in descending order, with those who played the most at the top.
    - Playtimes are shown in minutes and seconds.
-6. **Navigation Options**:
+6. **Share Match Summary**:
+   - Click the "Share Summary" button to open your device's share options.
+   - Select the app or method you wish to use to share the match summary.
+   - The summary includes the final score, goals by both teams with details, and player playtimes.
+   - **Note**: Sharing functionality depends on your device and browser capabilities.
+7. **Navigation Options**:
    - Click "Back to Home" to return to the landing page and start a new game.
 
 # How to Use the App
@@ -164,8 +170,10 @@ Football Subs is an app designed to help coaches manage substitutions and track 
    - Make substitutions by clicking on players in the lists.
    - Record goals using the "Goal Scored" button, specifying the scoring team and player.
    - Change the goalkeeper if necessary, with playtime adjustments.
-3. **Review Game Summary**:
+   - Add new players during the game as needed.
+3. **Review and Share Game Summary**:
    - After ending the game, review the game summary to see player playtimes (ordered by total playtime), the overall score, and details of goals scored by both teams, including the exact times.
+   - Share the match summary using the "Share Summary" button.
    - Return to the home screen to start a new game.
 
 Enjoy a smoother coaching experience with Football Subs!
