@@ -58,6 +58,12 @@ function App() {
             setPlayerData={setPlayerData}
             goalkeeper={goalkeeper}
             setGoalkeeper={setGoalkeeper}
+            ourScore={ourScore}
+            setOurScore={setOurScore}
+            opponentScore={opponentScore}
+            setOpponentScore={setOpponentScore}
+            goals={goals}
+            setGoals={setGoals}
             onEndGame={resetGame}
           />
         }

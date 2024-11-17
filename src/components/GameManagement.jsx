@@ -22,9 +22,15 @@ function GameManagement(props) {
     setPlayerData,
     goalkeeper,
     setGoalkeeper,
+    ourScore,
+    setOurScore,
+    opponentScore,
+    setOpponentScore,
+    goals,
+    setGoals,
     onEndGame,
   } = props;
-  
+
   const [isRunning, setIsRunning] = createSignal(false);
   const [gameIntervals, setGameIntervals] = createSignal([]);
 
@@ -45,12 +51,6 @@ function GameManagement(props) {
   const [now, setNow] = createSignal(Date.now());
   let uiTimer = null;
   const navigate = useNavigate();
-
-  // New state variables for score and goals
-  const [ourScore, setOurScore] = createSignal(0);
-  const [opponentScore, setOpponentScore] = createSignal(0);
-  const [goals, setGoals] = createSignal([]);
-  const [showGoalModal, setShowGoalModal] = createSignal(false);
 
   onMount(() => {
     updatePlayerLists();

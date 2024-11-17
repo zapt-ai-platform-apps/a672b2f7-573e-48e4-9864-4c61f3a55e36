@@ -1,12 +1,12 @@
 # Football Subs
 
-Football Subs is an app designed to help coaches manage substitutions and track game events for kids' football teams. It ensures that each player gets a fair amount of game time while keeping all players engaged and involved. The app allows coaches to monitor player playtimes, manage substitutions, track scores, record goal events, and review game summaries in real-time.
+Football Subs is an app designed to help coaches manage substitutions and track game events for kids' football teams. It ensures that each player gets a fair amount of game time while keeping all players engaged and involved. The app allows coaches to monitor player playtimes, manage substitutions, track scores, record goal events, and review detailed game summaries in real-time.
 
 ## Features
 
 - **Score Display**: The current score is displayed at the top of the screen during the game, allowing coaches to keep track of both teams' scores easily.
-- **Goal Recording**: A "Goal Scored" button allows coaches to record when a goal is scored. Coaches can specify if the goal was scored by their team or the opponent, and select the player who scored if it was their team.
-- **Game Summary**: At the end of the game, a comprehensive summary is displayed, showing each player's total playtime, the overall score, and details of who scored and when for your team.
+- **Goal Recording with Time Tracking**: A "Goal Scored" button allows coaches to record when a goal is scored. Coaches can specify if the goal was scored by their team or the opponent, select the player who scored if it was their team, and the app records the exact time the goal was scored.
+- **Comprehensive Game Summary**: At the end of the game, a detailed summary is displayed, showing each player's total playtime, the overall score, and a breakdown of goals scored by your team, including who scored and the exact time when each goal was scored.
 - **Accurate Playtime Tracking with Real-Time Updates**: Player playtimes are accurately calculated based on when they start and stop playing. Playtimes update every second during the game, ensuring coaches have up-to-the-second information.
 - **Playtime Increases Only When Game Is Running**: Player playtimes only increase when the game is running. When the game is paused, playtimes are paused as well, ensuring accurate tracking of actual playtime.
 - **Accurate Game Time Calculation**: The total game time is calculated by recording each interval the game is running, summing up the total elapsed time, and updating every second. This ensures precise tracking of the total game duration, even when the game is paused and resumed.
@@ -85,8 +85,37 @@ Football Subs is an app designed to help coaches manage substitutions and track 
 
 ### 3. Managing the Game
 
-(Details remain the same as previously listed, with the addition of step 8.)
-
+1. **Game Management Screen**: After starting the game, you are taken to the Game Management screen.
+2. **Time and Score Display**:
+   - The game clock displays the elapsed game time.
+   - The current score is displayed prominently.
+3. **Control Buttons**:
+   - **Start/Pause Button**: Starts or pauses the game clock.
+   - **End Game Button**: Ends the game and takes you to the Game Summary screen after confirmation.
+4. **Player Lists**:
+   - **Players on Field**:
+     - Displays the list of players currently on the field.
+     - Players are sorted by ascending total playtime.
+     - The goalkeeper is indicated with a "(GK)" tag.
+     - Clicking on a player selects them for substitution.
+   - **Players Off Field**:
+     - Shows the list of players off the field.
+     - Players are sorted by ascending total playtime.
+     - Clicking on a player selects them to come onto the field.
+5. **Substitutions**:
+   - Select a player to sub off from the "Players on Field" list.
+   - Select a player to sub on from the "Players Off Field" list.
+   - Click the "Make Substitution" button to execute the substitution.
+   - Players' playtimes adjust accordingly.
+6. **Change Goalkeeper**:
+   - Click the "Change Goalkeeper" button.
+   - Select a new goalkeeper from the list of on-field players.
+   - Confirm the change when prompted.
+   - The previous goalkeeper's playtime adjusts as they become an outfield player.
+7. **Add Players During Game**:
+   - Use the "Add New Player" section to add players during the game.
+   - Enter the player's name and click "Add."
+   - New players start with the minimum playtime among current outfield players.
 8. **Recording Goals**:
    - Click the "Goal Scored" button at the bottom of the screen.
    - **Select Team**:
@@ -96,15 +125,24 @@ Football Subs is an app designed to help coaches manage substitutions and track 
    - **Select Scorer (If Our Team)**:
      - If you selected "Our Team," a list of your players appears.
      - Click on the player who scored the goal.
-     - The goal is recorded with the scorer's name and the time it was scored.
+     - The goal is recorded with the scorer's name and the exact time it was scored.
    - **Updating Score**:
      - The score displayed at the top of the screen updates automatically to reflect the new score.
 
-(Other details remain the same.)
-
 ### 4. Reviewing Game Summary
 
-(Details as previously listed.)
+1. **Game Summary Screen**: After ending the game, you are presented with a comprehensive game summary.
+2. **Final Score**:
+   - The final score is displayed prominently.
+   - Shows the number of goals scored by your team and the opponent.
+3. **Goals by Our Team**:
+   - A list of goals scored by your team is displayed.
+   - For each goal, the scorer's name and the exact time the goal was scored are shown.
+4. **Player Playtimes**:
+   - A list of all players with their total playtimes is displayed.
+   - Playtimes are shown in minutes and seconds.
+5. **Navigation Options**:
+   - Click "Back to Home" to return to the landing page and start a new game.
 
 # How to Use the App
 
@@ -117,7 +155,7 @@ Football Subs is an app designed to help coaches manage substitutions and track 
    - Record goals using the "Goal Scored" button, specifying the scoring team and player.
    - Change the goalkeeper if necessary, with playtime adjustments.
 3. **Review Game Summary**:
-   - After ending the game, review the game summary to see player playtimes, the overall score, and details of goals scored by your team.
+   - After ending the game, review the game summary to see player playtimes, the overall score, and details of goals scored by your team, including the exact times.
    - Return to the home screen to start a new game.
 
 Enjoy a smoother coaching experience with Football Subs!
