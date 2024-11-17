@@ -1,3 +1,4 @@
+```jsx
 import {
   createSignal,
   onCleanup,
@@ -51,6 +52,8 @@ function GameManagement(props) {
   const [now, setNow] = createSignal(Date.now());
   let uiTimer = null;
   const navigate = useNavigate();
+
+  const [showGoalModal, setShowGoalModal] = createSignal(false); // Added missing definition
 
   onMount(() => {
     updatePlayerLists();
@@ -428,3 +431,4 @@ function GameManagement(props) {
 }
 
 export default GameManagement;
+```
