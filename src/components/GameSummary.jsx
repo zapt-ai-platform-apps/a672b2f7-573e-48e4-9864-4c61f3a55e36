@@ -70,8 +70,12 @@ function GameSummary(props) {
         alert('Sharing not supported on this browser.');
       }
     } catch (error) {
-      console.error('Error sharing:', error);
-      Sentry.captureException(error);
+      if (error.name !== 'AbortError') {
+        console.error('Error sharing:', error);
+        Sentry.captureException(error);
+        alert('An error occurred while sharing. Please try again.');
+      }
+      // If it's an AbortError (user canceled the share), do nothing
     } finally {
       setIsSharing(false);
     }
