@@ -17,7 +17,7 @@ function LandingPage() {
           class="w-32 h-32 mb-6"
           data-image-request="A football icon with substitutions arrows"
         />
-        <h1 class="text-5xl font-bold text-green-600 mb-4">Football Subs</h1>
+        <h1 class="text-5xl font-bold text-green-600 mb-4 text-center md:text-left">Football Subs</h1>
         <p class="text-lg text-gray-700 mb-8 text-center max-w-xl">
           Manage your team's substitutions effortlessly and ensure fair playtime
           for all players.

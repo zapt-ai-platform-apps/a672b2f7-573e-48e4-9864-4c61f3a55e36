@@ -87,7 +87,14 @@ function GoalScoredModal(props) {
                 )}
               </For>
             </ul>
-            <Show when={scorerName()}>
+            <Show when={scorerName()} fallback={
+              <button
+                class="mt-4 w-full py-3 bg-red-500 text-white text-lg rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out"
+                onClick={handleCancel}
+              >
+                Cancel
+              </button>
+            }>
               <div class="mt-4 flex justify-end space-x-4">
                 <button
                   class="px-6 py-3 bg-blue-500 text-white text-lg rounded-lg cursor-pointer hover:bg-blue-600 transition duration-300 ease-in-out"
@@ -103,12 +110,6 @@ function GoalScoredModal(props) {
                 </button>
               </div>
             </Show>
-            <button
-              class="mt-4 w-full py-3 bg-red-500 text-white text-lg rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out"
-              onClick={handleCancel}
-            >
-              Cancel
-            </button>
           </Show>
         </div>
       </div>
