@@ -1,5 +1,5 @@
 function Header(props) {
-  const { isRunning, toggleTimer, getTimeElapsed, handleEndGame } = props;
+  const { isRunning, toggleTimer, getTimeElapsed, handleEndGame, ourScore, opponentScore } = props;
 
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
@@ -12,6 +12,10 @@ function Header(props) {
       <div>
         <span class="font-semibold">Time Elapsed: </span>
         {formatTime(getTimeElapsed())}
+      </div>
+      <div>
+        <span class="font-semibold">Score: </span>
+        {ourScore()} - {opponentScore()}
       </div>
       <div class="flex space-x-2 md:space-x-4 mt-2 md:mt-0">
         <button

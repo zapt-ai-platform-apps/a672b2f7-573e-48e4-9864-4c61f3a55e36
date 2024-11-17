@@ -2,12 +2,17 @@ import { Routes, Route } from '@solidjs/router';
 import LandingPage from './components/LandingPage';
 import GameSetup from './components/GameSetup';
 import GameManagement from './components/GameManagement';
+import GameSummary from './components/GameSummary';
 import { createSignal } from 'solid-js';
 
 function App() {
   const [playerData, setPlayerData] = createSignal([]);
   const [numOnField, setNumOnField] = createSignal(5);
   const [goalkeeper, setGoalkeeper] = createSignal(null);
+
+  const [ourScore, setOurScore] = createSignal(0);
+  const [opponentScore, setOpponentScore] = createSignal(0);
+  const [goals, setGoals] = createSignal([]);
 
   const handleStartGame = (players, numPlayers, gk) => {
     // Initialize player data
@@ -32,6 +37,9 @@ function App() {
     setPlayerData([]);
     setNumOnField(5);
     setGoalkeeper(null);
+    setOurScore(0);
+    setOpponentScore(0);
+    setGoals([]);
   };
 
   return (
@@ -51,6 +59,18 @@ function App() {
             goalkeeper={goalkeeper}
             setGoalkeeper={setGoalkeeper}
             onEndGame={resetGame}
+          />
+        }
+      />
+      <Route
+        path="/summary"
+        element={
+          <GameSummary
+            playerData={playerData}
+            goals={goals}
+            ourScore={ourScore}
+            opponentScore={opponentScore}
+            resetGame={resetGame}
           />
         }
       />

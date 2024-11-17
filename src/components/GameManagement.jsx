@@ -13,6 +13,7 @@ import Header from './Header';
 import PlayerList from './PlayerList';
 import Substitution from './Substitution';
 import AddPlayer from './AddPlayer';
+import GoalScoredModal from './GoalScoredModal';
 
 function GameManagement(props) {
   const {
@@ -23,6 +24,7 @@ function GameManagement(props) {
     setGoalkeeper,
     onEndGame,
   } = props;
+  
   const [isRunning, setIsRunning] = createSignal(false);
   const [gameIntervals, setGameIntervals] = createSignal([]);
 
@@ -40,10 +42,15 @@ function GameManagement(props) {
 
   const [newPlayerName, setNewPlayerName] = createSignal('');
 
+  const [now, setNow] = createSignal(Date.now());
   let uiTimer = null;
   const navigate = useNavigate();
 
-  const [now, setNow] = createSignal(Date.now());
+  // New state variables for score and goals
+  const [ourScore, setOurScore] = createSignal(0);
+  const [opponentScore, setOpponentScore] = createSignal(0);
+  const [goals, setGoals] = createSignal([]);
+  const [showGoalModal, setShowGoalModal] = createSignal(false);
 
   onMount(() => {
     updatePlayerLists();
@@ -206,10 +213,25 @@ function GameManagement(props) {
             : interval
         )
       );
+
+      // End play intervals for all on-field players who are not goalkeepers
+      setPlayerData(
+        playerData().map((player) => {
+          if (player.isOnField && !player.isGoalkeeper) {
+            if (
+              player.playIntervals.length > 0 &&
+              player.playIntervals[player.playIntervals.length - 1].endTime === null
+            ) {
+              player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();
+            }
+          }
+          return player;
+        })
+      );
     }
     setShowEndGameConfirm(false);
-    onEndGame();
-    navigate('/');
+    // Navigate to GameSummary page
+    navigate('/summary');
   };
 
   const cancelEndGame = () => {
@@ -294,6 +316,18 @@ function GameManagement(props) {
     }
   };
 
+  // Function to record goal
+  const recordGoal = (team, scorerName) => {
+    const time = getTimeElapsed();
+    if (team === 'our') {
+      setOurScore(ourScore() + 1);
+      setGoals([...goals(), { team, scorerName, time }]);
+    } else if (team === 'opponent') {
+      setOpponentScore(opponentScore() + 1);
+      setGoals([...goals(), { team, scorerName: null, time }]);
+    }
+  };
+
   return (
     <div class="min-h-screen flex flex-col text-gray-800">
       <div class="p-4 flex-grow">
@@ -304,6 +338,8 @@ function GameManagement(props) {
           toggleTimer={toggleTimer}
           getTimeElapsed={getTimeElapsed}
           handleEndGame={handleEndGame}
+          ourScore={ourScore}
+          opponentScore={opponentScore}
         />
 
         {/* EndGameConfirmationModal */}
@@ -366,6 +402,24 @@ function GameManagement(props) {
           newPlayerName={newPlayerName}
           setNewPlayerName={setNewPlayerName}
           addNewPlayer={addNewPlayer}
+        />
+
+        {/* GoalScored button */}
+        <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+          <button
+            class="px-8 py-4 bg-blue-500 text-white text-lg rounded-lg cursor-pointer hover:bg-blue-600 hover:scale-105 transition duration-300 ease-in-out"
+            onClick={() => setShowGoalModal(true)}
+          >
+            Goal Scored
+          </button>
+        </div>
+
+        {/* GoalScoredModal */}
+        <GoalScoredModal
+          showGoalModal={showGoalModal}
+          setShowGoalModal={setShowGoalModal}
+          players={playerData}
+          recordGoal={recordGoal}
         />
       </div>
       <Footer />
