@@ -37,7 +37,7 @@ Football Subs is an app designed to help coaches manage substitutions and track 
 - **Confirmation Before Ending Game**: When the coach clicks the "End Game" button, the app asks for confirmation to prevent accidental termination of the game.
 - **Large, Easy-to-Press Buttons and Controls**: All buttons, checkboxes, and inputs have been made larger and easier to press, enhancing usability on mobile devices.
 - **No Default Selection for Substitutions**: Coaches must now choose which players to substitute by clicking on them in the lists, ensuring deliberate decisions and avoiding unintended substitutions.
-- **Vercel Analytics Integration**: The app now includes Vercel Analytics to collect analytics data about app usage, helping understand app performance and user engagement.
+- **Umami Analytics Integration**: The app now includes Umami Analytics to collect analytics data about app usage, helping understand app performance and user engagement without compromising user privacy.
 
 ## User Journeys
 
@@ -181,3 +181,9 @@ Enjoy a smoother coaching experience with Football Subs!
 ## Contact
 
 For any inquiries or support, please contact us at [footballsubs@zapt.ai](mailto:footballsubs@zapt.ai).
+
+## External Services
+
+### Umami Analytics
+
+The app uses **Umami Analytics** to collect analytics data about app usage, helping understand app performance and user engagement without compromising user privacy.
