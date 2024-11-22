@@ -25,7 +25,7 @@ if (!window.location.hostname.includes('vercel.app')) {
   const script = document.createElement('script');
   script.defer = true;
   script.src = 'https://cloud.umami.is/script.js';
-  script.setAttribute('data-website-id', '91af4364-49c1-47b0-a45d-49b42f67f070');
+  script.setAttribute('data-website-id', import.meta.env.VITE_PUBLIC_UMAMI_WEBSITE_ID);
   document.head.appendChild(script);
 }
 
