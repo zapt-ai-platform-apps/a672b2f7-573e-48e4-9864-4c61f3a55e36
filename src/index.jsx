@@ -20,6 +20,15 @@ Sentry.init({
 // Vercel Analytics
 inject();
 
+// Add Umami Analytics script conditionally
+if (!window.location.hostname.includes('vercel.app')) {
+  const script = document.createElement('script');
+  script.defer = true;
+  script.src = 'https://cloud.umami.is/script.js';
+  script.setAttribute('data-website-id', '91af4364-49c1-47b0-a45d-49b42f67f070');
+  document.head.appendChild(script);
+}
+
 // Add PWA support to the app (this will add a service worker and a manifest file, you don't need to do anything else)
 window.progressierAppRuntimeSettings = {
   uid: import.meta.env.VITE_PUBLIC_APP_ID,
@@ -28,6 +37,7 @@ window.progressierAppRuntimeSettings = {
   name: 'Football Subs',
   shortName: 'Football Subs',
 };
+
 let script = document.createElement('script');
 script.setAttribute(
   'src',
