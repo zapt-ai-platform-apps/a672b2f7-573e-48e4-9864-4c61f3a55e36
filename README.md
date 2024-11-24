@@ -114,17 +114,8 @@ Football Subs is an app designed to help coaches manage substitutions and track 
    - Select a player to sub on from the "Players Off Field" list.
    - Click the "Make Substitution" button to execute the substitution.
    - Players' playtimes adjust accordingly.
-6. **Change Goalkeeper**:
-   - Click the "Change Goalkeeper" button.
-   - Select a new goalkeeper from the list of on-field players.
-   - Confirm the change when prompted.
-   - The previous goalkeeper's playtime adjusts as they become an outfield player.
-7. **Add Players During Game**:
-   - Use the "Add New Player" section to add players during the game.
-   - Enter the player's name and click "Add."
-   - New players start with the minimum playtime among current outfield players.
-8. **Recording Goals**:
-   - Click the "Goal Scored" button at the bottom of the screen.
+6. **Recording Goals**:
+   - Click the "Goal Scored" button.
    - **Select Team**:
      - A modal appears asking which team scored.
      - Click "Our Team" if your team scored.
@@ -136,6 +127,15 @@ Football Subs is an app designed to help coaches manage substitutions and track 
      - The goal is recorded with the scorer's name.
    - **Updating Score**:
      - The score displayed at the top of the screen updates automatically to reflect the new score.
+7. **Change Goalkeeper**:
+   - Click the "Change Goalkeeper" button below the "Goal Scored" button.
+   - Select a new goalkeeper from the list of on-field players.
+   - Confirm the change when prompted.
+   - The previous goalkeeper's playtime adjusts as they become an outfield player.
+8. **Add Players During Game**:
+   - Use the "Add New Player" section to add players during the game.
+   - Enter the player's name and click "Add."
+   - New players start with the minimum playtime among current outfield players.
 
 ### 4. Reviewing Game Summary and Sharing
 

@@ -374,6 +374,24 @@ function GameManagement(props) {
           makeSubstitution={makeSubstitution}
         />
 
+        {/* GoalScored button */}
+        <div class="bg-white p-8 rounded-lg shadow-md mb-8">
+          <button
+            class="px-8 py-4 bg-green-500 text-white text-lg rounded-lg cursor-pointer hover:bg-green-600 hover:scale-105 transition duration-300 ease-in-out"
+            onClick={() => setShowGoalModal(true)}
+          >
+            Goal Scored
+          </button>
+        </div>
+
+        {/* GoalScoredModal */}
+        <GoalScoredModal
+          showGoalModal={showGoalModal}
+          setShowGoalModal={setShowGoalModal}
+          players={onFieldPlayers}
+          recordGoal={recordGoal}
+        />
+
         <div class="bg-white p-8 rounded-lg shadow-md mb-8">
           <button
             class="px-8 py-4 bg-yellow-500 text-white text-lg rounded-lg cursor-pointer hover:bg-yellow-600 hover:scale-105 transition duration-300 ease-in-out"
@@ -404,24 +422,6 @@ function GameManagement(props) {
           newPlayerName={newPlayerName}
           setNewPlayerName={setNewPlayerName}
           addNewPlayer={addNewPlayer}
-        />
-
-        {/* GoalScored button */}
-        <div class="bg-white p-8 rounded-lg shadow-md mb-8">
-          <button
-            class="px-8 py-4 bg-green-500 text-white text-lg rounded-lg cursor-pointer hover:bg-green-600 hover:scale-105 transition duration-300 ease-in-out"
-            onClick={() => setShowGoalModal(true)}
-          >
-            Goal Scored
-          </button>
-        </div>
-
-        {/* GoalScoredModal */}
-        <GoalScoredModal
-          showGoalModal={showGoalModal}
-          setShowGoalModal={setShowGoalModal}
-          players={onFieldPlayers}
-          recordGoal={recordGoal}
         />
       </div>
       <Footer />
