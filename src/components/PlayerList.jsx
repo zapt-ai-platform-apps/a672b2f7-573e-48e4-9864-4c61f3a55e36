@@ -1,7 +1,7 @@
 import { For } from 'solid-js';
 
 function PlayerList(props) {
-  const { players, title, selectedPlayer, handlePlayerClick, getTotalPlayTime } = props;
+  const { players, title, selectedPlayer, handlePlayerClick, getTotalPlayTime, message } = props;
 
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
@@ -14,6 +14,7 @@ function PlayerList(props) {
       <h2 class="text-2xl font-bold mb-2 text-green-600">
         {title}
       </h2>
+      <p class="mb-2 text-gray-600 text-sm">{message}</p>
       <ul>
         <For each={players()}>
           {(player) => (

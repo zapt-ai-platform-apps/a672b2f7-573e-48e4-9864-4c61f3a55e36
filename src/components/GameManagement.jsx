@@ -9,9 +9,9 @@ import Footer from './Footer';
 import EndGameConfirmationModal from './EndGameConfirmationModal';
 import AssignGoalkeeperModal from './AssignGoalkeeperModal';
 import ConfirmGoalkeeperModal from './ConfirmGoalkeeperModal';
+import ConfirmSubstitutionModal from './ConfirmSubstitutionModal';
 import Header from './Header';
 import PlayerList from './PlayerList';
-import Substitution from './Substitution';
 import AddPlayer from './AddPlayer';
 import GoalScoredModal from './GoalScoredModal';
 
@@ -36,6 +36,7 @@ function GameManagement(props) {
 
   const [selectedSubOffPlayer, setSelectedSubOffPlayer] = createSignal(null);
   const [selectedSubOnPlayer, setSelectedSubOnPlayer] = createSignal(null);
+  const [showSubstitutionConfirmModal, setShowSubstitutionConfirmModal] = createSignal(false);
 
   const [onFieldPlayers, setOnFieldPlayers] = createSignal([]);
   const [offFieldPlayers, setOffFieldPlayers] = createSignal([]);
@@ -149,8 +150,6 @@ function GameManagement(props) {
           return player;
         })
       );
-      setSelectedSubOffPlayer(null);
-      setSelectedSubOnPlayer(null);
       // Update the player lists
       updatePlayerLists();
     } else {
@@ -160,10 +159,29 @@ function GameManagement(props) {
 
   const handleSubOffPlayerClick = (player) => {
     setSelectedSubOffPlayer(player);
+    if (selectedSubOnPlayer()) {
+      setShowSubstitutionConfirmModal(true);
+    }
   };
 
   const handleSubOnPlayerClick = (player) => {
     setSelectedSubOnPlayer(player);
+    if (selectedSubOffPlayer()) {
+      setShowSubstitutionConfirmModal(true);
+    }
+  };
+
+  const confirmSubstitution = () => {
+    makeSubstitution();
+    setShowSubstitutionConfirmModal(false);
+    setSelectedSubOffPlayer(null);
+    setSelectedSubOnPlayer(null);
+  };
+
+  const cancelSubstitution = () => {
+    setShowSubstitutionConfirmModal(false);
+    setSelectedSubOffPlayer(null);
+    setSelectedSubOnPlayer(null);
   };
 
   const assignGoalkeeper = () => {
@@ -355,6 +373,7 @@ function GameManagement(props) {
           <PlayerList
             players={onFieldPlayers}
             title="Players on Field"
+            message="Select a player to sub off"
             selectedPlayer={selectedSubOffPlayer}
             handlePlayerClick={handleSubOffPlayerClick}
             getTotalPlayTime={getTotalPlayTime}
@@ -362,16 +381,20 @@ function GameManagement(props) {
           <PlayerList
             players={offFieldPlayers}
             title="Players Off Field"
+            message="Select a player to sub on"
             selectedPlayer={selectedSubOnPlayer}
             handlePlayerClick={handleSubOnPlayerClick}
             getTotalPlayTime={getTotalPlayTime}
           />
         </div>
 
-        <Substitution
+        {/* ConfirmSubstitutionModal */}
+        <ConfirmSubstitutionModal
+          showModal={showSubstitutionConfirmModal}
           selectedSubOffPlayer={selectedSubOffPlayer}
           selectedSubOnPlayer={selectedSubOnPlayer}
-          makeSubstitution={makeSubstitution}
+          confirmSubstitution={confirmSubstitution}
+          cancelSubstitution={cancelSubstitution}
         />
 
         {/* GoalScored button */}
