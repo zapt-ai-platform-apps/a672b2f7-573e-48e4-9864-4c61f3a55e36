@@ -332,8 +332,8 @@ function GameManagement(props) {
 
   return (
     <div class="min-h-screen flex flex-col text-gray-800">
-      <div class="p-4 flex-grow">
-        <h1 class="text-3xl font-bold mb-4 text-green-600">Game Management</h1>
+      <div class="p-8 flex-grow">
+        <h1 class="text-4xl font-bold mb-8 text-green-600">Game Management</h1>
 
         <Header
           isRunning={isRunning}
@@ -351,7 +351,7 @@ function GameManagement(props) {
           cancelEndGame={cancelEndGame}
         />
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           <PlayerList
             players={onFieldPlayers}
             title="Players on Field"
@@ -374,7 +374,7 @@ function GameManagement(props) {
           makeSubstitution={makeSubstitution}
         />
 
-        <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+        <div class="bg-white p-8 rounded-lg shadow-md mb-8">
           <button
             class="px-8 py-4 bg-yellow-500 text-white text-lg rounded-lg cursor-pointer hover:bg-yellow-600 hover:scale-105 transition duration-300 ease-in-out"
             onClick={assignGoalkeeper}
@@ -407,9 +407,9 @@ function GameManagement(props) {
         />
 
         {/* GoalScored button */}
-        <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+        <div class="bg-white p-8 rounded-lg shadow-md mb-8">
           <button
-            class="px-8 py-4 bg-blue-500 text-white text-lg rounded-lg cursor-pointer hover:bg-blue-600 hover:scale-105 transition duration-300 ease-in-out"
+            class="px-8 py-4 bg-green-500 text-white text-lg rounded-lg cursor-pointer hover:bg-green-600 hover:scale-105 transition duration-300 ease-in-out"
             onClick={() => setShowGoalModal(true)}
           >
             Goal Scored

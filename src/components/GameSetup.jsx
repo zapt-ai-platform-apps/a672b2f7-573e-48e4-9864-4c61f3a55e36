@@ -88,10 +88,10 @@ function GameSetup(props) {
 
   return (
     <div class="min-h-screen flex flex-col text-gray-800">
-      <div class="p-4 flex-grow">
-        <h1 class="text-3xl font-bold mb-4 text-green-600">Game Setup</h1>
-        <div class="bg-white p-4 rounded-lg shadow-md mb-4">
-          <h2 class="text-2xl font-bold mb-2 text-green-600">Add Players</h2>
+      <div class="p-8 flex-grow">
+        <h1 class="text-4xl font-bold mb-8 text-green-600">Game Setup</h1>
+        <div class="bg-white p-8 rounded-lg shadow-md mb-8">
+          <h2 class="text-2xl font-bold mb-4 text-green-600">Add Players</h2>
           <div class="flex flex-col sm:flex-row">
             <input
               type="text"
@@ -101,15 +101,15 @@ function GameSetup(props) {
               onInput={(e) => setPlayerName(e.target.value)}
             />
             <button
-              class="sm:px-8 px-4 py-4 bg-green-500 text-white text-lg sm:rounded-r-lg rounded-b-lg sm:rounded-bl-none cursor-pointer hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105 sm:mt-0 mt-2"
+              class="sm:px-8 px-4 py-4 bg-green-500 text-white text-lg sm:rounded-r-lg rounded-b-lg sm:rounded-bl-none cursor-pointer hover:bg-green-600 hover:scale-105 transition duration-300 ease-in-out sm:mt-0 mt-2"
               onClick={addPlayer}
             >
               Add
             </button>
           </div>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow-md mb-4">
-          <label class="block font-semibold mb-2 text-gray-700 text-lg">
+        <div class="bg-white p-8 rounded-lg shadow-md mb-8">
+          <label class="block font-semibold mb-4 text-gray-700 text-lg">
             Number of Players on Field:
           </label>
           <input
@@ -120,11 +120,11 @@ function GameSetup(props) {
             onInput={(e) => setNumOnField(parseInt(e.target.value))}
           />
         </div>
-        <div class="bg-white p-4 rounded-lg shadow-md mb-4">
-          <h2 class="text-2xl font-bold mb-2 text-green-600">
+        <div class="bg-white p-8 rounded-lg shadow-md mb-8">
+          <h2 class="text-2xl font-bold mb-4 text-green-600">
             Select Starting Line-up
           </h2>
-          <p class="mb-2 text-gray-700 text-lg">
+          <p class="mb-4 text-gray-700 text-lg">
             Select exactly {numOnField()} players to start on the field.
           </p>
           <ul>
@@ -150,8 +150,8 @@ function GameSetup(props) {
           </ul>
         </div>
         <Show when={startingPlayersCount() === numOnField()}>
-          <div class="bg-white p-4 rounded-lg shadow-md mb-4">
-            <label class="block font-semibold mb-2 text-gray-700 text-lg">
+          <div class="bg-white p-8 rounded-lg shadow-md mb-8">
+            <label class="block font-semibold mb-4 text-gray-700 text-lg">
               Select Goalkeeper:
             </label>
             <select
@@ -167,12 +167,12 @@ function GameSetup(props) {
           </div>
         </Show>
         <Show when={errorMessage()}>
-          <div class="bg-red-100 text-red-700 p-4 rounded mb-4 text-lg">
+          <div class="bg-red-100 text-red-700 p-4 rounded mb-8 text-lg">
             {errorMessage()}
           </div>
         </Show>
         <button
-          class="px-8 py-4 bg-blue-500 text-white text-lg rounded-lg cursor-pointer hover:bg-blue-600 transition duration-300 ease-in-out"
+          class="px-8 py-4 bg-green-500 text-white text-lg rounded-lg cursor-pointer hover:bg-green-600 hover:scale-105 transition duration-300 ease-in-out"
           onClick={handleStartGame}
         >
           Start Game

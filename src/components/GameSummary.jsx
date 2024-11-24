@@ -106,18 +106,18 @@ function GameSummary(props) {
 
   return (
     <div class="min-h-screen flex flex-col text-gray-800">
-      <div class="p-4 flex-grow">
-        <h1 class="text-3xl font-bold mb-4 text-green-600">Game Summary</h1>
+      <div class="p-8 flex-grow">
+        <h1 class="text-4xl font-bold mb-8 text-green-600">Game Summary</h1>
 
-        <div class="mb-4">
-          <h2 class="text-2xl font-bold mb-2 text-green-600">Final Score</h2>
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold mb-4 text-green-600">Final Score</h2>
           <p class="text-xl">
             Our Team {ourScore()} - {opponentScore()} Opponent Team
           </p>
         </div>
 
-        <div class="mb-4">
-          <h2 class="text-2xl font-bold mb-2 text-green-600">Goals by Our Team</h2>
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold mb-4 text-green-600">Goals by Our Team</h2>
           <Show when={Object.keys(goalsByPlayer()).length > 0} fallback={<p>No goals scored by our team.</p>}>
             <ul>
               <For each={Object.entries(goalsByPlayer())}>
@@ -131,12 +131,12 @@ function GameSummary(props) {
           </Show>
         </div>
 
-        <div class="mb-4">
-          <h2 class="text-2xl font-bold mb-2 text-green-600">Player Playtimes</h2>
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold mb-4 text-green-600">Player Playtimes</h2>
           <ul>
             <For each={sortedPlayerData()}>
               {(player) => (
-                <li class="flex justify-between items-center mb-2 p-4 bg-white rounded-lg shadow-md">
+                <li class="flex justify-between items-center mb-4 p-4 bg-white rounded-lg shadow-md">
                   <div class="font-medium text-lg">{player.name}</div>
                   <div>{formatTime(getTotalPlayTime(player))}</div>
                 </li>
@@ -145,16 +145,16 @@ function GameSummary(props) {
           </ul>
         </div>
 
-        <div class="flex space-x-4 mt-4">
+        <div class="flex space-x-4 mt-8">
           <button
-            class="px-8 py-4 bg-blue-500 text-white text-lg rounded-lg cursor-pointer hover:bg-blue-600 transition duration-300 ease-in-out"
+            class="px-8 py-4 bg-green-500 text-white text-lg rounded-lg cursor-pointer hover:bg-green-600 hover:scale-105 transition duration-300 ease-in-out"
             onClick={handleBackToHome}
           >
             Back to Home
           </button>
           <button
-            class={`px-8 py-4 bg-green-500 text-white text-lg rounded-lg ${
-              isSharing() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-green-600'
+            class={`px-8 py-4 bg-blue-500 text-white text-lg rounded-lg ${
+              isSharing() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-blue-600 hover:scale-105'
             } transition duration-300 ease-in-out`}
             onClick={handleShareSummary}
             disabled={isSharing()}
