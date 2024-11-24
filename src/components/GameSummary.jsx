@@ -78,9 +78,6 @@ function GameSummary(props) {
         summaryText += 'No goals scored by our team.\n';
       }
 
-      summaryText += '\nGoals by Opponent Team:\n';
-      summaryText += `Opponent Team scored ${opponentScore()} goal${opponentScore() !== 1 ? 's' : ''}\n`;
-
       summaryText += '\nPlayer Playtimes:\n';
       sortedPlayerData().forEach((player) => {
         summaryText += `- ${player.name}: ${formatTime(getTotalPlayTime(player))}\n`;
@@ -132,13 +129,6 @@ function GameSummary(props) {
               </For>
             </ul>
           </Show>
-        </div>
-
-        <div class="mb-4">
-          <h2 class="text-2xl font-bold mb-2 text-green-600">Goals by Opponent Team</h2>
-          <p class="text-lg">
-            Opponent Team scored {opponentScore()} goal{opponentScore() !== 1 ? 's' : ''}
-          </p>
         </div>
 
         <div class="mb-4">
