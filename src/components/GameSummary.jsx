@@ -1,6 +1,6 @@
 import { useNavigate } from '@solidjs/router';
 import Footer from './Footer';
-import { For } from 'solid-js';
+import { For, Show } from 'solid-js';
 import { createSignal } from 'solid-js';
 import * as Sentry from '@sentry/browser';
 
@@ -35,25 +35,51 @@ function GameSummary(props) {
   const sortedPlayerData = () =>
     [...playerData()].sort((a, b) => getTotalPlayTime(b) - getTotalPlayTime(a));
 
+  const goalsByPlayer = () => {
+    const counts = {};
+    goals()
+      .filter((goal) => goal.team === 'our')
+      .forEach((goal) => {
+        const scorer = goal.scorerName;
+        if (counts[scorer]) {
+          counts[scorer]++;
+        } else {
+          counts[scorer] = 1;
+        }
+      });
+    return counts;
+  };
+
   const handleShareSummary = async () => {
     setIsSharing(true);
     try {
       // Generate the summary text
       let summaryText = `Final Score: Our Team ${ourScore()} - ${opponentScore()} Opponent Team\n\n`;
 
-      summaryText += 'Goals by Our Team:\n';
+      // Compute goals by player
+      const goalsByPlayerData = {};
       goals()
         .filter((goal) => goal.team === 'our')
         .forEach((goal) => {
-          summaryText += `- ${goal.scorerName} scored at ${formatTime(goal.time)} minutes\n`;
+          const scorer = goal.scorerName;
+          if (goalsByPlayerData[scorer]) {
+            goalsByPlayerData[scorer]++;
+          } else {
+            goalsByPlayerData[scorer] = 1;
+          }
         });
 
-      summaryText += '\nGoals by Opponent Team:\n';
-      goals()
-        .filter((goal) => goal.team === 'opponent')
-        .forEach((goal) => {
-          summaryText += `- Opponent scored at ${formatTime(goal.time)} minutes\n`;
+      summaryText += 'Goals by Our Team:\n';
+      if (Object.keys(goalsByPlayerData).length > 0) {
+        Object.entries(goalsByPlayerData).forEach(([playerName, goalCount]) => {
+          summaryText += `- ${playerName}: ${goalCount} goal${goalCount !== 1 ? 's' : ''}\n`;
         });
+      } else {
+        summaryText += 'No goals scored by our team.\n';
+      }
+
+      summaryText += '\nGoals by Opponent Team:\n';
+      summaryText += `Opponent Team scored ${opponentScore()} goal${opponentScore() !== 1 ? 's' : ''}\n`;
 
       summaryText += '\nPlayer Playtimes:\n';
       sortedPlayerData().forEach((player) => {
@@ -95,28 +121,24 @@ function GameSummary(props) {
 
         <div class="mb-4">
           <h2 class="text-2xl font-bold mb-2 text-green-600">Goals by Our Team</h2>
-          <For each={goals().filter((goal) => goal.team === 'our')}>
-            {(goal) => (
-              <div class="mb-2">
-                <p>
-                  {goal.scorerName} scored at {formatTime(goal.time)} minutes
-                </p>
-              </div>
-            )}
-          </For>
+          <Show when={Object.keys(goalsByPlayer()).length > 0} fallback={<p>No goals scored by our team.</p>}>
+            <ul>
+              <For each={Object.entries(goalsByPlayer())}>
+                {([playerName, goalCount]) => (
+                  <li class="mb-2">
+                    <p>{playerName}: {goalCount} goal{goalCount !== 1 ? 's' : ''}</p>
+                  </li>
+                )}
+              </For>
+            </ul>
+          </Show>
         </div>
 
         <div class="mb-4">
           <h2 class="text-2xl font-bold mb-2 text-green-600">Goals by Opponent Team</h2>
-          <For each={goals().filter((goal) => goal.team === 'opponent')}>
-            {(goal) => (
-              <div class="mb-2">
-                <p>
-                  Opponent scored at {formatTime(goal.time)} minutes
-                </p>
-              </div>
-            )}
-          </For>
+          <p class="text-lg">
+            Opponent Team scored {opponentScore()} goal{opponentScore() !== 1 ? 's' : ''}
+          </p>
         </div>
 
         <div class="mb-4">
