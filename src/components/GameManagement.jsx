@@ -362,6 +362,10 @@ function GameManagement(props) {
           opponentScore={opponentScore}
         />
 
+        <p class="mb-4 text-gray-700 text-center">
+          Note: Playtime for goalkeepers is not tracked.
+        </p>
+
         {/* EndGameConfirmationModal */}
         <EndGameConfirmationModal
           showEndGameConfirm={showEndGameConfirm}

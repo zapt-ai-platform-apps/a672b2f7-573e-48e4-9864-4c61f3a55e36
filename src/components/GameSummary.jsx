@@ -83,6 +83,8 @@ function GameSummary(props) {
         summaryText += `- ${player.name}: ${formatTime(getTotalPlayTime(player))}\n`;
       });
 
+      summaryText += '\nNote: Playtime for goalkeepers is not included.\n';
+
       // Use Web Share API
       if (navigator.share) {
         await navigator.share({
@@ -143,6 +145,9 @@ function GameSummary(props) {
               )}
             </For>
           </ul>
+          <p class="mt-4 text-gray-700">
+            Note: Playtime for goalkeepers is not included.
+          </p>
         </div>
 
         <div class="flex space-x-4 mt-8">
