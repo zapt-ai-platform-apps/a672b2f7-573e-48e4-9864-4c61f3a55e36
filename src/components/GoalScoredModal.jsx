@@ -43,7 +43,9 @@ function GoalScoredModal(props) {
   return (
     <Show when={showGoalModal()}>
       <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class={`bg-white p-6 rounded-lg max-w-md w-full flex flex-col ${modalHeightClass()}`}>
+        <div
+          class={`bg-white p-6 rounded-lg max-w-md w-full flex flex-col ${modalHeightClass()}`}
+        >
           <h2 class="text-2xl font-bold mb-4 text-green-600">Goal Scored</h2>
           <Show when={!team()}>
             <p class="mb-4 text-lg">Which team scored?</p>
@@ -83,7 +85,7 @@ function GoalScoredModal(props) {
             <p class="mt-4 mb-2 text-lg">Who scored?</p>
             <div class="flex-grow overflow-y-auto">
               <ul>
-                <For each={players().map((player) => player.name)}>
+                <For each={[...players().map((player) => player.name), 'Own Goal']}>
                   {(name) => (
                     <li
                       class={`p-4 cursor-pointer hover:bg-gray-200 rounded-lg text-2xl ${
