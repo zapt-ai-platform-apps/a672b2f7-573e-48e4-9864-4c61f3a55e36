@@ -13,8 +13,8 @@ import ConfirmSubstitutionModal from './ConfirmSubstitutionModal';
 import RemoveGoalConfirmationModal from './RemoveGoalConfirmationModal';
 import Header from './Header';
 import PlayerList from './PlayerList';
-import AddPlayer from './AddPlayer';
 import GoalScoredModal from './GoalScoredModal';
+import AddPlayerModal from './AddPlayerModal';
 
 function GameManagement(props) {
   const {
@@ -49,6 +49,8 @@ function GameManagement(props) {
   const [showEndGameConfirm, setShowEndGameConfirm] = createSignal(false);
 
   const [newPlayerName, setNewPlayerName] = createSignal('');
+
+  const [showAddPlayerModal, setShowAddPlayerModal] = createSignal(false);
 
   const [now, setNow] = createSignal(Date.now());
   let uiTimer = null;
@@ -495,11 +497,24 @@ function GameManagement(props) {
           setShowGKConfirmModal={setShowGKConfirmModal}
         />
 
-        <AddPlayer
+        <div class="bg-white p-8 rounded-lg shadow-md mb-8">
+          <button
+            class="px-8 py-4 bg-green-500 text-white text-lg rounded-lg cursor-pointer hover:bg-green-600 hover:scale-105 transition duration-300 ease-in-out"
+            onClick={() => setShowAddPlayerModal(true)}
+          >
+            Add New Player
+          </button>
+        </div>
+
+        {/* AddPlayerModal */}
+        <AddPlayerModal
+          showAddPlayerModal={showAddPlayerModal}
+          setShowAddPlayerModal={setShowAddPlayerModal}
           newPlayerName={newPlayerName}
           setNewPlayerName={setNewPlayerName}
           addNewPlayer={addNewPlayer}
         />
+
       </div>
       <Footer />
     </div>
