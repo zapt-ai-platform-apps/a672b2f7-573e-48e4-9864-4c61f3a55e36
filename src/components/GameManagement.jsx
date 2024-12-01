@@ -10,6 +10,7 @@ import EndGameConfirmationModal from './EndGameConfirmationModal';
 import AssignGoalkeeperModal from './AssignGoalkeeperModal';
 import ConfirmGoalkeeperModal from './ConfirmGoalkeeperModal';
 import ConfirmSubstitutionModal from './ConfirmSubstitutionModal';
+import RemoveGoalConfirmationModal from './RemoveGoalConfirmationModal';
 import Header from './Header';
 import PlayerList from './PlayerList';
 import AddPlayer from './AddPlayer';
@@ -54,6 +55,8 @@ function GameManagement(props) {
   const navigate = useNavigate();
 
   const [showGoalModal, setShowGoalModal] = createSignal(false);
+
+  const [showRemoveGoalConfirm, setShowRemoveGoalConfirm] = createSignal(false);
 
   onMount(() => {
     updatePlayerLists();
@@ -348,6 +351,36 @@ function GameManagement(props) {
     }
   };
 
+  const handleRemoveLastGoal = () => {
+    if (goals().length === 0) {
+      alert('No goals to remove.');
+      return;
+    }
+    setShowRemoveGoalConfirm(true);
+  };
+
+  const confirmRemoveGoal = () => {
+    const currentGoals = goals();
+    if (currentGoals.length === 0) {
+      alert('No goals to remove.');
+      return;
+    }
+    const lastGoal = currentGoals[currentGoals.length - 1];
+
+    if (lastGoal.team === 'our') {
+      setOurScore(Math.max(0, ourScore() - 1));
+    } else if (lastGoal.team === 'opponent') {
+      setOpponentScore(Math.max(0, opponentScore() - 1));
+    }
+
+    setGoals(currentGoals.slice(0, -1));
+    setShowRemoveGoalConfirm(false);
+  };
+
+  const cancelRemoveGoal = () => {
+    setShowRemoveGoalConfirm(false);
+  };
+
   return (
     <div class="min-h-screen flex flex-col text-gray-800">
       <div class="p-8 flex-grow">
@@ -417,6 +450,23 @@ function GameManagement(props) {
           setShowGoalModal={setShowGoalModal}
           players={onFieldPlayers}
           recordGoal={recordGoal}
+        />
+
+        {/* Remove Last Goal button */}
+        <div class="bg-white p-8 rounded-lg shadow-md mb-8">
+          <button
+            class="px-8 py-4 bg-red-500 text-white text-lg rounded-lg cursor-pointer hover:bg-red-600 hover:scale-105 transition duration-300 ease-in-out"
+            onClick={handleRemoveLastGoal}
+          >
+            Remove Last Goal
+          </button>
+        </div>
+
+        {/* RemoveGoalConfirmationModal */}
+        <RemoveGoalConfirmationModal
+          showRemoveGoalConfirm={showRemoveGoalConfirm}
+          confirmRemoveGoal={confirmRemoveGoal}
+          cancelRemoveGoal={cancelRemoveGoal}
         />
 
         <div class="bg-white p-8 rounded-lg shadow-md mb-8">
