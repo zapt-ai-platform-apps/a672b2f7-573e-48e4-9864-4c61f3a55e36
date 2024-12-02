@@ -9,12 +9,13 @@ function App() {
   const [playerData, setPlayerData] = createSignal([]);
   const [numOnField, setNumOnField] = createSignal(5);
   const [goalkeeper, setGoalkeeper] = createSignal(null);
+  const [includeGKPlaytime, setIncludeGKPlaytime] = createSignal(true);
 
   const [ourScore, setOurScore] = createSignal(0);
   const [opponentScore, setOpponentScore] = createSignal(0);
   const [goals, setGoals] = createSignal([]);
 
-  const handleStartGame = (players, numPlayers, gk) => {
+  const handleStartGame = (players, numPlayers, gk, includeGKTime) => {
     // Initialize player data
     setPlayerData(
       players.map((player) => {
@@ -31,6 +32,7 @@ function App() {
     );
     setNumOnField(numPlayers);
     setGoalkeeper(gk);
+    setIncludeGKPlaytime(includeGKTime);
   };
 
   const resetGame = () => {
@@ -40,6 +42,7 @@ function App() {
     setOurScore(0);
     setOpponentScore(0);
     setGoals([]);
+    setIncludeGKPlaytime(true);
   };
 
   return (
@@ -64,6 +67,7 @@ function App() {
             setOpponentScore={setOpponentScore}
             goals={goals}
             setGoals={setGoals}
+            includeGKPlaytime={includeGKPlaytime}
             onEndGame={resetGame}
           />
         }
@@ -76,6 +80,7 @@ function App() {
             goals={goals}
             ourScore={ourScore}
             opponentScore={opponentScore}
+            includeGKPlaytime={includeGKPlaytime}
             resetGame={resetGame}
           />
         }

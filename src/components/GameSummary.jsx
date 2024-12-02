@@ -5,7 +5,7 @@ import { createSignal } from 'solid-js';
 import * as Sentry from '@sentry/browser';
 
 function GameSummary(props) {
-  const { playerData, goals, ourScore, opponentScore, resetGame } = props;
+  const { playerData, goals, ourScore, opponentScore, includeGKPlaytime, resetGame } = props;
   const navigate = useNavigate();
   const [isSharing, setIsSharing] = createSignal(false);
 
@@ -17,6 +17,9 @@ function GameSummary(props) {
       } else {
         total += 0;
       }
+    }
+    if (!includeGKPlaytime() && player.isGoalkeeper) {
+      return 0;
     }
     return Math.floor(total / 1000); // return total playtime in seconds
   };
@@ -83,7 +86,9 @@ function GameSummary(props) {
         summaryText += `- ${player.name}: ${formatTime(getTotalPlayTime(player))}\n`;
       });
 
-      summaryText += '\nNote: Playtime for goalkeepers is not included.\n';
+      if (!includeGKPlaytime()) {
+        summaryText += '\nNote: Playtime for goalkeepers is not included.\n';
+      }
 
       // Use Web Share API
       if (navigator.share) {
@@ -145,9 +150,11 @@ function GameSummary(props) {
               )}
             </For>
           </ul>
-          <p class="mt-4 text-gray-700">
-            Note: Playtime for goalkeepers is not included.
-          </p>
+          <Show when={!includeGKPlaytime()}>
+            <p class="mt-4 text-gray-700">
+              Note: Playtime for goalkeepers is not included.
+            </p>
+          </Show>
         </div>
 
         <div class="flex space-x-4 mt-8">

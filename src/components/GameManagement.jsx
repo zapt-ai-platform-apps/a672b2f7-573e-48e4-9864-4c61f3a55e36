@@ -29,6 +29,7 @@ function GameManagement(props) {
     setOpponentScore,
     goals,
     setGoals,
+    includeGKPlaytime,
     onEndGame,
   } = props;
 
@@ -95,6 +96,9 @@ function GameManagement(props) {
       } else {
         total += isRunning() ? now() - interval.startTime : 0;
       }
+    }
+    if (!includeGKPlaytime() && player.isGoalkeeper) {
+      return 0;
     }
     return Math.floor(total / 1000); // return total playtime in seconds
   };
@@ -239,10 +243,10 @@ function GameManagement(props) {
         )
       );
 
-      // End play intervals for all on-field players who are not goalkeepers
+      // End play intervals for all on-field players who are not goalkeepers or includeGKPlaytime is true
       setPlayerData(
         playerData().map((player) => {
-          if (player.isOnField && !player.isGoalkeeper) {
+          if (player.isOnField && (!player.isGoalkeeper || includeGKPlaytime())) {
             if (
               player.playIntervals.length > 0 &&
               player.playIntervals[player.playIntervals.length - 1].endTime === null
@@ -270,10 +274,10 @@ function GameManagement(props) {
       // Start a new game interval
       setGameIntervals((prev) => [...prev, { startTime: Date.now(), endTime: null }]);
 
-      // Start play intervals for all on-field players who are not goalkeepers
+      // Start play intervals for all on-field players who are not goalkeepers or includeGKPlaytime is true
       setPlayerData(
         playerData().map((player) => {
-          if (player.isOnField && !player.isGoalkeeper) {
+          if (player.isOnField && (!player.isGoalkeeper || includeGKPlaytime())) {
             if (
               player.playIntervals.length === 0 ||
               player.playIntervals[player.playIntervals.length - 1].endTime !== null
@@ -296,10 +300,10 @@ function GameManagement(props) {
         )
       );
 
-      // End play intervals for all on-field players who are not goalkeepers
+      // End play intervals for all on-field players who are not goalkeepers or includeGKPlaytime is true
       setPlayerData(
         playerData().map((player) => {
-          if (player.isOnField && !player.isGoalkeeper) {
+          if (player.isOnField && (!player.isGoalkeeper || includeGKPlaytime())) {
             if (
               player.playIntervals.length > 0 &&
               player.playIntervals[player.playIntervals.length - 1].endTime === null
@@ -319,11 +323,10 @@ function GameManagement(props) {
 
   const addNewPlayer = () => {
     if (newPlayerName().trim() !== '') {
-      // Find the minimum totalPlayTime among current players who are not the current goalkeeper
-      const nonGKPlayers = playerData().filter((p) => !p.isGoalkeeper);
+      // Find the minimum totalPlayTime among current players
       const minPlayTime =
-        nonGKPlayers.length > 0
-          ? Math.min(...nonGKPlayers.map((p) => getTotalPlayTime(p)))
+        playerData().length > 0
+          ? Math.min(...playerData().map((p) => getTotalPlayTime(p)))
           : 0;
 
       setPlayerData([
@@ -397,9 +400,11 @@ function GameManagement(props) {
           opponentScore={opponentScore}
         />
 
-        <p class="mb-4 text-gray-700 text-center">
-          Note: Playtime for goalkeepers is not tracked.
-        </p>
+        <Show when={!includeGKPlaytime()}>
+          <p class="mb-4 text-gray-700 text-center">
+            Note: Playtime for goalkeepers is not tracked.
+          </p>
+        </Show>
 
         {/* EndGameConfirmationModal */}
         <EndGameConfirmationModal

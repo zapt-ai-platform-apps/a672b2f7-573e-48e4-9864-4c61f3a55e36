@@ -11,6 +11,7 @@ function GameSetup(props) {
   const [errorMessage, setErrorMessage] = createSignal('');
   const [startingPlayers, setStartingPlayers] = createSignal([]);
   const [goalkeeper, setGoalkeeper] = createSignal('');
+  const [includeGKPlaytime, setIncludeGKPlaytime] = createSignal(true);
   const navigate = useNavigate();
 
   onMount(() => {
@@ -82,7 +83,7 @@ function GameSetup(props) {
     }
     setErrorMessage('');
     localStorage.setItem('players', JSON.stringify(players()));
-    onStartGame(players(), numOnField(), goalkeeper());
+    onStartGame(players(), numOnField(), goalkeeper(), includeGKPlaytime());
     navigate('/manage');
   };
 
@@ -166,6 +167,20 @@ function GameSetup(props) {
             </select>
           </div>
         </Show>
+        <div class="bg-white p-8 rounded-lg shadow-md mb-8">
+          <label class="block font-semibold mb-4 text-gray-700 text-lg">
+            Include Goalkeeper's Playtime in Totals:
+          </label>
+          <input
+            type="checkbox"
+            checked={includeGKPlaytime()}
+            onChange={() => setIncludeGKPlaytime(!includeGKPlaytime())}
+            class="mr-2 cursor-pointer w-6 h-6"
+          />
+          <span class="text-gray-800 text-lg">
+            {includeGKPlaytime() ? 'Yes' : 'No'}
+          </span>
+        </div>
         <Show when={errorMessage()}>
           <div class="bg-red-100 text-red-700 p-4 rounded mb-8 text-lg">
             {errorMessage()}

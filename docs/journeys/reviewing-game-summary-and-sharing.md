@@ -17,16 +17,16 @@
    - **Player Playtimes**:
      - Shows a list of all players sorted by total playtime in descending order.
      - Each entry displays the player's name and their cumulative playtime.
-     - **Important Note**: Playtime for goalkeepers is not included in the totals.
+     - **Important Note**: Playtime for goalkeepers is included or excluded based on your selection during game setup.
 
 3. **Analyzing Player Performance**:
    - Review individual player playtimes to assess fair play distribution.
    - Use goal statistics to evaluate player contributions.
-   - Remember that goalkeeper playtime is not tracked in the playtime totals.
+   - If you chose to exclude goalkeeper playtime, be aware that their playtime will not be reflected in the totals.
 
 4. **Sharing the Match Summary**:
    - Press the "Share Summary" button.
-   - The app compiles the summary into a shareable format, including a note that goalkeeper playtime is not included.
+   - The app compiles the summary into a shareable format, noting whether goalkeeper playtime is included.
    - On devices that support the Web Share API, a share dialog appears.
    - Select the preferred app (e.g., messaging or email) to share the summary.
 
@@ -37,8 +37,8 @@
 ## Important Information
 
 - **Data Privacy**: All shared data is generated on your device; no personal data is transmitted to external servers during sharing.
-- **Accurate Time Tracking**: Player playtimes are precisely calculated, excluding any paused game time and goalkeeper time.
-- **Goalkeeper Playtime**: The app does not track or include playtime for goalkeepers in the player playtime totals.
+- **Accurate Time Tracking**: Player playtimes are precisely calculated, including or excluding goalkeeper playtime based on your preference.
+- **Goalkeeper Playtime**: If you chose to exclude goalkeeper playtime, their playtime is not included in the player playtime totals.
 - **Accessible Formatting**: The summary is formatted for readability when shared via text-based applications.
 - **Error Handling**:
   - If sharing is not supported by your device, an alert notifies you.

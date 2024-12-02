@@ -36,7 +36,12 @@
    - Once the starting lineup is selected, a dropdown menu appears to select the goalkeeper.
    - Choose one player from the starting lineup to be the goalkeeper.
 
-7. **Start Game**:
+7. **Include Goalkeeper's Playtime in Totals**:
+   - Decide whether you want the goalkeeper's playtime to be included in the total playtime calculations.
+   - By default, the option "Include Goalkeeper's Playtime in Totals" is selected.
+   - You can uncheck the box if you prefer to exclude the goalkeeper's playtime from the totals.
+
+8. **Start Game**:
    - Review your selections to ensure accuracy.
    - Click the "Start Game" button to proceed.
    - An error message will appear if any required information is missing.
@@ -47,3 +52,4 @@
 - **Data Validation**: The app checks for the correct number of starting players and prompts you if adjustments are needed.
 - **Persistent Data**: Player lists are saved between sessions, but starting lineup selections reset each time.
 - **Flexibility**: You can add or remove players at any point before starting the game.
+- **Include/Exclude Goalkeeper Playtime**: You have the option to include or exclude the goalkeeper's playtime in the total playtime calculations according to your preference.

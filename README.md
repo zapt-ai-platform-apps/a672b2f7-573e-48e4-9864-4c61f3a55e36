@@ -1,6 +1,6 @@
 # Football Subs
 
-Football Subs is an app designed to help coaches manage substitutions and track game events for kids' football teams. It ensures that each player gets a fair amount of game time while keeping all players engaged and involved. The app allows coaches to monitor player playtimes, manage substitutions, track scores, record goal events, review detailed game summaries in real-time, and share the match summary directly from the app once the match has ended.
+Football Subs is an app designed to help coaches manage substitutions and track game events for kids' football teams. It ensures that each player gets a fair amount of game time while keeping all players engaged and involved. The app allows coaches to monitor player playtimes—including or excluding goalkeeper playtime based on preference—manage substitutions, track scores, record goal events, review detailed game summaries in real-time, and share the match summary directly from the app once the match has ended.
 
 ## User Journeys
 
