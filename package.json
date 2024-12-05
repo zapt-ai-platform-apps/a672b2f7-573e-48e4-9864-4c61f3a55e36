@@ -13,7 +13,8 @@
     "@solidjs/router": "^0.8.4",
     "@sentry/browser": "^8.35.0",
     "@vercel/analytics": "^1.4.0",
-    "solid-icons": "^1.0.9"
+    "solid-icons": "^1.0.9",
+    "logrocket": "9.0.0"
   },
   "devDependencies": {
     "vite": "^5.4.7",

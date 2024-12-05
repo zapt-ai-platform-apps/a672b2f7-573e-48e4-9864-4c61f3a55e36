@@ -4,6 +4,9 @@ import App from './App';
 import './index.css';
 import * as Sentry from '@sentry/browser';
 import { inject } from '@vercel/analytics';
+import LogRocket from 'logrocket';
+
+LogRocket.init('p29zbk/zapt');
 
 Sentry.init({
   dsn: import.meta.env.VITE_PUBLIC_SENTRY_DSN,
