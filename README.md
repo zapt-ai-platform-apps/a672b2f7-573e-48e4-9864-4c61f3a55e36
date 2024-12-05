@@ -18,3 +18,7 @@ For inquiries or support, contact us at [footballsubs@zapt.ai](mailto:footballsu
 ### Umami Analytics
 
 The app uses **Umami Analytics** to collect analytics data about app usage, helping understand app performance and user engagement without compromising user privacy.
+
+### Hotjar
+
+The app uses **Hotjar** to collect user experience data, helping us understand user behavior and improve the app's usability.
