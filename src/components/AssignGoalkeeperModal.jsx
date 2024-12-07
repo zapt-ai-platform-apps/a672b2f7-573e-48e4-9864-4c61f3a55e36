@@ -1,4 +1,4 @@
-import { Show, For } from 'solid-js';
+import { For } from 'solid-js';
 
 function AssignGoalkeeperModal(props) {
   const {
@@ -9,43 +9,38 @@ function AssignGoalkeeperModal(props) {
     setShowGKModal,
   } = props;
 
-  return (
-    <Show when={showGKModal()}>
-      <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-lg">
-          <h2 class="text-2xl font-bold mb-4 text-green-600">
-            Assign Goalkeeper
-          </h2>
-          <ul>
-            <For each={onFieldPlayers()}>
-              {(player) => (
-                <li
-                  class="flex justify-between items-center mb-2 cursor-pointer hover:bg-gray-200 p-4 rounded-lg"
-                  onClick={() => {
-                    setSelectedNewGoalkeeper(player.name);
-                    setShowGKConfirmModal(true);
-                  }}
+  const selectGoalkeeper = (playerName) => {
+    setSelectedNewGoalkeeper(playerName);
+    setShowGKConfirmModal(true);
+  };
+
+  return showGKModal() ? (
+    <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-8 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold mb-4">Select New Goalkeeper</h2>
+        <ul>
+          <For each={onFieldPlayers()}>
+            {(player) => (
+              <li key={player.name}>
+                <button
+                  class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-2"
+                  onClick={() => selectGoalkeeper(player.name)}
                 >
-                  <div class="text-lg">{player.name}</div>
-                  <div>
-                    {player.isGoalkeeper && (
-                      <span class="text-yellow-500 font-semibold">(GK)</span>
-                    )}
-                  </div>
-                </li>
-              )}
-            </For>
-          </ul>
-          <button
-            class="mt-4 w-full py-4 bg-red-500 text-white text-lg rounded-lg cursor-pointer hover:bg-red-600 transition duration-300 ease-in-out"
-            onClick={() => setShowGKModal(false)}
-          >
-            Cancel
-          </button>
-        </div>
+                  {player.name}
+                </button>
+              </li>
+            )}
+          </For>
+        </ul>
+        <button
+          class="px-4 py-2 bg-gray-500 text-white rounded-lg mt-4"
+          onClick={() => setShowGKModal(false)}
+        >
+          Cancel
+        </button>
       </div>
-    </Show>
-  );
+    </div>
+  ) : null;
 }
 
 export default AssignGoalkeeperModal;

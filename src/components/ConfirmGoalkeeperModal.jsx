@@ -1,5 +1,3 @@
-import { Show } from 'solid-js';
-
 function ConfirmGoalkeeperModal(props) {
   const {
     showGKConfirmModal,
@@ -8,37 +6,28 @@ function ConfirmGoalkeeperModal(props) {
     setShowGKConfirmModal,
   } = props;
 
-  return (
-    <Show when={showGKConfirmModal()}>
-      <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-lg">
-          <h2 class="text-2xl font-bold mb-4 text-green-600">
-            Confirm Change Goalkeeper
-          </h2>
-          <p class="mb-4 text-lg">
-            Are you sure you want to change the goalkeeper to{' '}
-            {selectedNewGoalkeeper()}?
-          </p>
-          <div class="flex justify-end space-x-4">
-            <button
-              class="px-6 py-3 bg-green-500 text-white text-lg rounded-lg cursor-pointer hover:bg-green-600 transition duration-300 ease-in-out"
-              onClick={() => {
-                confirmGoalkeeper(selectedNewGoalkeeper());
-              }}
-            >
-              Yes
-            </button>
-            <button
-              class="px-6 py-3 bg-gray-500 text-white text-lg rounded-lg cursor-pointer hover:bg-gray-600 transition duration-300 ease-in-out"
-              onClick={() => setShowGKConfirmModal(false)}
-            >
-              No
-            </button>
-          </div>
+  return showGKConfirmModal() ? (
+    <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-8 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold mb-4">Confirm Goalkeeper Change</h2>
+        <p>Are you sure you want to make {selectedNewGoalkeeper()} the new goalkeeper?</p>
+        <div class="mt-4">
+          <button
+            class="px-4 py-2 bg-green-500 text-white rounded-lg mr-2"
+            onClick={() => confirmGoalkeeper(selectedNewGoalkeeper())}
+          >
+            Yes
+          </button>
+          <button
+            class="px-4 py-2 bg-red-500 text-white rounded-lg"
+            onClick={() => setShowGKConfirmModal(false)}
+          >
+            No
+          </button>
         </div>
       </div>
-    </Show>
-  );
+    </div>
+  ) : null;
 }
 
 export default ConfirmGoalkeeperModal;
