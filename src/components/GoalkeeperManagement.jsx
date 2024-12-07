@@ -29,16 +29,22 @@ function GoalkeeperManagement(props) {
     setPlayerData(
       playerData().map((player) => {
         if (player.name === playerName) {
-          // New goalkeeper, end their current play interval
-          if (isRunning() && player.playIntervals.length > 0 && player.isOnField) {
-            player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();
+          // New goalkeeper
+          if (!includeGKPlaytime()) {
+            // End their current play interval
+            if (isRunning() && player.playIntervals.length > 0 && player.isOnField) {
+              player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();
+            }
           }
           return { ...player, isGoalkeeper: true };
         }
         if (player.name === previousGoalkeeperName) {
-          // Previous goalkeeper, start a new play interval if they are on field and game is running
-          if (isRunning() && player.isOnField) {
-            player.playIntervals.push({ startTime: Date.now(), endTime: null });
+          // Previous goalkeeper
+          if (!includeGKPlaytime()) {
+            // Start a new play interval if they are on field and game is running
+            if (isRunning() && player.isOnField) {
+              player.playIntervals.push({ startTime: Date.now(), endTime: null });
+            }
           }
           return { ...player, isGoalkeeper: false };
         }
@@ -51,6 +57,9 @@ function GoalkeeperManagement(props) {
 
     updatePlayerLists();
   };
+
+  const availableGoalkeepers = () =>
+    onFieldPlayers().filter((player) => player.name !== goalkeeper());
 
   return (
     <>
@@ -65,7 +74,7 @@ function GoalkeeperManagement(props) {
 
       <AssignGoalkeeperModal
         showGKModal={showGKModal}
-        onFieldPlayers={onFieldPlayers}
+        availablePlayers={availableGoalkeepers}
         setSelectedNewGoalkeeper={setSelectedNewGoalkeeper}
         setShowGKConfirmModal={setShowGKConfirmModal}
         setShowGKModal={setShowGKModal}

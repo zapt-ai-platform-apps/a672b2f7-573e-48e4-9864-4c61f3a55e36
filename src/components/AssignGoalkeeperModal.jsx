@@ -3,7 +3,7 @@ import { Show, For } from 'solid-js';
 function AssignGoalkeeperModal(props) {
   const {
     showGKModal,
-    onFieldPlayers,
+    availablePlayers,
     setSelectedNewGoalkeeper,
     setShowGKConfirmModal,
     setShowGKModal,
@@ -20,7 +20,7 @@ function AssignGoalkeeperModal(props) {
         <div class="bg-white p-8 rounded-lg shadow-md">
           <h2 class="text-2xl font-bold mb-4">Select New Goalkeeper</h2>
           <ul>
-            <For each={onFieldPlayers()}>
+            <For each={availablePlayers()}>
               {(player) => (
                 <li>
                   <button
