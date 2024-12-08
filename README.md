@@ -22,3 +22,7 @@ The app uses **Umami Analytics** to collect analytics data about app usage, help
 ### Hotjar
 
 The app uses **Hotjar** to collect user experience data, helping us understand user behavior and improve the app's usability.
+
+## Important Note
+
+- **Goalkeeper Playtime Handling**: When you choose to exclude the goalkeeper's playtime from totals, the app now accurately freezes the goalkeeper's playtime while they are in goal. Changing the goalkeeper will no longer reset their accumulated playtime to zero. This ensures fair tracking of each player's time on the field, even when they switch roles during the game.

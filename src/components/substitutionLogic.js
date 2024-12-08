@@ -1,4 +1,5 @@
 import { createSignal } from 'solid-js';
+import { makeSubstitution } from '../utils/substitutionHandlers';
 
 export function useSubstitutionLogic(props) {
   const {
@@ -11,45 +12,6 @@ export function useSubstitutionLogic(props) {
   const [selectedSubOffPlayer, setSelectedSubOffPlayer] = createSignal(null);
   const [selectedSubOnPlayer, setSelectedSubOnPlayer] = createSignal(null);
   const [showSubstitutionConfirmModal, setShowSubstitutionConfirmModal] = createSignal(false);
-
-  const makeSubstitution = () => {
-    if (selectedSubOffPlayer() && selectedSubOnPlayer()) {
-      const offPlayerName = selectedSubOffPlayer().name;
-      const onPlayerName = selectedSubOnPlayer().name;
-
-      setPlayerData(
-        playerData().map((player) => {
-          if (player.name === offPlayerName) {
-            if (player.playIntervals.length > 0) {
-              player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();
-            }
-            return { ...player, isOnField: false };
-          }
-          if (player.name === onPlayerName) {
-            if (isRunning()) {
-              return {
-                ...player,
-                isOnField: true,
-                playIntervals: [
-                  ...player.playIntervals,
-                  { startTime: Date.now(), endTime: null },
-                ],
-              };
-            } else {
-              return {
-                ...player,
-                isOnField: true,
-              };
-            }
-          }
-          return player;
-        })
-      );
-      updatePlayerLists();
-    } else {
-      alert('Please select a player to sub off and a player to sub on.');
-    }
-  };
 
   const handleSubOffPlayerClick = (player) => {
     setSelectedSubOffPlayer(player);
@@ -66,7 +28,14 @@ export function useSubstitutionLogic(props) {
   };
 
   const confirmSubstitution = () => {
-    makeSubstitution();
+    makeSubstitution({
+      playerData,
+      setPlayerData,
+      selectedSubOffPlayer,
+      selectedSubOnPlayer,
+      isRunning,
+      updatePlayerLists,
+    });
     setShowSubstitutionConfirmModal(false);
     setSelectedSubOffPlayer(null);
     setSelectedSubOnPlayer(null);

@@ -25,26 +25,37 @@ function GoalkeeperManagement(props) {
   const confirmGoalkeeper = (playerName) => {
     const previousGoalkeeperName = goalkeeper();
 
-    // Update the player data to set the new goalkeeper
     setPlayerData(
       playerData().map((player) => {
         if (player.name === playerName) {
-          // New goalkeeper
-          if (!includeGKPlaytime()) {
-            // End their current play interval
-            if (isRunning() && player.playIntervals.length > 0 && player.isOnField) {
+          if (isRunning() && player.isOnField) {
+            if (
+              player.playIntervals.length > 0 &&
+              player.playIntervals[player.playIntervals.length - 1].endTime === null
+            ) {
               player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();
             }
+            player.playIntervals.push({
+              startTime: Date.now(),
+              endTime: null,
+              isGoalkeeper: true,
+            });
           }
           return { ...player, isGoalkeeper: true };
         }
         if (player.name === previousGoalkeeperName) {
-          // Previous goalkeeper
-          if (!includeGKPlaytime()) {
-            // Start a new play interval if they are on field and game is running
-            if (isRunning() && player.isOnField) {
-              player.playIntervals.push({ startTime: Date.now(), endTime: null });
+          if (isRunning() && player.isOnField) {
+            if (
+              player.playIntervals.length > 0 &&
+              player.playIntervals[player.playIntervals.length - 1].endTime === null
+            ) {
+              player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();
             }
+            player.playIntervals.push({
+              startTime: Date.now(),
+              endTime: null,
+              isGoalkeeper: false,
+            });
           }
           return { ...player, isGoalkeeper: false };
         }
