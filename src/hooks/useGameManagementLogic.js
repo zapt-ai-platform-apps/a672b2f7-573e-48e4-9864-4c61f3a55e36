@@ -36,7 +36,7 @@ function useGameManagementLogic(props) {
   });
 
   const { now, startUITimer, getTimeElapsed } = useGameTimer({ isRunning, gameIntervals });
-  
+
   const {
     onFieldPlayers,
     offFieldPlayers,
@@ -65,7 +65,6 @@ function useGameManagementLogic(props) {
     updatePlayerLists,
     getTotalPlayTime,
     getTimeElapsed,
-    startUITimer,
     handleEndGame,
     confirmEndGame,
     cancelEndGame,
