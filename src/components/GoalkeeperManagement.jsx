@@ -28,13 +28,16 @@ function GoalkeeperManagement(props) {
     setPlayerData(
       playerData().map((player) => {
         if (player.name === playerName) {
+          // New goalkeeper
           if (isRunning() && player.isOnField) {
             if (
               player.playIntervals.length > 0 &&
               player.playIntervals[player.playIntervals.length - 1].endTime === null
             ) {
+              // Close previous interval
               player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();
             }
+            // Start new interval with isGoalkeeper: true
             player.playIntervals.push({
               startTime: Date.now(),
               endTime: null,
@@ -42,15 +45,17 @@ function GoalkeeperManagement(props) {
             });
           }
           return { ...player, isGoalkeeper: true };
-        }
-        if (player.name === previousGoalkeeperName) {
+        } else if (player.name === previousGoalkeeperName) {
+          // Previous goalkeeper
           if (isRunning() && player.isOnField) {
             if (
               player.playIntervals.length > 0 &&
               player.playIntervals[player.playIntervals.length - 1].endTime === null
             ) {
+              // Close previous interval
               player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();
             }
+            // Start new interval with isGoalkeeper: false
             player.playIntervals.push({
               startTime: Date.now(),
               endTime: null,
@@ -58,10 +63,12 @@ function GoalkeeperManagement(props) {
             });
           }
           return { ...player, isGoalkeeper: false };
+        } else {
+          return player;
         }
-        return player;
       })
     );
+
     setGoalkeeper(playerName);
     setShowGKConfirmModal(false);
     setShowGKModal(false);

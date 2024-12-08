@@ -1,8 +1,10 @@
 import { useNavigate } from '@solidjs/router';
 import Footer from './Footer';
-import { For, Show } from 'solid-js';
+import { Show } from 'solid-js';
 import { createSignal } from 'solid-js';
 import * as Sentry from '@sentry/browser';
+import GoalsList from './GoalsList';
+import PlayerPlaytimes from './PlayerPlaytimes';
 
 function GameSummary(props) {
   const { playerData, goals, ourScore, opponentScore, includeGKPlaytime, resetGame } = props;
@@ -12,14 +14,14 @@ function GameSummary(props) {
   const getTotalPlayTime = (player) => {
     let total = 0;
     for (const interval of player.playIntervals) {
+      if (!includeGKPlaytime() && interval.isGoalkeeper) {
+        continue;
+      }
       if (interval.endTime) {
         total += interval.endTime - interval.startTime;
       } else {
         total += 0;
       }
-    }
-    if (!includeGKPlaytime() && player.isGoalkeeper) {
-      return 0;
     }
     return Math.floor(total / 1000); // return total playtime in seconds
   };
@@ -35,31 +37,11 @@ function GameSummary(props) {
     navigate('/');
   };
 
-  const sortedPlayerData = () =>
-    [...playerData()].sort((a, b) => getTotalPlayTime(b) - getTotalPlayTime(a));
-
-  const goalsByPlayer = () => {
-    const counts = {};
-    goals()
-      .filter((goal) => goal.team === 'our')
-      .forEach((goal) => {
-        const scorer = goal.scorerName;
-        if (counts[scorer]) {
-          counts[scorer]++;
-        } else {
-          counts[scorer] = 1;
-        }
-      });
-    return counts;
-  };
-
   const handleShareSummary = async () => {
     setIsSharing(true);
     try {
-      // Generate the summary text
       let summaryText = `Final Score: Our Team ${ourScore()} - ${opponentScore()} Opponent Team\n\n`;
 
-      // Compute goals by player
       const goalsByPlayerData = {};
       goals()
         .filter((goal) => goal.team === 'our')
@@ -82,15 +64,16 @@ function GameSummary(props) {
       }
 
       summaryText += '\nPlayer Playtimes:\n';
-      sortedPlayerData().forEach((player) => {
-        summaryText += `- ${player.name}: ${formatTime(getTotalPlayTime(player))}\n`;
-      });
+      playerData()
+        .sort((a, b) => getTotalPlayTime(b) - getTotalPlayTime(a))
+        .forEach((player) => {
+          summaryText += `- ${player.name}: ${formatTime(getTotalPlayTime(player))}\n`;
+        });
 
       if (!includeGKPlaytime()) {
         summaryText += '\nNote: Playtime for goalkeepers is not included.\n';
       }
 
-      // Use Web Share API
       if (navigator.share) {
         await navigator.share({
           title: 'Match Summary',
@@ -105,7 +88,6 @@ function GameSummary(props) {
         Sentry.captureException(error);
         alert('An error occurred while sharing. Please try again.');
       }
-      // If it's an AbortError (user canceled the share), do nothing
     } finally {
       setIsSharing(false);
     }
@@ -123,39 +105,14 @@ function GameSummary(props) {
           </p>
         </div>
 
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold mb-4 text-green-600">Goals by Our Team</h2>
-          <Show when={Object.keys(goalsByPlayer()).length > 0} fallback={<p>No goals scored by our team.</p>}>
-            <ul>
-              <For each={Object.entries(goalsByPlayer())}>
-                {([playerName, goalCount]) => (
-                  <li class="mb-2">
-                    <p>{playerName}: {goalCount} goal{goalCount !== 1 ? 's' : ''}</p>
-                  </li>
-                )}
-              </For>
-            </ul>
-          </Show>
-        </div>
+        <GoalsList goals={goals} />
 
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold mb-4 text-green-600">Player Playtimes</h2>
-          <ul>
-            <For each={sortedPlayerData()}>
-              {(player) => (
-                <li class="flex justify-between items-center mb-4 p-4 bg-white rounded-lg shadow-md">
-                  <div class="font-medium text-lg">{player.name}</div>
-                  <div>{formatTime(getTotalPlayTime(player))}</div>
-                </li>
-              )}
-            </For>
-          </ul>
-          <Show when={!includeGKPlaytime()}>
-            <p class="mt-4 text-gray-700">
-              Note: Playtime for goalkeepers is not included.
-            </p>
-          </Show>
-        </div>
+        <PlayerPlaytimes
+          playerData={playerData}
+          includeGKPlaytime={includeGKPlaytime}
+          getTotalPlayTime={getTotalPlayTime}
+          formatTime={formatTime}
+        />
 
         <div class="flex space-x-4 mt-8">
           <button
