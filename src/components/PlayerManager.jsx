@@ -8,6 +8,7 @@ function PlayerManager(props) {
     addPlayer,
     deletePlayer,
     toggleStartingPlayer,
+    startingPlayersCount,
   } = props;
 
   return (
@@ -36,6 +37,9 @@ function PlayerManager(props) {
         </h2>
         <p class="mb-4 text-gray-700 text-lg">
           Select players to start on the field.
+        </p>
+        <p class="mb-4 text-gray-700 text-lg">
+          You have selected {startingPlayersCount()} {startingPlayersCount() === 1 ? 'player' : 'players'} for the starting lineup.
         </p>
         <ul>
           <For each={players()}>
