@@ -26,8 +26,6 @@ function GameManagementMain(props) {
         cancelEndGame={props.cancelEndGame}
       />
 
-      <AdjustPlayers {...props} />
-
       <SubstitutionPanel {...props} />
 
       <GoalManagement {...props} />
@@ -35,6 +33,8 @@ function GameManagementMain(props) {
       <GoalkeeperManagement {...props} />
 
       <AddPlayer {...props} />
+
+      <AdjustPlayers {...props} />
     </div>
   );
 }
