@@ -22,7 +22,7 @@ function GameManagementMain(props) {
 
       <EndGameConfirmationModal
         showEndGameConfirm={props.showEndGameConfirm}
-        confirmEndGameHandler={props.confirmEndGameHandler}
+        confirmEndGame={props.confirmEndGame}
         cancelEndGame={props.cancelEndGame}
       />
 

@@ -46,7 +46,8 @@ function GameManagement(props) {
   });
 
   const confirmEndGameHandler = () => {
-    confirmEndGame(navigate);
+    confirmEndGame();
+    navigate('/summary');
   };
 
   return (
@@ -59,7 +60,7 @@ function GameManagement(props) {
       opponentScore={opponentScore}
       includeGKPlaytime={includeGKPlaytime}
       showEndGameConfirm={showEndGameConfirm}
-      confirmEndGameHandler={confirmEndGameHandler}
+      confirmEndGame={confirmEndGameHandler}
       cancelEndGame={cancelEndGame}
       playerData={playerData}
       setPlayerData={setPlayerData}

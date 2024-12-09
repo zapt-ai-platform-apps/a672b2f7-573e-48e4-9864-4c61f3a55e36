@@ -1,10 +1,17 @@
-function useEndGameManager({ isRunning, setIsRunning, gameIntervals, setGameIntervals, playerData, setPlayerData, showEndGameConfirm, setShowEndGameConfirm }) {
-
+function useEndGameManager({
+  isRunning,
+  setIsRunning,
+  gameIntervals,
+  setGameIntervals,
+  playerData,
+  setPlayerData,
+  setShowEndGameConfirm,
+}) {
   const handleEndGame = () => {
     setShowEndGameConfirm(true);
   };
 
-  const confirmEndGame = (navigate) => {
+  const confirmEndGame = () => {
     if (isRunning()) {
       setIsRunning(false);
       setGameIntervals((prev) =>
@@ -30,7 +37,6 @@ function useEndGameManager({ isRunning, setIsRunning, gameIntervals, setGameInte
       );
     }
     setShowEndGameConfirm(false);
-    navigate('/summary');
   };
 
   const cancelEndGame = () => {
