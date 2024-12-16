@@ -8,6 +8,7 @@ Football Subs is an app designed to help coaches manage substitutions and track 
 2. [Setting Up the Game](docs/journeys/setting-up-the-game.md) - Prepare your game by adding players and selecting the starting lineup
 3. [Managing the Game](docs/journeys/managing-the-game.md) - Oversee the game in real-time, manage substitutions, and record goals
 4. [Reviewing Game Summary and Sharing](docs/journeys/reviewing-game-summary-and-sharing.md) - Analyze the game summary and share it directly from the app
+5. [Switching Between Light and Dark Mode](docs/journeys/switching-between-light-and-dark-mode.md) - Customize the app's appearance by toggling between light and dark themes
 
 ## Contact
 

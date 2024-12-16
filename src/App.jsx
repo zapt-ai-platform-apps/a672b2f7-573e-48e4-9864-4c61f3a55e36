@@ -3,6 +3,7 @@ import LandingPage from './components/LandingPage';
 import GameSetup from './components/GameSetup';
 import GameManagement from './components/GameManagement';
 import GameSummary from './components/GameSummary';
+import NavBar from './components/NavBar';
 import {
   playerData,
   setPlayerData,
@@ -17,7 +18,7 @@ import {
   goals,
   setGoals,
   handleStartGame,
-  resetGame
+  resetGame,
 } from './state';
 import { Toaster } from 'solid-toast';
 
@@ -25,12 +26,10 @@ function App() {
   return (
     <>
       <Toaster />
+      <NavBar />
       <Routes>
         <Route path="/" component={LandingPage} />
-        <Route
-          path="/setup"
-          element={<GameSetup onStartGame={handleStartGame} />}
-        />
+        <Route path="/setup" element={<GameSetup onStartGame={handleStartGame} />} />
         <Route
           path="/manage"
           element={
