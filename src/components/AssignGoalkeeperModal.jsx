@@ -18,7 +18,7 @@ function AssignGoalkeeperModal(props) {
   return (
     <Show when={showGKModal()}>
       <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg max-w-md w-full">
           <h2 class="text-2xl mb-4 text-gray-800 dark:text-white">Select a New Goalkeeper</h2>
           <ul>
             {availablePlayers().map((player) => (

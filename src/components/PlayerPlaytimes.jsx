@@ -8,13 +8,13 @@ function PlayerPlaytimes(props) {
 
   return (
     <div class="mb-8">
-      <h2 class="text-2xl font-bold mb-4 text-green-600">Player Playtimes</h2>
+      <h2 class="text-2xl font-bold mb-4 text-green-600 dark:text-green-400">Player Playtimes</h2>
       <ul>
         <For each={sortedPlayerData()}>
           {(player) => (
             <li class="flex justify-between items-center mb-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
-              <div class="font-medium text-lg">{player.name}</div>
-              <div>{formatTime(getTotalPlayTime(player))}</div>
+              <div class="font-medium text-lg text-gray-800 dark:text-white">{player.name}</div>
+              <div class="text-gray-800 dark:text-white">{formatTime(getTotalPlayTime(player))}</div>
             </li>
           )}
         </For>

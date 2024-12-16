@@ -10,7 +10,7 @@ import AdjustPlayers from './AdjustPlayers';
 function GameManagementMain(props) {
   return (
     <div class="p-8 flex-grow bg-white dark:bg-gray-900 text-gray-800 dark:text-white">
-      <h1 class="text-4xl font-bold mb-8 text-green-600">Game Management</h1>
+      <h1 class="text-4xl font-bold mb-8 text-green-600 dark:text-green-400">Game Management</h1>
 
       <Header {...props} />
 

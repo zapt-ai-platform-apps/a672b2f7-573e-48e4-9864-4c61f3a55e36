@@ -29,7 +29,7 @@ function GoalScoringSection(props) {
 
   return (
     <>
-      <div class="bg-white p-8 rounded-lg shadow-md mb-8">
+      <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md mb-8">
         <button
           class="px-8 py-4 bg-green-500 text-white text-lg rounded-lg cursor-pointer hover:bg-green-600 hover:scale-105 transition duration-300 ease-in-out"
           onClick={() => setShowGoalModal(true)}

@@ -8,7 +8,6 @@ function AddPlayer(props) {
 
   const addNewPlayer = () => {
     if (newPlayerName().trim() !== '') {
-      // Find the minimum totalPlayTime among current players
       const minPlayTime =
         playerData().length > 0
           ? Math.min(...playerData().map((p) => p.totalPlayTime || 0))
@@ -18,7 +17,7 @@ function AddPlayer(props) {
         ...playerData(),
         {
           name: newPlayerName().trim(),
-          playIntervals: [], // Start with no play intervals
+          playIntervals: [],
           isOnField: false,
           isGoalkeeper: false,
           totalPlayTime: minPlayTime,
@@ -31,7 +30,7 @@ function AddPlayer(props) {
 
   return (
     <>
-      <div class="bg-white p-8 rounded-lg shadow-md mb-8">
+      <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md mb-8">
         <button
           class="px-8 py-4 bg-green-500 text-white text-lg rounded-lg cursor-pointer hover:bg-green-600 hover:scale-105 transition duration-300 ease-in-out"
           onClick={() => setShowAddPlayerModal(true)}
@@ -40,7 +39,6 @@ function AddPlayer(props) {
         </button>
       </div>
 
-      {/* AddPlayerModal */}
       <AddPlayerModal
         showAddPlayerModal={showAddPlayerModal}
         setShowAddPlayerModal={setShowAddPlayerModal}
