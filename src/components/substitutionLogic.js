@@ -1,5 +1,6 @@
 import { createSignal } from 'solid-js';
 import { makeSubstitution } from '../utils/substitutionHandlers';
+import { toast } from 'solid-toast';
 
 export function useSubstitutionLogic(props) {
   const {
@@ -36,6 +37,7 @@ export function useSubstitutionLogic(props) {
       isRunning,
       updatePlayerLists,
     });
+    toast.success(`Substituted ${selectedSubOffPlayer().name} with ${selectedSubOnPlayer().name}!`);
     setShowSubstitutionConfirmModal(false);
     setSelectedSubOffPlayer(null);
     setSelectedSubOnPlayer(null);

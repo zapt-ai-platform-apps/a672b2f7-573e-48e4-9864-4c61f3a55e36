@@ -29,7 +29,9 @@ function useGameSetup() {
       };
       setPlayers([...players(), newPlayer]);
       setPlayerName('');
+      return true;
     }
+    return false;
   };
 
   const deletePlayer = (playerNameToDelete) => {
@@ -38,7 +40,9 @@ function useGameSetup() {
       const updatedPlayers = players().filter((player) => player.name !== playerNameToDelete);
       setPlayers(updatedPlayers);
       localStorage.setItem('players', JSON.stringify(updatedPlayers));
+      return true;
     }
+    return false;
   };
 
   const toggleStartingPlayer = (playerNameToToggle) => {

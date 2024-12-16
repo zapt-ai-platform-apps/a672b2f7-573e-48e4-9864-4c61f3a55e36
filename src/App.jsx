@@ -19,48 +19,52 @@ import {
   handleStartGame,
   resetGame
 } from './state';
+import { Toaster } from 'solid-toast';
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" component={LandingPage} />
-      <Route
-        path="/setup"
-        element={<GameSetup onStartGame={handleStartGame} />}
-      />
-      <Route
-        path="/manage"
-        element={
-          <GameManagement
-            playerData={playerData}
-            setPlayerData={setPlayerData}
-            goalkeeper={goalkeeper}
-            setGoalkeeper={setGoalkeeper}
-            ourScore={ourScore}
-            setOurScore={setOurScore}
-            opponentScore={opponentScore}
-            setOpponentScore={setOpponentScore}
-            goals={goals}
-            setGoals={setGoals}
-            includeGKPlaytime={includeGKPlaytime}
-            onEndGame={resetGame}
-          />
-        }
-      />
-      <Route
-        path="/summary"
-        element={
-          <GameSummary
-            playerData={playerData}
-            goals={goals}
-            ourScore={ourScore}
-            opponentScore={opponentScore}
-            includeGKPlaytime={includeGKPlaytime}
-            resetGame={resetGame}
-          />
-        }
-      />
-    </Routes>
+    <>
+      <Toaster />
+      <Routes>
+        <Route path="/" component={LandingPage} />
+        <Route
+          path="/setup"
+          element={<GameSetup onStartGame={handleStartGame} />}
+        />
+        <Route
+          path="/manage"
+          element={
+            <GameManagement
+              playerData={playerData}
+              setPlayerData={setPlayerData}
+              goalkeeper={goalkeeper}
+              setGoalkeeper={setGoalkeeper}
+              ourScore={ourScore}
+              setOurScore={setOurScore}
+              opponentScore={opponentScore}
+              setOpponentScore={setOpponentScore}
+              goals={goals}
+              setGoals={setGoals}
+              includeGKPlaytime={includeGKPlaytime}
+              onEndGame={resetGame}
+            />
+          }
+        />
+        <Route
+          path="/summary"
+          element={
+            <GameSummary
+              playerData={playerData}
+              goals={goals}
+              ourScore={ourScore}
+              opponentScore={opponentScore}
+              includeGKPlaytime={includeGKPlaytime}
+              resetGame={resetGame}
+            />
+          }
+        />
+      </Routes>
+    </>
   );
 }
 
