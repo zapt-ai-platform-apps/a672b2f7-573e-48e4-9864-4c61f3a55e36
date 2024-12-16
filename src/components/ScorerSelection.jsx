@@ -4,14 +4,14 @@ function ScorerSelection(props) {
   const { players, scorerName, setScorerName, handleConfirm, handleCancel } = props;
 
   return (
-    <div class="flex-grow overflow-y-auto">
+    <div class="flex-grow overflow-y-auto text-gray-800 dark:text-white">
       <p class="mt-4 mb-2 text-lg">Who scored?</p>
       <ul>
         <For each={[...players().map((player) => player.name), 'Own Goal']}>
           {(name) => (
             <li
               class={`p-4 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg text-2xl ${
-                scorerName() === name ? 'bg-blue-200 dark:bg-blue-700' : ''
+                scorerName() === name ? 'bg-blue-200 dark:bg-blue-600' : ''
               }`}
               onClick={() => setScorerName(name)}
             >

@@ -2,7 +2,7 @@ function OpponentGoalConfirmation(props) {
   const { handleConfirm, handleCancel } = props;
 
   return (
-    <div>
+    <div class="text-gray-800 dark:text-white">
       <p class="mt-4 mb-2 text-lg">Confirm opponent team scored?</p>
       <div class="mt-4 flex justify-end space-x-4">
         <button

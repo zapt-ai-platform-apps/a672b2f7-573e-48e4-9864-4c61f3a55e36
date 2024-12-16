@@ -40,7 +40,7 @@ function GoalScoredModal(props) {
         <div
           class={`bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full flex flex-col ${modalHeightClass()}`}
         >
-          <h2 class="text-2xl font-bold mb-4 text-green-600">Goal Scored</h2>
+          <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Goal Scored</h2>
           <Show when={!team()}>
             <TeamSelection setTeam={setTeam} setConfirmOpponentGoal={setConfirmOpponentGoal} />
           </Show>

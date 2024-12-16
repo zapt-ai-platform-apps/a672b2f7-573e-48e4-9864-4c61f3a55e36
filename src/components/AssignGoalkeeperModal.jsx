@@ -17,14 +17,14 @@ function AssignGoalkeeperModal(props) {
 
   return (
     <Show when={showGKModal()}>
-      <div class="fixed inset-0 flex items-center justify-center z-50">
-        <div class="bg-white p-8 rounded-lg shadow-lg">
-          <h2 class="text-2xl mb-4">Select a new goalkeeper</h2>
+      <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
+          <h2 class="text-2xl mb-4 text-gray-800 dark:text-white">Select a New Goalkeeper</h2>
           <ul>
             {availablePlayers().map((player) => (
               <li key={player.name} class="mb-2">
                 <button
-                  class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                  class="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out"
                   onClick={() => selectGoalkeeper(player.name)}
                 >
                   {player.name}
@@ -33,7 +33,7 @@ function AssignGoalkeeperModal(props) {
             ))}
           </ul>
           <button
-            class="mt-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+            class="mt-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-300 ease-in-out"
             onClick={() => setShowGKModal(false)}
           >
             Cancel

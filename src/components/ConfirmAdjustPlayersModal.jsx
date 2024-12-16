@@ -17,8 +17,8 @@ function ConfirmAdjustPlayersModal(props) {
     <Show when={showConfirmModal()}>
       <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full">
-          <h2 class="text-2xl font-bold mb-4 text-green-600">Confirm Action</h2>
-          <p class="mb-4 text-lg">
+          <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Confirm Action</h2>
+          <p class="mb-4 text-lg text-gray-700 dark:text-gray-200">
             Are you sure you want to {actionText()} <strong>{selectedPlayer().name}</strong> {adjustType() === 'increase' ? 'to' : 'from'} the field?
           </p>
           <div class="flex justify-end space-x-4">

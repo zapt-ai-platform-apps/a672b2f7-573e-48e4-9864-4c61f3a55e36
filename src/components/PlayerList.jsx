@@ -11,10 +11,10 @@ function PlayerList(props) {
 
   return (
     <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md h-full">
-      <h2 class="text-2xl font-bold mb-2 text-green-600">
+      <h2 class="text-2xl font-bold mb-2 text-gray-800 dark:text-white">
         {title}
       </h2>
-      <p class="mb-2 text-gray-600 text-sm">{message}</p>
+      <p class="mb-2 text-gray-600 dark:text-gray-300 text-sm">{message}</p>
       <ul>
         <For each={players()}>
           {(player) => (
@@ -26,7 +26,7 @@ function PlayerList(props) {
               }`}
               onClick={() => handlePlayerClick && handlePlayerClick(player)}
             >
-              <div class="font-medium text-lg">
+              <div class="font-medium text-lg text-gray-800 dark:text-white">
                 {player.name}{' '}
                 {player.isGoalkeeper && (
                   <span class="text-yellow-500 font-semibold">(GK)</span>
