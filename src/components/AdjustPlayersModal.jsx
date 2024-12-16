@@ -24,7 +24,7 @@ function AdjustPlayersModal(props) {
   return (
     <Show when={showAdjustModal()}>
       <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-lg max-w-md w-full">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full">
           <h2 class="text-2xl font-bold mb-4 text-green-600">
             {adjustType() === 'increase' ? 'Add Player to Field' : 'Remove Player from Field'}
           </h2>
@@ -32,7 +32,7 @@ function AdjustPlayersModal(props) {
             <For each={playersList()}>
               {(player) => (
                 <li
-                  class="p-4 mb-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200"
+                  class="p-4 mb-2 bg-gray-100 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600"
                   onClick={() => handlePlayerSelection(player)}
                 >
                   {player.name}

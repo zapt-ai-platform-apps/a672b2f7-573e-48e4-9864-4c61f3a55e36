@@ -10,7 +10,7 @@ function PlayerList(props) {
   };
 
   return (
-    <div class="bg-white p-4 rounded-lg shadow-md h-full">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md h-full">
       <h2 class="text-2xl font-bold mb-2 text-green-600">
         {title}
       </h2>
@@ -21,8 +21,8 @@ function PlayerList(props) {
             <li
               class={`flex justify-between items-center mb-2 p-4 rounded-lg cursor-pointer ${
                 selectedPlayer() && selectedPlayer().name === player.name
-                  ? 'bg-blue-200'
-                  : 'hover:bg-gray-100'
+                  ? 'bg-blue-200 dark:bg-blue-700'
+                  : 'hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
               onClick={() => handlePlayerClick && handlePlayerClick(player)}
             >
@@ -33,7 +33,7 @@ function PlayerList(props) {
                 )}
               </div>
               <div>
-                <span class="text-sm text-gray-600">
+                <span class="text-sm text-gray-600 dark:text-gray-300">
                   {formatTime(getTotalPlayTime(player))}
                 </span>
               </div>

@@ -15,7 +15,7 @@ function ConfirmGoalkeeperModal(props) {
   return (
     <Show when={showGKConfirmModal()}>
       <div class="fixed inset-0 flex items-center justify-center z-50">
-        <div class="bg-white p-8 rounded-lg shadow-lg">
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
           <h2 class="text-2xl mb-4">Confirm Goalkeeper Change</h2>
           <p>
             Are you sure you want to make{' '}

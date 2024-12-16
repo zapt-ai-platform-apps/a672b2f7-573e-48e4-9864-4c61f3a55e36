@@ -12,7 +12,7 @@ function PlayerPlaytimes(props) {
       <ul>
         <For each={sortedPlayerData()}>
           {(player) => (
-            <li class="flex justify-between items-center mb-4 p-4 bg-white rounded-lg shadow-md">
+            <li class="flex justify-between items-center mb-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
               <div class="font-medium text-lg">{player.name}</div>
               <div>{formatTime(getTotalPlayTime(player))}</div>
             </li>
@@ -20,7 +20,7 @@ function PlayerPlaytimes(props) {
         </For>
       </ul>
       <Show when={!includeGKPlaytime()}>
-        <p class="mt-4 text-gray-700">Note: Playtime for goalkeepers is not included.</p>
+        <p class="mt-4 text-gray-700 dark:text-gray-300">Note: Playtime for goalkeepers is not included.</p>
       </Show>
     </div>
   );

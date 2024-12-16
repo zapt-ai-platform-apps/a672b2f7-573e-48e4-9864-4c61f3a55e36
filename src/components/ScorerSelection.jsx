@@ -10,8 +10,8 @@ function ScorerSelection(props) {
         <For each={[...players().map((player) => player.name), 'Own Goal']}>
           {(name) => (
             <li
-              class={`p-4 cursor-pointer hover:bg-gray-200 rounded-lg text-2xl ${
-                scorerName() === name ? 'bg-blue-200' : ''
+              class={`p-4 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg text-2xl ${
+                scorerName() === name ? 'bg-blue-200 dark:bg-blue-700' : ''
               }`}
               onClick={() => setScorerName(name)}
             >
