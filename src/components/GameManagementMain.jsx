@@ -1,13 +1,56 @@
-import { Show } from 'solid-js';
 import Header from './Header';
 import SubstitutionPanel from './SubstitutionPanel';
-import GoalManagement from './GoalManagement';
-import GoalkeeperManagement from './GoalkeeperManagement';
-import AddPlayer from './AddPlayer';
+import GameActions from './GameActions';
 import EndGameConfirmationModal from './EndGameConfirmationModal';
-import AdjustPlayers from './AdjustPlayers';
+import GoalScoredModal from './GoalScoredModal';
+import AssignGoalkeeperModal from './AssignGoalkeeperModal';
+import ConfirmGoalkeeperModal from './ConfirmGoalkeeperModal';
+import AddPlayerModal from './AddPlayerModal';
+import AdjustPlayersModal from './AdjustPlayersModal';
+import ConfirmAdjustPlayersModal from './ConfirmAdjustPlayersModal';
+import RemoveGoalConfirmationModal from './RemoveGoalConfirmationModal';
+import createGameManagementStore from '../hooks/useGameManagement';
 
 function GameManagementMain(props) {
+  const {
+    // State variables
+    showGoalModal,
+    setShowGoalModal,
+    showRemoveGoalConfirm,
+    setShowRemoveGoalConfirm,
+    showGKModal,
+    setShowGKModal,
+    showGKConfirmModal,
+    setShowGKConfirmModal,
+    selectedNewGoalkeeper,
+    setSelectedNewGoalkeeper,
+    showAddPlayerModal,
+    setShowAddPlayerModal,
+    newPlayerName,
+    setNewPlayerName,
+    showAdjustModal,
+    setShowAdjustModal,
+    adjustType,
+    setAdjustType,
+    selectedPlayer,
+    setSelectedPlayer,
+    showConfirmModal,
+    setShowConfirmModal,
+
+    // Functions
+    recordGoal,
+    handleRemoveLastGoal,
+    confirmRemoveGoal,
+    cancelRemoveGoal,
+    assignGoalkeeper,
+    confirmGoalkeeper,
+    addNewPlayer,
+    handleIncreasePlayers,
+    handleDecreasePlayers,
+    confirmAdjustment,
+    availableGoalkeepers,
+  } = createGameManagementStore(props);
+
   return (
     <div class="p-8 flex-grow bg-white dark:bg-gray-900 text-gray-800 dark:text-white">
       <h1 class="text-4xl font-bold mb-8 text-green-600 dark:text-green-400">Game Management</h1>
@@ -28,13 +71,70 @@ function GameManagementMain(props) {
 
       <SubstitutionPanel {...props} />
 
-      <GoalManagement {...props} />
+      <GameActions
+        assignGoalkeeper={assignGoalkeeper}
+        handleRemoveLastGoal={handleRemoveLastGoal}
+        setShowGoalModal={setShowGoalModal}
+        setShowAddPlayerModal={setShowAddPlayerModal}
+        handleIncreasePlayers={handleIncreasePlayers}
+        handleDecreasePlayers={handleDecreasePlayers}
+        isRunning={props.isRunning}
+      />
 
-      <GoalkeeperManagement {...props} />
+      {/* Modals */}
+      <GoalScoredModal
+        showGoalModal={showGoalModal}
+        setShowGoalModal={setShowGoalModal}
+        players={props.onFieldPlayers}
+        recordGoal={recordGoal}
+      />
 
-      <AddPlayer {...props} />
+      <RemoveGoalConfirmationModal
+        showRemoveGoalConfirm={showRemoveGoalConfirm}
+        confirmRemoveGoal={confirmRemoveGoal}
+        cancelRemoveGoal={cancelRemoveGoal}
+      />
 
-      <AdjustPlayers {...props} />
+      <AssignGoalkeeperModal
+        showGKModal={showGKModal}
+        availablePlayers={availableGoalkeepers}
+        setSelectedNewGoalkeeper={setSelectedNewGoalkeeper}
+        setShowGKConfirmModal={setShowGKConfirmModal}
+        setShowGKModal={setShowGKModal}
+      />
+
+      <ConfirmGoalkeeperModal
+        showGKConfirmModal={showGKConfirmModal}
+        selectedNewGoalkeeper={selectedNewGoalkeeper}
+        confirmGoalkeeper={confirmGoalkeeper}
+        setShowGKConfirmModal={setShowGKConfirmModal}
+      />
+
+      <AddPlayerModal
+        showAddPlayerModal={showAddPlayerModal}
+        setShowAddPlayerModal={setShowAddPlayerModal}
+        newPlayerName={newPlayerName}
+        setNewPlayerName={setNewPlayerName}
+        addNewPlayer={addNewPlayer}
+      />
+
+      <AdjustPlayersModal
+        showAdjustModal={showAdjustModal}
+        setShowAdjustModal={setShowAdjustModal}
+        adjustType={adjustType}
+        onFieldPlayers={props.onFieldPlayers}
+        offFieldPlayers={props.offFieldPlayers}
+        setSelectedPlayer={setSelectedPlayer}
+        setShowConfirmModal={setShowConfirmModal}
+      />
+
+      <ConfirmAdjustPlayersModal
+        showConfirmModal={showConfirmModal}
+        setShowConfirmModal={setShowConfirmModal}
+        selectedPlayer={selectedPlayer}
+        adjustType={adjustType}
+        confirmAdjustment={confirmAdjustment}
+      />
     </div>
   );
 }

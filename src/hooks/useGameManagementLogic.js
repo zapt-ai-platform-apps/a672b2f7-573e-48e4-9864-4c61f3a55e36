@@ -8,6 +8,14 @@ function useGameManagementLogic(props) {
   const {
     playerData,
     setPlayerData,
+    goalkeeper,
+    setGoalkeeper,
+    ourScore,
+    setOurScore,
+    opponentScore,
+    setOpponentScore,
+    goals,
+    setGoals,
     includeGKPlaytime,
   } = props;
 
@@ -56,12 +64,22 @@ function useGameManagementLogic(props) {
   });
 
   return {
+    playerData,
+    setPlayerData,
+    goalkeeper,
+    setGoalkeeper,
+    ourScore,
+    setOurScore,
+    opponentScore,
+    setOpponentScore,
+    goals,
+    setGoals,
+    includeGKPlaytime,
     isRunning,
     gameIntervals,
     onFieldPlayers,
     offFieldPlayers,
     showEndGameConfirm,
-    now,
     updatePlayerLists,
     getTotalPlayTime,
     getTimeElapsed,

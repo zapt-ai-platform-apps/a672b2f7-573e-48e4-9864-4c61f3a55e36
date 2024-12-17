@@ -17,10 +17,8 @@ function GameManagement(props) {
     goals,
     setGoals,
     includeGKPlaytime,
-  } = props;
-
-  const {
     isRunning,
+    gameIntervals,
     onFieldPlayers,
     offFieldPlayers,
     showEndGameConfirm,
@@ -32,17 +30,17 @@ function GameManagement(props) {
     cancelEndGame,
     toggleTimer,
   } = useGameManagementLogic({
-    playerData,
-    setPlayerData,
-    goalkeeper,
-    setGoalkeeper,
-    ourScore,
-    setOurScore,
-    opponentScore,
-    setOpponentScore,
-    goals,
-    setGoals,
-    includeGKPlaytime,
+    playerData: props.playerData,
+    setPlayerData: props.setPlayerData,
+    goalkeeper: props.goalkeeper,
+    setGoalkeeper: props.setGoalkeeper,
+    ourScore: props.ourScore,
+    setOurScore: props.setOurScore,
+    opponentScore: props.opponentScore,
+    setOpponentScore: props.setOpponentScore,
+    goals: props.goals,
+    setGoals: props.setGoals,
+    includeGKPlaytime: props.includeGKPlaytime,
   });
 
   const confirmEndGameHandler = () => {
@@ -57,7 +55,9 @@ function GameManagement(props) {
       getTimeElapsed={getTimeElapsed}
       handleEndGame={handleEndGame}
       ourScore={ourScore}
+      setOurScore={setOurScore}
       opponentScore={opponentScore}
+      setOpponentScore={setOpponentScore}
       includeGKPlaytime={includeGKPlaytime}
       showEndGameConfirm={showEndGameConfirm}
       confirmEndGame={confirmEndGameHandler}
@@ -68,8 +68,6 @@ function GameManagement(props) {
       onFieldPlayers={onFieldPlayers}
       offFieldPlayers={offFieldPlayers}
       getTotalPlayTime={getTotalPlayTime}
-      setOurScore={setOurScore}
-      setOpponentScore={setOpponentScore}
       goals={goals}
       setGoals={setGoals}
       goalkeeper={goalkeeper}
