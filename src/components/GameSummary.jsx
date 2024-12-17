@@ -1,5 +1,4 @@
 import { useNavigate } from '@solidjs/router';
-import Footer from './Footer';
 import { createSignal } from 'solid-js';
 import GoalsList from './GoalsList';
 import PlayerPlaytimes from './PlayerPlaytimes';
@@ -68,7 +67,6 @@ function GameSummary(props) {
           />
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

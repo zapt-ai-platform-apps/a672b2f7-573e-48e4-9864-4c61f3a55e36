@@ -21,6 +21,12 @@ function NavBar() {
           >
             Made on ZAPT
           </a>
+          <a
+            href="mailto:footballsubs@zapt.ai"
+            class="text-gray-800 dark:text-white hover:underline cursor-pointer"
+          >
+            Contact Us
+          </a>
           <ThemeToggle />
         </div>
       </div>

@@ -1,5 +1,4 @@
 import { useNavigate } from '@solidjs/router';
-import Footer from './Footer';
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -28,7 +27,6 @@ function LandingPage() {
           Get Started
         </button>
       </div>
-      <Footer />
     </div>
   );
 }

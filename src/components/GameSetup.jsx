@@ -1,5 +1,4 @@
 import { Show } from 'solid-js';
-import Footer from './Footer';
 import PlayerManager from './PlayerManager';
 import GoalkeeperSettings from './GoalkeeperSettings';
 import ErrorMessage from './ErrorMessage';
@@ -66,7 +65,6 @@ function GameSetup(props) {
           onStartGame={onStartGame}
         />
       </div>
-      <Footer />
     </div>
   );
 }
