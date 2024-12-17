@@ -14,9 +14,6 @@ function StartingLineupSelector(props) {
         Select Starting Line-up
       </h2>
       <p class="mb-4 text-gray-700 dark:text-gray-300 text-lg">
-        Select players to start on the field.
-      </p>
-      <p class="mb-4 text-gray-700 dark:text-gray-300 text-lg">
         You have selected {startingPlayersCount()}{' '}
         {startingPlayersCount() === 1 ? 'player' : 'players'} for the starting
         lineup.

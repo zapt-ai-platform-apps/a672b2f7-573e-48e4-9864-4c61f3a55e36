@@ -31,16 +31,16 @@ function PlayerManager(props) {
 
   return (
     <>
-      <AddPlayerForm
-        playerName={playerName}
-        setPlayerName={setPlayerName}
-        handleAddPlayer={handleAddPlayer}
-      />
       <StartingLineupSelector
         players={players}
         startingPlayersCount={startingPlayersCount}
         toggleStartingPlayer={toggleStartingPlayer}
         handleDeletePlayer={handleDeletePlayer}
+      />
+      <AddPlayerForm
+        playerName={playerName}
+        setPlayerName={setPlayerName}
+        handleAddPlayer={handleAddPlayer}
       />
     </>
   );
