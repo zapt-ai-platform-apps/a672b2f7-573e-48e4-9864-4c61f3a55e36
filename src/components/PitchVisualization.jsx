@@ -1,21 +1,21 @@
-import { createSignal, onMount, onCleanup, For } from 'solid-js';
+import { createSignal, onMount, onCleanup } from 'solid-js';
 import { playerData, setPlayerData } from '../state';
-import Player from './Player';
+import Pitch from './Pitch';
 
 function PitchVisualization() {
-  const [pitchRef, setPitchRef] = createSignal(null);
+  let pitchRef;
   const [draggingPlayer, setDraggingPlayer] = createSignal(null);
   const [isDragging, setIsDragging] = createSignal(false);
 
-  const handleMouseDown = (e, player) => {
+  const handlePointerDown = (e, player) => {
     e.preventDefault();
     setDraggingPlayer(player);
     setIsDragging(true);
   };
 
-  const handleMouseMove = (e) => {
+  const handlePointerMove = (e) => {
     if (isDragging()) {
-      const pitchRect = pitchRef().getBoundingClientRect();
+      const pitchRect = pitchRef.getBoundingClientRect();
       const x = e.clientX - pitchRect.left;
       const y = e.clientY - pitchRect.top;
 
@@ -33,41 +33,7 @@ function PitchVisualization() {
     }
   };
 
-  const handleMouseUp = () => {
-    if (isDragging()) {
-      setIsDragging(false);
-      setDraggingPlayer(null);
-    }
-  };
-
-  const handleTouchStart = (e, player) => {
-    e.preventDefault();
-    setDraggingPlayer(player);
-    setIsDragging(true);
-  };
-
-  const handleTouchMove = (e) => {
-    if (isDragging() && e.touches.length === 1) {
-      const touch = e.touches[0];
-      const pitchRect = pitchRef().getBoundingClientRect();
-      const x = touch.clientX - pitchRect.left;
-      const y = touch.clientY - pitchRect.top;
-
-      setPlayerData(
-        playerData().map((p) => {
-          if (p.name === draggingPlayer().name) {
-            return {
-              ...p,
-              position: { x, y },
-            };
-          }
-          return p;
-        })
-      );
-    }
-  };
-
-  const handleTouchEnd = () => {
+  const handlePointerUp = () => {
     if (isDragging()) {
       setIsDragging(false);
       setDraggingPlayer(null);
@@ -75,44 +41,33 @@ function PitchVisualization() {
   };
 
   onMount(() => {
-    const pitchElement = pitchRef();
-    if (pitchElement) {
-      pitchElement.addEventListener('mousemove', handleMouseMove);
-      pitchElement.addEventListener('mouseup', handleMouseUp);
-      pitchElement.addEventListener('mouseleave', handleMouseUp);
-      pitchElement.addEventListener('touchmove', handleTouchMove);
-      pitchElement.addEventListener('touchend', handleTouchEnd);
+    if (pitchRef) {
+      pitchRef.addEventListener('pointermove', handlePointerMove);
+      pitchRef.addEventListener('pointerup', handlePointerUp);
+      pitchRef.addEventListener('pointercancel', handlePointerUp);
+      pitchRef.addEventListener('pointerleave', handlePointerUp);
     }
   });
 
   onCleanup(() => {
-    const pitchElement = pitchRef();
-    if (pitchElement) {
-      pitchElement.removeEventListener('mousemove', handleMouseMove);
-      pitchElement.removeEventListener('mouseup', handleMouseUp);
-      pitchElement.removeEventListener('mouseleave', handleMouseUp);
-      pitchElement.removeEventListener('touchmove', handleTouchMove);
-      pitchElement.removeEventListener('touchend', handleTouchEnd);
+    if (pitchRef) {
+      pitchRef.removeEventListener('pointermove', handlePointerMove);
+      pitchRef.removeEventListener('pointerup', handlePointerUp);
+      pitchRef.removeEventListener('pointercancel', handlePointerUp);
+      pitchRef.removeEventListener('pointerleave', handlePointerUp);
     }
   });
 
   return (
     <div class="mb-8">
-      <h2 class="text-2xl font-bold mb-4 text-green-600 dark:text-green-400">Player Positions</h2>
-      <div
-        ref={setPitchRef}
-        class="relative border border-green-600 bg-green-100 w-full h-96 rounded-lg overflow-hidden"
-      >
-        <For each={playerData().filter((player) => player.isOnField)}>
-          {(player) => (
-            <Player
-              player={player}
-              handleMouseDown={handleMouseDown}
-              handleTouchStart={handleTouchStart}
-            />
-          )}
-        </For>
-      </div>
+      <h2 class="text-2xl font-bold mb-4 text-green-600 dark:text-green-400">
+        Player Positions
+      </h2>
+      <Pitch
+        pitchRef={(el) => (pitchRef = el)}
+        playerData={playerData}
+        handlePointerDown={handlePointerDown}
+      />
       <p class="mt-4 text-gray-700 dark:text-gray-300">
         Drag and drop players to set their positions.
       </p>

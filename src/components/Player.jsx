@@ -15,8 +15,7 @@ function Player(props) {
         height: '40px',
         transform: 'translate(-50%, -50%)',
       }}
-      onMouseDown={(e) => props.handleMouseDown(e, props.player)}
-      onTouchStart={(e) => props.handleTouchStart(e, props.player)}
+      onPointerDown={(e) => props.handlePointerDown(e, props.player)}
     >
       {props.player.isGoalkeeper ? 'GK' : props.player.name.charAt(0)}
     </div>
