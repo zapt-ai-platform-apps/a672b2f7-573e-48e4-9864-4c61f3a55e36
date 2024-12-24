@@ -1,38 +1,100 @@
-import { createSignal, onMount, onCleanup, For, Show } from 'solid-js';
+import { createSignal, onMount, onCleanup, For } from 'solid-js';
 import { playerData, setPlayerData } from '../state';
+import Player from './Player';
 
 function PitchVisualization() {
   const [pitchRef, setPitchRef] = createSignal(null);
   const [draggingPlayer, setDraggingPlayer] = createSignal(null);
+  const [isDragging, setIsDragging] = createSignal(false);
 
-  const onDragStart = (player) => {
-    setDraggingPlayer(player);
-  };
-
-  const onDragEnd = () => {
-    setDraggingPlayer(null);
-  };
-
-  const onDrop = (e) => {
+  const handleMouseDown = (e, player) => {
     e.preventDefault();
-    const pitchRect = pitchRef().getBoundingClientRect();
-    const x = e.clientX - pitchRect.left;
-    const y = e.clientY - pitchRect.top;
-
-    setPlayerData(
-      playerData().map((player) => {
-        if (player.name === draggingPlayer().name) {
-          console.log(`Player ${player.name} moved to position: x=${x}, y=${y}`);
-          return {
-            ...player,
-            position: { x, y },
-          };
-        }
-        return player;
-      })
-    );
-    setDraggingPlayer(null);
+    setDraggingPlayer(player);
+    setIsDragging(true);
   };
+
+  const handleMouseMove = (e) => {
+    if (isDragging()) {
+      const pitchRect = pitchRef().getBoundingClientRect();
+      const x = e.clientX - pitchRect.left;
+      const y = e.clientY - pitchRect.top;
+
+      setPlayerData(
+        playerData().map((p) => {
+          if (p.name === draggingPlayer().name) {
+            return {
+              ...p,
+              position: { x, y },
+            };
+          }
+          return p;
+        })
+      );
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (isDragging()) {
+      setIsDragging(false);
+      setDraggingPlayer(null);
+    }
+  };
+
+  const handleTouchStart = (e, player) => {
+    e.preventDefault();
+    setDraggingPlayer(player);
+    setIsDragging(true);
+  };
+
+  const handleTouchMove = (e) => {
+    if (isDragging() && e.touches.length === 1) {
+      const touch = e.touches[0];
+      const pitchRect = pitchRef().getBoundingClientRect();
+      const x = touch.clientX - pitchRect.left;
+      const y = touch.clientY - pitchRect.top;
+
+      setPlayerData(
+        playerData().map((p) => {
+          if (p.name === draggingPlayer().name) {
+            return {
+              ...p,
+              position: { x, y },
+            };
+          }
+          return p;
+        })
+      );
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (isDragging()) {
+      setIsDragging(false);
+      setDraggingPlayer(null);
+    }
+  };
+
+  onMount(() => {
+    const pitchElement = pitchRef();
+    if (pitchElement) {
+      pitchElement.addEventListener('mousemove', handleMouseMove);
+      pitchElement.addEventListener('mouseup', handleMouseUp);
+      pitchElement.addEventListener('mouseleave', handleMouseUp);
+      pitchElement.addEventListener('touchmove', handleTouchMove);
+      pitchElement.addEventListener('touchend', handleTouchEnd);
+    }
+  });
+
+  onCleanup(() => {
+    const pitchElement = pitchRef();
+    if (pitchElement) {
+      pitchElement.removeEventListener('mousemove', handleMouseMove);
+      pitchElement.removeEventListener('mouseup', handleMouseUp);
+      pitchElement.removeEventListener('mouseleave', handleMouseUp);
+      pitchElement.removeEventListener('touchmove', handleTouchMove);
+      pitchElement.removeEventListener('touchend', handleTouchEnd);
+    }
+  });
 
   return (
     <div class="mb-8">
@@ -40,30 +102,20 @@ function PitchVisualization() {
       <div
         ref={setPitchRef}
         class="relative border border-green-600 bg-green-100 w-full h-96 rounded-lg overflow-hidden"
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={onDrop}
       >
-        <For each={playerData().filter(player => player.isOnField)}>
+        <For each={playerData().filter((player) => player.isOnField)}>
           {(player) => (
-            <div
-              class="absolute cursor-pointer flex items-center justify-center bg-blue-500 text-white rounded-full"
-              style={{
-                top: player.position && player.position.y !== null ? `${(player.position.y - 20)}px` : '50%',
-                left: player.position && player.position.x !== null ? `${(player.position.x - 20)}px` : '50%',
-                width: '40px',
-                height: '40px',
-                transform: 'translate(-50%, -50%)',
-              }}
-              draggable
-              onDragStart={() => onDragStart(player)}
-              onDragEnd={onDragEnd}
-            >
-              {player.isGoalkeeper ? 'GK' : player.name.charAt(0)}
-            </div>
+            <Player
+              player={player}
+              handleMouseDown={handleMouseDown}
+              handleTouchStart={handleTouchStart}
+            />
           )}
         </For>
       </div>
-      <p class="mt-4 text-gray-700 dark:text-gray-300">Drag and drop players to set their positions.</p>
+      <p class="mt-4 text-gray-700 dark:text-gray-300">
+        Drag and drop players to set their positions.
+      </p>
     </div>
   );
 }
