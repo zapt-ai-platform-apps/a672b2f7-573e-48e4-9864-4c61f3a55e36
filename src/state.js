@@ -20,6 +20,7 @@ export const handleStartGame = (players, gk, includeGKTime) => {
         isOnField: isStarting,
         isGoalkeeper: isGoalkeeperPlayer,
         totalPlayTime: 0, // initial total play time is 0
+        position: { x: null, y: null }, // Initial position is null
       };
     })
   );
