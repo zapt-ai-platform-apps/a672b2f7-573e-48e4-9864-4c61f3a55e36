@@ -16,7 +16,7 @@
     "solid-icons": "^1.0.9",
     "logrocket": "^9.0.0",
     "solid-toast": "^0.5.0",
-    "solid-dnd": "^0.2.1"
+    "@thisbeyond/solid-dnd": "^0.4.1"
   },
   "devDependencies": {
     "vite": "^5.4.7",
