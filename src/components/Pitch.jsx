@@ -4,8 +4,8 @@ import Player from './Player';
 function Pitch(props) {
   return (
     <div
+      class="relative bg-green-600 w-full max-w-4xl mx-auto h-96 rounded-lg overflow-hidden"
       ref={props.pitchRef}
-      class="relative bg-green-600 w-full h-96 rounded-lg overflow-hidden"
       style="touch-action: none;"
     >
       {/* Pitch Markings */}
