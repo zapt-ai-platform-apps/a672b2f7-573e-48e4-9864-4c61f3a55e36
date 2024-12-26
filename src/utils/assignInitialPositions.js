@@ -11,10 +11,12 @@ export default function assignInitialPositions(pitchRef) {
   const pitchRect = pitchRef.getBoundingClientRect();
   const totalPlayers = onField.length;
   const spacing = pitchRect.width / (totalPlayers + 1);
-
+  const centerY = pitchRect.height / 2;
+  const verticalSpacing = pitchRect.height / (totalPlayers + 1);
+  
   playersWithoutPosition.forEach((player, index) => {
     const assignedPlayer = playerData().find((p) => p.name === player.name);
-    if (assignedPlayer && !assignedPlayer.position) {
+    if (assignedPlayer && (!assignedPlayer.position || assignedPlayer.position.x === null || assignedPlayer.position.y === null)) {
       setPlayerData(
         playerData().map((p) => {
           if (p.name === assignedPlayer.name) {
@@ -22,7 +24,7 @@ export default function assignInitialPositions(pitchRef) {
               ...p,
               position: {
                 x: spacing * (index + 1),
-                y: pitchRect.height / 2,
+                y: centerY + ((index % 2 === 0 ? 1 : -1) * (verticalSpacing / 2)),
               },
             };
           }
