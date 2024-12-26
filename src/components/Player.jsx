@@ -1,23 +1,28 @@
 function Player(props) {
+  const { player, handlePointerDown } = props;
+  
+  // Define different colors for goalkeeper and field players
+  const playerColorClass = player.isGoalkeeper ? 'bg-red-500 dark:bg-red-700' : 'bg-blue-500 dark:bg-blue-700';
+
   return (
     <div
-      class="absolute cursor-pointer flex items-center justify-center bg-blue-500 text-white rounded-full"
+      class={`absolute cursor-pointer flex items-center justify-center ${playerColorClass} text-white rounded-full`}
       style={{
         top:
-          props.player.position && props.player.position.y !== null
-            ? `${props.player.position.y - 20}px`
+          player.position && player.position.y !== null
+            ? `${player.position.y - 20}px`
             : '50%',
         left:
-          props.player.position && props.player.position.x !== null
-            ? `${props.player.position.x - 20}px`
+          player.position && player.position.x !== null
+            ? `${player.position.x - 20}px`
             : '50%',
         width: '40px',
         height: '40px',
         transform: 'translate(-50%, -50%)',
       }}
-      onPointerDown={(e) => props.handlePointerDown(e, props.player)}
+      onPointerDown={(e) => handlePointerDown(e, player)}
     >
-      {props.player.isGoalkeeper ? 'GK' : props.player.name.charAt(0)}
+      {player.isGoalkeeper ? 'GK' : player.name.charAt(0)}
     </div>
   );
 }

@@ -1,61 +1,28 @@
-import { createSignal, onMount, onCleanup } from 'solid-js';
-import { playerData, setPlayerData } from '../state';
+import { createEffect, onMount, onCleanup } from 'solid-js';
+import { playerData } from '../state';
 import Pitch from './Pitch';
+import useDragAndDrop from '../hooks/useDragAndDrop';
+import assignInitialPositions from '../utils/assignInitialPositions';
 
 function PitchVisualization() {
   let pitchRef;
-  const [draggingPlayer, setDraggingPlayer] = createSignal(null);
-  const [isDragging, setIsDragging] = createSignal(false);
 
-  const handlePointerDown = (e, player) => {
-    e.preventDefault();
-    setDraggingPlayer(player);
-    setIsDragging(true);
-  };
+  const { handlePointerDown, init, cleanup } = useDragAndDrop();
 
-  const handlePointerMove = (e) => {
-    if (isDragging()) {
-      const pitchRect = pitchRef.getBoundingClientRect();
-      const x = e.clientX - pitchRect.left;
-      const y = e.clientY - pitchRect.top;
-
-      setPlayerData(
-        playerData().map((p) => {
-          if (p.name === draggingPlayer().name) {
-            return {
-              ...p,
-              position: { x, y },
-            };
-          }
-          return p;
-        })
-      );
+  createEffect(() => {
+    if (pitchRef) {
+      assignInitialPositions(pitchRef);
     }
-  };
-
-  const handlePointerUp = () => {
-    if (isDragging()) {
-      setIsDragging(false);
-      setDraggingPlayer(null);
-    }
-  };
+  });
 
   onMount(() => {
     if (pitchRef) {
-      pitchRef.addEventListener('pointermove', handlePointerMove);
-      pitchRef.addEventListener('pointerup', handlePointerUp);
-      pitchRef.addEventListener('pointercancel', handlePointerUp);
-      pitchRef.addEventListener('pointerleave', handlePointerUp);
+      init(pitchRef);
     }
   });
 
   onCleanup(() => {
-    if (pitchRef) {
-      pitchRef.removeEventListener('pointermove', handlePointerMove);
-      pitchRef.removeEventListener('pointerup', handlePointerUp);
-      pitchRef.removeEventListener('pointercancel', handlePointerUp);
-      pitchRef.removeEventListener('pointerleave', handlePointerUp);
-    }
+    cleanup();
   });
 
   return (
