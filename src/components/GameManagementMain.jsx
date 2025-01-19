@@ -5,10 +5,13 @@ import EndGameConfirmationModal from './EndGameConfirmationModal';
 import PitchVisualization from './PitchVisualization';
 import GameManagementModals from './GameManagementModals';
 import createGameManagementStore from '../hooks/useGameManagement';
-import { Show } from 'solid-js';
+import { createSignal, Show } from 'solid-js';
 
 function GameManagementMain(props) {
   const store = createGameManagementStore(props);
+
+  // Create signal for pitch visibility
+  const [showPitch, setShowPitch] = createSignal(false);
 
   return (
     <div class="p-8 flex-grow bg-white dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen">
@@ -22,7 +25,19 @@ function GameManagementMain(props) {
         </p>
       </Show>
 
-      <PitchVisualization />
+      {/* Button to toggle pitch visibility */}
+      <button
+        class="mb-4 px-4 py-2 bg-brand-500 text-white rounded-md
+              hover:bg-brand-600 transition-all duration-300 ease-in-out-custom"
+        onClick={() => setShowPitch(!showPitch())}
+      >
+        {showPitch() ? 'Hide Pitch' : 'Show Pitch'}
+      </button>
+
+      {/* Conditionally render the pitch */}
+      <Show when={showPitch()}>
+        <PitchVisualization />
+      </Show>
 
       <EndGameConfirmationModal
         showEndGameConfirm={props.showEndGameConfirm}
