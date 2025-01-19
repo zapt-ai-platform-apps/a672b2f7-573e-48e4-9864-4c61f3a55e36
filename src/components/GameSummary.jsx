@@ -1,5 +1,4 @@
 import { useNavigate } from '@solidjs/router';
-import { createSignal } from 'solid-js';
 import GoalsList from './GoalsList';
 import PlayerPlaytimes from './PlayerPlaytimes';
 import FinalScore from './FinalScore';
@@ -24,8 +23,7 @@ function GameSummary(props) {
 
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
-    const seconds = ('0' + (timeInSeconds % 60)).slice(-2);
-    return `${minutes}:${seconds}`;
+    return `${minutes}:${('0' + (timeInSeconds % 60)).slice(-2)}`;
   };
 
   const handleBackToHome = () => {
@@ -34,24 +32,20 @@ function GameSummary(props) {
   };
 
   return (
-    <div class="min-h-screen flex flex-col text-gray-800 dark:bg-gray-900 dark:text-white">
+    <div class="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-800 dark:text-white">
       <div class="p-8 flex-grow">
-        <h1 class="text-4xl font-bold mb-8 text-green-600 dark:text-green-400">Game Summary</h1>
-
+        <h1 class="text-4xl font-bold mb-8 text-brand-500 dark:text-brand-400">Game Summary</h1>
         <FinalScore ourScore={ourScore} opponentScore={opponentScore} />
-
         <GoalsList goals={goals} />
-
         <PlayerPlaytimes
           playerData={playerData}
           includeGKPlaytime={includeGKPlaytime}
           getTotalPlayTime={getTotalPlayTime}
           formatTime={formatTime}
         />
-
         <div class="flex space-x-4 mt-8">
           <button
-            class="px-8 py-4 bg-green-500 text-white text-lg rounded-lg cursor-pointer hover:bg-green-600 hover:scale-105 transition duration-300 ease-in-out"
+            class="px-8 py-4 bg-brand-500 text-white text-lg rounded-md cursor-pointer hover:bg-brand-600 hover:scale-105 transition-all duration-300 ease-in-out-custom focus:outline-none focus:ring-2 focus:ring-brand-400"
             onClick={handleBackToHome}
           >
             Back to Home

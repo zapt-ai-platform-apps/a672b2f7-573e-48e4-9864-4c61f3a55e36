@@ -12,11 +12,8 @@ function GoalScoredModal(props) {
 
   const handleConfirm = () => {
     recordGoal(team(), scorerName());
-    if (team() === 'our') {
-      toast.success(`Goal scored by ${scorerName()}!`);
-    } else {
-      toast.success('Opponent scored a goal.');
-    }
+    const teamMessage = team() === 'our' ? `Goal scored by ${scorerName()}!` : 'Opponent scored a goal.';
+    toast.success(teamMessage);
     setTeam('');
     setScorerName('');
     setConfirmOpponentGoal(false);
@@ -30,25 +27,16 @@ function GoalScoredModal(props) {
     setShowGoalModal(false);
   };
 
-  const modalHeightClass = () => {
-    return team() === 'our' ? 'h-4/5' : '';
-  };
-
   return (
     <Show when={showGoalModal()}>
       <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div
-          class={`bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full flex flex-col ${modalHeightClass()}`}
-        >
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-md shadow-lg max-w-md w-full">
           <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Goal Scored</h2>
           <Show when={!team()}>
             <TeamSelection setTeam={setTeam} setConfirmOpponentGoal={setConfirmOpponentGoal} />
           </Show>
           <Show when={team() === 'opponent' && confirmOpponentGoal()}>
-            <OpponentGoalConfirmation
-              handleConfirm={handleConfirm}
-              handleCancel={handleCancel}
-            />
+            <OpponentGoalConfirmation handleConfirm={handleConfirm} handleCancel={handleCancel} />
           </Show>
           <Show when={team() === 'our'}>
             <ScorerSelection

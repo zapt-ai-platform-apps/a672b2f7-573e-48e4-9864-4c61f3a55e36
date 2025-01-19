@@ -20,7 +20,7 @@ function GoalsList(props) {
 
   return (
     <div class="mb-8">
-      <h2 class="text-2xl font-bold mb-4 text-green-600">Goals by Our Team</h2>
+      <h2 class="text-2xl font-bold mb-4 text-brand-500">Goals by Our Team</h2>
       <Show when={Object.keys(goalsByPlayer()).length > 0} fallback={<p>No goals scored by our team.</p>}>
         <ul>
           <For each={Object.entries(goalsByPlayer())}>
