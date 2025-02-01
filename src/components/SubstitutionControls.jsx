@@ -1,19 +1,9 @@
-import { createSignal } from 'solid-js';
+import React from 'react';
 import PlayerList from './PlayerList';
 import ConfirmSubstitutionModal from './ConfirmSubstitutionModal';
 import { useSubstitutionLogic } from './substitutionLogic';
 
 function SubstitutionControls(props) {
-  const {
-    playerData,
-    setPlayerData,
-    isRunning,
-    updatePlayerLists,
-    onFieldPlayers,
-    offFieldPlayers,
-    getTotalPlayTime,
-  } = props;
-
   const {
     selectedSubOffPlayer,
     setSelectedSubOffPlayer,
@@ -26,30 +16,30 @@ function SubstitutionControls(props) {
     handleSubOffPlayerClick,
     handleSubOnPlayerClick,
   } = useSubstitutionLogic({
-    playerData,
-    setPlayerData,
-    isRunning,
-    updatePlayerLists,
+    playerData: props.playerData,
+    setPlayerData: props.setPlayerData,
+    isRunning: props.isRunning,
+    updatePlayerLists: props.updatePlayerLists,
   });
 
   return (
     <>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
         <PlayerList
-          players={onFieldPlayers}
+          players={props.onFieldPlayers}
           title="Players on Field"
           message="Select a player to sub off"
           selectedPlayer={selectedSubOffPlayer}
           handlePlayerClick={handleSubOffPlayerClick}
-          getTotalPlayTime={getTotalPlayTime}
+          getTotalPlayTime={props.getTotalPlayTime}
         />
         <PlayerList
-          players={offFieldPlayers}
+          players={props.offFieldPlayers}
           title="Players Off Field"
           message="Select a player to sub on"
           selectedPlayer={selectedSubOnPlayer}
           handlePlayerClick={handleSubOnPlayerClick}
-          getTotalPlayTime={getTotalPlayTime}
+          getTotalPlayTime={props.getTotalPlayTime}
         />
       </div>
 

@@ -1,43 +1,36 @@
-import { createSignal } from 'solid-js';
+import { useState } from 'react';
 import { makeSubstitution } from '../utils/substitutionHandlers';
-import { toast } from 'solid-toast';
+import { toast } from 'react-toastify';
 
 export function useSubstitutionLogic(props) {
-  const {
-    playerData,
-    setPlayerData,
-    isRunning,
-    updatePlayerLists,
-  } = props;
-
-  const [selectedSubOffPlayer, setSelectedSubOffPlayer] = createSignal(null);
-  const [selectedSubOnPlayer, setSelectedSubOnPlayer] = createSignal(null);
-  const [showSubstitutionConfirmModal, setShowSubstitutionConfirmModal] = createSignal(false);
+  const [selectedSubOffPlayer, setSelectedSubOffPlayer] = useState(null);
+  const [selectedSubOnPlayer, setSelectedSubOnPlayer] = useState(null);
+  const [showSubstitutionConfirmModal, setShowSubstitutionConfirmModal] = useState(false);
 
   const handleSubOffPlayerClick = (player) => {
     setSelectedSubOffPlayer(player);
-    if (selectedSubOnPlayer()) {
+    if (selectedSubOnPlayer !== null) {
       setShowSubstitutionConfirmModal(true);
     }
   };
 
   const handleSubOnPlayerClick = (player) => {
     setSelectedSubOnPlayer(player);
-    if (selectedSubOffPlayer()) {
+    if (selectedSubOffPlayer !== null) {
       setShowSubstitutionConfirmModal(true);
     }
   };
 
   const confirmSubstitution = () => {
     makeSubstitution({
-      playerData,
-      setPlayerData,
-      selectedSubOffPlayer,
-      selectedSubOnPlayer,
-      isRunning,
-      updatePlayerLists,
+      playerData: props.playerData,
+      setPlayerData: props.setPlayerData,
+      selectedSubOffPlayer: selectedSubOffPlayer,
+      selectedSubOnPlayer: selectedSubOnPlayer,
+      isRunning: props.isRunning,
+      updatePlayerLists: props.updatePlayerLists,
     });
-    toast.success(`Substituted ${selectedSubOffPlayer().name} with ${selectedSubOnPlayer().name}!`);
+    toast.success(`Substituted ${selectedSubOffPlayer.name} with ${selectedSubOnPlayer.name}!`);
     setShowSubstitutionConfirmModal(false);
     setSelectedSubOffPlayer(null);
     setSelectedSubOnPlayer(null);
