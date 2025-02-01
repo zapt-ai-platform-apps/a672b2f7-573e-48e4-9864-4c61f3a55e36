@@ -11,7 +11,8 @@ function useGameTimer({ isRunning, gameIntervals }) {
 
   const getTimeElapsed = () => {
     let total = 0;
-    gameIntervals.forEach((interval) => {
+    const intervals = Array.isArray(gameIntervals) ? gameIntervals : [];
+    intervals.forEach((interval) => {
       if (interval.endTime) {
         total += interval.endTime - interval.startTime;
       } else {
