@@ -8,7 +8,7 @@ import { inject } from '@vercel/analytics';
 import LogRocket from 'logrocket';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { StateProvider } from './state';
+import { StateProvider } from './state.jsx';
 
 LogRocket.init('p29zbk/zapt');
 
