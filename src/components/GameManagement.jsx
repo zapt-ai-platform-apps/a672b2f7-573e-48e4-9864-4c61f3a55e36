@@ -1,4 +1,5 @@
-import { useNavigate } from '@solidjs/router';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import useGameManagementLogic from '../hooks/useGameManagementLogic';
 import GameManagementContent from './GameManagementContent';
 
@@ -29,19 +30,7 @@ function GameManagement(props) {
     confirmEndGame,
     cancelEndGame,
     toggleTimer,
-  } = useGameManagementLogic({
-    playerData: props.playerData,
-    setPlayerData: props.setPlayerData,
-    goalkeeper: props.goalkeeper,
-    setGoalkeeper: props.setGoalkeeper,
-    ourScore: props.ourScore,
-    setOurScore: props.setOurScore,
-    opponentScore: props.opponentScore,
-    setOpponentScore: props.setOpponentScore,
-    goals: props.goals,
-    setGoals: props.setGoals,
-    includeGKPlaytime: props.includeGKPlaytime,
-  });
+  } = useGameManagementLogic(props);
 
   const confirmEndGameHandler = () => {
     confirmEndGame();

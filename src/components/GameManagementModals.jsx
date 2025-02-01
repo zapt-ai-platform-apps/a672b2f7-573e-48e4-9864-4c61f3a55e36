@@ -1,3 +1,4 @@
+import React from 'react';
 import GoalScoredModal from './GoalScoredModal';
 import AssignGoalkeeperModal from './AssignGoalkeeperModal';
 import ConfirmGoalkeeperModal from './ConfirmGoalkeeperModal';

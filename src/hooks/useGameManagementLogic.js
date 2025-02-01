@@ -1,35 +1,19 @@
-import { createSignal, onMount } from 'solid-js';
+import { useEffect } from 'react';
 import useGameTimer from './useGameTimer';
 import usePlayerManagement from './usePlayerManagement';
 import useGameIntervalsManager from './useGameIntervalsManager';
 import useEndGameManager from './useEndGameManager';
 
 function useGameManagementLogic(props) {
-  const {
-    playerData,
-    setPlayerData,
-    goalkeeper,
-    setGoalkeeper,
-    ourScore,
-    setOurScore,
-    opponentScore,
-    setOpponentScore,
-    goals,
-    setGoals,
-    includeGKPlaytime,
-  } = props;
+  const { playerData, setPlayerData, goalkeeper, setGoalkeeper, ourScore, setOurScore, opponentScore, setOpponentScore, goals, setGoals, includeGKPlaytime } = props;
 
-  const [isRunning, setIsRunning] = createSignal(false);
-  const [gameIntervals, setGameIntervals] = createSignal([]);
-  const [showEndGameConfirm, setShowEndGameConfirm] = createSignal(false);
-
-  const { toggleTimer } = useGameIntervalsManager({
-    isRunning,
-    setIsRunning,
-    gameIntervals,
-    setGameIntervals,
+  const { isRunning, setIsRunning, gameIntervals, setGameIntervals, toggleTimer } = useGameIntervalsManager({
+    isRunning: props.isRunning,
+    setIsRunning: props.setIsRunning,
+    gameIntervals: props.gameIntervals,
+    setGameIntervals: props.setGameIntervals,
     playerData,
-    setPlayerData,
+    setPlayerData
   });
 
   const { handleEndGame, confirmEndGame, cancelEndGame } = useEndGameManager({
@@ -39,29 +23,24 @@ function useGameManagementLogic(props) {
     setGameIntervals,
     playerData,
     setPlayerData,
-    showEndGameConfirm,
-    setShowEndGameConfirm,
+    setShowEndGameConfirm: props.setShowEndGameConfirm
   });
 
   const { now, startUITimer, getTimeElapsed } = useGameTimer({ isRunning, gameIntervals });
 
-  const {
-    onFieldPlayers,
-    offFieldPlayers,
-    updatePlayerLists,
-    getTotalPlayTime,
-  } = usePlayerManagement({
+  const { onFieldPlayers, offFieldPlayers, updatePlayerLists, getTotalPlayTime } = usePlayerManagement({
     playerData,
     setPlayerData,
     includeGKPlaytime,
     isRunning,
-    now,
+    now
   });
 
-  onMount(() => {
+  useEffect(() => {
     updatePlayerLists();
     startUITimer();
-  });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return {
     playerData,
@@ -79,14 +58,14 @@ function useGameManagementLogic(props) {
     gameIntervals,
     onFieldPlayers,
     offFieldPlayers,
-    showEndGameConfirm,
+    showEndGameConfirm: props.showEndGameConfirm,
     updatePlayerLists,
     getTotalPlayTime,
     getTimeElapsed,
     handleEndGame,
     confirmEndGame,
     cancelEndGame,
-    toggleTimer,
+    toggleTimer
   };
 }
 

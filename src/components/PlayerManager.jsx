@@ -1,18 +1,9 @@
-import { toast } from 'solid-toast';
+import React from 'react';
+import { toast } from 'react-toastify';
 import AddPlayerForm from './AddPlayerForm';
 import StartingLineupSelector from './StartingLineupSelector';
 
-function PlayerManager(props) {
-  const {
-    playerName,
-    setPlayerName,
-    players,
-    addPlayer,
-    deletePlayer,
-    toggleStartingPlayer,
-    startingPlayersCount,
-  } = props;
-
+function PlayerManager({ playerName, setPlayerName, players, addPlayer, deletePlayer, toggleStartingPlayer, startingPlayersCount }) {
   const handleAddPlayer = () => {
     const success = addPlayer();
     if (success) {

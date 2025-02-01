@@ -1,45 +1,43 @@
-import { createSignal } from 'solid-js';
-import { playerData, setPlayerData } from '../state';
+import { useCallback } from 'react';
+import { useStateContext } from '../state';
 
 export default function useDragAndDrop() {
-  const [draggingPlayer, setDraggingPlayer] = createSignal(null);
-  const [isDragging, setIsDragging] = createSignal(false);
-  let pitchRefLocal;
+  let pitchRefLocal = null;
+  const { playerData, setPlayerData } = useStateContext();
 
-  const handlePointerDown = (e, player) => {
+  const handlePointerDown = useCallback((e, player) => {
     e.preventDefault();
-    setDraggingPlayer(player);
-    setIsDragging(true);
-  };
+    window._draggingPlayer = player;
+    window._isDragging = true;
+  }, []);
 
-  const handlePointerMove = (e) => {
-    if (isDragging()) {
+  const handlePointerMove = useCallback((e) => {
+    if (window._isDragging) {
       const pitchRect = pitchRefLocal.getBoundingClientRect();
       const x = e.clientX - pitchRect.left;
       const y = e.clientY - pitchRect.top;
-
       setPlayerData(
-        playerData().map((p) => {
-          if (p.name === draggingPlayer().name) {
+        playerData.map((p) => {
+          if (p.name === window._draggingPlayer.name) {
             return {
               ...p,
-              position: { x, y },
+              position: { x, y }
             };
           }
           return p;
         })
       );
     }
-  };
+  }, [playerData, setPlayerData]);
 
-  const handlePointerUp = () => {
-    if (isDragging()) {
-      setIsDragging(false);
-      setDraggingPlayer(null);
+  const handlePointerUp = useCallback(() => {
+    if (window._isDragging) {
+      window._isDragging = false;
+      window._draggingPlayer = null;
     }
-  };
+  }, []);
 
-  function init(pitchRef) {
+  const init = useCallback((pitchRef) => {
     pitchRefLocal = pitchRef;
     if (pitchRefLocal) {
       pitchRefLocal.addEventListener('pointermove', handlePointerMove);
@@ -47,20 +45,20 @@ export default function useDragAndDrop() {
       pitchRefLocal.addEventListener('pointercancel', handlePointerUp);
       pitchRefLocal.addEventListener('pointerleave', handlePointerUp);
     }
-  }
+  }, [handlePointerMove, handlePointerUp]);
 
-  function cleanup() {
+  const cleanup = useCallback(() => {
     if (pitchRefLocal) {
       pitchRefLocal.removeEventListener('pointermove', handlePointerMove);
       pitchRefLocal.removeEventListener('pointerup', handlePointerUp);
       pitchRefLocal.removeEventListener('pointercancel', handlePointerUp);
       pitchRefLocal.removeEventListener('pointerleave', handlePointerUp);
     }
-  }
+  }, [handlePointerMove, handlePointerUp]);
 
   return {
     handlePointerDown,
     init,
-    cleanup,
+    cleanup
   };
 }

@@ -1,11 +1,9 @@
-import { For, Show } from 'solid-js';
+import React from 'react';
 
-function GoalsList(props) {
-  const { goals } = props;
-
+function GoalsList({ goals }) {
   const goalsByPlayer = () => {
     const counts = {};
-    goals()
+    goals
       .filter((goal) => goal.team === 'our')
       .forEach((goal) => {
         const scorer = goal.scorerName;
@@ -18,22 +16,25 @@ function GoalsList(props) {
     return counts;
   };
 
+  const playerGoals = goalsByPlayer();
+  const hasGoals = Object.keys(playerGoals).length > 0;
+
   return (
-    <div class="mb-8">
-      <h2 class="text-2xl font-bold mb-4 text-brand-500">Goals by Our Team</h2>
-      <Show when={Object.keys(goalsByPlayer()).length > 0} fallback={<p>No goals scored by our team.</p>}>
+    <div className="mb-8">
+      <h2 className="text-2xl font-bold mb-4 text-brand-500">Goals by Our Team</h2>
+      {hasGoals ? (
         <ul>
-          <For each={Object.entries(goalsByPlayer())}>
-            {([playerName, goalCount]) => (
-              <li class="mb-2">
-                <p>
-                  {playerName}: {goalCount} goal{goalCount !== 1 ? 's' : ''}
-                </p>
-              </li>
-            )}
-          </For>
+          {Object.entries(playerGoals).map(([playerName, goalCount], index) => (
+            <li key={index} className="mb-2">
+              <p>
+                {playerName}: {goalCount} goal{goalCount !== 1 ? 's' : ''}
+              </p>
+            </li>
+          ))}
         </ul>
-      </Show>
+      ) : (
+        <p>No goals scored by our team.</p>
+      )}
     </div>
   );
 }

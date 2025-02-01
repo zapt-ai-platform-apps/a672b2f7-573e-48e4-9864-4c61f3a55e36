@@ -1,4 +1,4 @@
-import { Show } from 'solid-js';
+import React from 'react';
 import PlayerManager from './PlayerManager';
 import GoalkeeperSettings from './GoalkeeperSettings';
 import ErrorMessage from './ErrorMessage';
@@ -26,12 +26,12 @@ function GameSetup(props) {
     setIncludeGKPlaytime,
     addPlayer,
     deletePlayer,
-    toggleStartingPlayer,
+    toggleStartingPlayer
   } = useGameSetup();
 
   return (
-    <div class="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-800 dark:text-white">
-      <div class="p-8 flex-grow">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-800 dark:text-white">
+      <div className="p-8 flex-grow">
         <GameIntro />
         <PlayerManager
           playerName={playerName}
@@ -46,7 +46,7 @@ function GameSetup(props) {
           deletePlayer={deletePlayer}
           toggleStartingPlayer={toggleStartingPlayer}
         />
-        <Show when={startingPlayersCount() > 0}>
+        {startingPlayersCount > 0 && (
           <GoalkeeperSettings
             startingPlayers={startingPlayers}
             goalkeeper={goalkeeper}
@@ -54,7 +54,7 @@ function GameSetup(props) {
             includeGKPlaytime={includeGKPlaytime}
             setIncludeGKPlaytime={setIncludeGKPlaytime}
           />
-        </Show>
+        )}
         <ErrorMessage errorMessage={errorMessage} />
         <StartGameButton
           players={players}

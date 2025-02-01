@@ -1,33 +1,33 @@
-import { createSignal, onMount } from 'solid-js';
+import { useState, useEffect } from 'react';
 
 function useGameSetup() {
-  const [playerName, setPlayerName] = createSignal('');
-  const [players, setPlayers] = createSignal([]);
-  const [startingPlayersCount, setStartingPlayersCount] = createSignal(0);
-  const [errorMessage, setErrorMessage] = createSignal('');
-  const [startingPlayers, setStartingPlayers] = createSignal([]);
-  const [goalkeeper, setGoalkeeper] = createSignal('');
-  const [includeGKPlaytime, setIncludeGKPlaytime] = createSignal(true);
+  const [playerName, setPlayerName] = useState('');
+  const [players, setPlayers] = useState([]);
+  const [startingPlayersCount, setStartingPlayersCount] = useState(0);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [startingPlayers, setStartingPlayers] = useState([]);
+  const [goalkeeper, setGoalkeeper] = useState('');
+  const [includeGKPlaytime, setIncludeGKPlaytime] = useState(true);
 
-  onMount(() => {
+  useEffect(() => {
     const savedPlayers = localStorage.getItem('players');
     if (savedPlayers) {
       const loadedPlayers = JSON.parse(savedPlayers);
       const updatedPlayers = loadedPlayers.map((player) => ({
         ...player,
-        isStartingPlayer: false,
+        isStartingPlayer: false
       }));
       setPlayers(updatedPlayers);
     }
-  });
+  }, []);
 
   const addPlayer = () => {
-    if (playerName().trim() !== '') {
+    if (playerName.trim() !== '') {
       const newPlayer = {
-        name: playerName().trim(),
-        isStartingPlayer: false,
+        name: playerName.trim(),
+        isStartingPlayer: false
       };
-      setPlayers([...players(), newPlayer]);
+      setPlayers([...players, newPlayer]);
       setPlayerName('');
       return true;
     }
@@ -37,7 +37,7 @@ function useGameSetup() {
   const deletePlayer = (playerNameToDelete) => {
     const confirmDelete = window.confirm(`Are you sure you want to delete ${playerNameToDelete}?`);
     if (confirmDelete) {
-      const updatedPlayers = players().filter((player) => player.name !== playerNameToDelete);
+      const updatedPlayers = players.filter((player) => player.name !== playerNameToDelete);
       setPlayers(updatedPlayers);
       localStorage.setItem('players', JSON.stringify(updatedPlayers));
       return true;
@@ -46,17 +46,16 @@ function useGameSetup() {
   };
 
   const toggleStartingPlayer = (playerNameToToggle) => {
-    setPlayers(
-      players().map((player) => {
-        if (player.name === playerNameToToggle) {
-          return { ...player, isStartingPlayer: !player.isStartingPlayer };
-        }
-        return player;
-      })
-    );
-    const count = players().filter((p) => p.isStartingPlayer).length;
+    const updatedPlayers = players.map((player) => {
+      if (player.name === playerNameToToggle) {
+        return { ...player, isStartingPlayer: !player.isStartingPlayer };
+      }
+      return player;
+    });
+    setPlayers(updatedPlayers);
+    const count = updatedPlayers.filter((p) => p.isStartingPlayer).length;
     setStartingPlayersCount(count);
-    setStartingPlayers(players().filter((p) => p.isStartingPlayer));
+    setStartingPlayers(updatedPlayers.filter((p) => p.isStartingPlayer));
   };
 
   return {
@@ -76,7 +75,7 @@ function useGameSetup() {
     setIncludeGKPlaytime,
     addPlayer,
     deletePlayer,
-    toggleStartingPlayer,
+    toggleStartingPlayer
   };
 }
 

@@ -1,38 +1,67 @@
-import { createSignal } from 'solid-js';
+import React, { createContext, useState, useContext } from 'react';
 
-export const [playerData, setPlayerData] = createSignal([]);
-export const [goalkeeper, setGoalkeeper] = createSignal(null);
-export const [includeGKPlaytime, setIncludeGKPlaytime] = createSignal(true);
+const StateContext = createContext();
 
-export const [ourScore, setOurScore] = createSignal(0);
-export const [opponentScore, setOpponentScore] = createSignal(0);
-export const [goals, setGoals] = createSignal([]);
+export function StateProvider({ children }) {
+  const [playerData, setPlayerData] = useState([]);
+  const [goalkeeper, setGoalkeeper] = useState(null);
+  const [includeGKPlaytime, setIncludeGKPlaytime] = useState(true);
+  const [ourScore, setOurScore] = useState(0);
+  const [opponentScore, setOpponentScore] = useState(0);
+  const [goals, setGoals] = useState([]);
 
-export const handleStartGame = (players, gk, includeGKTime) => {
-  // Initialize player data
-  setPlayerData(
-    players.map((player) => {
-      const isStarting = player.isStartingPlayer;
-      const isGoalkeeperPlayer = player.name === gk;
-      return {
-        name: player.name,
-        playIntervals: [], // Start with empty playIntervals
-        isOnField: isStarting,
-        isGoalkeeper: isGoalkeeperPlayer,
-        totalPlayTime: 0, // initial total play time is 0
-        position: { x: null, y: null }, // Initial position is null
-      };
-    })
+  const handleStartGame = (players, gk, includeGKTime) => {
+    setPlayerData(
+      players.map((player) => {
+        const isStarting = player.isStartingPlayer;
+        const isGoalkeeperPlayer = player.name === gk;
+        return {
+          name: player.name,
+          playIntervals: [],
+          isOnField: isStarting,
+          isGoalkeeper: isGoalkeeperPlayer,
+          totalPlayTime: 0,
+          position: { x: null, y: null }
+        };
+      })
+    );
+    setGoalkeeper(gk);
+    setIncludeGKPlaytime(includeGKTime);
+  };
+
+  const resetGame = () => {
+    setPlayerData([]);
+    setGoalkeeper(null);
+    setOurScore(0);
+    setOpponentScore(0);
+    setGoals([]);
+    setIncludeGKPlaytime(true);
+  };
+
+  return (
+    <StateContext.Provider
+      value={{
+        playerData,
+        setPlayerData,
+        goalkeeper,
+        setGoalkeeper,
+        includeGKPlaytime,
+        setIncludeGKPlaytime,
+        ourScore,
+        setOurScore,
+        opponentScore,
+        setOpponentScore,
+        goals,
+        setGoals,
+        handleStartGame,
+        resetGame
+      }}
+    >
+      {children}
+    </StateContext.Provider>
   );
-  setGoalkeeper(gk);
-  setIncludeGKPlaytime(includeGKTime);
-};
+}
 
-export const resetGame = () => {
-  setPlayerData([]);
-  setGoalkeeper(null);
-  setOurScore(0);
-  setOpponentScore(0);
-  setGoals([]);
-  setIncludeGKPlaytime(true);
-};
+export function useStateContext() {
+  return useContext(StateContext);
+}

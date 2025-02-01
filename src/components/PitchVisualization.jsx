@@ -1,41 +1,36 @@
-import { createEffect, onMount, onCleanup } from 'solid-js';
-import { playerData } from '../state';
+import React, { useEffect, useRef } from 'react';
+import { useStateContext } from '../state';
 import Pitch from './Pitch';
 import useDragAndDrop from '../hooks/useDragAndDrop';
 import assignInitialPositions from '../utils/assignInitialPositions';
 
 function PitchVisualization() {
-  let pitchRef;
-
+  const { playerData } = useStateContext();
+  const pitchRef = useRef(null);
   const { handlePointerDown, init, cleanup } = useDragAndDrop();
 
-  createEffect(() => {
-    if (pitchRef) {
-      assignInitialPositions(pitchRef);
+  useEffect(() => {
+    if (pitchRef.current) {
+      assignInitialPositions(pitchRef.current);
     }
-  });
+  }, [playerData]);
 
-  onMount(() => {
-    if (pitchRef) {
-      init(pitchRef);
+  useEffect(() => {
+    if (pitchRef.current) {
+      init(pitchRef.current);
     }
-  });
-
-  onCleanup(() => {
-    cleanup();
-  });
+    return () => {
+      cleanup();
+    };
+  }, [init, cleanup]);
 
   return (
-    <div class="mb-8">
-      <h2 class="text-2xl font-bold mb-4 text-green-600 dark:text-green-400">
+    <div className="mb-8">
+      <h2 className="text-2xl font-bold mb-4 text-green-600 dark:text-green-400">
         Player Positions
       </h2>
-      <Pitch
-        pitchRef={(el) => (pitchRef = el)}
-        playerData={playerData}
-        handlePointerDown={handlePointerDown}
-      />
-      <p class="mt-4 text-gray-700 dark:text-gray-300">
+      <Pitch pitchRef={pitchRef} playerData={playerData} handlePointerDown={handlePointerDown} />
+      <p className="mt-4 text-gray-700 dark:text-gray-300">
         Drag and drop players to set their positions.
       </p>
     </div>

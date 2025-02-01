@@ -1,31 +1,29 @@
-import { For } from 'solid-js';
+import React from 'react';
 
-function GoalkeeperSettings(props) {
-  const { startingPlayers, goalkeeper, setGoalkeeper, includeGKPlaytime, setIncludeGKPlaytime } = props;
-
+function GoalkeeperSettings({ startingPlayers, goalkeeper, setGoalkeeper, includeGKPlaytime, setIncludeGKPlaytime }) {
   return (
-    <div class="bg-white dark:bg-gray-800 p-8 rounded-md shadow-md mb-8">
-      <label class="block font-semibold mb-4 text-gray-700 dark:text-gray-300 text-lg">Select Goalkeeper:</label>
+    <div className="bg-white dark:bg-gray-800 p-8 rounded-md shadow-md mb-8">
+      <label className="block font-semibold mb-4 text-gray-700 dark:text-gray-300 text-lg">Select Goalkeeper:</label>
       <select
-        class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-400 cursor-pointer box-border text-lg dark:bg-gray-700 dark:text-white"
-        value={goalkeeper()}
+        className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-400 cursor-pointer box-border text-lg dark:bg-gray-700 dark:text-white"
+        value={goalkeeper}
         onChange={(e) => setGoalkeeper(e.target.value)}
       >
         <option value="">-- Select Goalkeeper --</option>
-        <For each={startingPlayers()}>
-          {(player) => (
-            <option value={player.name}>{player.name}</option>
-          )}
-        </For>
+        {startingPlayers.map((player, index) => (
+          <option key={index} value={player.name}>{player.name}</option>
+        ))}
       </select>
-      <div class="flex items-center mt-4">
+      <div className="flex items-center mt-4">
         <input
           type="checkbox"
-          checked={includeGKPlaytime()}
-          onChange={() => setIncludeGKPlaytime(!includeGKPlaytime())}
-          class="mr-2 cursor-pointer w-6 h-6"
+          checked={includeGKPlaytime}
+          onChange={() => setIncludeGKPlaytime(!includeGKPlaytime)}
+          className="mr-2 cursor-pointer w-6 h-6"
         />
-        <label class="text-gray-800 dark:text-gray-200 text-lg">{includeGKPlaytime() ? 'Include' : 'Exclude'} Goalkeeper's Playtime in Totals</label>
+        <label className="text-gray-800 dark:text-gray-200 text-lg">
+          {includeGKPlaytime ? 'Include' : 'Exclude'} Goalkeeper's Playtime in Totals
+        </label>
       </div>
     </div>
   );

@@ -1,34 +1,23 @@
-function useEndGameManager({
-  isRunning,
-  setIsRunning,
-  gameIntervals,
-  setGameIntervals,
-  playerData,
-  setPlayerData,
-  setShowEndGameConfirm,
-}) {
+function useEndGameManager({ isRunning, setIsRunning, gameIntervals, setGameIntervals, playerData, setPlayerData, setShowEndGameConfirm }) {
   const handleEndGame = () => {
     setShowEndGameConfirm(true);
   };
 
   const confirmEndGame = () => {
-    if (isRunning()) {
+    if (isRunning) {
       setIsRunning(false);
       setGameIntervals((prev) =>
         prev.map((interval, idx) =>
-          idx === prev.length - 1 && interval.endTime === null
+          idx === prev.length - 1 && !interval.endTime
             ? { ...interval, endTime: Date.now() }
             : interval
         )
       );
 
       setPlayerData(
-        playerData().map((player) => {
+        playerData.map((player) => {
           if (player.isOnField) {
-            if (
-              player.playIntervals.length > 0 &&
-              player.playIntervals[player.playIntervals.length - 1].endTime === null
-            ) {
+            if (player.playIntervals.length > 0 && !player.playIntervals[player.playIntervals.length - 1].endTime) {
               player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();
             }
           }
@@ -46,7 +35,7 @@ function useEndGameManager({
   return {
     handleEndGame,
     confirmEndGame,
-    cancelEndGame,
+    cancelEndGame
   };
 }
 

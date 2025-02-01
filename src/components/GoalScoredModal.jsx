@@ -1,18 +1,17 @@
-import { Show, createSignal } from 'solid-js';
-import { toast } from 'solid-toast';
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import TeamSelection from './TeamSelection';
 import ScorerSelection from './ScorerSelection';
 import OpponentGoalConfirmation from './OpponentGoalConfirmation';
 
-function GoalScoredModal(props) {
-  const { showGoalModal, setShowGoalModal, players, recordGoal } = props;
-  const [team, setTeam] = createSignal('');
-  const [scorerName, setScorerName] = createSignal('');
-  const [confirmOpponentGoal, setConfirmOpponentGoal] = createSignal(false);
+function GoalScoredModal({ showGoalModal, setShowGoalModal, players, recordGoal }) {
+  const [team, setTeam] = useState('');
+  const [scorerName, setScorerName] = useState('');
+  const [confirmOpponentGoal, setConfirmOpponentGoal] = useState(false);
 
   const handleConfirm = () => {
-    recordGoal(team(), scorerName());
-    const teamMessage = team() === 'our' ? `Goal scored by ${scorerName()}!` : 'Opponent scored a goal.';
+    recordGoal(team, scorerName);
+    const teamMessage = team === 'our' ? `Goal scored by ${scorerName}!` : 'Opponent scored a goal.';
     toast.success(teamMessage);
     setTeam('');
     setScorerName('');
@@ -27,29 +26,29 @@ function GoalScoredModal(props) {
     setShowGoalModal(false);
   };
 
+  if (!showGoalModal) return null;
+
   return (
-    <Show when={showGoalModal()}>
-      <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-md shadow-lg max-w-md w-full">
-          <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Goal Scored</h2>
-          <Show when={!team()}>
-            <TeamSelection setTeam={setTeam} setConfirmOpponentGoal={setConfirmOpponentGoal} />
-          </Show>
-          <Show when={team() === 'opponent' && confirmOpponentGoal()}>
-            <OpponentGoalConfirmation handleConfirm={handleConfirm} handleCancel={handleCancel} />
-          </Show>
-          <Show when={team() === 'our'}>
-            <ScorerSelection
-              players={players}
-              scorerName={scorerName}
-              setScorerName={setScorerName}
-              handleConfirm={handleConfirm}
-              handleCancel={handleCancel}
-            />
-          </Show>
-        </div>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-md shadow-lg max-w-md w-full">
+        <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Goal Scored</h2>
+        {!team && (
+          <TeamSelection setTeam={setTeam} setConfirmOpponentGoal={setConfirmOpponentGoal} />
+        )}
+        {team === 'opponent' && confirmOpponentGoal && (
+          <OpponentGoalConfirmation handleConfirm={handleConfirm} handleCancel={handleCancel} />
+        )}
+        {team === 'our' && (
+          <ScorerSelection
+            players={players}
+            scorerName={scorerName}
+            setScorerName={setScorerName}
+            handleConfirm={handleConfirm}
+            handleCancel={handleCancel}
+          />
+        )}
       </div>
-    </Show>
+    </div>
   );
 }
 

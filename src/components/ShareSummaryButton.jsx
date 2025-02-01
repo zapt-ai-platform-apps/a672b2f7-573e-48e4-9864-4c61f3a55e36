@@ -1,25 +1,16 @@
-import { createSignal } from 'solid-js';
+import React, { useState } from 'react';
 import * as Sentry from '@sentry/browser';
 
-function ShareSummaryButton(props) {
-  const {
-    ourScore,
-    opponentScore,
-    playerData,
-    goals,
-    includeGKPlaytime,
-    getTotalPlayTime,
-    formatTime,
-  } = props;
-  const [isSharing, setIsSharing] = createSignal(false);
+function ShareSummaryButton({ ourScore, opponentScore, playerData, goals, includeGKPlaytime, getTotalPlayTime, formatTime }) {
+  const [isSharing, setIsSharing] = useState(false);
 
   const handleShareSummary = async () => {
     setIsSharing(true);
     try {
-      let summaryText = `Final Score: Our Team ${ourScore()} - ${opponentScore()} Opponent Team\n\n`;
+      let summaryText = `Final Score: Our Team ${ourScore} - ${opponentScore} Opponent Team\n\n`;
 
       const goalsByPlayerData = {};
-      goals()
+      goals
         .filter((goal) => goal.team === 'our')
         .forEach((goal) => {
           const scorer = goal.scorerName;
@@ -40,13 +31,13 @@ function ShareSummaryButton(props) {
       }
 
       summaryText += '\nPlayer Playtimes:\n';
-      playerData()
+      [...playerData]
         .sort((a, b) => getTotalPlayTime(b) - getTotalPlayTime(a))
         .forEach((player) => {
           summaryText += `- ${player.name}: ${formatTime(getTotalPlayTime(player))}\n`;
         });
 
-      if (!includeGKPlaytime()) {
+      if (!includeGKPlaytime) {
         summaryText += '\nNote: Playtime for goalkeepers is not included.\n';
       }
 
@@ -71,13 +62,13 @@ function ShareSummaryButton(props) {
 
   return (
     <button
-      class={`px-8 py-4 bg-blue-500 text-white text-lg rounded-lg ${
-        isSharing() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-blue-600 hover:scale-105'
+      className={`px-8 py-4 bg-blue-500 text-white text-lg rounded-lg ${
+        isSharing ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-blue-600 hover:scale-105'
       } transition duration-300 ease-in-out`}
       onClick={handleShareSummary}
-      disabled={isSharing()}
+      disabled={isSharing}
     >
-      {isSharing() ? 'Sharing...' : 'Share Summary'}
+      {isSharing ? 'Sharing...' : 'Share Summary'}
     </button>
   );
 }

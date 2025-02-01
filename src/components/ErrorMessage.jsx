@@ -1,14 +1,12 @@
-import { Show } from 'solid-js';
+import React from 'react';
 
-function ErrorMessage(props) {
-  const { errorMessage } = props;
+function ErrorMessage({ errorMessage }) {
+  if (!errorMessage) return null;
 
   return (
-    <Show when={errorMessage()}>
-      <div class="bg-error/10 text-error p-4 rounded mb-8 text-lg">
-        {errorMessage()}
-      </div>
-    </Show>
+    <div className="bg-error/10 text-error p-4 rounded mb-8 text-lg">
+      {errorMessage}
+    </div>
   );
 }
 

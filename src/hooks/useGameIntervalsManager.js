@@ -1,21 +1,20 @@
 function useGameIntervalsManager({ isRunning, setIsRunning, gameIntervals, setGameIntervals, playerData, setPlayerData }) {
   const toggleTimer = () => {
-    if (!isRunning()) {
+    if (!isRunning) {
       setIsRunning(true);
       setGameIntervals((prev) => [...prev, { startTime: Date.now(), endTime: null }]);
 
       setPlayerData(
-        playerData().map((player) => {
+        playerData.map((player) => {
           if (player.isOnField) {
-            if (
-              player.playIntervals.length === 0 ||
-              player.playIntervals[player.playIntervals.length - 1].endTime !== null
-            ) {
-              player.playIntervals.push({
-                startTime: Date.now(),
-                endTime: null,
-                isGoalkeeper: player.isGoalkeeper,
-              });
+            if (player.playIntervals.length === 0 || player.playIntervals[player.playIntervals.length - 1].endTime) {
+              return {
+                ...player,
+                playIntervals: [
+                  ...player.playIntervals,
+                  { startTime: Date.now(), endTime: null, isGoalkeeper: player.isGoalkeeper }
+                ]
+              };
             }
           }
           return player;
@@ -25,19 +24,16 @@ function useGameIntervalsManager({ isRunning, setIsRunning, gameIntervals, setGa
       setIsRunning(false);
       setGameIntervals((prev) =>
         prev.map((interval, idx) =>
-          idx === prev.length - 1 && interval.endTime === null
+          idx === prev.length - 1 && !interval.endTime
             ? { ...interval, endTime: Date.now() }
             : interval
         )
       );
 
       setPlayerData(
-        playerData().map((player) => {
+        playerData.map((player) => {
           if (player.isOnField) {
-            if (
-              player.playIntervals.length > 0 &&
-              player.playIntervals[player.playIntervals.length - 1].endTime === null
-            ) {
+            if (player.playIntervals.length > 0 && !player.playIntervals[player.playIntervals.length - 1].endTime) {
               player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();
             }
           }
@@ -47,9 +43,7 @@ function useGameIntervalsManager({ isRunning, setIsRunning, gameIntervals, setGa
     }
   };
 
-  return {
-    toggleTimer,
-  };
+  return { toggleTimer };
 }
 
 export default useGameIntervalsManager;

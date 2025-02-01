@@ -1,39 +1,27 @@
-import { createSignal, onCleanup } from 'solid-js';
+import { useState, useEffect } from 'react';
 
 function useGameTimer({ isRunning, gameIntervals }) {
-  const [now, setNow] = createSignal(Date.now());
-  let uiTimer = null;
-
-  const startUITimer = () => {
-    uiTimer = setInterval(() => {
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const uiTimer = setInterval(() => {
       setNow(Date.now());
     }, 1000);
-  };
+    return () => clearInterval(uiTimer);
+  }, []);
 
   const getTimeElapsed = () => {
-    now();
     let total = 0;
-    for (const interval of gameIntervals()) {
+    gameIntervals.forEach((interval) => {
       if (interval.endTime) {
         total += interval.endTime - interval.startTime;
       } else {
-        total += isRunning() ? now() - interval.startTime : 0;
+        total += isRunning ? Date.now() - interval.startTime : 0;
       }
-    }
+    });
     return Math.floor(total / 1000);
   };
 
-  onCleanup(() => {
-    if (uiTimer !== null) {
-      clearInterval(uiTimer);
-    }
-  });
-
-  return {
-    now,
-    startUITimer,
-    getTimeElapsed,
-  };
+  return { now, startUITimer: () => {}, getTimeElapsed };
 }
 
 export default useGameTimer;
