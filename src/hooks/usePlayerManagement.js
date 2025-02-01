@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function usePlayerManagement({ playerData, setPlayerData, includeGKPlaytime, isRunning, now }) {
+function usePlayerManagement({ playerData = [], setPlayerData, includeGKPlaytime, isRunning, now }) {
   const [onFieldPlayers, setOnFieldPlayers] = useState([]);
   const [offFieldPlayers, setOffFieldPlayers] = useState([]);
 
