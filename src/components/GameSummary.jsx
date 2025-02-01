@@ -1,11 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useStateContext } from '../state';
 import GoalsList from './GoalsList';
 import PlayerPlaytimes from './PlayerPlaytimes';
 import FinalScore from './FinalScore';
 import ShareSummaryButton from './ShareSummaryButton';
 
-function GameSummary({ playerData, goals, ourScore, opponentScore, includeGKPlaytime, resetGame }) {
+function GameSummary() {
+  const { playerData, goals, ourScore, opponentScore, includeGKPlaytime, resetGame } = useStateContext();
   const navigate = useNavigate();
 
   const getTotalPlayTime = (player) => {
@@ -23,7 +25,8 @@ function GameSummary({ playerData, goals, ourScore, opponentScore, includeGKPlay
 
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
-    return `${minutes}:${('0' + (timeInSeconds % 60)).slice(-2)}`;
+    const seconds = ('0' + (timeInSeconds % 60)).slice(-2);
+    return `${minutes}:${seconds}`;
   };
 
   const handleBackToHome = () => {
