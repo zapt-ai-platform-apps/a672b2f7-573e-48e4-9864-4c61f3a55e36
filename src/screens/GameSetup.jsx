@@ -1,10 +1,10 @@
 import React from 'react';
-import PlayerManager from './PlayerManager';
-import GoalkeeperSettings from './GoalkeeperSettings';
-import ErrorMessage from './ErrorMessage';
+import PlayerManager from '../components/PlayerManager';
+import GoalkeeperSettings from '../components/GoalkeeperSettings';
+import ErrorMessage from '../components/ErrorMessage';
 import useGameSetup from '../hooks/useGameSetup';
-import GameIntro from './GameIntro';
-import StartGameButton from './StartGameButton';
+import GameIntro from '../components/GameIntro';
+import StartGameButton from '../components/StartGameButton';
 import { useStateContext } from '../state';
 
 function GameSetup() {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useGameManagementLogic from '../hooks/useGameManagementLogic';
-import GameManagementContent from './GameManagementContent';
+import GameManagementContent from '../components/GameManagementContent';
 
 function GameManagement() {
   const navigate = useNavigate();

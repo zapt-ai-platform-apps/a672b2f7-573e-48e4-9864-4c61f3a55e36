@@ -1,9 +1,9 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import LandingPage from './components/LandingPage';
-import GameSetup from './components/GameSetup';
-import GameManagement from './components/GameManagement';
-import GameSummary from './components/GameSummary';
+import LandingPage from './screens/LandingPage';
+import GameSetup from './screens/GameSetup';
+import GameManagement from './screens/GameManagement';
+import GameSummary from './screens/GameSummary';
 import NavBar from './components/NavBar';
 
 function App() {

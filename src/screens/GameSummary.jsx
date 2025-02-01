@@ -1,10 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStateContext } from '../state';
-import GoalsList from './GoalsList';
-import PlayerPlaytimes from './PlayerPlaytimes';
-import FinalScore from './FinalScore';
-import ShareSummaryButton from './ShareSummaryButton';
+import GoalsList from '../components/GoalsList';
+import PlayerPlaytimes from '../components/PlayerPlaytimes';
+import FinalScore from '../components/FinalScore';
+import ShareSummaryButton from '../components/ShareSummaryButton';
 
 function GameSummary() {
   const { playerData, goals, ourScore, opponentScore, includeGKPlaytime, resetGame } = useStateContext();
@@ -48,7 +48,7 @@ function GameSummary() {
         />
         <div className="flex space-x-4 mt-8">
           <button
-            className="px-8 py-4 bg-brand-500 text-white text-lg rounded-md cursor-pointer hover:bg-brand-600 hover:scale-105 transition-all duration-300 ease-in-out-custom focus:outline-none focus:ring-2 focus:ring-brand-400"
+            className="px-8 py-4 bg-brand-500 text-white text-lg rounded-md cursor-pointer hover:bg-brand-600 hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-400"
             onClick={handleBackToHome}
           >
             Back to Home
