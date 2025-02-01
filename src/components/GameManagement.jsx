@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useGameManagementLogic from '../hooks/useGameManagementLogic';
 import GameManagementContent from './GameManagementContent';
 
-function GameManagement(props) {
+function GameManagement() {
   const navigate = useNavigate();
 
   const {
@@ -30,7 +30,7 @@ function GameManagement(props) {
     confirmEndGame,
     cancelEndGame,
     toggleTimer,
-  } = useGameManagementLogic(props);
+  } = useGameManagementLogic();
 
   const confirmEndGameHandler = () => {
     confirmEndGame();

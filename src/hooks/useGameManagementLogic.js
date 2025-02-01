@@ -1,17 +1,22 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useStateContext } from '../state';
 import useGameTimer from './useGameTimer';
 import usePlayerManagement from './usePlayerManagement';
 import useGameIntervalsManager from './useGameIntervalsManager';
 import useEndGameManager from './useEndGameManager';
 
-function useGameManagementLogic(props) {
-  const { playerData, setPlayerData, goalkeeper, setGoalkeeper, ourScore, setOurScore, opponentScore, setOpponentScore, goals, setGoals, includeGKPlaytime } = props;
+function useGameManagementLogic() {
+  const { playerData, setPlayerData, goalkeeper, setGoalkeeper, ourScore, setOurScore, opponentScore, setOpponentScore, goals, setGoals, includeGKPlaytime } = useStateContext();
 
-  const { isRunning, setIsRunning, gameIntervals, setGameIntervals, toggleTimer } = useGameIntervalsManager({
-    isRunning: props.isRunning,
-    setIsRunning: props.setIsRunning,
-    gameIntervals: props.gameIntervals,
-    setGameIntervals: props.setGameIntervals,
+  const [isRunning, setIsRunning] = useState(false);
+  const [gameIntervals, setGameIntervals] = useState([]);
+  const [showEndGameConfirm, setShowEndGameConfirm] = useState(false);
+
+  const { toggleTimer } = useGameIntervalsManager({
+    isRunning,
+    setIsRunning,
+    gameIntervals,
+    setGameIntervals,
     playerData,
     setPlayerData
   });
@@ -23,11 +28,10 @@ function useGameManagementLogic(props) {
     setGameIntervals,
     playerData,
     setPlayerData,
-    setShowEndGameConfirm: props.setShowEndGameConfirm
+    setShowEndGameConfirm
   });
 
   const { now, startUITimer, getTimeElapsed } = useGameTimer({ isRunning, gameIntervals });
-
   const { onFieldPlayers, offFieldPlayers, updatePlayerLists, getTotalPlayTime } = usePlayerManagement({
     playerData,
     setPlayerData,
@@ -39,8 +43,7 @@ function useGameManagementLogic(props) {
   useEffect(() => {
     updatePlayerLists();
     startUITimer();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [updatePlayerLists, startUITimer]);
 
   return {
     playerData,
@@ -58,7 +61,7 @@ function useGameManagementLogic(props) {
     gameIntervals,
     onFieldPlayers,
     offFieldPlayers,
-    showEndGameConfirm: props.showEndGameConfirm,
+    showEndGameConfirm,
     updatePlayerLists,
     getTotalPlayTime,
     getTimeElapsed,
