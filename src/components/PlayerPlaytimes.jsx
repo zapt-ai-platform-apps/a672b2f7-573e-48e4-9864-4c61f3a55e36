@@ -1,7 +1,8 @@
 import React from 'react';
 
 function PlayerPlaytimes({ playerData, includeGKPlaytime, getTotalPlayTime, formatTime }) {
-  const sortedPlayerData = [...playerData].sort((a, b) => getTotalPlayTime(b) - getTotalPlayTime(a));
+  const dataArray = Array.isArray(playerData) ? playerData : [];
+  const sortedPlayerData = dataArray.sort((a, b) => getTotalPlayTime(b) - getTotalPlayTime(a));
 
   return (
     <div className="mb-8">
