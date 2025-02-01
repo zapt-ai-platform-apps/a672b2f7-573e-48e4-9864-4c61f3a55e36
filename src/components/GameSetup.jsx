@@ -5,9 +5,10 @@ import ErrorMessage from './ErrorMessage';
 import useGameSetup from '../hooks/useGameSetup';
 import GameIntro from './GameIntro';
 import StartGameButton from './StartGameButton';
+import { useStateContext } from '../state';
 
-function GameSetup(props) {
-  const { onStartGame } = props;
+function GameSetup() {
+  const { handleStartGame } = useStateContext();
 
   const {
     playerName,
@@ -62,7 +63,7 @@ function GameSetup(props) {
           goalkeeper={goalkeeper}
           includeGKPlaytime={includeGKPlaytime}
           setErrorMessage={setErrorMessage}
-          onStartGame={onStartGame}
+          onStartGame={handleStartGame}
         />
       </div>
     </div>
