@@ -1,6 +1,6 @@
 import React from 'react';
 
-function GoalsList({ goals }) {
+function GoalsList({ goals = [] }) {
   const goalsByPlayer = () => {
     const counts = {};
     goals
