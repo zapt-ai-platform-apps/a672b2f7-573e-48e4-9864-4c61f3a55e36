@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import Header from '../../src/components/Header';
-import SubstitutionPanel from '../../src/components/SubstitutionPanel';
-import GameActions from '../../src/components/GameActions';
-import EndGameConfirmationModal from '../../src/components/EndGameConfirmationModal';
-import PitchVisualization from '../../src/components/PitchVisualization';
+import Header from '../../components/Header';
+import SubstitutionPanel from '../../components/SubstitutionPanel';
+import GameActions from '../../components/GameActions';
+import EndGameConfirmationModal from '../../components/EndGameConfirmationModal';
+import PitchVisualization from '../../components/PitchVisualization';
 import GameManagementModals from './GameManagementModals';
-import createGameManagementStore from '../../src/hooks/useGameManagement';
+import createGameManagementStore from '../../hooks/useGameManagement';
 
 function GameManagementMain(props) {
   const store = createGameManagementStore(props);
