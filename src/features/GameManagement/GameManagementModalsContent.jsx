@@ -1,13 +1,13 @@
 import React from 'react';
-import GoalScoredModal from './GoalScoredModal';
-import AssignGoalkeeperModal from './AssignGoalkeeperModal';
-import ConfirmGoalkeeperModal from './ConfirmGoalkeeperModal';
-import AddPlayerModal from './AddPlayerModal';
-import AdjustPlayersModal from './AdjustPlayersModal';
-import ConfirmAdjustPlayersModal from './ConfirmAdjustPlayersModal';
-import RemoveGoalConfirmationModal from './RemoveGoalConfirmationModal';
+import GoalScoredModal from '../../src/components/GoalScoredModal';
+import AssignGoalkeeperModal from '../../src/components/AssignGoalkeeperModal';
+import ConfirmGoalkeeperModal from '../../src/components/ConfirmGoalkeeperModal';
+import AddPlayerModal from '../../src/components/AddPlayerModal';
+import AdjustPlayersModal from '../../src/components/AdjustPlayersModal';
+import ConfirmAdjustPlayersModal from '../../src/components/ConfirmAdjustPlayersModal';
+import RemoveGoalConfirmationModal from '../../src/components/RemoveGoalConfirmationModal';
 
-function GameManagementModals(props) {
+function GameManagementModalsContent(props) {
   return (
     <>
       <GoalScoredModal
@@ -67,4 +67,4 @@ function GameManagementModals(props) {
   );
 }
 
-export default GameManagementModals;
+export default GameManagementModalsContent;
