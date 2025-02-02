@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import useGameManagementLogic from '../../hooks/useGameManagementLogic';
+import useGameManagementLogic from './hooks/useGameManagementLogic';
 import GameManagementContent from './GameManagementContent';
 
 function GameManagementScreen() {
@@ -29,7 +29,7 @@ function GameManagementScreen() {
     handleEndGame,
     confirmEndGame,
     cancelEndGame,
-    toggleTimer,
+    toggleTimer
   } = useGameManagementLogic();
 
   const confirmEndGameHandler = () => {

@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import { useStateContext } from '../state';
-import useGameTimer from './useGameTimer';
-import usePlayerManagement from './usePlayerManagement';
+import { useState } from 'react';
+import { useStateContext } from '../../../state';
 import useGameIntervalsManager from './useGameIntervalsManager';
 import useEndGameManager from './useEndGameManager';
+import useGameTimer from './useGameTimer';
+import usePlayerManagement from './usePlayerManagement';
 
-function useGameManagementLogic() {
+function createGameManagementStore(props) {
   const { playerData, setPlayerData, goalkeeper, setGoalkeeper, ourScore, setOurScore, opponentScore, setOpponentScore, goals, setGoals, includeGKPlaytime } = useStateContext();
 
   const [isRunning, setIsRunning] = useState(false);
@@ -40,11 +40,6 @@ function useGameManagementLogic() {
     now
   });
 
-  useEffect(() => {
-    updatePlayerLists();
-    startUITimer();
-  }, [updatePlayerLists, startUITimer]);
-
   return {
     playerData,
     setPlayerData,
@@ -72,4 +67,4 @@ function useGameManagementLogic() {
   };
 }
 
-export default useGameManagementLogic;
+export default createGameManagementStore;
