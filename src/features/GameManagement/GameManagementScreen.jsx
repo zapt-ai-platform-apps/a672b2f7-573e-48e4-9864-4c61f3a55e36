@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import useGameManagementLogic from '../hooks/useGameManagementLogic';
-import GameManagementContent from '../features/GameManagement/GameManagementContent';
+import useGameManagementLogic from '../../hooks/useGameManagementLogic';
+import GameManagementContent from './GameManagementContent';
 
-function GameManagement() {
+function GameManagementScreen() {
   const navigate = useNavigate();
 
   const {
@@ -65,4 +65,4 @@ function GameManagement() {
   );
 }
 
-export default GameManagement;
+export default GameManagementScreen;
