@@ -1,10 +1,10 @@
 import React from 'react';
-import PlayerManager from '../components/PlayerManager';
+import GameIntro from './GameSetup/GameIntro';
+import PlayerManager from './GameSetup/PlayerManager';
+import StartGameButton from './GameSetup/StartGameButton';
 import GoalkeeperSettings from '../components/GoalkeeperSettings';
 import ErrorMessage from '../components/ErrorMessage';
 import useGameSetup from '../hooks/useGameSetup';
-import GameIntro from '../components/GameIntro';
-import StartGameButton from '../components/StartGameButton';
 import { useStateContext } from '../state';
 
 function GameSetup() {
@@ -38,14 +38,10 @@ function GameSetup() {
           playerName={playerName}
           setPlayerName={setPlayerName}
           players={players}
-          setPlayers={setPlayers}
-          startingPlayersCount={startingPlayersCount}
-          setStartingPlayersCount={setStartingPlayersCount}
-          startingPlayers={startingPlayers}
-          setStartingPlayers={setStartingPlayers}
           addPlayer={addPlayer}
           deletePlayer={deletePlayer}
           toggleStartingPlayer={toggleStartingPlayer}
+          startingPlayersCount={startingPlayersCount}
         />
         {startingPlayersCount > 0 && (
           <GoalkeeperSettings
