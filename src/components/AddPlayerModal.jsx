@@ -1,42 +1,89 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useStateContext } from '../state';
+import { useAvailablePlayers } from '../hooks/useAvailablePlayers';
 
-function AddPlayerModal({ showAddPlayerModal, setShowAddPlayerModal, newPlayerName, setNewPlayerName, addNewPlayer }) {
-  const addPlayerAndCloseModal = () => {
+function AddPlayerModal({
+  showAddPlayerModal,
+  setShowAddPlayerModal,
+  newPlayerName,
+  setNewPlayerName,
+  addNewPlayer,
+  currentGamePlayers
+}) {
+  const { selectedSquad } = useStateContext();
+  const [mode, setMode] = useState('select');
+  const availablePlayers = useAvailablePlayers(selectedSquad, currentGamePlayers);
+
+  const handleSelectPlayer = (playerName) => {
+    addNewPlayer(playerName);
+    setShowAddPlayerModal(false);
+  };
+
+  const handleManualAdd = () => {
     if (newPlayerName.trim() !== '') {
-      addNewPlayer();
+      addNewPlayer(newPlayerName.trim());
       setNewPlayerName('');
       setShowAddPlayerModal(false);
     }
   };
 
-  const cancelAddPlayer = () => {
-    setNewPlayerName('');
-    setShowAddPlayerModal(false);
+  const switchToManual = () => {
+    setMode('manual');
   };
 
   if (!showAddPlayerModal) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-md shadow-lg">
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-md shadow-lg max-w-md w-full">
         <h2 className="text-2xl font-bold mb-4 text-brand-500">Add New Player</h2>
-        <input
-          type="text"
-          placeholder="Player Name"
-          value={newPlayerName}
-          onChange={(e) => setNewPlayerName(e.target.value)}
-          className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-brand-400 focus:border-transparent mb-4 box-border text-lg"
-        />
+        {mode === 'select' && availablePlayers.length > 0 ? (
+          <>
+            <p className="mb-4 text-lg text-gray-700 dark:text-gray-200">
+              Select a player from your squad:
+            </p>
+            <ul className="max-h-60 overflow-y-auto mb-4">
+              {availablePlayers.map((name, index) => (
+                <li
+                  key={index}
+                  className="p-4 mb-2 bg-gray-100 dark:bg-gray-700 rounded-md cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white"
+                  onClick={() => handleSelectPlayer(name)}
+                >
+                  {name}
+                </li>
+              ))}
+            </ul>
+            <button
+              className="w-full px-6 py-3 bg-gray-500 text-white text-lg rounded-md cursor-pointer hover:bg-gray-600 transition-all duration-300 ease-in-out-custom focus:outline-none focus:ring-2 focus:ring-gray-400 mb-4"
+              onClick={switchToManual}
+            >
+              Not in Squad? Enter Name Manually
+            </button>
+          </>
+        ) : (
+          <>
+            <p className="mb-4 text-lg text-gray-700 dark:text-gray-200">
+              Enter the player's name:
+            </p>
+            <input
+              type="text"
+              placeholder="Player Name"
+              value={newPlayerName}
+              onChange={(e) => setNewPlayerName(e.target.value)}
+              className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-brand-400 mb-4 box-border text-lg"
+            />
+          </>
+        )}
         <div className="flex justify-end space-x-4">
           <button
             className="px-6 py-3 bg-brand-500 text-white text-lg rounded-md cursor-pointer hover:bg-brand-600 transition-all duration-300 ease-in-out-custom focus:outline-none focus:ring-2 focus:ring-brand-400"
-            onClick={addPlayerAndCloseModal}
+            onClick={mode === 'manual' ? handleManualAdd : () => setShowAddPlayerModal(false)}
           >
-            Add
+            {mode === 'manual' ? 'Add' : 'Close'}
           </button>
           <button
             className="px-6 py-3 bg-gray-500 text-white text-lg rounded-md cursor-pointer hover:bg-gray-600 transition-all duration-300 ease-in-out-custom focus:outline-none focus:ring-2 focus:ring-gray-400"
-            onClick={cancelAddPlayer}
+            onClick={() => setShowAddPlayerModal(false)}
           >
             Cancel
           </button>

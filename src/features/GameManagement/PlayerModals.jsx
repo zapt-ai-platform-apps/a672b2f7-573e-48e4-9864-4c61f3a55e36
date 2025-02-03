@@ -12,6 +12,7 @@ function PlayerModals(props) {
         newPlayerName={props.newPlayerName}
         setNewPlayerName={props.setNewPlayerName}
         addNewPlayer={props.addNewPlayer}
+        currentGamePlayers={props.playerData}
       />
 
       <AdjustPlayersModal
