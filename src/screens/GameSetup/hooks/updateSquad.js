@@ -11,10 +11,14 @@ export const getSquadPlayers = (selectedSquad) => {
 export const updateSquad = (selectedSquad, updatedSquadPlayers, setSelectedSquad) => {
   const updatedSquad = { ...selectedSquad, players: updatedSquadPlayers };
   setSelectedSquad(updatedSquad);
-  import('../../api/squadAPI.js').then(({ updateSquadAPI }) => {
-    updateSquadAPI(selectedSquad.id, selectedSquad.name, updatedSquadPlayers)
-      .catch((error) => {
-        console.error('Failed to update squad in backend:', error);
-      });
-  });
+  import("../../../api/squadAPI.js")
+    .then(({ updateSquadAPI }) => {
+      updateSquadAPI(selectedSquad.id, selectedSquad.name, updatedSquadPlayers)
+        .catch((error) => {
+          console.error('Failed to update squad in backend:', error);
+        });
+    })
+    .catch(error => {
+      console.error('Failed to load squadAPI.js:', error);
+    });
 };
