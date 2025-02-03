@@ -29,14 +29,12 @@ function useGameSetup() {
       setPlayers(updatedPlayers);
       localStorage.setItem('players', JSON.stringify(updatedPlayers));
       if (selectedSquad) {
-        let updatedSquadPlayers;
-        if (Array.isArray(selectedSquad.players)) {
-          updatedSquadPlayers = [...selectedSquad.players, newPlayer.name];
-        } else {
-          updatedSquadPlayers = selectedSquad.players
-            ? selectedSquad.players + ', ' + newPlayer.name
-            : newPlayer.name;
-        }
+        const currentSquadPlayers = Array.isArray(selectedSquad.players)
+          ? selectedSquad.players
+          : selectedSquad.players
+          ? selectedSquad.players.split(',').map(p => p.trim()).filter(Boolean)
+          : [];
+        const updatedSquadPlayers = [...currentSquadPlayers, newPlayer.name];
         setSelectedSquad({ ...selectedSquad, players: updatedSquadPlayers });
       }
       setPlayerName('');
@@ -56,18 +54,14 @@ function useGameSetup() {
       setPlayers(updatedPlayers);
       localStorage.setItem('players', JSON.stringify(updatedPlayers));
       if (selectedSquad) {
-        let updatedSquadPlayers;
-        if (Array.isArray(selectedSquad.players)) {
-          updatedSquadPlayers = selectedSquad.players.filter(
-            (name) => name !== playerNameToDelete
-          );
-        } else {
-          updatedSquadPlayers = selectedSquad.players
-            .split(',')
-            .map(p => p.trim())
-            .filter(p => p !== playerNameToDelete)
-            .join(', ');
-        }
+        const currentSquadPlayers = Array.isArray(selectedSquad.players)
+          ? selectedSquad.players
+          : selectedSquad.players
+          ? selectedSquad.players.split(',').map(p => p.trim()).filter(Boolean)
+          : [];
+        const updatedSquadPlayers = currentSquadPlayers.filter(
+          (name) => name !== playerNameToDelete
+        );
         setSelectedSquad({ ...selectedSquad, players: updatedSquadPlayers });
       }
       return true;
