@@ -14,6 +14,12 @@ export async function fetchSquadsAPI() {
 
 export async function createSquadAPI(squadName, squadPlayers) {
   try {
+    let playersArray;
+    if (Array.isArray(squadPlayers)) {
+      playersArray = squadPlayers;
+    } else {
+      playersArray = squadPlayers.split(',').map(player => player.trim());
+    }
     const response = await fetch('/api/squads', {
       method: 'POST',
       headers: {
@@ -21,7 +27,7 @@ export async function createSquadAPI(squadName, squadPlayers) {
       },
       body: JSON.stringify({
         name: squadName,
-        players: squadPlayers.split(',').map(player => player.trim())
+        players: playersArray
       })
     });
     if (!response.ok) {
