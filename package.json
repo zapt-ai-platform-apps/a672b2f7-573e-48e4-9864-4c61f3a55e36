@@ -21,7 +21,9 @@
     "drizzle-orm": "^0.33.0",
     "postgres": "^3.4.5",
     "resend": "^4.0.1",
-    "react-icons": "^4.10.1"
+    "react-icons": "^4.10.1",
+    "@supabase/auth-ui-react": "^0.4.7",
+    "@supabase/auth-ui-shared": "^0.1.8"
   },
   "devDependencies": {
     "vite": "^4.1.0",
