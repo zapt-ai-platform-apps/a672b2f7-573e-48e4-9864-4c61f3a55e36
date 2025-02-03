@@ -14,7 +14,7 @@ function MatchSquadSelector({ allPlayers, selectedPlayers, togglePlayer }) {
               type="checkbox"
               checked={selectedPlayers.some(p => p.name === player.name)}
               onChange={() => togglePlayer(player.name)}
-              className="mr-4 cursor-pointer w-6 h-6"
+              className="mr-4 cursor-pointer w-6 h-6 accent-brand-500"
             />
             <span className="flex-1 text-gray-800 dark:text-gray-200 text-lg">{player.name}</span>
           </li>
