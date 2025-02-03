@@ -4,7 +4,9 @@ import LandingPage from './screens/Landing/LandingPage.jsx';
 import GameSetup from './screens/GameSetup.jsx';
 import GameManagementScreen from './features/GameManagement/GameManagementScreen.jsx';
 import GameSummaryScreen from './features/GameSummary/GameSummaryScreen.jsx';
+import SquadManagement from './screens/SquadManagement.jsx';
 import NavBar from './components/NavBar';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 function App() {
   return (
@@ -15,6 +17,14 @@ function App() {
         <Route path="/setup" element={<GameSetup />} />
         <Route path="/manage" element={<GameManagementScreen />} />
         <Route path="/summary" element={<GameSummaryScreen />} />
+        <Route
+          path="/squads"
+          element={
+            <ProtectedRoute>
+              <SquadManagement />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </>
   );

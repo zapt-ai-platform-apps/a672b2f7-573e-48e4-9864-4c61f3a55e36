@@ -1,5 +1,6 @@
 import React from 'react';
 import ThemeToggle from './ThemeToggle';
+import NavBarUserControls from './NavBarUserControls';
 
 function NavBar() {
   return (
@@ -28,6 +29,7 @@ function NavBar() {
           >
             Contact Us
           </a>
+          <NavBarUserControls />
           <ThemeToggle />
         </div>
       </div>
