@@ -1,8 +1,14 @@
+import { supabase } from '../supabaseClient.js';
 import * as Sentry from '@sentry/browser';
 
 export async function fetchSquadsAPI() {
   try {
-    const response = await fetch('/api/squads');
+    const { data: { session } } = await supabase.auth.getSession();
+    const response = await fetch('/api/squads', {
+      headers: {
+        Authorization: `Bearer ${session?.access_token}`,
+      },
+    });
     if (!response.ok) {
       throw new Error('Error fetching squads');
     }
@@ -23,10 +29,12 @@ export async function createSquadAPI(squadName, squadPlayers) {
     } else {
       playersArray = squadPlayers.split(',').map(player => player.trim());
     }
+    const { data: { session } } = await supabase.auth.getSession();
     const response = await fetch('/api/squads', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session?.access_token}`,
       },
       body: JSON.stringify({
         name: squadName,
