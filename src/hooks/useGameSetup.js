@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useStateContext } from './../state';
 import { getInitialPlayers } from './gameSetupInit';
+import { getSquadPlayers, updateSquad } from './updateSquad';
 
 function useGameSetup() {
   const { selectedSquad, setSelectedSquad } = useStateContext();
@@ -21,21 +22,15 @@ function useGameSetup() {
 
   const addPlayer = () => {
     if (playerName.trim() !== '') {
-      const newPlayer = {
-        name: playerName.trim(),
-        isStartingPlayer: false
-      };
+      const newPlayer = { name: playerName.trim(), isStartingPlayer: false };
       const updatedPlayers = [...players, newPlayer];
       setPlayers(updatedPlayers);
       localStorage.setItem('players', JSON.stringify(updatedPlayers));
+
       if (selectedSquad) {
-        const currentSquadPlayers = Array.isArray(selectedSquad.players)
-          ? selectedSquad.players
-          : selectedSquad.players
-          ? selectedSquad.players.split(',').map(p => p.trim()).filter(Boolean)
-          : [];
+        const currentSquadPlayers = getSquadPlayers(selectedSquad);
         const updatedSquadPlayers = [...currentSquadPlayers, newPlayer.name];
-        setSelectedSquad({ ...selectedSquad, players: updatedSquadPlayers });
+        updateSquad(selectedSquad, updatedSquadPlayers, setSelectedSquad);
       }
       setPlayerName('');
       return true;
@@ -44,25 +39,15 @@ function useGameSetup() {
   };
 
   const deletePlayer = (playerNameToDelete) => {
-    const confirmDelete = window.confirm(
-      `Are you sure you want to delete ${playerNameToDelete}?`
-    );
+    const confirmDelete = window.confirm(`Are you sure you want to delete ${playerNameToDelete}?`);
     if (confirmDelete) {
-      const updatedPlayers = players.filter(
-        (player) => player.name !== playerNameToDelete
-      );
+      const updatedPlayers = players.filter(player => player.name !== playerNameToDelete);
       setPlayers(updatedPlayers);
       localStorage.setItem('players', JSON.stringify(updatedPlayers));
       if (selectedSquad) {
-        const currentSquadPlayers = Array.isArray(selectedSquad.players)
-          ? selectedSquad.players
-          : selectedSquad.players
-          ? selectedSquad.players.split(',').map(p => p.trim()).filter(Boolean)
-          : [];
-        const updatedSquadPlayers = currentSquadPlayers.filter(
-          (name) => name !== playerNameToDelete
-        );
-        setSelectedSquad({ ...selectedSquad, players: updatedSquadPlayers });
+        const currentSquadPlayers = getSquadPlayers(selectedSquad);
+        const updatedSquadPlayers = currentSquadPlayers.filter(name => name !== playerNameToDelete);
+        updateSquad(selectedSquad, updatedSquadPlayers, setSelectedSquad);
       }
       return true;
     }
@@ -70,16 +55,15 @@ function useGameSetup() {
   };
 
   const toggleStartingPlayer = (playerNameToToggle) => {
-    const updatedPlayers = players.map((player) => {
-      if (player.name === playerNameToToggle) {
-        return { ...player, isStartingPlayer: !player.isStartingPlayer };
-      }
-      return player;
-    });
+    const updatedPlayers = players.map(player =>
+      player.name === playerNameToToggle
+        ? { ...player, isStartingPlayer: !player.isStartingPlayer }
+        : player
+    );
     setPlayers(updatedPlayers);
-    const count = updatedPlayers.filter((p) => p.isStartingPlayer).length;
+    const count = updatedPlayers.filter(p => p.isStartingPlayer).length;
     setStartingPlayersCount(count);
-    setStartingPlayers(updatedPlayers.filter((p) => p.isStartingPlayer));
+    setStartingPlayers(updatedPlayers.filter(p => p.isStartingPlayer));
   };
 
   return {
