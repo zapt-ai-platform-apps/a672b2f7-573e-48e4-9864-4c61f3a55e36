@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/browser';
+
 export async function fetchSquadsAPI() {
   try {
     const response = await fetch('/api/squads');
@@ -8,6 +10,7 @@ export async function fetchSquadsAPI() {
     return data;
   } catch (error) {
     console.error(error);
+    Sentry.captureException(error);
     return [];
   }
 }
@@ -36,6 +39,7 @@ export async function createSquadAPI(squadName, squadPlayers) {
     return await response.json();
   } catch (error) {
     console.error(error);
+    Sentry.captureException(error);
     throw error;
   }
 }
