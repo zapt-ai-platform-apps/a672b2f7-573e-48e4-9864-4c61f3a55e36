@@ -2,6 +2,7 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { authenticateUser } from './_apiUtils.js';
 import { squads } from '../drizzle/schema.js';
+import { eq } from 'drizzle-orm';
 import * as Sentry from '@sentry/node';
 
 export default async function handler(req, res) {
@@ -11,7 +12,7 @@ export default async function handler(req, res) {
     const db = drizzle(client);
 
     if (req.method === 'GET') {
-      const result = await db.select().from(squads).where(squads.userId.eq(user.id));
+      const result = await db.select().from(squads).where(eq(squads.userId, user.id));
       return res.status(200).json(result);
     } else if (req.method === 'POST') {
       const { name, players } = req.body;
