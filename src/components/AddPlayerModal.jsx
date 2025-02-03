@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useStateContext } from '../state';
 import { useAvailablePlayers } from '../hooks/useAvailablePlayers';
+import PlayerSelectionList from './PlayerSelectionList';
 
 function AddPlayerModal({
   showAddPlayerModal,
@@ -38,28 +39,11 @@ function AddPlayerModal({
       <div className="bg-white dark:bg-gray-800 p-6 rounded-md shadow-lg max-w-md w-full">
         <h2 className="text-2xl font-bold mb-4 text-brand-500">Add New Player</h2>
         {mode === 'select' && availablePlayers.length > 0 ? (
-          <>
-            <p className="mb-4 text-lg text-gray-700 dark:text-gray-200">
-              Select a player from your squad:
-            </p>
-            <ul className="max-h-60 overflow-y-auto mb-4">
-              {availablePlayers.map((name, index) => (
-                <li
-                  key={index}
-                  className="p-4 mb-2 bg-gray-100 dark:bg-gray-700 rounded-md cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white"
-                  onClick={() => handleSelectPlayer(name)}
-                >
-                  {name}
-                </li>
-              ))}
-            </ul>
-            <button
-              className="w-full px-6 py-3 bg-gray-500 text-white text-lg rounded-md cursor-pointer hover:bg-gray-600 transition-all duration-300 ease-in-out-custom focus:outline-none focus:ring-2 focus:ring-gray-400 mb-4"
-              onClick={switchToManual}
-            >
-              Not in Squad? Enter Name Manually
-            </button>
-          </>
+          <PlayerSelectionList
+            availablePlayers={availablePlayers}
+            onSelect={handleSelectPlayer}
+            onSwitch={switchToManual}
+          />
         ) : (
           <>
             <p className="mb-4 text-lg text-gray-700 dark:text-gray-200">
@@ -79,7 +63,7 @@ function AddPlayerModal({
             className="px-6 py-3 bg-brand-500 text-white text-lg rounded-md cursor-pointer hover:bg-brand-600 transition-all duration-300 ease-in-out-custom focus:outline-none focus:ring-2 focus:ring-brand-400"
             onClick={mode === 'manual' ? handleManualAdd : () => setShowAddPlayerModal(false)}
           >
-            {mode === 'manual' ? 'Add' : 'Close'}
+            {mode === 'manual' ? 'Confirm' : 'Close'}
           </button>
           <button
             className="px-6 py-3 bg-gray-500 text-white text-lg rounded-md cursor-pointer hover:bg-gray-600 transition-all duration-300 ease-in-out-custom focus:outline-none focus:ring-2 focus:ring-gray-400"
