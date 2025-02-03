@@ -9,7 +9,7 @@ import useGameSetup from '../hooks/useGameSetup';
 import { useStateContext } from '../state';
 
 function GameSetup() {
-  const { selectedSquad } = useStateContext();
+  const { selectedSquad, handleStartGame } = useStateContext();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -67,7 +67,7 @@ function GameSetup() {
           goalkeeper={goalkeeper}
           includeGKPlaytime={includeGKPlaytime}
           setErrorMessage={setErrorMessage}
-          onStartGame={undefined}
+          onStartGame={handleStartGame}
         />
       </div>
     </div>
