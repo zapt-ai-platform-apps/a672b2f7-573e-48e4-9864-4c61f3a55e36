@@ -9,6 +9,7 @@ export function StateProvider({ children }) {
   const [ourScore, setOurScore] = useState(0);
   const [opponentScore, setOpponentScore] = useState(0);
   const [goals, setGoals] = useState([]);
+  const [selectedSquad, setSelectedSquad] = useState(null);
 
   const handleStartGame = (players, gk, includeGKTime) => {
     setPlayerData(
@@ -36,6 +37,7 @@ export function StateProvider({ children }) {
     setOpponentScore(0);
     setGoals([]);
     setIncludeGKPlaytime(true);
+    setSelectedSquad(null);
   };
 
   return (
@@ -53,6 +55,8 @@ export function StateProvider({ children }) {
         setOpponentScore,
         goals,
         setGoals,
+        selectedSquad,
+        setSelectedSquad,
         handleStartGame,
         resetGame
       }}

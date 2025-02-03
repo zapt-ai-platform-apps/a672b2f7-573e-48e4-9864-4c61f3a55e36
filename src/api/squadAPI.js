@@ -1,45 +1,35 @@
-import * as Sentry from '@sentry/browser';
-
 export async function fetchSquadsAPI() {
   try {
-    const response = await fetch('/api/squad', {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      throw new Error('Failed to fetch squads');
+    const response = await fetch('/api/squads');
+    if (!response.ok) {
+      throw new Error('Error fetching squads');
     }
+    const data = await response.json();
+    return data;
   } catch (error) {
-    console.error('Error fetching squads:', error);
-    Sentry.captureException(error);
-    throw error;
+    console.error(error);
+    return [];
   }
 }
 
-export async function createSquadAPI(name, players) {
+export async function createSquadAPI(squadName, squadPlayers) {
   try {
-    const response = await fetch('/api/squad', {
+    const response = await fetch('/api/squads', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        name: name.trim(),
-        players: players.trim()
+        name: squadName,
+        players: squadPlayers.split(',').map(player => player.trim())
       })
     });
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw new Error('Failed to create squad');
+    if (!response.ok) {
+      throw new Error('Error creating squad');
     }
+    return await response.json();
   } catch (error) {
-    console.error('Error creating squad:', error);
-    Sentry.captureException(error);
+    console.error(error);
     throw error;
   }
 }

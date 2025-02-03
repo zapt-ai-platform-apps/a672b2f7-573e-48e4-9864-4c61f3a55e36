@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { fetchSquadsAPI, createSquadAPI } from '../api/squadAPI';
+import { useStateContext } from '../state';
 
 function SquadManagement() {
+  const { setSelectedSquad } = useStateContext();
+  const navigate = useNavigate();
   const [squadName, setSquadName] = useState('');
   const [squadPlayers, setSquadPlayers] = useState('');
   const [squads, setSquads] = useState([]);
@@ -40,6 +44,11 @@ function SquadManagement() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSelectSquad = (squad) => {
+    setSelectedSquad(squad);
+    navigate('/setup');
   };
 
   return (
@@ -85,6 +94,12 @@ function SquadManagement() {
                 <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                   Created at: {new Date(squad.created_at).toLocaleString()}
                 </p>
+                <button
+                  className="mt-4 px-6 py-3 bg-blue-500 text-white text-lg rounded cursor-pointer hover:bg-blue-600 transition-all duration-300"
+                  onClick={() => handleSelectSquad(squad)}
+                >
+                  Select Squad
+                </button>
               </li>
             ))}
           </ul>
