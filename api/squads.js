@@ -2,7 +2,7 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { authenticateUser } from './_apiUtils.js';
 import { squads } from '../drizzle/schema.js';
-import { eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm/expressions';
 import * as Sentry from '@sentry/node';
 
 export default async function handler(req, res) {
