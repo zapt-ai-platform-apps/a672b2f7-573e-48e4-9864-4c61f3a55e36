@@ -11,28 +11,29 @@ export default function useMatchSquad() {
     if (!selectedSquad) {
       navigate('/squads', { replace: true });
     } else {
-      const squadPlayers = Array.isArray(selectedSquad.players) 
-        ? selectedSquad.players 
+      const squadPlayers = Array.isArray(selectedSquad.players)
+        ? selectedSquad.players
         : selectedSquad.players.split(',').map(p => p.trim());
-      const initialMatchPlayers = squadPlayers.map(name => ({ 
-        name, 
-        isStartingPlayer: false 
+      const initialMatchPlayers = squadPlayers.map(name => ({
+        name,
+        isStartingPlayer: false,
+        isInMatch: false
       }));
       setMatchSquadPlayers(initialMatchPlayers);
     }
   }, [selectedSquad, navigate]);
 
   const toggleMatchPlayer = (playerName) => {
-    setMatchSquadPlayers(prev => 
-      prev.map(player => 
-        player.name === playerName 
-          ? { ...player, isInMatch: !player.isInMatch } 
+    setMatchSquadPlayers(prev =>
+      prev.map(player =>
+        player.name === playerName
+          ? { ...player, isInMatch: !player.isInMatch }
           : player
       )
     );
   };
 
-  const activeMatchPlayers = matchSquadPlayers.filter(player => player.isInMatch !== false);
+  const activeMatchPlayers = matchSquadPlayers.filter(player => player.isInMatch);
 
   return { matchSquadPlayers, activeMatchPlayers, toggleMatchPlayer };
 }
