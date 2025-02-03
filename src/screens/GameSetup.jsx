@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import GameIntro from './GameSetup/GameIntro';
 import PlayerManager from './GameSetup/PlayerManager';
@@ -7,28 +7,17 @@ import GoalkeeperSettings from '../components/GoalkeeperSettings';
 import ErrorMessage from '../components/ErrorMessage';
 import useGameSetup from '../hooks/useGameSetup';
 import { useStateContext } from '../state';
+import MatchSquadSelector from '../components/MatchSquadSelector';
+import useMatchSquad from '../hooks/useMatchSquad';
 
 function GameSetup() {
-  const { selectedSquad, handleStartGame } = useStateContext();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!selectedSquad) {
-      navigate('/squads', { replace: true });
-    }
-  }, [selectedSquad, navigate]);
-
+  const { handleStartGame } = useStateContext();
   const { 
     playerName,
     setPlayerName,
-    players,
-    setPlayers,
-    startingPlayersCount,
-    setStartingPlayersCount,
     errorMessage,
     setErrorMessage,
     startingPlayers,
-    setStartingPlayers,
     goalkeeper,
     setGoalkeeper,
     includeGKPlaytime,
@@ -38,20 +27,30 @@ function GameSetup() {
     toggleStartingPlayer 
   } = useGameSetup();
 
+  const { activeMatchPlayers, toggleMatchPlayer } = useMatchSquad();
+
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-800 dark:text-white">
       <div className="p-8 flex-grow">
         <GameIntro />
+        
+        <MatchSquadSelector
+          allPlayers={activeMatchPlayers}
+          selectedPlayers={activeMatchPlayers}
+          togglePlayer={toggleMatchPlayer}
+        />
+
         <PlayerManager
           playerName={playerName}
           setPlayerName={setPlayerName}
-          players={players}
+          players={activeMatchPlayers}
           addPlayer={addPlayer}
           deletePlayer={deletePlayer}
           toggleStartingPlayer={toggleStartingPlayer}
-          startingPlayersCount={startingPlayersCount}
+          startingPlayersCount={startingPlayers.length}
         />
-        {startingPlayersCount > 0 && (
+
+        {startingPlayers.length > 0 && (
           <GoalkeeperSettings
             startingPlayers={startingPlayers}
             goalkeeper={goalkeeper}
@@ -60,14 +59,16 @@ function GameSetup() {
             setIncludeGKPlaytime={setIncludeGKPlaytime}
           />
         )}
+
         <ErrorMessage errorMessage={errorMessage} />
+
         <StartGameButton
-          players={players}
-          startingPlayersCount={startingPlayersCount}
+          players={activeMatchPlayers}
+          startingPlayersCount={startingPlayers.length}
           goalkeeper={goalkeeper}
           includeGKPlaytime={includeGKPlaytime}
           setErrorMessage={setErrorMessage}
-          onStartGame={handleStartGame}
+          onStartGame={() => handleStartGame(activeMatchPlayers, goalkeeper, includeGKPlaytime)}
         />
       </div>
     </div>

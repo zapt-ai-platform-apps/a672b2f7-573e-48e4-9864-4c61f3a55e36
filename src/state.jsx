@@ -10,6 +10,7 @@ export function StateProvider({ children }) {
   const [opponentScore, setOpponentScore] = useState(0);
   const [goals, setGoals] = useState([]);
   const [selectedSquad, setSelectedSquad] = useState(null);
+  const [matchSquad, setMatchSquad] = useState([]);
 
   const handleStartGame = (players, gk, includeGKTime) => {
     setPlayerData(
@@ -28,6 +29,7 @@ export function StateProvider({ children }) {
     );
     setGoalkeeper(gk);
     setIncludeGKPlaytime(includeGKTime);
+    setMatchSquad(players);
   };
 
   const resetGame = () => {
@@ -38,6 +40,7 @@ export function StateProvider({ children }) {
     setGoals([]);
     setIncludeGKPlaytime(true);
     setSelectedSquad(null);
+    setMatchSquad([]);
   };
 
   return (
@@ -57,6 +60,8 @@ export function StateProvider({ children }) {
         setGoals,
         selectedSquad,
         setSelectedSquad,
+        matchSquad,
+        setMatchSquad,
         handleStartGame,
         resetGame
       }}
