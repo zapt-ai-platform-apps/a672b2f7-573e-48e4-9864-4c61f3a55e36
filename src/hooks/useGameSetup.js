@@ -15,7 +15,7 @@ function useGameSetup() {
 
   useEffect(() => {
     const initialPlayers = getInitialPlayers(selectedSquad);
-    if (initial Players) {
+    if (initialPlayers) {
       setPlayers(initialPlayers);
     }
   }, [selectedSquad]);
