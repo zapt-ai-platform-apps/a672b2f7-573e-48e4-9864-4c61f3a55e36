@@ -4,7 +4,9 @@ function addPlayerAction(playerName, players, setPlayers, setPlayerName) {
       name: playerName.trim(),
       isStartingPlayer: false
     };
-    setPlayers([...players, newPlayer]);
+    const updatedPlayers = [...players, newPlayer];
+    setPlayers(updatedPlayers);
+    localStorage.setItem('players', JSON.stringify(updatedPlayers));
     setPlayerName('');
     return true;
   }
