@@ -55,12 +55,12 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <StateProvider>
-      <AuthProvider>
-        <Router>
+      <Router>
+        <AuthProvider>
           <App />
           <ToastContainer />
-        </Router>
-      </AuthProvider>
+        </AuthProvider>
+      </Router>
     </StateProvider>
   </React.StrictMode>
 );
