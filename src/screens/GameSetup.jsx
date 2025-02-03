@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import GameIntro from './GameSetup/GameIntro';
 import PlayerManager from './GameSetup/PlayerManager';
 import StartGameButton from './GameSetup/StartGameButton';
@@ -8,9 +9,16 @@ import useGameSetup from '../hooks/useGameSetup';
 import { useStateContext } from '../state';
 
 function GameSetup() {
-  const { handleStartGame } = useStateContext();
+  const { selectedSquad } = useStateContext();
+  const navigate = useNavigate();
 
-  const {
+  useEffect(() => {
+    if (!selectedSquad) {
+      navigate('/squads', { replace: true });
+    }
+  }, [selectedSquad, navigate]);
+
+  const { 
     playerName,
     setPlayerName,
     players,
@@ -27,7 +35,7 @@ function GameSetup() {
     setIncludeGKPlaytime,
     addPlayer,
     deletePlayer,
-    toggleStartingPlayer
+    toggleStartingPlayer 
   } = useGameSetup();
 
   return (
@@ -59,7 +67,7 @@ function GameSetup() {
           goalkeeper={goalkeeper}
           includeGKPlaytime={includeGKPlaytime}
           setErrorMessage={setErrorMessage}
-          onStartGame={handleStartGame}
+          onStartGame={undefined}
         />
       </div>
     </div>
