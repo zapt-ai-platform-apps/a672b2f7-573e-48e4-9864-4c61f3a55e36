@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useStateContext } from './../state';
-import { getInitialPlayers } from './gameSetupInit';
-import { getSquadPlayers, updateSquad } from './updateSquad';
+import { getInitialPlayers } from '../screens/GameSetup/hooks/gameSetupInit.js';
+import { getSquadPlayers, updateSquad } from '../screens/GameSetup/hooks/updateSquad.js';
 
 function useGameSetup() {
   const { selectedSquad, setSelectedSquad } = useStateContext();
@@ -41,7 +41,9 @@ function useGameSetup() {
   const deletePlayer = (playerNameToDelete) => {
     const confirmDelete = window.confirm(`Are you sure you want to delete ${playerNameToDelete}?`);
     if (confirmDelete) {
-      const updatedPlayers = players.filter(player => player.name !== playerNameToDelete);
+      const updatedPlayers = players.filter(
+        (player) => player.name !== playerNameToDelete
+      );
       setPlayers(updatedPlayers);
       localStorage.setItem('players', JSON.stringify(updatedPlayers));
       if (selectedSquad) {
