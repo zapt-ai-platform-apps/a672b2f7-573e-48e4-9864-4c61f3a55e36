@@ -5,7 +5,7 @@ import GameSetup from './screens/GameSetup.jsx';
 import GameManagementScreen from './features/GameManagement/GameManagementScreen.jsx';
 import GameSummaryScreen from './features/GameSummary/GameSummaryScreen.jsx';
 import SquadManagement from './screens/SquadManagement.jsx';
-import NavBar from './components/NavBar';
+import NavBar from './components/navigation/NavBar.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 function App() {

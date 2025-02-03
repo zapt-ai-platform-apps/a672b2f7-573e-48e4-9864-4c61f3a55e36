@@ -1,6 +1,6 @@
 import React from 'react';
-import ThemeToggle from './ThemeToggle';
-import NavBarUserControls from './NavBarUserControls';
+import NavBarUserControls from './NavBarUserControls.jsx';
+import ThemeToggle from './ThemeToggle.jsx';
 
 function NavBar() {
   return (

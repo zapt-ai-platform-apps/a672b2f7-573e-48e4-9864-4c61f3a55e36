@@ -1,6 +1,6 @@
 import React from 'react';
-import { supabase } from '../supabaseClient.js';
-import { useAuth } from './AuthProvider.jsx';
+import { supabase } from '../../supabaseClient.js';
+import { useAuth } from '../AuthProvider.jsx';
 import { useNavigate } from 'react-router-dom';
 
 function NavBarUserControls() {
