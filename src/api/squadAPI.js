@@ -51,3 +51,35 @@ export async function createSquadAPI(squadName, squadPlayers) {
     throw error;
   }
 }
+
+export async function updateSquadAPI(squadId, squadName, squadPlayers) {
+  try {
+    let playersArray;
+    if (Array.isArray(squadPlayers)) {
+      playersArray = squadPlayers;
+    } else {
+      playersArray = squadPlayers.split(',').map(player => player.trim());
+    }
+    const { data: { session } } = await supabase.auth.getSession();
+    const response = await fetch('/api/squads', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session?.access_token}`,
+      },
+      body: JSON.stringify({
+        id: squadId,
+        name: squadName,
+        players: playersArray
+      })
+    });
+    if (!response.ok) {
+      throw new Error('Error updating squad');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    Sentry.captureException(error);
+    throw error;
+  }
+}

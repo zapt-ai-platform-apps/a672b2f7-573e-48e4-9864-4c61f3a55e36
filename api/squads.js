@@ -25,8 +25,18 @@ export default async function handler(req, res) {
         players,
       }).returning();
       return res.status(200).json(insertResult);
+    } else if (req.method === 'PUT') {
+      const { id, name, players } = req.body;
+      if (!id || !name || !players) {
+        return res.status(400).json({ error: 'ID, name and players are required for update' });
+      }
+      const updateResult = await db.update(squads)
+        .set({ name, players })
+        .where(eq(squads.id, id))
+        .returning();
+      return res.status(200).json(updateResult);
     } else {
-      res.setHeader('Allow', ['GET', 'POST']);
+      res.setHeader('Allow', ['GET', 'POST', 'PUT']);
       return res.status(405).end(`Method ${req.method} Not Allowed`);
     }
   } catch (error) {
