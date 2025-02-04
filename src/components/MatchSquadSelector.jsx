@@ -8,17 +8,29 @@ function MatchSquadSelector({ allPlayers, selectedPlayers, togglePlayer }) {
         Choose which squad members will be available for this match:
       </p>
       <ul>
-        {allPlayers.map((player, index) => (
-          <li key={index} className="flex items-center mb-4">
-            <input
-              type="checkbox"
-              checked={selectedPlayers.some(p => p.name === player.name)}
-              onChange={() => togglePlayer(player.name)}
-              className="mr-4 cursor-pointer w-6 h-6 accent-brand-500"
-            />
-            <span className="flex-1 text-gray-800 dark:text-gray-200 text-lg">{player.name}</span>
-          </li>
-        ))}
+        {allPlayers.map((player, index) => {
+          const isSelected = selectedPlayers.some(p => p.name === player.name);
+          return (
+            <li key={index} className="flex items-center mb-4 select-none">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  onChange={() => togglePlayer(player.name)}
+                  className="hidden"
+                />
+                <span className={`w-6 h-6 inline-flex items-center justify-center border-2 rounded mr-4 transition-colors ${isSelected ? 'bg-green-500 border-green-500' : 'bg-white border-gray-400'}`}>
+                  {isSelected && (
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </span>
+                <span className="flex-1 text-gray-800 dark:text-gray-200 text-lg">{player.name}</span>
+              </label>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
