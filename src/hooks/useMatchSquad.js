@@ -11,14 +11,23 @@ export default function useMatchSquad() {
     if (!selectedSquad) {
       navigate('/squads', { replace: true });
     } else {
-      const squadPlayers = Array.isArray(selectedSquad.players)
-        ? selectedSquad.players
-        : selectedSquad.players.split(',').map(p => p.trim());
+      // Handle different player data formats safely
+      const squadPlayers = selectedSquad.players 
+        ? (
+          Array.isArray(selectedSquad.players)
+            ? selectedSquad.players
+            : typeof selectedSquad.players === 'string'
+              ? selectedSquad.players.split(',').map(p => p.trim()).filter(Boolean)
+              : []
+        )
+        : [];
+
       const initialMatchPlayers = squadPlayers.map(name => ({
         name,
         isStartingPlayer: false,
-        isInMatch: false
+        isInMatch: true // Default to including selected squad players
       }));
+      
       setMatchSquadPlayers(initialMatchPlayers);
     }
   }, [selectedSquad, navigate]);
