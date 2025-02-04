@@ -1,7 +1,8 @@
-import React from 'react';
-import SquadForm from '../components/SquadForm';
-import SquadList from '../components/SquadList';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import SquadManagementContent from './SquadManagementContent';
 import useSquadManagement from '../hooks/useSquadManagement';
+import { useStateContext } from '../state';
 
 function SquadManagement() {
   const {
@@ -22,60 +23,33 @@ function SquadManagement() {
     cancelEdit
   } = useSquadManagement();
 
+  const { selectedSquad } = useStateContext();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (selectedSquad) {
+      navigate('/game-setup');
+    }
+  }, [selectedSquad, navigate]);
+
   return (
-    <div className="min-h-screen p-8 bg-white dark:bg-gray-900 text-gray-800 dark:text-white">
-      <h1 className="text-4xl font-bold mb-8 text-brand-500">Squad Management</h1>
-      {editingSquad ? (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-2xl font-bold mb-4">Edit Squad</h2>
-          <SquadForm
-            squadName={squadName}
-            setSquadName={setSquadName}
-            newSquadPlayer={newSquadPlayer}
-            setNewSquadPlayer={setNewSquadPlayer}
-            squadPlayersList={squadPlayersList}
-            handleAddSquadPlayer={handleAddSquadPlayer}
-            handleDeleteSquadPlayer={handleDeleteSquadPlayer}
-            onUpdateSquad={handleUpdateSquad}
-            editMode={true}
-            loading={loading}
-          />
-          <button
-            className="mt-4 px-6 py-4 bg-gray-500 text-white text-lg rounded cursor-pointer hover:bg-gray-600 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50"
-            onClick={cancelEdit}
-          >
-            Cancel Editing
-          </button>
-        </div>
-      ) : (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-          <SquadForm
-            squadName={squadName}
-            setSquadName={setSquadName}
-            newSquadPlayer={newSquadPlayer}
-            setNewSquadPlayer={setNewSquadPlayer}
-            squadPlayersList={squadPlayersList}
-            handleAddSquadPlayer={handleAddSquadPlayer}
-            handleDeleteSquadPlayer={handleDeleteSquadPlayer}
-            handleCreateSquad={handleCreateSquad}
-            loading={loading}
-          />
-        </div>
-      )}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-        <SquadList
-          squads={squads}
-          loading={loading}
-          handleSelectSquad={handleSelectSquad}
-          handleEditSquad={handleEditSquad}
-        />
-      </div>
-      <div className="fixed bottom-4 right-4 text-sm text-gray-600 dark:text-gray-400">
-        <a href="https://www.zapt.ai" target="_blank" rel="noopener noreferrer" className="underline">
-          Made on ZAPT
-        </a>
-      </div>
-    </div>
+    <SquadManagementContent
+      squadName={squadName}
+      setSquadName={setSquadName}
+      newSquadPlayer={newSquadPlayer}
+      setNewSquadPlayer={setNewSquadPlayer}
+      squadPlayersList={squadPlayersList}
+      squads={squads}
+      loading={loading}
+      editingSquad={editingSquad}
+      handleAddSquadPlayer={handleAddSquadPlayer}
+      handleDeleteSquadPlayer={handleDeleteSquadPlayer}
+      handleCreateSquad={handleCreateSquad}
+      handleUpdateSquad={handleUpdateSquad}
+      handleSelectSquad={handleSelectSquad}
+      handleEditSquad={handleEditSquad}
+      cancelEdit={cancelEdit}
+    />
   );
 }
 

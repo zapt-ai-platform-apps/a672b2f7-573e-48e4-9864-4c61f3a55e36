@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import * as squadService from './useSquadManagementService';
+import { useStateContext } from '../state';
 
 function useSquadManagement() {
+  const { setSelectedSquad } = useStateContext();
   const [squadName, setSquadName] = useState('');
   const [newSquadPlayer, setNewSquadPlayer] = useState('');
   const [squadPlayersList, setSquadPlayersList] = useState([]);
@@ -75,6 +77,7 @@ function useSquadManagement() {
     setSquadName(squad.name);
     setSquadPlayersList(squad.players || []);
     setNewSquadPlayer('');
+    setSelectedSquad(squad);
   }
 
   function handleEditSquad(squad) {
