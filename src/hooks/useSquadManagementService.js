@@ -1,33 +1,31 @@
-let squads = [];
+import { fetchSquadsAPI, createSquadAPI, updateSquadAPI } from '../api/squadAPI';
 
 export async function fetchSquads() {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([...squads]);
-    }, 500);
-  });
+  try {
+    const data = await fetchSquadsAPI();
+    return data;
+  } catch (error) {
+    console.error('Error fetching squads:', error);
+    throw error;
+  }
 }
 
 export async function createSquad(name, players) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const newSquad = { id: Date.now(), name, players };
-      squads.push(newSquad);
-      resolve(newSquad);
-    }, 500);
-  });
+  try {
+    const newSquad = await createSquadAPI(name, players);
+    return newSquad;
+  } catch (error) {
+    console.error('Error creating squad:', error);
+    throw error;
+  }
 }
 
 export async function updateSquad(id, name, players) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const index = squads.findIndex((squad) => squad.id === id);
-      if (index === -1) {
-        reject(new Error('Squad not found'));
-      } else {
-        squads[index] = { id, name, players };
-        resolve(squads[index]);
-      }
-    }, 500);
-  });
+  try {
+    const updatedSquad = await updateSquadAPI(id, name, players);
+    return updatedSquad;
+  } catch (error) {
+    console.error('Error updating squad:', error);
+    throw error;
+  }
 }

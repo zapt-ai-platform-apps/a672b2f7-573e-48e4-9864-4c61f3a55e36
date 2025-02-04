@@ -1,44 +1,30 @@
 import React from 'react';
 
 function SquadList({ squads, loading, handleSelectSquad, handleEditSquad }) {
-  if (loading) {
-    return <div className="p-4">Loading...</div>;
-  }
-  
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Squads</h2>
-      {squads.length === 0 ? (
-        <div>No squads available.</div>
+      {loading ? (
+        <p>Loading squads...</p>
       ) : (
         <ul>
-          {squads.map((squad) => (
-            <li key={squad.id} className="mb-4 border p-4 rounded">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="text-xl font-semibold">{squad.name}</h3>
-                  {squad.players && squad.players.length > 0 && (
-                    <ul className="mt-2">
-                      {squad.players.map((player, idx) => (
-                        <li key={idx} className="text-sm text-gray-700">{player}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-                <div className="flex flex-col space-y-2">
-                  <button
-                    onClick={() => handleSelectSquad(squad)}
-                    className="cursor-pointer px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
-                  >
-                    Select
-                  </button>
-                  <button
-                    onClick={() => handleEditSquad(squad)}
-                    className="cursor-pointer px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition duration-300"
-                  >
-                    Edit
-                  </button>
-                </div>
+          {squads.map((squad, index) => (
+            <li key={index} className="flex justify-between items-center border-b py-2">
+              <span>{squad.name}</span>
+              <div>
+                <button
+                  type="button"
+                  onClick={() => handleSelectSquad(squad)}
+                  className="mr-2 px-3 py-1 bg-blue-500 text-white rounded"
+                >
+                  Select
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleEditSquad(squad)}
+                  className="px-3 py-1 bg-yellow-500 text-white rounded"
+                >
+                  Edit
+                </button>
               </div>
             </li>
           ))}
