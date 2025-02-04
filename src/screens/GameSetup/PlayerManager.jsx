@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import AddPlayerForm from '../../components/AddPlayerForm.jsx';
 import StartingLineupSelector from '../../components/StartingLineupSelector.jsx';
 
-function PlayerManager({ playerName, setPlayerName, players, addPlayer, deletePlayer, toggleStartingPlayer, startingPlayersCount }) {
+function PlayerManager({ playerName, setPlayerName, players, addPlayer, toggleStartingPlayer, startingPlayersCount }) {
   const handleAddPlayer = () => {
     const success = addPlayer();
     if (success) {
@@ -13,20 +13,12 @@ function PlayerManager({ playerName, setPlayerName, players, addPlayer, deletePl
     }
   };
 
-  const handleDeletePlayer = (playerNameToDelete) => {
-    const success = deletePlayer(playerNameToDelete);
-    if (success) {
-      toast.success('Player deleted successfully!');
-    }
-  };
-
   return (
     <>
       <StartingLineupSelector
         players={players}
         startingPlayersCount={startingPlayersCount}
         toggleStartingPlayer={toggleStartingPlayer}
-        handleDeletePlayer={handleDeletePlayer}
       />
       <AddPlayerForm
         playerName={playerName}
