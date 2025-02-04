@@ -1,39 +1,48 @@
 import React from 'react';
 
 function SquadList({ squads, loading, handleSelectSquad, handleEditSquad }) {
+  if (loading) {
+    return <div className="p-4">Loading...</div>;
+  }
+  
   return (
     <div>
-      <h2 className="text-3xl font-bold mb-4">Your Squads</h2>
-      {loading ? (
-        <p>Loading squads...</p>
-      ) : squads.length > 0 ? (
-        <ul className="space-y-4">
+      <h2 className="text-2xl font-bold mb-4">Squads</h2>
+      {squads.length === 0 ? (
+        <div>No squads available.</div>
+      ) : (
+        <ul>
           {squads.map((squad) => (
-            <li key={squad.id} className="p-4 border border-gray-300 dark:border-gray-600 rounded">
-              <h3 className="text-2xl font-semibold">{squad.name}</h3>
-              <p className="mt-2">Players: {Array.isArray(squad.players) ? squad.players.join(', ') : squad.players}</p>
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Created at: {new Date(squad.created_at || squad.createdAt).toLocaleString()}
-              </p>
-              <div className="mt-4 flex space-x-4">
-                <button
-                  className="px-6 py-3 bg-blue-500 text-white text-lg rounded cursor-pointer hover:bg-blue-600 transition-all duration-300"
-                  onClick={() => handleSelectSquad(squad)}
-                >
-                  Select Squad
-                </button>
-                <button
-                  className="px-6 py-3 bg-yellow-500 text-white text-lg rounded cursor-pointer hover:bg-yellow-600 transition-all duration-300"
-                  onClick={() => handleEditSquad(squad)}
-                >
-                  Edit
-                </button>
+            <li key={squad.id} className="mb-4 border p-4 rounded">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="text-xl font-semibold">{squad.name}</h3>
+                  {squad.players && squad.players.length > 0 && (
+                    <ul className="mt-2">
+                      {squad.players.map((player, idx) => (
+                        <li key={idx} className="text-sm text-gray-700">{player}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                <div className="flex flex-col space-y-2">
+                  <button
+                    onClick={() => handleSelectSquad(squad)}
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  >
+                    Select
+                  </button>
+                  <button
+                    onClick={() => handleEditSquad(squad)}
+                    className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                  >
+                    Edit
+                  </button>
+                </div>
               </div>
             </li>
           ))}
         </ul>
-      ) : (
-        <p>No squads found. Create one above!</p>
       )}
     </div>
   );

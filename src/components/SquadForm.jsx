@@ -1,70 +1,88 @@
-import React, { useState, useEffect } from 'react';
-import SquadInputs from './SquadInputs';
-import SquadPlayersList from './SquadPlayersList';
+import React from 'react';
 
-function SquadForm({
-  squadName,
-  setSquadName,
-  newSquadPlayer,
-  setNewSquadPlayer,
-  squadPlayersList,
-  handleAddSquadPlayer,
-  handleDeleteSquadPlayer,
-  handleCreateSquad,
-  onUpdateSquad,
-  editMode = false,
-  loading
-}) {
-  const [localName, setLocalName] = useState(squadName);
-  const [localPlayers, setLocalPlayers] = useState(squadPlayersList);
-
-  useEffect(() => {
-    setLocalName(squadName);
-  }, [squadName]);
-
-  useEffect(() => {
-    setLocalPlayers(squadPlayersList);
-  }, [squadPlayersList]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (editMode && onUpdateSquad) {
-      onUpdateSquad(localName, localPlayers);
-    } else {
-      handleCreateSquad(e);
-    }
-  };
+function SquadForm(props) {
+  const {
+    squadName,
+    setSquadName,
+    newSquadPlayer,
+    setNewSquadPlayer,
+    squadPlayersList,
+    handleAddSquadPlayer,
+    handleDeleteSquadPlayer,
+    handleCreateSquad,
+    onUpdateSquad,
+    editMode,
+    loading
+  } = props;
 
   return (
-    <form onSubmit={handleSubmit} className="mb-8 space-y-6">
-      <SquadInputs
-        localName={localName}
-        setLocalName={setLocalName}
-        setSquadName={setSquadName}
-        newSquadPlayer={newSquadPlayer}
-        setNewSquadPlayer={setNewSquadPlayer}
-        handleAddSquadPlayer={handleAddSquadPlayer}
-      />
-      {localPlayers.length > 0 && (
-        <SquadPlayersList
-          localPlayers={localPlayers}
-          handleDeleteSquadPlayer={handleDeleteSquadPlayer}
+    <div>
+      <div className="mb-4">
+        <label className="block text-lg font-medium mb-2">Squad Name</label>
+        <input
+          type="text"
+          value={squadName}
+          onChange={(e) => setSquadName(e.target.value)}
+          className="w-full p-2 border rounded"
         />
+      </div>
+      <div className="mb-4">
+        <label className="block text-lg font-medium mb-2">Add Squad Player</label>
+        <div className="flex">
+          <input
+            type="text"
+            value={newSquadPlayer}
+            onChange={(e) => setNewSquadPlayer(e.target.value)}
+            className="w-full p-2 border rounded-l"
+          />
+          <button
+            onClick={handleAddSquadPlayer}
+            className="px-4 bg-blue-500 text-white rounded-r hover:bg-blue-600"
+            disabled={loading}
+          >
+            Add Player
+          </button>
+        </div>
+      </div>
+      {squadPlayersList.length > 0 && (
+        <div className="mb-4">
+          <label className="block text-lg font-medium mb-2">Squad Players</label>
+          <ul>
+            {squadPlayersList.map((player, index) => (
+              <li key={index} className="flex justify-between items-center border-b py-1">
+                <span>{player}</span>
+                <button
+                  onClick={() => handleDeleteSquadPlayer(player)}
+                  className="text-red-500 hover:text-red-700"
+                  disabled={loading}
+                >
+                  Delete
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
-      <button
-        type="submit"
-        className="mt-6 w-full px-8 py-4 bg-green-500 text-white text-lg rounded-md cursor-pointer hover:bg-green-600 hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400"
-        disabled={loading}
-      >
-        {loading
-          ? editMode
-            ? 'Updating...'
-            : 'Creating...'
-          : editMode
-          ? 'Update Squad'
-          : 'Create Squad'}
-      </button>
-    </form>
+      <div>
+        {editMode ? (
+          <button
+            onClick={onUpdateSquad}
+            className="px-6 py-4 bg-green-500 text-white text-lg rounded hover:bg-green-600 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={loading}
+          >
+            Update Squad
+          </button>
+        ) : (
+          <button
+            onClick={handleCreateSquad}
+            className="px-6 py-4 bg-green-500 text-white text-lg rounded hover:bg-green-600 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={loading}
+          >
+            Create Squad
+          </button>
+        )}
+      </div>
+    </div>
   );
 }
 

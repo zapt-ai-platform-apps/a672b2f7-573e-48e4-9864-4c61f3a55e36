@@ -26,7 +26,7 @@ function SquadManagement() {
     <div className="min-h-screen p-8 bg-white dark:bg-gray-900 text-gray-800 dark:text-white">
       <h1 className="text-4xl font-bold mb-8 text-brand-500">Squad Management</h1>
       {editingSquad ? (
-        <>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-2xl font-bold mb-4">Edit Squad</h2>
           <SquadForm
             squadName={squadName}
@@ -41,31 +41,40 @@ function SquadManagement() {
             loading={loading}
           />
           <button
-            className="mb-8 px-6 py-4 bg-gray-500 text-white text-lg rounded cursor-pointer hover:bg-gray-600 transition-all duration-300"
+            className="mt-4 px-6 py-4 bg-gray-500 text-white text-lg rounded cursor-pointer hover:bg-gray-600 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50"
             onClick={cancelEdit}
           >
             Cancel Editing
           </button>
-        </>
+        </div>
       ) : (
-        <SquadForm
-          squadName={squadName}
-          setSquadName={setSquadName}
-          newSquadPlayer={newSquadPlayer}
-          setNewSquadPlayer={setNewSquadPlayer}
-          squadPlayersList={squadPlayersList}
-          handleAddSquadPlayer={handleAddSquadPlayer}
-          handleDeleteSquadPlayer={handleDeleteSquadPlayer}
-          handleCreateSquad={handleCreateSquad}
-          loading={loading}
-        />
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+          <SquadForm
+            squadName={squadName}
+            setSquadName={setSquadName}
+            newSquadPlayer={newSquadPlayer}
+            setNewSquadPlayer={setNewSquadPlayer}
+            squadPlayersList={squadPlayersList}
+            handleAddSquadPlayer={handleAddSquadPlayer}
+            handleDeleteSquadPlayer={handleDeleteSquadPlayer}
+            handleCreateSquad={handleCreateSquad}
+            loading={loading}
+          />
+        </div>
       )}
-      <SquadList
-        squads={squads}
-        loading={loading}
-        handleSelectSquad={handleSelectSquad}
-        handleEditSquad={handleEditSquad}
-      />
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <SquadList
+          squads={squads}
+          loading={loading}
+          handleSelectSquad={handleSelectSquad}
+          handleEditSquad={handleEditSquad}
+        />
+      </div>
+      <div className="fixed bottom-4 right-4 text-sm text-gray-600 dark:text-gray-400">
+        <a href="https://www.zapt.ai" target="_blank" rel="noopener noreferrer" className="underline">
+          Made on ZAPT
+        </a>
+      </div>
     </div>
   );
 }
