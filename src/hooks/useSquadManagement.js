@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import * as squadService from './useSquadManagementService';
 
 function useSquadManagement() {
   const [squadName, setSquadName] = useState('');
@@ -7,6 +8,21 @@ function useSquadManagement() {
   const [squads, setSquads] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editingSquad, setEditingSquad] = useState(null);
+
+  useEffect(() => {
+    async function loadSquads() {
+      setLoading(true);
+      try {
+        const fetchedSquads = await squadService.fetchSquads();
+        setSquads(fetchedSquads);
+      } catch (error) {
+        // Error handled in service
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadSquads();
+  }, []);
 
   function handleAddSquadPlayer() {
     const trimmedPlayer = newSquadPlayer.trim();
@@ -20,48 +36,49 @@ function useSquadManagement() {
     setSquadPlayersList(squadPlayersList.filter((p) => p !== player));
   }
 
-  function handleCreateSquad() {
+  async function handleCreateSquad() {
     if (squadName.trim() === '') return;
     setLoading(true);
-    const newSquad = {
-      id: Date.now(),
-      name: squadName,
-      players: squadPlayersList
-    };
-    setSquads([...squads, newSquad]);
-    setSquadName('');
-    setSquadPlayersList([]);
-    setNewSquadPlayer('');
-    setLoading(false);
+    try {
+      await squadService.createSquad(squadName, squadPlayersList);
+      const fetchedSquads = await squadService.fetchSquads();
+      setSquads(fetchedSquads);
+      setSquadName('');
+      setSquadPlayersList([]);
+      setNewSquadPlayer('');
+    } catch (error) {
+      // Error handled in service
+    } finally {
+      setLoading(false);
+    }
   }
 
-  function handleEditSquad(squad) {
-    setEditingSquad(squad);
+  async function handleUpdateSquad() {
+    if (!editingSquad || squadName.trim() === '') return;
+    setLoading(true);
+    try {
+      await squadService.updateSquad(editingSquad.id, squadName, squadPlayersList);
+      const fetchedSquads = await squadService.fetchSquads();
+      setSquads(fetchedSquads);
+      setEditingSquad(null);
+      setSquadName('');
+      setSquadPlayersList([]);
+      setNewSquadPlayer('');
+    } catch (error) {
+      // Error handled in service
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleSelectSquad(squad) {
     setSquadName(squad.name);
     setSquadPlayersList(squad.players || []);
     setNewSquadPlayer('');
   }
 
-  function handleUpdateSquad() {
-    if (!editingSquad || squadName.trim() === '') return;
-    setLoading(true);
-    const updatedSquad = {
-      ...editingSquad,
-      name: squadName,
-      players: squadPlayersList
-    };
-    const updatedSquads = squads.map((squad) =>
-      squad.id === editingSquad.id ? updatedSquad : squad
-    );
-    setSquads(updatedSquads);
-    setEditingSquad(null);
-    setSquadName('');
-    setSquadPlayersList([]);
-    setNewSquadPlayer('');
-    setLoading(false);
-  }
-
-  function handleSelectSquad(squad) {
+  function handleEditSquad(squad) {
+    setEditingSquad(squad);
     setSquadName(squad.name);
     setSquadPlayersList(squad.players || []);
     setNewSquadPlayer('');
