@@ -9,14 +9,16 @@ function StartingLineupSelector({ players, startingPlayersCount, toggleStartingP
       </p>
       <ul>
         {players.map((player, index) => (
-          <li key={index} className="flex items-center mb-4">
-            <input
-              type="checkbox"
-              checked={player.isStartingPlayer}
-              onChange={() => toggleStartingPlayer(player.name)}
-              className="mr-4 cursor-pointer w-6 h-6 accent-brand-500 border border-gray-300 rounded"
-            />
-            <span className="flex-1 text-gray-800 dark:text-gray-200 text-lg">{player.name}</span>
+          <li key={index} className="mb-4">
+            <label className="flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={player.isStartingPlayer}
+                onChange={() => toggleStartingPlayer(player.name)}
+                className="mr-4 w-6 h-6 accent-brand-500 border border-gray-300 rounded"
+              />
+              <span className="flex-1 text-gray-800 dark:text-gray-200 text-lg">{player.name}</span>
+            </label>
           </li>
         ))}
       </ul>
