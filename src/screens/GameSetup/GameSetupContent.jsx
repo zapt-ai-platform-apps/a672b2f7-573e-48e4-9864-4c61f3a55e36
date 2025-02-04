@@ -18,9 +18,10 @@ function GameSetupContent() {
     goalkeeper,
     setGoalkeeper,
     includeGKPlaytime,
-    setIncludeGKPlaytime,
-    handleStartGame
+    setIncludeGKPlaytime
   } = useGameSetup();
+  
+  const { handleStartGame } = useStateContext();
   const { matchSquadPlayers, toggleMatchPlayer } = useMatchSquad();
 
   return (
