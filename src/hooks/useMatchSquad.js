@@ -33,7 +33,17 @@ export default function useMatchSquad() {
     );
   };
 
+  const toggleStartingPlayer = (playerName) => {
+    setMatchSquadPlayers(prev =>
+      prev.map(player =>
+        player.name === playerName && player.isInMatch
+          ? { ...player, isStartingPlayer: !player.isStartingPlayer }
+          : player
+      )
+    );
+  };
+
   const activeMatchPlayers = matchSquadPlayers.filter(player => player.isInMatch);
 
-  return { matchSquadPlayers, activeMatchPlayers, toggleMatchPlayer };
+  return { matchSquadPlayers, activeMatchPlayers, toggleMatchPlayer, toggleStartingPlayer };
 }

@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
 import GameSetupStepOne from './GameSetupStepOne';
 import GameSetupStepTwo from './GameSetupStepTwo';
+import useMatchSquad from '../../hooks/useMatchSquad';
 
 function GameSetupView({
   playerName,
   setPlayerName,
   addPlayer,
   deletePlayer,
-  toggleStartingPlayer,
   errorMessage,
   setErrorMessage,
-  startingPlayers,
   goalkeeper,
   setGoalkeeper,
   includeGKPlaytime,
   setIncludeGKPlaytime,
-  handleStartGame,
-  matchSquadPlayers,
-  toggleMatchPlayer
+  handleStartGame
 }) {
+  const { matchSquadPlayers, toggleMatchPlayer, toggleStartingPlayer } = useMatchSquad();
   const [step, setStep] = useState(1);
+
   const selectedMatchPlayers = matchSquadPlayers.filter(player => player.isInMatch);
+  const startingPlayers = selectedMatchPlayers.filter(player => player.isStartingPlayer);
 
   const handleNext = () => {
     if (selectedMatchPlayers.length === 0) {
