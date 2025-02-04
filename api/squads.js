@@ -1,19 +1,21 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
 import { authenticateUser } from './_apiUtils.js';
 import { squads } from '../drizzle/schema.js';
 import { eq } from 'drizzle-orm/expressions';
 import * as Sentry from '@sentry/node';
+import db from '../lib/db.js';
+import { parsePlayers } from '../lib/utils.js';
 
 export default async function handler(req, res) {
   try {
     const user = await authenticateUser(req);
-    const client = postgres(process.env.COCKROACH_DB_URL);
-    const db = drizzle(client);
 
     if (req.method === 'GET') {
       const result = await db.select().from(squads).where(eq(squads.userId, user.id));
-      return res.status(200).json(result);
+      const squadsData = result.map(row => ({
+        ...row,
+        players: parsePlayers(row.players)
+      }));
+      return res.status(200).json(squadsData);
     } else if (req.method === 'POST') {
       const { name, players } = req.body;
       if (!name || !players) {
@@ -22,19 +24,21 @@ export default async function handler(req, res) {
       const insertResult = await db.insert(squads).values({
         userId: user.id,
         name,
-        players,
+        players: JSON.stringify(players)
       }).returning();
-      return res.status(200).json(insertResult);
+      const insertedSquad = insertResult[0];
+      return res.status(200).json({ ...insertedSquad, players: parsePlayers(insertedSquad.players) });
     } else if (req.method === 'PUT') {
       const { id, name, players } = req.body;
       if (!id || !name || !players) {
         return res.status(400).json({ error: 'ID, name and players are required for update' });
       }
       const updateResult = await db.update(squads)
-        .set({ name, players })
+        .set({ name, players: JSON.stringify(players) })
         .where(eq(squads.id, id))
         .returning();
-      return res.status(200).json(updateResult);
+      const updatedSquad = updateResult[0];
+      return res.status(200).json({ ...updatedSquad, players: parsePlayers(updatedSquad.players) });
     } else {
       res.setHeader('Allow', ['GET', 'POST', 'PUT']);
       return res.status(405).end(`Method ${req.method} Not Allowed`);
