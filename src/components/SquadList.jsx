@@ -1,6 +1,6 @@
 import React from 'react';
 
-function SquadList({ squads, loading, handleSelectSquad, handleEditSquad }) {
+function SquadList({ squads = [], loading, handleSelectSquad, handleEditSquad }) {
   return (
     <div>
       {loading ? (
@@ -14,14 +14,14 @@ function SquadList({ squads, loading, handleSelectSquad, handleEditSquad }) {
                 <button
                   type="button"
                   onClick={() => handleSelectSquad(squad)}
-                  className="mr-2 px-3 py-1 bg-blue-500 text-white rounded"
+                  className="mr-2 px-3 py-1 bg-blue-500 text-white rounded cursor-pointer"
                 >
                   Select
                 </button>
                 <button
                   type="button"
                   onClick={() => handleEditSquad(squad)}
-                  className="px-3 py-1 bg-yellow-500 text-white rounded"
+                  className="px-3 py-1 bg-yellow-500 text-white rounded cursor-pointer"
                 >
                   Edit
                 </button>
