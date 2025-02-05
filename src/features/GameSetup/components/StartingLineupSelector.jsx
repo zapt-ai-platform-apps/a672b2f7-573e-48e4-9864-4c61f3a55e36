@@ -1,5 +1,5 @@
 import React from 'react';
-import Checkbox from '../../../components/Checkbox.jsx';
+import Checkbox from './Checkbox.jsx';
 
 function StartingLineupSelector({ players, startingPlayersCount, toggleStartingPlayer }) {
   return (
@@ -16,7 +16,9 @@ function StartingLineupSelector({ players, startingPlayersCount, toggleStartingP
                 checked={player.isStartingPlayer}
                 onChange={() => toggleStartingPlayer(player.name)}
               />
-              <span className="flex-1 ml-4 text-gray-800 dark:text-gray-200 text-lg">{player.name}</span>
+              <span className="flex-1 ml-4 text-gray-800 dark:text-gray-200 text-lg">
+                {player.name}
+              </span>
             </label>
           </li>
         ))}
