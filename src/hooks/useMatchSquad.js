@@ -11,12 +11,13 @@ export default function useMatchSquad() {
     if (!selectedSquad) {
       navigate('/squads', { replace: true });
     } else {
-      // Handle player data parsing with proper error handling
       let squadPlayers = [];
       try {
-        squadPlayers = selectedSquad.players 
-          ? JSON.parse(selectedSquad.players)
-          : [];
+        if (Array.isArray(selectedSquad.players)) {
+          squadPlayers = selectedSquad.players;
+        } else if (typeof selectedSquad.players === 'string') {
+          squadPlayers = JSON.parse(selectedSquad.players);
+        }
       } catch (error) {
         console.error('Error parsing squad players:', error);
         squadPlayers = [];
