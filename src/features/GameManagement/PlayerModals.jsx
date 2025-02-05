@@ -1,7 +1,7 @@
 import React from 'react';
-import AddPlayerModal from '../../components/AddPlayerModal';
-import AdjustPlayersModal from '../../components/AdjustPlayersModal';
-import ConfirmAdjustPlayersModal from '../../components/ConfirmAdjustPlayersModal';
+import AddPlayerModal from './modals/AddPlayerModal.jsx';
+import AdjustPlayersModal from './modals/AdjustPlayersModal.jsx';
+import ConfirmAdjustPlayersModal from './modals/ConfirmAdjustPlayersModal.jsx';
 
 function PlayerModals(props) {
   return (
