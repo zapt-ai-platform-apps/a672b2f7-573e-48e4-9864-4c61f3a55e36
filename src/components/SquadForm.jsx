@@ -5,7 +5,7 @@ function SquadForm({
   setSquadName,
   newSquadPlayer,
   setNewSquadPlayer,
-  squadPlayersList,
+  squadPlayersList = [],
   handleAddSquadPlayer,
   handleDeleteSquadPlayer,
   onUpdateSquad,
