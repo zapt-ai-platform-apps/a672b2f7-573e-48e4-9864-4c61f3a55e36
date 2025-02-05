@@ -1,3 +1,10 @@
+import { parsePlayers } from '../../lib/utils.js';
+
 export function getInitialPlayers(selectedSquad) {
-  return selectedSquad && Array.isArray(selectedSquad.players) ? selectedSquad.players : [];
+  if (selectedSquad && selectedSquad.players) {
+    return Array.isArray(selectedSquad.players)
+      ? selectedSquad.players
+      : parsePlayers(selectedSquad.players);
+  }
+  return [];
 }
