@@ -1,5 +1,5 @@
 import React from 'react';
-import GameIntro from './GameIntro.jsx';
+import GameIntro from '../../screens/GameSetup/GameIntro.jsx';
 import MatchSquadSelector from '../../components/MatchSquadSelector.jsx';
 
 function GameSetupStepOne({ matchSquadPlayers, selectedMatchPlayers, toggleMatchPlayer, handleNext }) {
