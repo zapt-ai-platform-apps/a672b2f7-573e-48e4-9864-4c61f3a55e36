@@ -1,8 +1,8 @@
 import React from 'react';
-import GoalScoredModal from '../../components/GoalScoredModal';
-import RemoveGoalConfirmationModal from '../../components/RemoveGoalConfirmationModal';
-import AssignGoalkeeperModal from '../../components/AssignGoalkeeperModal';
-import ConfirmGoalkeeperModal from '../../components/ConfirmGoalkeeperModal';
+import GoalScoredModal from './modals/GoalScoredModal.jsx';
+import RemoveGoalConfirmationModal from '../../components/RemoveGoalConfirmationModal.jsx';
+import AssignGoalkeeperModal from './modals/AssignGoalkeeperModal.jsx';
+import ConfirmGoalkeeperModal from './modals/ConfirmGoalkeeperModal.jsx';
 
 function GoalAndGKModals(props) {
   return (
