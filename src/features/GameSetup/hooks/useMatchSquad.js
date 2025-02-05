@@ -13,8 +13,9 @@ export default function useMatchSquad() {
       navigate('/squads', { replace: true });
     } else {
       const initialPlayers = getInitialPlayers(selectedSquad);
-      const squadPlayers = initialPlayers.map(player =>
-        typeof player === 'string' ? player : player.name
+      // Convert each player to a string. If the player is an object, extract the 'name' attribute.
+      const squadPlayers = initialPlayers.map(item =>
+        typeof item === 'object' && item.name ? item.name : item
       );
       const initialMatchPlayers = squadPlayers.map(name => ({
         name,
