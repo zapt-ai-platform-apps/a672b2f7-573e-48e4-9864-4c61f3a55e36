@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useStateContext } from '../../../state';
-import { useAvailablePlayers } from '../../../hooks/useAvailablePlayers';
+import { useAvailablePlayers } from '../hooks/useAvailablePlayers';
 import PlayerSelectionList from './PlayerSelectionList.jsx';
 import { ModalContainer, ManualPlayerForm } from './components/ModalComponents.jsx';
 
