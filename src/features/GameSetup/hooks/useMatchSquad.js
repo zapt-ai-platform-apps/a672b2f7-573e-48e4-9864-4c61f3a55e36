@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useStateContext } from '../../../state.jsx';
+import { useStateContext } from '../../../state';
 import { getInitialPlayers } from './gameSetupInit.js';
 
 export default function useMatchSquad() {

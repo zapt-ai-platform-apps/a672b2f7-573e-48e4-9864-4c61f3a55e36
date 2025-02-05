@@ -1,5 +1,5 @@
 import React from 'react';
-import Checkbox from './Checkbox';
+import Checkbox from '../../../components/Checkbox.jsx';
 
 function StartingLineupSelector({ players, startingPlayersCount, toggleStartingPlayer }) {
   return (

@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useStateContext } from '../../../state';
 import { getInitialPlayers } from './gameSetupInit.js';
+import { getSquadPlayers, updateSquad } from './updateSquad.js';
 
 function useGameSetup() {
+  const { selectedSquad, setSelectedSquad } = useStateContext();
   const [playerName, setPlayerName] = useState('');
   const [players, setPlayers] = useState([]);
   const [startingPlayersCount, setStartingPlayersCount] = useState(0);
@@ -11,12 +14,11 @@ function useGameSetup() {
   const [includeGKPlaytime, setIncludeGKPlaytime] = useState(true);
 
   useEffect(() => {
-    // 'selectedSquad' was originally used here; omitted for simplicity.
-    const initialPlayers = getInitialPlayers();
+    const initialPlayers = getInitialPlayers(selectedSquad);
     if (initialPlayers) {
       setPlayers(initialPlayers);
     }
-  }, []);
+  }, [selectedSquad]);
 
   const addPlayer = () => {
     if (playerName.trim() !== '') {
@@ -24,6 +26,12 @@ function useGameSetup() {
       const updatedPlayers = [...players, newPlayer];
       setPlayers(updatedPlayers);
       localStorage.setItem('players', JSON.stringify(updatedPlayers));
+
+      if (selectedSquad) {
+        const currentSquadPlayers = getSquadPlayers(selectedSquad);
+        const updatedSquadPlayers = [...currentSquadPlayers, newPlayer.name];
+        updateSquad(selectedSquad, updatedSquadPlayers, setSelectedSquad);
+      }
       setPlayerName('');
       return true;
     }
@@ -36,6 +44,11 @@ function useGameSetup() {
       const updatedPlayers = players.filter((player) => player.name !== playerNameToDelete);
       setPlayers(updatedPlayers);
       localStorage.setItem('players', JSON.stringify(updatedPlayers));
+      if (selectedSquad) {
+        const currentSquadPlayers = getSquadPlayers(selectedSquad);
+        const updatedSquadPlayers = currentSquadPlayers.filter(name => name !== playerNameToDelete);
+        updateSquad(selectedSquad, updatedSquadPlayers, setSelectedSquad);
+      }
       return true;
     }
     return false;

@@ -1,24 +1,11 @@
-export const getSquadPlayers = (selectedSquad) => {
-  let currentSquadPlayers = [];
-  if (Array.isArray(selectedSquad.players)) {
-    currentSquadPlayers = selectedSquad.players;
-  } else if (selectedSquad.players) {
-    currentSquadPlayers = selectedSquad.players.split(',').map(p => p.trim()).filter(Boolean);
-  }
-  return currentSquadPlayers;
-};
+export function getSquadPlayers(selectedSquad) {
+  return selectedSquad && selectedSquad.players ? selectedSquad.players : [];
+}
 
-export const updateSquad = (selectedSquad, updatedSquadPlayers, setSelectedSquad) => {
-  const updatedSquad = { ...selectedSquad, players: updatedSquadPlayers };
-  setSelectedSquad(updatedSquad);
-  import("../../../api/squadAPI.js")
-    .then(({ updateSquadAPI }) => {
-      updateSquadAPI(selectedSquad.id, selectedSquad.name, updatedSquadPlayers)
-        .catch((error) => {
-          console.error('Failed to update squad in backend:', error);
-        });
-    })
-    .catch(error => {
-      console.error('Failed to load squadAPI.js:', error);
-    });
-};
+export function updateSquad(selectedSquad, updatedSquadPlayers, setSelectedSquad) {
+  if (selectedSquad) {
+    const updatedSquad = { ...selectedSquad, players: updatedSquadPlayers };
+    setSelectedSquad(updatedSquad);
+    localStorage.setItem('selectedSquad', JSON.stringify(updatedSquad));
+  }
+}

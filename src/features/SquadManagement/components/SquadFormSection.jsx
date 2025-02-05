@@ -1,5 +1,5 @@
 import React from 'react';
-import SquadForm from './SquadForm';
+import SquadForm from './SquadForm.jsx';
 
 function SquadFormSection({
   squadName,
@@ -11,13 +11,13 @@ function SquadFormSection({
   handleDeleteSquadPlayer,
   handleCreateSquad,
   handleUpdateSquad,
-  editingSquad,
+  editMode,
   cancelEdit,
   loading
 }) {
   return (
     <div>
-      {editingSquad ? (
+      {editMode ? (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8 border border-gray-200 dark:border-gray-700">
           <h2 className="text-2xl font-bold mb-4">Edit Squad</h2>
           <SquadForm

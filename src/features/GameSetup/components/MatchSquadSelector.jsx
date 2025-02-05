@@ -9,14 +9,14 @@ function MatchSquadSelector({ allPlayers, selectedPlayers, togglePlayer }) {
       </p>
       <ul>
         {allPlayers.map((player, index) => {
-          const isSelected = selectedPlayers.some(p => p.name === player.name);
+          const isSelected = selectedPlayers.some(p => p === player);
           return (
             <li key={index} className="flex items-center mb-4 select-none">
               <label className="flex items-center cursor-pointer">
                 <input
                   type="checkbox"
                   checked={isSelected}
-                  onChange={() => togglePlayer(player.name)}
+                  onChange={() => togglePlayer(player)}
                   className="hidden"
                 />
                 <span className={`w-6 h-6 inline-flex items-center justify-center border-2 rounded mr-4 transition-colors ${isSelected ? 'bg-green-500 border-green-500' : 'bg-white border-gray-400'}`}>
@@ -26,7 +26,7 @@ function MatchSquadSelector({ allPlayers, selectedPlayers, togglePlayer }) {
                     </svg>
                   )}
                 </span>
-                <span className="flex-1 text-gray-800 dark:text-gray-200 text-lg">{player.name}</span>
+                <span className="flex-1 text-gray-800 dark:text-gray-200 text-lg">{player}</span>
               </label>
             </li>
           );

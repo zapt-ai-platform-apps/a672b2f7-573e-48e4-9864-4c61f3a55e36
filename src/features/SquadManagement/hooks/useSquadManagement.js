@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import * as squadService from './useSquadManagementService';
-import { useStateContext } from '../state';
+import * as squadService from './useSquadManagementService.js';
+import { useStateContext } from '../../../state';
 
 function useSquadManagement() {
   const { setSelectedSquad } = useStateContext();

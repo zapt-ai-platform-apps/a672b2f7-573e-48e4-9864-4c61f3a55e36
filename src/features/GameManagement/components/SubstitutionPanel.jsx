@@ -1,4 +1,4 @@
-import SubstitutionControls from './SubstitutionControls';
+import SubstitutionControls from './SubstitutionControls.jsx';
 
 function SubstitutionPanel(props) {
   const {

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import TeamSelection from './TeamSelection';
-import ScorerSelection from './ScorerSelection';
-import OpponentGoalConfirmation from './OpponentGoalConfirmation';
+import TeamSelection from './TeamSelection.jsx';
+import ScorerSelection from './ScorerSelection.jsx';
+import OpponentGoalConfirmation from './OpponentGoalConfirmation.jsx';
 
 function GoalScoredModal({ showGoalModal, setShowGoalModal, players, recordGoal }) {
   const [team, setTeam] = useState('');

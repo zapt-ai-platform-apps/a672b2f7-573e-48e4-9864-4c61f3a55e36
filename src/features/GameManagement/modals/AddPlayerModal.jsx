@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useStateContext } from '../state';
+import { useStateContext } from '../../../state';
 import { useAvailablePlayers } from '../hooks/useAvailablePlayers';
-import PlayerSelectionList from './PlayerSelectionList';
-import ModalContainer from './ModalContainer';
+import PlayerSelectionList from './PlayerSelectionList.jsx';
+import ModalContainer from './components/ModalContainer.jsx';
 
 function AddPlayerModal({
   showAddPlayerModal,

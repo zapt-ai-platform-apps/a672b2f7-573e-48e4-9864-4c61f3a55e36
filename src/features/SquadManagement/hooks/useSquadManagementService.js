@@ -1,4 +1,4 @@
-import { fetchSquadsAPI, createSquadAPI, updateSquadAPI } from '../api/squadAPI';
+import { fetchSquadsAPI, createSquadAPI, updateSquadAPI } from '../../../api/squadAPI';
 
 export async function fetchSquads() {
   try {

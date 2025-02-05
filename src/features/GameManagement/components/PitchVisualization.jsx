@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
-import { useStateContext } from '../state';
-import Pitch from './Pitch';
+import { useStateContext } from '../../../state';
+import Pitch from './Pitch.jsx';
 import useDragAndDrop from '../hooks/useDragAndDrop';
-import assignInitialPositions from '../utils/assignInitialPositions';
+import assignInitialPositions from '../../../utils/assignInitialPositions';
 
 function PitchVisualization() {
   const { playerData } = useStateContext();

@@ -1,5 +1,5 @@
 import React from 'react';
-import SquadList from './SquadList';
+import SquadList from './SquadList.jsx';
 
 function SquadListSection({
   squads,
