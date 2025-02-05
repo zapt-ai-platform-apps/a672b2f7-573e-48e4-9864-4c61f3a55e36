@@ -1,6 +1,6 @@
 import React from 'react';
-import SquadFormSection from '../../components/SquadFormSection.jsx';
-import SquadListSection from '../../components/SquadListSection.jsx';
+import SquadFormSection from './components/SquadFormSection.jsx';
+import SquadListSection from './components/SquadListSection.jsx';
 import { useNavigate } from 'react-router-dom';
 import { useStateContext } from '../../state.jsx';
 
