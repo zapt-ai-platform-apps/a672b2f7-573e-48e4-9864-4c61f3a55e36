@@ -28,7 +28,7 @@ function SquadManagement() {
 
   useEffect(() => {
     if (selectedSquad) {
-      navigate('/game-setup');
+      navigate('/setup');
     }
   }, [selectedSquad, navigate]);
 
