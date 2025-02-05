@@ -11,21 +11,21 @@ export default function useMatchSquad() {
     if (!selectedSquad) {
       navigate('/squads', { replace: true });
     } else {
-      // Handle different player data formats safely
-      const squadPlayers = selectedSquad.players 
-        ? (
-          Array.isArray(selectedSquad.players)
-            ? selectedSquad.players
-            : typeof selectedSquad.players === 'string'
-              ? selectedSquad.players.split(',').map(p => p.trim()).filter(Boolean)
-              : []
-        )
-        : [];
+      // Handle player data parsing with proper error handling
+      let squadPlayers = [];
+      try {
+        squadPlayers = selectedSquad.players 
+          ? JSON.parse(selectedSquad.players)
+          : [];
+      } catch (error) {
+        console.error('Error parsing squad players:', error);
+        squadPlayers = [];
+      }
 
       const initialMatchPlayers = squadPlayers.map(name => ({
         name,
         isStartingPlayer: false,
-        isInMatch: true // Default to including selected squad players
+        isInMatch: true
       }));
       
       setMatchSquadPlayers(initialMatchPlayers);
