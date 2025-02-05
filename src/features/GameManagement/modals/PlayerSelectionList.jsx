@@ -2,23 +2,24 @@ import React from 'react';
 
 function PlayerSelectionList({ availablePlayers, onSelect, onSwitch }) {
   return (
-    <div className="p-4">
+    <div>
       <ul className="mb-4">
-        {availablePlayers.map((player, index) => (
-          <li
-            key={index}
-            className="py-2 px-4 border-b border-gray-300 cursor-pointer hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-800"
-            onClick={() => onSelect(player)}
-          >
-            {player}
+        {availablePlayers.map((player) => (
+          <li key={player} className="mb-2">
+            <button
+              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition duration-200"
+              onClick={() => onSelect(player)}
+            >
+              {player}
+            </button>
           </li>
         ))}
       </ul>
       <button
+        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200"
         onClick={onSwitch}
-        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-300"
       >
-        Switch to manual entry
+        Switch to Manual Entry
       </button>
     </div>
   );
