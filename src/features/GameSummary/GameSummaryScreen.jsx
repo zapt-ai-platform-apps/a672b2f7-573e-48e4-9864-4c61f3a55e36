@@ -1,25 +1,24 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStateContext } from '../../state';
-import GoalsList from '../../components/GoalsList';
-import PlayerPlaytimes from '../../components/PlayerPlaytimes';
-import FinalScore from '../../components/FinalScore';
-import ShareSummaryButton from '../../components/ShareSummaryButton';
+import GoalsList from './components/GoalsList.jsx';
+import PlayerPlaytimes from './components/PlayerPlaytimes.jsx';
+import FinalScore from './components/FinalScore.jsx';
+import ShareSummaryButton from './components/ShareSummaryButton.jsx';
 
 function GameSummaryScreen() {
   const { playerData, goals, ourScore, opponentScore, includeGKPlaytime, resetGame } = useStateContext();
-  const navigate = useNavigate();
 
   const getTotalPlayTime = (player) => {
     let total = 0;
-    for (const interval of player.playIntervals) {
+    player.playIntervals.forEach((interval) => {
       if (!includeGKPlaytime && interval.isGoalkeeper) {
-        continue;
+        return;
       }
       if (interval.endTime) {
         total += interval.endTime - interval.startTime;
       }
-    }
+    });
     return Math.floor(total / 1000);
   };
 
@@ -28,6 +27,8 @@ function GameSummaryScreen() {
     const seconds = ('0' + (timeInSeconds % 60)).slice(-2);
     return `${minutes}:${seconds}`;
   };
+
+  const navigate = useNavigate();
 
   const handleBackToHome = () => {
     resetGame();
