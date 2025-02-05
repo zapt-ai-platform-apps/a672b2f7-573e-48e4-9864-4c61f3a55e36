@@ -5,7 +5,7 @@ import GameActions from './components/GameActions';
 import EndGameConfirmationModal from './modals/EndGameConfirmationModal';
 import PitchVisualization from './components/PitchVisualization';
 import GameManagementModals from './GameManagementModals';
-import createGameManagementStore from './hooks/useGameManagement';
+import createGameManagementStore from './hooks/useGameManagementLogic';
 
 function GameManagementMain(props) {
   const store = createGameManagementStore(props);
