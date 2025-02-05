@@ -1,4 +1,4 @@
-import { parsePlayers } from '../../lib/utils.js';
+import { parsePlayers } from '../../../lib/utils.js';
 
 export function getInitialPlayers(selectedSquad) {
   if (selectedSquad && selectedSquad.players) {
