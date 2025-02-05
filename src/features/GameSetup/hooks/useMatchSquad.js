@@ -13,7 +13,9 @@ export default function useMatchSquad() {
       navigate('/squads', { replace: true });
     } else {
       const initialPlayers = getInitialPlayers(selectedSquad);
-      const squadPlayers = initialPlayers.map(player => player.name);
+      const squadPlayers = initialPlayers.map(player =>
+        typeof player === 'string' ? player : player.name
+      );
       const initialMatchPlayers = squadPlayers.map(name => ({
         name,
         isStartingPlayer: false,
