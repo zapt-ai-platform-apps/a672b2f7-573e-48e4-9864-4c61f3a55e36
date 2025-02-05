@@ -1,5 +1,5 @@
 import React from 'react';
-import StartingLineupSelector from '../../components/StartingLineupSelector.jsx';
+import StartingLineupSelector from './components/StartingLineupSelector.jsx';
 
 function PlayerManager({ playerName, setPlayerName, players, addPlayer, deletePlayer, toggleStartingPlayer, startingPlayersCount }) {
   return (
