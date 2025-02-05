@@ -1,6 +1,6 @@
 import React from 'react';
 import PlayerManager from './PlayerManager.jsx';
-import GoalkeeperSettings from '../../components/GoalkeeperSettings.jsx';
+import GoalkeeperSettings from './components/GoalkeeperSettings.jsx';
 import ErrorMessage from '../../components/ErrorMessage.jsx';
 import StartGameButton from './StartGameButton.jsx';
 
