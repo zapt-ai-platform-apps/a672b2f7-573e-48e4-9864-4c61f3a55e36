@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStateContext } from '../state';
+import { getInitialPlayers } from '../screens/GameSetup/hooks/gameSetupInit.js';
 
 export default function useMatchSquad() {
   const { selectedSquad } = useStateContext();
@@ -11,22 +12,9 @@ export default function useMatchSquad() {
     if (!selectedSquad) {
       navigate('/squads', { replace: true });
     } else {
-      let squadPlayers = [];
-      if (selectedSquad.players) {
-        if (Array.isArray(selectedSquad.players)) {
-          squadPlayers = selectedSquad.players;
-        } else if (typeof selectedSquad.players === 'string') {
-          try {
-            squadPlayers = JSON.parse(selectedSquad.players);
-            if (!Array.isArray(squadPlayers)) {
-              throw new Error('Parsed squad players is not an array');
-            }
-          } catch (error) {
-            console.error('Error parsing squad players JSON, falling back to CSV:', error);
-            squadPlayers = selectedSquad.players.split(',').map(s => s.trim()).filter(Boolean);
-          }
-        }
-      }
+      // Retrieve initial players from localStorage or from the selected squad data
+      const initialPlayers = getInitialPlayers(selectedSquad);
+      const squadPlayers = initialPlayers.map(player => player.name);
       const initialMatchPlayers = squadPlayers.map(name => ({
         name,
         isStartingPlayer: false,
