@@ -1,6 +1,5 @@
 import React from 'react';
 import useMatchSquad from '../hooks/useMatchSquad';
-import NavBar from '../components/navigation/NavBar';
 import StartGameButton from './GameSetup/StartGameButton';
 import * as Sentry from "@sentry/browser";
 
@@ -29,7 +28,6 @@ export default function GameSetup() {
 
   return (
     <div className="min-h-screen flex flex-col text-gray-800">
-      <NavBar />
       <div className="flex-1 h-full p-4">
         <h1 className="text-3xl font-bold mb-4">Game Setup</h1>
         {matchSquadPlayers.length === 0 ? (

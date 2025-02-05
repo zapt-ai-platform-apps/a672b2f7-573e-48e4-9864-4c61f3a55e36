@@ -1,15 +1,12 @@
 import React from 'react';
 
 export default function StartGameButton({ disabled }) {
-  const handleClick = () => {
-    console.log('Starting game...');
-  };
-
   return (
     <button
+      className={`cursor-pointer ${
+        disabled ? 'bg-gray-400' : 'bg-purple-500'
+      } text-white px-4 py-2 rounded`}
       disabled={disabled}
-      className={`cursor-pointer ${disabled ? 'bg-gray-400' : 'bg-blue-500'} text-white px-3 py-1 rounded`}
-      onClick={handleClick}
     >
       Start Game
     </button>
