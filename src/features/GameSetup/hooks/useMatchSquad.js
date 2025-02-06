@@ -14,8 +14,8 @@ export default function useMatchSquad() {
     } else if (matchSquadPlayers.length === 0) {  // Only initialize if not already set
       const initialPlayers = getInitialPlayers(selectedSquad);
       // Convert each player to a string if needed.
-      const squadPlayers = initialPlayers.map(item =>
-        typeof item === 'object' && item.name ? item.name : item
+      const squadPlayers = initialPlayers.map(player =>
+        typeof player === 'object' && player.name ? player.name : player
       );
       const initialMatchPlayers = squadPlayers.map(name => ({
         name,
