@@ -20,7 +20,7 @@ function LandingPage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 opacity-80 -z-10 animate-pulse"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-700 opacity-90 -z-10"></div>
       <div className="min-h-screen flex flex-col justify-center items-center p-8">
         <HeroSection onGetStarted={handleGetStarted} />
         <FeaturesSection />
