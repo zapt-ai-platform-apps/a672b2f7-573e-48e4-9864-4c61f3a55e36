@@ -1,11 +1,12 @@
 import React from 'react';
 import { supabase } from '../supabaseClient.js';
 import { Auth } from '@supabase/auth-ui-react';
+import { ThemeSupa } from '@supabase/auth-ui-shared';
 
 export default function LoginPrompt() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl px-8 py-10 max-w-md w-full">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#FF6B6B]/10 to-[#FF4757]/10 p-4">
+      <div className="w-full max-w-md p-8 space-y-6 bg-white/60 dark:bg-gray-800/60 rounded-2xl backdrop-blur-lg border-2 border-[#FF6B6B]/30">
         <img
           src="https://otebnzqfzytqyyjdfhzr.supabase.co/storage/v1/render/image/public/icons/a672b2f7-573e-48e4-9864-4c61f3a55e36/a07d10c7-40ae-490b-922a-cffd0ccb2aea.png"
           alt="Football Subs Logo"
@@ -27,22 +28,16 @@ export default function LoginPrompt() {
           supabaseClient={supabase}
           providers={['google', 'facebook', 'apple']}
           appearance={{
-            theme: {
-              base: 'light',
-              variables: {
-                default: {
-                  buttonBorder: '1px solid #0ea5e9',
-                  buttonBorderRadius: '12px',
-                  buttonPadding: '0.75rem 1.5rem',
-                  buttonBoxShadow: 'none'
-                },
-                colors: {
-                  brand: '#0ea5e9'
-                }
+            theme: ThemeSupa,
+            variables: {
+              default: {
+                brand: '#FF6B6B',
+                brandAccent: '#FF4757',
+                buttonBorderRadius: '12px',
+                inputBorderRadius: '12px'
               }
             }
           }}
-          theme="light"
         />
       </div>
     </div>
