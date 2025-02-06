@@ -12,7 +12,7 @@ function MatchSquadSelector({ allPlayers, selectedPlayers, togglePlayer }) {
           return (
             <li
               key={index}
-              onClick={() => togglePlayer(player)}
+              onClick={() => togglePlayer(player.name)}
               className={`p-4 mb-2 border rounded-lg cursor-pointer transition-colors duration-300 ease-in-out ${
                 isSelected ? 'bg-green-100 border-green-500' : 'bg-gray-100 border-gray-300'
               }`}
