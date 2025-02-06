@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.supabase-auth-ui button {
+  margin: 1rem !important;
+}
