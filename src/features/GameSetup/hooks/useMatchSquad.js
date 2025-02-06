@@ -11,12 +11,13 @@ export default function useMatchSquad() {
   useEffect(() => {
     if (!selectedSquad) {
       navigate('/squads', { replace: true });
-    } else if (matchSquadPlayers.length === 0) {  // Only initialize if not already set
+    } else {
       const initialPlayers = getInitialPlayers(selectedSquad);
-      // Convert each player to a string if needed.
+      // Ensure that if players are stored as objects, extract their name; otherwise use the value directly.
       const squadPlayers = initialPlayers.map(player =>
         typeof player === 'object' && player.name ? player.name : player
       );
+      // Reinitialize the match squad list with the actual names from the selected squad.
       const initialMatchPlayers = squadPlayers.map(name => ({
         name,
         isStartingPlayer: false,
@@ -24,7 +25,7 @@ export default function useMatchSquad() {
       }));
       setMatchSquadPlayers(initialMatchPlayers);
     }
-  }, [selectedSquad, navigate, matchSquadPlayers.length]);
+  }, [selectedSquad, navigate]);
 
   const toggleMatchPlayer = (playerName) => {
     setMatchSquadPlayers(prev =>
