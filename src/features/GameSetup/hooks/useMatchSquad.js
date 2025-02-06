@@ -1,51 +1,23 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useStateContext } from '../../../state';
-import { getInitialPlayers } from './gameSetupInit.js';
+import { useState } from 'react';
 
-export default function useMatchSquad() {
-  const { selectedSquad } = useStateContext();
-  const navigate = useNavigate();
-  const [matchSquadPlayers, setMatchSquadPlayers] = useState([]);
+function useMatchSquad() {
+  const [matchSquadPlayers, setMatchSquadPlayers] = useState([
+    { id: 1, name: 'Player 1', isInMatch: false, isStartingPlayer: false },
+    { id: 2, name: 'Player 2', isInMatch: false, isStartingPlayer: false },
+    { id: 3, name: 'Player 3', isInMatch: false, isStartingPlayer: false }
+  ]);
 
-  useEffect(() => {
-    if (!selectedSquad) {
-      navigate('/squads', { replace: true });
-    } else {
-      const initialPlayers = getInitialPlayers(selectedSquad);
-      // Ensure that if players are stored as objects, extract their name; otherwise use the value directly.
-      const squadPlayers = initialPlayers.map(player =>
-        typeof player === 'object' && player.name ? player.name : player
-      );
-      // Reinitialize the match squad list with the actual names from the selected squad.
-      const initialMatchPlayers = squadPlayers.map(name => ({
-        name,
-        isStartingPlayer: false,
-        isInMatch: true
-      }));
-      setMatchSquadPlayers(initialMatchPlayers);
-    }
-  }, [selectedSquad, navigate]);
-
-  const toggleMatchPlayer = (playerName) => {
-    setMatchSquadPlayers(prev =>
-      prev.map(player =>
-        player.name === playerName ? { ...player, isInMatch: !player.isInMatch } : player
-      )
-    );
-  };
-
-  const toggleStartingPlayer = (playerName) => {
-    setMatchSquadPlayers(prev =>
-      prev.map(player =>
-        player.name === playerName && player.isInMatch
-          ? { ...player, isStartingPlayer: !player.isStartingPlayer }
+  const toggleMatchPlayer = (playerId) => {
+    setMatchSquadPlayers(players =>
+      players.map(player =>
+        player.id === playerId
+          ? { ...player, isInMatch: !player.isInMatch }
           : player
       )
     );
   };
 
-  const activeMatchPlayers = matchSquadPlayers.filter(player => player.isInMatch);
-
-  return { matchSquadPlayers, activeMatchPlayers, toggleMatchPlayer, toggleStartingPlayer };
+  return { matchSquadPlayers, toggleMatchPlayer };
 }
+
+export default useMatchSquad;

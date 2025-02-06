@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import GameSetupStepOne from './GameSetupStepOne.jsx';
-import GameSetupStepTwo from './GameSetupStepTwo.jsx';
+import { GameSetupStepOne, GameSetupStepTwo } from './GameSetupSteps.jsx';
 import useMatchSquad from './hooks/useMatchSquad.js';
+import { useNavigate } from 'react-router-dom';
 
 function GameSetupView({
   playerName,
@@ -20,6 +20,7 @@ function GameSetupView({
 }) {
   const { matchSquadPlayers, toggleMatchPlayer } = useMatchSquad();
   const [step, setStep] = useState(1);
+  const navigate = useNavigate();
 
   const selectedMatchPlayers = matchSquadPlayers.filter(player => player.isInMatch);
   const startingPlayersFromMatch = selectedMatchPlayers.filter(player => player.isStartingPlayer);
@@ -34,37 +35,48 @@ function GameSetupView({
   };
 
   const handleBack = () => {
-    setStep(1);
+    if (step === 1) {
+      navigate('/squads/options');
+    } else {
+      setStep(1);
+    }
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-800 dark:text-white">
       <div className="p-8 flex-grow">
         {step === 1 && (
-          <GameSetupStepOne
-            matchSquadPlayers={matchSquadPlayers}
-            selectedMatchPlayers={selectedMatchPlayers}
-            toggleMatchPlayer={toggleMatchPlayer}
-            handleNext={handleNext}
-          />
+          <>
+            <button
+              onClick={handleBack}
+              className="mb-4 px-4 py-2 bg-gray-300 rounded-md cursor-pointer hover:bg-gray-400"
+            >
+              Back
+            </button>
+            <GameSetupStepOne
+              matchSquadPlayers={matchSquadPlayers}
+              selectedMatchPlayers={selectedMatchPlayers}
+              toggleMatchPlayer={toggleMatchPlayer}
+              handleNext={handleNext}
+            />
+          </>
         )}
         {step === 2 && (
           <GameSetupStepTwo
             playerName={playerName}
             setPlayerName={setPlayerName}
-            selectedMatchPlayers={selectedMatchPlayers}
             addPlayer={addPlayer}
             deletePlayer={deletePlayer}
             toggleStartingPlayer={toggleStartingPlayer}
+            errorMessage={errorMessage}
+            setErrorMessage={setErrorMessage}
             startingPlayers={startingPlayersFromMatch}
             goalkeeper={goalkeeper}
             setGoalkeeper={setGoalkeeper}
             includeGKPlaytime={includeGKPlaytime}
             setIncludeGKPlaytime={setIncludeGKPlaytime}
-            errorMessage={errorMessage}
             handleBack={handleBack}
             handleStartGame={handleStartGame}
-            setErrorMessage={setErrorMessage}
           />
         )}
       </div>
