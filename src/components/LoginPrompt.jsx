@@ -4,16 +4,24 @@ import { Auth } from '@supabase/auth-ui-react';
 
 export default function LoginPrompt() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-brand-500 to-brand-700">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg px-10 py-8 max-w-md w-full">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-brand-500 to-brand-700 p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl px-8 py-10 max-w-md w-full">
         <img
           src="https://otebnzqfzytqyyjdfhzr.supabase.co/storage/v1/render/image/public/icons/a672b2f7-573e-48e4-9864-4c61f3a55e36/a07d10c7-40ae-490b-922a-cffd0ccb2aea.png"
           alt="Football Subs Logo"
-          className="h-16 w-16 mx-auto mb-4"
+          className="h-16 w-16 mx-auto mb-6"
         />
         <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">Welcome to Football Subs</h2>
-        <p className="text-center text-xl mb-4">
-          Sign in with <a href="https://www.zapt.ai" target="_blank" rel="noopener noreferrer" className="text-blue-500">ZAPT</a>
+        <p className="text-center text-xl mb-6">
+          Sign in with{' '}
+          <a
+            href="https://www.zapt.ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 underline"
+          >
+            ZAPT
+          </a>
         </p>
         <Auth
           supabaseClient={supabase}
@@ -24,9 +32,9 @@ export default function LoginPrompt() {
               variables: {
                 default: {
                   buttonBorder: '0px',
-                  buttonBorderRadius: '8px',
-                  buttonPadding: '0.75rem 1.5rem',
-                  buttonBoxShadow: 'none'
+                  buttonBorderRadius: '9999px',
+                  buttonPadding: '1rem 2rem',
+                  buttonBoxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
                 },
                 colors: {
                   brand: '#0ea5e9'
