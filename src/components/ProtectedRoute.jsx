@@ -12,8 +12,8 @@ function ProtectedRoute({ children }) {
     return <Navigate to="/" replace />;
   }
 
-  // Allow access to Squad Management regardless of squad selection
-  if (location.pathname !== '/squads' && !selectedSquad) {
+  // For routes that are not part of squad management, require a selected squad.
+  if (!location.pathname.startsWith('/squads') && !selectedSquad) {
     return <Navigate to="/squads" replace />;
   }
 
