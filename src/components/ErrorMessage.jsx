@@ -1,13 +1,9 @@
 import React from 'react';
 
 function ErrorMessage({ errorMessage }) {
-  if (!errorMessage) return null;
-
-  return (
-    <div className="bg-error/10 text-error p-4 rounded mb-8 text-lg">
-      {errorMessage}
-    </div>
-  );
+  return errorMessage ? (
+    <div style={{ color: 'red', marginTop: '8px' }}>{errorMessage}</div>
+  ) : null;
 }
 
 export default ErrorMessage;
