@@ -11,9 +11,9 @@ export default function useMatchSquad() {
   useEffect(() => {
     if (!selectedSquad) {
       navigate('/squads', { replace: true });
-    } else {
+    } else if (matchSquadPlayers.length === 0) {  // Only initialize if not already set
       const initialPlayers = getInitialPlayers(selectedSquad);
-      // Convert each player to a string. If the player is an object, extract the 'name' attribute.
+      // Convert each player to a string if needed.
       const squadPlayers = initialPlayers.map(item =>
         typeof item === 'object' && item.name ? item.name : item
       );
@@ -24,14 +24,12 @@ export default function useMatchSquad() {
       }));
       setMatchSquadPlayers(initialMatchPlayers);
     }
-  }, [selectedSquad, navigate]);
+  }, [selectedSquad, navigate, matchSquadPlayers.length]);
 
   const toggleMatchPlayer = (playerName) => {
     setMatchSquadPlayers(prev =>
       prev.map(player =>
-        player.name === playerName
-          ? { ...player, isInMatch: !player.isInMatch }
-          : player
+        player.name === playerName ? { ...player, isInMatch: !player.isInMatch } : player
       )
     );
   };
