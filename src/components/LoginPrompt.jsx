@@ -31,12 +31,10 @@ export default function LoginPrompt() {
               base: 'light',
               variables: {
                 default: {
-                  buttonBorder: 'none',
-                  buttonBorderRadius: '8px',
-                  buttonPadding: '1rem 2rem',
-                  // Optional: If supported, add margin adjustment for buttons
-                  // buttonMargin: '1rem',
-                  buttonBoxShadow: '0 2px 4px rgba(0, 0, 0, 0.15)'
+                  buttonBorder: '1px solid #0ea5e9',
+                  buttonBorderRadius: '12px',
+                  buttonPadding: '0.75rem 1.5rem',
+                  buttonBoxShadow: 'none'
                 },
                 colors: {
                   brand: '#0ea5e9'
