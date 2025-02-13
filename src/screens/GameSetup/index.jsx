@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GameSetupStepOne, GameSetupStepTwo } from './GameSetupSteps.jsx';
+import { GameSetupStepOne, GameSetupStepTwo } from '../../features/GameSetup/GameSetupSteps.jsx';
 import GameSetupComponents from '../../features/GameSetup/GameSetupComponents.jsx';
 import useMatchSquad from '../../features/GameSetup/hooks/useMatchSquad.js';
 
