@@ -1,31 +1,8 @@
-import { fetchSquadsAPI, createSquadAPI, updateSquadAPI } from '../api/squadAPI.js';
-
 export async function fetchSquads() {
-  try {
-    const data = await fetchSquadsAPI();
-    return data;
-  } catch (error) {
-    console.error('Error fetching squads:', error);
-    throw error;
-  }
-}
-
-export async function createSquad(name, players) {
-  try {
-    const newSquad = await createSquadAPI(name, players);
-    return newSquad;
-  } catch (error) {
-    console.error('Error creating squad:', error);
-    throw error;
-  }
-}
-
-export async function updateSquad(id, name, players) {
-  try {
-    const updatedSquad = await updateSquadAPI(id, name, players);
-    return updatedSquad;
-  } catch (error) {
-    console.error('Error updating squad:', error);
-    throw error;
-  }
+  await new Promise(resolve => setTimeout(resolve, 500));
+  return [
+    { id: 1, name: 'Alpha Squad' },
+    { id: 2, name: 'Bravo Squad' },
+    { id: 3, name: 'Charlie Squad' }
+  ];
 }

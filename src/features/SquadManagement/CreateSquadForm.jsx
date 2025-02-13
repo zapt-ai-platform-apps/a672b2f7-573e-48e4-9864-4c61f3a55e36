@@ -1,68 +1,38 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { createSquadAPI } from './api/squadAPI.js';
-import { useStateContext } from '../../state';
-import * as Sentry from '@sentry/browser';
-import Loading from '../../components/Loading.jsx';
+import React from 'react';
 
 function CreateSquadForm() {
-  const navigate = useNavigate();
-  const { setSelectedSquad } = useStateContext();
-  const [squadName, setSquadName] = useState('');
-  const [playersInput, setPlayersInput] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [squadName, setSquadName] = React.useState('');
 
-  const handleCreateSquad = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!squadName.trim() || !playersInput.trim()) {
-      setError('Squad name and players are required.');
-      return;
-    }
-    setError('');
-    setLoading(true);
-    try {
-      const playersArray = playersInput.split(',').map(p => p.trim()).filter(p => p);
-      const newSquad = await createSquadAPI(squadName, playersArray);
-      setSelectedSquad(newSquad);
-      navigate('/squads/options');
-    } catch (err) {
-      console.error('Error creating squad:', err);
-      Sentry.captureException(err);
-      setError('Failed to create squad. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    console.log('New squad created with name:', squadName);
+    setSquadName('');
   };
 
   return (
-    <form onSubmit={handleCreateSquad} className="w-full max-w-md">
+    <form onSubmit={handleSubmit} className="w-full max-w-sm">
       <div className="mb-4">
-        <label className="block text-lg mb-2">Squad Name</label>
+        <label className="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2" htmlFor="squadName">
+          Squad Name
+        </label>
         <input
+          id="squadName"
           type="text"
           value={squadName}
           onChange={(e) => setSquadName(e.target.value)}
-          className="w-full p-4 border rounded box-border text-lg"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
+          placeholder="Enter squad name"
+          required
         />
       </div>
-      <div className="mb-4">
-        <label className="block text-lg mb-2">Players (comma separated)</label>
-        <input
-          type="text"
-          value={playersInput}
-          onChange={(e) => setPlayersInput(e.target.value)}
-          className="w-full p-4 border rounded box-border text-lg"
-        />
+      <div className="flex items-center justify-between">
+        <button
+          type="submit"
+          className="px-4 py-2 bg-green-500 text-white text-lg rounded-md cursor-pointer hover:bg-green-600 transition-colors"
+        >
+          Create Squad
+        </button>
       </div>
-      {error && <p className="mb-4 text-red-500">{error}</p>}
-      <button
-        type="submit"
-        className="w-full py-4 bg-green-500 text-white text-lg rounded-md cursor-pointer hover:bg-green-600 transition-colors"
-        disabled={loading}
-      >
-        {loading ? <Loading /> : 'Create Squad'}
-      </button>
     </form>
   );
 }

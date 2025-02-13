@@ -4,7 +4,6 @@ import { useStateContext } from '../../state';
 import Loading from '../../components/Loading.jsx';
 import CreateSquadForm from './CreateSquadForm.jsx';
 
-// SquadSelectionScreen Component
 function SquadSelectionScreen() {
   const navigate = useNavigate();
   const { setSelectedSquad } = useStateContext();
@@ -66,7 +65,6 @@ function SquadSelectionScreen() {
   );
 }
 
-// SquadOptionsScreen Component
 function SquadOptionsScreen() {
   const navigate = useNavigate();
   const { selectedSquad } = useStateContext();
@@ -106,7 +104,6 @@ function SquadOptionsScreen() {
   );
 }
 
-// CreateSquadScreen Component
 function CreateSquadScreen() {
   const navigate = useNavigate();
 
