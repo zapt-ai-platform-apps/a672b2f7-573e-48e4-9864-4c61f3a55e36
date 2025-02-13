@@ -1,4 +1,4 @@
-import { supabase } from '../supabaseClient.js';
+import { supabase } from '../../../supabaseClient.js';
 import * as Sentry from '@sentry/browser';
 
 export async function fetchSquadsAPI() {
