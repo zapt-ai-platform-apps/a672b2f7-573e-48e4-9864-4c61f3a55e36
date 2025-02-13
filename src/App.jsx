@@ -7,7 +7,7 @@ import GameSummaryScreen from './features/GameSummary/GameSummaryScreen.jsx';
 import SquadSelectionScreen from './features/SquadManagement/SquadSelectionScreen.jsx';
 import SquadOptionsScreen from './features/SquadManagement/SquadOptionsScreen.jsx';
 import CreateSquadScreen from './features/SquadManagement/CreateSquadScreen.jsx';
-import EditSquadScreen from './features/SquadManagement/EditSquadScreen.jsx';
+import EditSquadForm from './features/SquadManagement/EditSquadForm.jsx';
 import NavBar from './components/navigation/NavBar.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 
@@ -23,7 +23,7 @@ function App() {
         <Route path="/squads" element={<ProtectedRoute><SquadSelectionScreen /></ProtectedRoute>} />
         <Route path="/squads/new" element={<ProtectedRoute><CreateSquadScreen /></ProtectedRoute>} />
         <Route path="/squads/options" element={<ProtectedRoute><SquadOptionsScreen /></ProtectedRoute>} />
-        <Route path="/squads/edit" element={<ProtectedRoute><EditSquadScreen /></ProtectedRoute>} />
+        <Route path="/squads/edit" element={<ProtectedRoute><EditSquadForm /></ProtectedRoute>} />
       </Routes>
     </>
   );

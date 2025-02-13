@@ -4,7 +4,7 @@ import SubstitutionPanel from './components/SubstitutionPanel';
 import GameActions from './components/GameActions';
 import EndGameConfirmationModal from './modals/EndGameConfirmationModal';
 import PitchVisualization from './components/PitchVisualization';
-import GameManagementModals from './GameManagementModals';
+import GameManagementModalsContent from './GameManagementModalsContent.jsx';
 import createGameManagementStore from './hooks/useGameManagementLogic';
 
 function GameManagementMain(props) {
@@ -50,7 +50,7 @@ function GameManagementMain(props) {
         isRunning={props.isRunning}
       />
 
-      <GameManagementModals {...props} {...store} />
+      <GameManagementModalsContent {...props} {...store} />
     </div>
   );
 }
