@@ -4,10 +4,7 @@ import LandingPage from './features/Landing/LandingPage.jsx';
 import GameSetup from './features/GameSetup';
 import GameManagementScreen from './features/GameManagement';
 import GameSummaryScreen from './features/GameSummary';
-import SquadSelectionScreen from './features/SquadManagement/SquadSelectionScreen.jsx';
-import SquadOptionsScreen from './features/SquadManagement/SquadOptionsScreen.jsx';
-import CreateSquadScreen from './features/SquadManagement/CreateSquadScreen.jsx';
-import EditSquadForm from './features/SquadManagement/EditSquadForm.jsx';
+import { SquadSelectionScreen, SquadOptionsScreen, CreateSquadScreen, EditSquadForm } from './features/SquadManagement';
 import NavBar from './components/navigation/NavBar.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 
