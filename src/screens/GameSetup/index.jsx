@@ -1,16 +1,17 @@
-import React from 'react';
-import GameSetupComponents from '../../features/GameSetup/GameSetupComponents.jsx';
-import GameSetupSteps from '../../features/GameSetup/GameSetupSteps.jsx';
-import useMatchSquad from '../../features/GameSetup/hooks/useMatchSquad.js';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { GameSetupStepOne, GameSetupStepTwo } from './GameSetupSteps.jsx';
+import GameSetupComponents from '../../features/GameSetup/GameSetupComponents.jsx';
+import useMatchSquad from '../../features/GameSetup/hooks/useMatchSquad.js';
 
 function GameSetupScreen() {
   const { matchSquadPlayers, toggleMatchPlayer } = useMatchSquad();
-  const [step, setStep] = React.useState(1);
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const [step, setStep] = useState(1);
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   const selectedMatchPlayers = matchSquadPlayers.filter(player => player.isInMatch);
+  const startingPlayersFromMatch = selectedMatchPlayers.filter(player => player.isStartingPlayer);
 
   const handleNext = () => {
     if (selectedMatchPlayers.length === 0) {
@@ -39,7 +40,7 @@ function GameSetupScreen() {
           >
             Back
           </button>
-          <GameSetupSteps
+          <GameSetupStepOne
             matchSquadPlayers={matchSquadPlayers}
             selectedMatchPlayers={selectedMatchPlayers}
             toggleMatchPlayer={toggleMatchPlayer}
