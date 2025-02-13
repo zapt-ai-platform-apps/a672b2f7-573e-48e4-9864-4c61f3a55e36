@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import LandingPage from './features/Landing/LandingPage.jsx';
-import GameSetup from './features/GameSetup/GameSetup.jsx';
+import GameSetup from './features/GameSetup';
 import GameManagementScreen from './features/GameManagement/GameManagementScreen.jsx';
 import GameSummaryScreen from './features/GameSummary/GameSummaryScreen.jsx';
 import SquadSelectionScreen from './features/SquadManagement/SquadSelectionScreen.jsx';
