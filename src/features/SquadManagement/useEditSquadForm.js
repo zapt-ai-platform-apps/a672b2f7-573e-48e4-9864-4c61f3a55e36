@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { updateSquadAPI } from '../../api/squadAPI.js';
 import { useStateContext } from '../../state';
 import * as Sentry from '@sentry/browser';
-import { parsePlayers } from '../../lib/utils.js';
+import { parsePlayers } from '../../../lib/utils.js';
 
 function useEditSquadForm() {
   const navigate = useNavigate();
