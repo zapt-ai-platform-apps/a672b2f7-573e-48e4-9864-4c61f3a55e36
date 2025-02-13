@@ -1,44 +1,63 @@
 import { useState } from 'react';
-import { useStateContext } from '../../../state';
-import useGameIntervalsManager from './useGameIntervalsManager';
-import useEndGameManager from './useEndGameManager';
-import useGameTimer from './useGameTimer';
-import usePlayerManagement from './usePlayerManagement';
 
-function createGameManagementStore(props) {
-  const { playerData, setPlayerData, goalkeeper, setGoalkeeper, ourScore, setOurScore, opponentScore, setOpponentScore, goals, setGoals, includeGKPlaytime } = useStateContext();
-
+function useGameManagementLogic() {
+  const [playerData, setPlayerData] = useState([]);
+  const [goalkeeper, setGoalkeeper] = useState(null);
+  const [ourScore, setOurScore] = useState(0);
+  const [opponentScore, setOpponentScore] = useState(0);
+  const [goals, setGoals] = useState([]);
+  const [includeGKPlaytime] = useState(true);
   const [isRunning, setIsRunning] = useState(false);
-  const [gameIntervals, setGameIntervals] = useState([]);
+  const [gameIntervals] = useState([]);
+  const [onFieldPlayers, setOnFieldPlayers] = useState([]);
+  const [offFieldPlayers, setOffFieldPlayers] = useState([]);
   const [showEndGameConfirm, setShowEndGameConfirm] = useState(false);
+  const [showGoalModal, setShowGoalModal] = useState(false);
+  const [showAddPlayerModal, setShowAddPlayerModal] = useState(false);
 
-  const { toggleTimer } = useGameIntervalsManager({
-    isRunning,
-    setIsRunning,
-    gameIntervals,
-    setGameIntervals,
-    playerData,
-    setPlayerData
-  });
+  const updatePlayerLists = () => {
+    // Implement logic to update player lists if needed
+  };
 
-  const { handleEndGame, confirmEndGame, cancelEndGame } = useEndGameManager({
-    isRunning,
-    setIsRunning,
-    gameIntervals,
-    setGameIntervals,
-    playerData,
-    setPlayerData,
-    setShowEndGameConfirm
-  });
+  const getTotalPlayTime = () => {
+    return 0;
+  };
 
-  const { now, startUITimer, getTimeElapsed } = useGameTimer({ isRunning, gameIntervals });
-  const { onFieldPlayers, offFieldPlayers, updatePlayerLists, getTotalPlayTime } = usePlayerManagement({
-    playerData,
-    setPlayerData,
-    includeGKPlaytime,
-    isRunning,
-    now
-  });
+  const getTimeElapsed = () => {
+    return '00:00';
+  };
+
+  const handleEndGame = () => {
+    setShowEndGameConfirm(true);
+  };
+
+  const confirmEndGame = () => {
+    setShowEndGameConfirm(false);
+  };
+
+  const cancelEndGame = () => {
+    setShowEndGameConfirm(false);
+  };
+
+  const toggleTimer = () => {
+    setIsRunning((prev) => !prev);
+  };
+
+  const assignGoalkeeper = () => {
+    setGoalkeeper(playerData[0] || null);
+  };
+
+  const handleRemoveLastGoal = () => {
+    setGoals((prevGoals) => prevGoals.slice(0, -1));
+  };
+
+  const handleIncreasePlayers = () => {
+    setOnFieldPlayers((prev) => [...prev, { id: Date.now(), name: 'New Player' }]);
+  };
+
+  const handleDecreasePlayers = () => {
+    setOnFieldPlayers((prev) => prev.slice(0, -1));
+  };
 
   return {
     playerData,
@@ -63,8 +82,14 @@ function createGameManagementStore(props) {
     handleEndGame,
     confirmEndGame,
     cancelEndGame,
-    toggleTimer
+    toggleTimer,
+    assignGoalkeeper,
+    handleRemoveLastGoal,
+    setShowGoalModal,
+    setShowAddPlayerModal,
+    handleIncreasePlayers,
+    handleDecreasePlayers
   };
 }
 
-export default createGameManagementStore;
+export default useGameManagementLogic;
