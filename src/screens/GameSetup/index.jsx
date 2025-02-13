@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GameSetupStepOne, GameSetupStepTwo } from '../../features/GameSetup/GameSetupSteps.jsx';
+import { GameSetupStepOne } from '../../features/GameSetup/GameSetupSteps.jsx';
 import GameSetupComponents from '../../features/GameSetup/GameSetupComponents.jsx';
 import useMatchSquad from '../../features/GameSetup/hooks/useMatchSquad.js';
+import useGameSetup from '../../features/GameSetup/hooks/useGameSetup.js';
 
 function GameSetupScreen() {
   const { matchSquadPlayers, toggleMatchPlayer } = useMatchSquad();
@@ -10,8 +11,8 @@ function GameSetupScreen() {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const selectedMatchPlayers = matchSquadPlayers.filter(player => player.isInMatch);
-  const startingPlayersFromMatch = selectedMatchPlayers.filter(player => player.isStartingPlayer);
+  const selectedMatchPlayers = matchSquadPlayers.filter((player) => player.isInMatch);
+  const gameSetup = useGameSetup();
 
   const handleNext = () => {
     if (selectedMatchPlayers.length === 0) {
@@ -32,7 +33,7 @@ function GameSetupScreen() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {step === 1 && (
+      {step === 1 ? (
         <>
           <button
             onClick={handleBack}
@@ -48,12 +49,8 @@ function GameSetupScreen() {
             errorMessage={errorMessage}
           />
         </>
-      )}
-      {step === 2 && (
-        <GameSetupComponents
-          errorMessage={errorMessage}
-          setErrorMessage={setErrorMessage}
-        />
+      ) : (
+        <GameSetupComponents {...gameSetup} errorMessage={errorMessage} setErrorMessage={setErrorMessage} />
       )}
     </div>
   );
