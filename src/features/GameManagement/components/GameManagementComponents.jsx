@@ -52,20 +52,4 @@ function PitchVisualization() {
   );
 }
 
-function GoalAndGKModals({ playerData, setPlayerData, isRunning, onFieldPlayers, offFieldPlayers, updatePlayerLists, assignGoalkeeper }) {
-  return (
-    <div className="goal-and-gk-modals">
-      <p>Goal and Goalkeeper Modals</p>
-    </div>
-  );
-}
-
-function PlayerModals({ playerData, setPlayerData, isRunning, onFieldPlayers, offFieldPlayers, updatePlayerLists }) {
-  return (
-    <div className="player-modals">
-      <p>Player Modals</p>
-    </div>
-  );
-}
-
-export { Header, SubstitutionPanel, GameActions, EndGameConfirmationModal, PitchVisualization, GoalAndGKModals, PlayerModals };
+export { Header, SubstitutionPanel, GameActions, EndGameConfirmationModal, PitchVisualization };

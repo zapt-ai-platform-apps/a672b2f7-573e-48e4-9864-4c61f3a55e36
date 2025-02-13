@@ -1,13 +1,8 @@
 import React from 'react';
+import ModalContainer from '../../../shared/components/ModalContainer.jsx';
 
-export function ModalContainer({ children }) {
-  return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-md shadow-lg max-w-md w-full">
-        {children}
-      </div>
-    </div>
-  );
+export function ModalContainerWrapper({ children }) {
+  return <ModalContainer>{children}</ModalContainer>;
 }
 
 export function ManualPlayerForm({ newPlayerName, setNewPlayerName }) {
