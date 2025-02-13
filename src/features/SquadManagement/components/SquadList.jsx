@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function SquadList({ squads = [], loading, handleSelectSquad, handleEditSquad }) {
+  const navigate = useNavigate();
   return (
     <div>
       {loading ? (
@@ -13,7 +15,10 @@ function SquadList({ squads = [], loading, handleSelectSquad, handleEditSquad })
               <div>
                 <button
                   type="button"
-                  onClick={() => handleSelectSquad(squad)}
+                  onClick={() => {
+                    handleSelectSquad(squad);
+                    navigate('/setup');
+                  }}
                   className="mr-2 px-3 py-1 bg-blue-500 text-white rounded cursor-pointer"
                 >
                   Select
