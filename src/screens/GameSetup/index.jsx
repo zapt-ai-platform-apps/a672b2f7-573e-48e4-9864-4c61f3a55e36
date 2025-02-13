@@ -6,13 +6,14 @@ import useMatchSquad from '../../features/GameSetup/hooks/useMatchSquad.js';
 import useGameSetup from '../../features/GameSetup/hooks/useGameSetup.js';
 
 function GameSetupScreen() {
-  const { matchSquadPlayers, toggleMatchPlayer } = useMatchSquad();
+  const { matchSquadPlayers, toggleMatchPlayer, toggleStartingPlayer } = useMatchSquad();
   const [step, setStep] = useState(1);
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
-
-  const selectedMatchPlayers = matchSquadPlayers.filter((player) => player.isInMatch);
   const gameSetup = useGameSetup();
+
+  const selectedMatchPlayers = matchSquadPlayers.filter(player => player.isInMatch);
+  const startingPlayers = selectedMatchPlayers.filter(player => player.isStartingPlayer);
 
   const handleNext = () => {
     if (selectedMatchPlayers.length === 0) {
@@ -31,26 +32,34 @@ function GameSetupScreen() {
     }
   };
 
+  const handleStartGame = () => {
+    if (startingPlayers.length === 0 || !gameSetup.goalkeeper) {
+      setErrorMessage('Please select starting players and a goalkeeper.');
+      return;
+    }
+    gameSetup.handleStartGame(startingPlayers, gameSetup.goalkeeper, gameSetup.includeGKPlaytime);
+    navigate('/manage');
+  };
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-white">
       {step === 1 ? (
-        <>
-          <button
-            onClick={handleBack}
-            className="mb-4 px-4 py-2 bg-gray-300 rounded-md cursor-pointer"
-          >
-            Back
-          </button>
-          <GameSetupStepOne
-            matchSquadPlayers={matchSquadPlayers}
-            selectedMatchPlayers={selectedMatchPlayers}
-            toggleMatchPlayer={toggleMatchPlayer}
-            handleNext={handleNext}
-            errorMessage={errorMessage}
-          />
-        </>
+        <GameSetupStepOne
+          matchSquadPlayers={matchSquadPlayers}
+          selectedMatchPlayers={selectedMatchPlayers}
+          toggleMatchPlayer={toggleMatchPlayer}
+          handleNext={handleNext}
+          errorMessage={errorMessage}
+        />
       ) : (
-        <GameSetupComponents {...gameSetup} errorMessage={errorMessage} setErrorMessage={setErrorMessage} />
+        <GameSetupComponents
+          {...gameSetup}
+          errorMessage={errorMessage}
+          setErrorMessage={setErrorMessage}
+          handleStartGame={handleStartGame}
+          handleBack={handleBack}
+          startingPlayers={startingPlayers}
+        />
       )}
     </div>
   );

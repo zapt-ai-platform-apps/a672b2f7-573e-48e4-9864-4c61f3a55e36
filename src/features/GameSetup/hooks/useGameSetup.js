@@ -4,86 +4,36 @@ import { getInitialPlayers } from './gameSetupInit.js';
 import { getSquadPlayers, updateSquad } from './updateSquad.js';
 
 function useGameSetup() {
-  const { selectedSquad, setSelectedSquad } = useStateContext();
-  const [playerName, setPlayerName] = useState('');
-  const [players, setPlayers] = useState([]);
-  const [startingPlayersCount, setStartingPlayersCount] = useState(0);
+  const { selectedSquad, setSelectedSquad, handleStartGame } = useStateContext();
   const [errorMessage, setErrorMessage] = useState('');
-  const [startingPlayers, setStartingPlayers] = useState([]);
   const [goalkeeper, setGoalkeeper] = useState('');
   const [includeGKPlaytime, setIncludeGKPlaytime] = useState(true);
 
   useEffect(() => {
-    const initialPlayers = getInitialPlayers(selectedSquad);
-    if (initialPlayers) {
-      setPlayers(initialPlayers);
+    if (selectedSquad?.players) {
+      const initialPlayers = getInitialPlayers(selectedSquad);
+      setGoalkeeper(initialPlayers[0]?.name || '');
     }
   }, [selectedSquad]);
 
-  const addPlayer = () => {
-    if (playerName.trim() !== '') {
-      const newPlayer = { name: playerName.trim(), isStartingPlayer: false };
-      const updatedPlayers = [...players, newPlayer];
-      setPlayers(updatedPlayers);
-      localStorage.setItem('players', JSON.stringify(updatedPlayers));
-
-      if (selectedSquad) {
-        const currentSquadPlayers = getSquadPlayers(selectedSquad);
-        const updatedSquadPlayers = [...currentSquadPlayers, newPlayer.name];
-        updateSquad(selectedSquad, updatedSquadPlayers, setSelectedSquad);
-      }
-      setPlayerName('');
-      return true;
-    }
-    return false;
-  };
-
-  const deletePlayer = (playerNameToDelete) => {
-    const confirmDelete = window.confirm(`Are you sure you want to delete ${playerNameToDelete}?`);
-    if (confirmDelete) {
-      const updatedPlayers = players.filter((player) => player.name !== playerNameToDelete);
-      setPlayers(updatedPlayers);
-      localStorage.setItem('players', JSON.stringify(updatedPlayers));
-      if (selectedSquad) {
-        const currentSquadPlayers = getSquadPlayers(selectedSquad);
-        const updatedSquadPlayers = currentSquadPlayers.filter(name => name !== playerNameToDelete);
-        updateSquad(selectedSquad, updatedSquadPlayers, setSelectedSquad);
-      }
-      return true;
-    }
-    return false;
-  };
-
-  const toggleStartingPlayer = (playerNameToToggle) => {
-    const updatedPlayers = players.map(player =>
-      player.name === playerNameToToggle
-        ? { ...player, isStartingPlayer: !player.isStartingPlayer }
-        : player
-    );
-    setPlayers(updatedPlayers);
-    const count = updatedPlayers.filter(p => p.isStartingPlayer).length;
-    setStartingPlayersCount(count);
-    setStartingPlayers(updatedPlayers.filter(p => p.isStartingPlayer));
-  };
-
   return {
-    playerName,
-    setPlayerName,
-    players,
-    setPlayers,
-    startingPlayersCount,
-    setStartingPlayersCount,
     errorMessage,
     setErrorMessage,
-    startingPlayers,
-    setStartingPlayers,
     goalkeeper,
     setGoalkeeper,
     includeGKPlaytime,
     setIncludeGKPlaytime,
-    addPlayer,
-    deletePlayer,
-    toggleStartingPlayer
+    handleStartGame: (players, gk, includeGKTime) => {
+      if (!gk) {
+        setErrorMessage('Please select a goalkeeper');
+        return;
+      }
+      handleStartGame(
+        players.filter(p => p.isStartingPlayer),
+        gk,
+        includeGKTime
+      );
+    }
   };
 }
 
