@@ -1,13 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useStateContext } from '../../../state';
 
 function useEditSquadForm() {
-  const [squadName, setSquadName] = useState('');
-  const [squadPlayersList, setSquadPlayersList] = useState([]);
+  const { selectedSquad } = useStateContext();
+  const [squadName, setSquadName] = useState(selectedSquad?.name || '');
+  const [squadPlayersList, setSquadPlayersList] = useState(selectedSquad?.players || []);
   const [newPlayerName, setNewPlayerName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (selectedSquad) {
+      setSquadName(selectedSquad.name);
+      setSquadPlayersList(selectedSquad.players || []);
+    }
+  }, [selectedSquad]);
 
   const handleAddPlayer = () => {
     if (newPlayerName.trim() !== '') {

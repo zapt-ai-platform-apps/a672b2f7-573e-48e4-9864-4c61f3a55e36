@@ -4,9 +4,11 @@ import useSquadManagement from '../../features/SquadManagement/hooks/useSquadMan
 import SquadListSection from '../../features/SquadManagement/components/SquadListSection.jsx';
 import CreateSquadView from './CreateSquadView';
 import EditSquadView from './EditSquadView';
+import { useStateContext } from '../../state';
 
 const SquadManagementScreen = () => {
   const { squads, loading, handleSelectSquad, handleEditSquad } = useSquadManagement();
+  const { setSelectedSquad } = useStateContext();
   const navigate = useNavigate();
   const [currentView, setCurrentView] = useState('options');
 
@@ -14,6 +16,12 @@ const SquadManagementScreen = () => {
 
   const handleProceedToSetup = () => {
     navigate('/setup');
+  };
+
+  const handleEditSquadWrapper = (squad) => {
+    setSelectedSquad(squad);
+    handleEditSquad(squad);
+    setCurrentView('edit');
   };
 
   if (currentView === 'options') {
@@ -28,28 +36,13 @@ const SquadManagementScreen = () => {
             >
               Create Squad
             </button>
-            <button
-              onClick={() => {
-                if (!squads || squads.length === 0) {
-                  alert('No squad available to edit.');
-                } else {
-                  setCurrentView('edit');
-                }
-              }}
-              className="px-4 py-2 bg-yellow-500 text-white rounded-md cursor-pointer hover:bg-yellow-600 transition-all duration-300"
-            >
-              Edit Squad
-            </button>
           </div>
         </div>
         <SquadListSection
           squads={squads}
           loading={loading}
           handleSelectSquad={handleSelectSquad}
-          handleEditSquad={(squad) => {
-            handleEditSquad(squad);
-            setCurrentView('edit');
-          }}
+          handleEditSquad={handleEditSquadWrapper}
           handleProceedToSetup={handleProceedToSetup}
         />
       </div>
