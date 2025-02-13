@@ -79,3 +79,5 @@ export function GameSetupStepTwo({
     </div>
   );
 }
+
+export default GameSetupStepOne;
