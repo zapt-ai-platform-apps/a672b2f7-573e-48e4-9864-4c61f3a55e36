@@ -3,7 +3,7 @@ import { squads } from '../drizzle/schema.js';
 import { eq } from 'drizzle-orm/expressions';
 import * as Sentry from '@sentry/node';
 import db from '../lib/db.js';
-import { parsePlayers } from '../lib/utils.js';
+import { parsePlayers } from '../src/utils/parsePlayers.js';
 
 export default async function handler(req, res) {
   try {

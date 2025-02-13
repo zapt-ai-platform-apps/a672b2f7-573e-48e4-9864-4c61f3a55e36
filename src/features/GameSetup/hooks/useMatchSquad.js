@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useStateContext } from '../../../state';
-import { parsePlayers } from '../../../lib/utils';
+import { parsePlayers } from '../../../utils/parsePlayers.js';
 
 function useMatchSquad() {
   const [matchSquadPlayers, setMatchSquadPlayers] = useState([]);
@@ -8,17 +8,18 @@ function useMatchSquad() {
 
   useEffect(() => {
     if (selectedSquad?.players) {
-      const playersArray = Array.isArray(selectedSquad.players)
-        ? selectedSquad.players
-        : parsePlayers(selectedSquad.players);
-        
-      const initialPlayers = playersArray.map((name, index) => ({
+      let squadPlayers = [];
+      if (Array.isArray(selectedSquad.players)) {
+        squadPlayers = selectedSquad.players;
+      } else {
+        squadPlayers = parsePlayers(selectedSquad.players);
+      }
+      const initialPlayers = squadPlayers.map((name, index) => ({
         id: index,
         name,
         isInMatch: false,
         isStartingPlayer: false
       }));
-      
       setMatchSquadPlayers(initialPlayers);
     } else {
       setMatchSquadPlayers([]);
