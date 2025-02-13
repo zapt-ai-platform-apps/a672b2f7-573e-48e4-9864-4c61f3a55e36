@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import LandingScreen from './screens/Landing/index.jsx';
 import GameSetupParticipantsScreen from './screens/GameSetup/SelectParticipants/index.jsx';
 import GameSetupConfigurationScreen from './screens/GameSetup/ConfigureLineup/index.jsx';
@@ -16,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingScreen />} />
         <Route path="/setup">
+          <Route index element={<Navigate to="/setup/participants" replace />} />
           <Route path="participants" element={<ProtectedRoute><GameSetupParticipantsScreen /></ProtectedRoute>} />
           <Route path="configuration" element={<ProtectedRoute><GameSetupConfigurationScreen /></ProtectedRoute>} />
         </Route>

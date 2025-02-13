@@ -15,7 +15,7 @@ const SquadManagementScreen = () => {
   const goToOptions = () => setCurrentView('options');
 
   const handleProceedToSetup = () => {
-    navigate('/setup');
+    navigate('/setup/participants');
   };
 
   const handleEditSquadWrapper = (squad) => {
