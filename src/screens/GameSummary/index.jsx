@@ -1,8 +1,6 @@
 import React from 'react';
-import GameSummaryScreen from '../../features/GameSummary/index.jsx';
+import GameSummaryScreen from './GameSummaryScreen.jsx';
 
-const GameSummaryScreenWrapper = () => {
-  return <GameSummaryScreen />;
-};
+const GameSummaryScreenWrapper = () => <GameSummaryScreen />;
 
 export default GameSummaryScreenWrapper;

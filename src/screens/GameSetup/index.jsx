@@ -1,8 +1,12 @@
 import React from 'react';
-import GameSetup from '../../features/GameSetup/index.jsx';
+import GameSetupComponents from './components/GameSetupComponents.jsx';
+import useGameSetup from './hooks/useGameSetup.js';
+import { useStateContext } from '../../state.jsx';
 
-const GameSetupScreen = () => {
-  return <GameSetup />;
-};
+function GameSetupScreen() {
+  const hookProps = useGameSetup();
+  const { handleStartGame } = useStateContext();
+  return <GameSetupComponents {...hookProps} handleStartGame={handleStartGame} />;
+}
 
 export default GameSetupScreen;

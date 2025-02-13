@@ -1,8 +1,6 @@
 import React from 'react';
-import { SquadSelectionScreen } from '../../features/SquadManagement/index.jsx';
+import { SquadSelectionScreen } from './SquadSelectionScreen.jsx';
 
-const SquadManagementScreen = () => {
-  return <SquadSelectionScreen />;
-};
+const SquadManagementScreen = () => <SquadSelectionScreen />;
 
 export default SquadManagementScreen;
