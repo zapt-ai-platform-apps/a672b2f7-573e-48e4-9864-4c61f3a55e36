@@ -5,9 +5,6 @@ import GameSetupScreen from './screens/GameSetup/index.jsx';
 import GameManagementScreen from './screens/GameManagement/index.jsx';
 import GameSummaryScreen from './screens/GameSummary/index.jsx';
 import SquadManagementScreen from './screens/SquadManagement/index.jsx';
-import CreateSquad from './screens/SquadManagement/CreateSquad.jsx';
-import SquadOptions from './screens/SquadManagement/Options.jsx';
-import EditSquad from './screens/SquadManagement/EditSquad.jsx';
 import NavBar from './components/navigation/NavBar.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 
@@ -21,9 +18,6 @@ function App() {
         <Route path="/manage" element={<ProtectedRoute><GameManagementScreen /></ProtectedRoute>} />
         <Route path="/summary" element={<ProtectedRoute><GameSummaryScreen /></ProtectedRoute>} />
         <Route path="/squads" element={<ProtectedRoute><SquadManagementScreen /></ProtectedRoute>} />
-        <Route path="/squads/new" element={<ProtectedRoute><CreateSquad /></ProtectedRoute>} />
-        <Route path="/squads/options" element={<ProtectedRoute><SquadOptions /></ProtectedRoute>} />
-        <Route path="/squads/edit" element={<ProtectedRoute><EditSquad /></ProtectedRoute>} />
       </Routes>
     </>
   );

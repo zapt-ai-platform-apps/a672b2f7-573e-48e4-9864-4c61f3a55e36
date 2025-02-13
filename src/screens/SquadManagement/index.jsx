@@ -1,35 +1,66 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSquadManagement from '../../features/SquadManagement/hooks/useSquadManagement.js';
 import SquadListSection from '../../features/SquadManagement/components/SquadListSection.jsx';
-import { useStateContext } from '../../state.jsx';
+import CreateSquadView from './CreateSquadView';
+import EditSquadView from './EditSquadView';
 
 const SquadManagementScreen = () => {
   const { squads, loading, handleSelectSquad, handleEditSquad } = useSquadManagement();
-  const { selectedSquad } = useStateContext();
   const navigate = useNavigate();
+  const [currentView, setCurrentView] = useState('options');
+
+  const goToOptions = () => setCurrentView('options');
 
   const handleProceedToSetup = () => {
-    if (selectedSquad) {
-      navigate('/setup');
-    } else {
-      alert('Please select a squad to proceed.');
-    }
+    navigate('/setup');
   };
 
-  return (
-    <div className="min-h-screen p-8 bg-white dark:bg-gray-900 text-gray-800 dark:text-white">
-      <h1 className="text-4xl font-bold mb-8">Select a Squad</h1>
-      <SquadListSection
-        squads={squads}
-        loading={loading}
-        handleSelectSquad={handleSelectSquad}
-        handleEditSquad={handleEditSquad}
-        selectedSquad={selectedSquad}
-        handleProceedToSetup={handleProceedToSetup}
-      />
-    </div>
-  );
+  if (currentView === 'options') {
+    return (
+      <div className="min-h-screen p-8 bg-white dark:bg-gray-900 text-gray-800 dark:text-white">
+        <div className="mb-8 flex justify-between items-center">
+          <h1 className="text-4xl font-bold">Select a Squad</h1>
+          <div className="flex space-x-4">
+            <button
+              onClick={() => setCurrentView('create')}
+              className="px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer hover:bg-blue-600 transition-all duration-300"
+            >
+              Create Squad
+            </button>
+            <button
+              onClick={() => {
+                if (!squads || squads.length === 0) {
+                  alert('No squad available to edit.');
+                } else {
+                  setCurrentView('edit');
+                }
+              }}
+              className="px-4 py-2 bg-yellow-500 text-white rounded-md cursor-pointer hover:bg-yellow-600 transition-all duration-300"
+            >
+              Edit Squad
+            </button>
+          </div>
+        </div>
+        <SquadListSection
+          squads={squads}
+          loading={loading}
+          handleSelectSquad={handleSelectSquad}
+          handleEditSquad={(squad) => {
+            handleEditSquad(squad);
+            setCurrentView('edit');
+          }}
+          handleProceedToSetup={handleProceedToSetup}
+        />
+      </div>
+    );
+  } else if (currentView === 'create') {
+    return <CreateSquadView goToOptions={goToOptions} setCurrentView={setCurrentView} />;
+  } else if (currentView === 'edit') {
+    return <EditSquadView goToOptions={goToOptions} />;
+  }
+
+  return null;
 };
 
 export default SquadManagementScreen;
