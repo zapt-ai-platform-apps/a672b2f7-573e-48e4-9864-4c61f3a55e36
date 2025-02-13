@@ -1,45 +1,36 @@
+# Setting Up the Game Setup
+
 ## Step-by-Step Instructions
 
-1. **Navigate to Game Setup**:
-   - From the landing page, click the "Get Started" button.
-   - You are taken to the Game Setup screen.
+1. **Navigate to Participant Selection**:
+   - From the Squad Management screen, click "Proceed to Game Setup"
+   - You'll be taken to `/setup/participants` to select match participants
 
-2. **Add Players**:
-   - **Input Field**:
-     - Enter the name of a player in the text input field labeled "Player Name."
-     - Click the "Add" button to add the player to your team list.
-     - Repeat this process for all team members.
-   - **Player List Persistence**:
-     - The app saves your player list locally.
-     - Previously added players will appear when you return to the app.
+2. **Select Match Participants**:
+   - Check players from your squad who will participate in this match
+   - At least 1 player must be selected
+   - Click "Continue to Setup" to proceed to `/setup/configuration`
 
-3. **Delete Players**:
-   - Next to each player's name, there is a delete icon (🗑️).
-   - Click the icon to remove a player from the list.
-   - A confirmation dialog will appear; click "OK" to confirm deletion.
+3. **Configure Starting Lineup**:
+   - From selected participants, choose who will start on the field
+   - Select number of starting players based on your formation
+   - Use toggle buttons to mark starters
 
-4. **Set Number of Players on Field**:
-   - Specify how many players can be on the field at one time.
-   - Enter the number in the "Number of Players on Field" input box.
+4. **Assign Goalkeeper**:
+   - Choose goalkeeper from starting players using dropdown
+   - Set whether to include goalkeeper time in totals
 
-5. **Select Players for This Match**:
-   - **Checkboxes**:
-     - Check the box next to the names of players who will participate in this match.
-     - You can select fewer than your entire squad; the selected players will start on the field while the others remain on the bench.
-     - An error message will appear if no players are selected.
-   - **Visual Indicators**:
-     - Checked players indicate they are selected for the match.
+5. **Finalize Setup**:
+   - Review all selections
+   - Click "Start Game" to begin match tracking
+   - You'll be redirected to `/manage` for live game management
 
-6. **Assign Goalkeeper**:
-   - Once the players for the match are selected, a dropdown menu appears to select the goalkeeper.
-   - Choose one player from the selected players to be the goalkeeper.
+## Important Information
 
-7. **Include Goalkeeper's Playtime in Totals**:
-   - Decide whether you want the goalkeeper's playtime to be included in the total playtime calculations.
-   - By default, the option "Include Goalkeeper's Playtime in Totals" is selected.
-   - You can uncheck the box if you prefer to exclude the goalkeeper's playtime from the totals.
-
-8. **Start Game**:
-   - Review your selections to ensure accuracy.
-   - Click the "Start Game" button to proceed.
-   - An error message will appear if any required information is missing.
+- **Two-Step Process**: Clear separation between participant selection (step 1) and lineup configuration (step 2)
+- **Route Structure**: 
+  - Participant selection: `/setup/participants`
+  - Lineup configuration: `/setup/configuration`
+- **Data Flow**: Selected participants persist between steps through global state
+- **Error Handling**: System prevents progressing with invalid configurations
+- **Navigation**: Use browser back button or in-app back buttons to adjust selections
