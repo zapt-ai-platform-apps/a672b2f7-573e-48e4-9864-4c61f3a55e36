@@ -10,7 +10,7 @@ function StartingLineupSelector({ players, startingPlayersCount, toggleStartingP
               {player.name} {player.isStartingPlayer ? '(Starter)' : '(Bench)'}
             </span>
             <button
-              onClick={() => toggleStartingPlayer(player.id)}
+              onClick={() => toggleStartingPlayer(player.name)}
               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-300"
             >
               Toggle Starter
