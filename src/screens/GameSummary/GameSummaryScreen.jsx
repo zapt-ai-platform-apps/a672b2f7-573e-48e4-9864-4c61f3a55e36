@@ -1,29 +1,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStateContext } from '../../state';
-import GoalsList from './components/GoalsList.jsx';
-import PlayerPlaytimes from './components/PlayerPlaytimes.jsx';
-import FinalScore from './components/FinalScore.jsx';
-import ShareSummaryButton from './components/ShareSummaryButton.jsx';
+import GoalsList from '../../features/GameSummary/components/GoalsList.jsx';
+import PlayerPlaytimes from '../../features/GameSummary/components/PlayerPlaytimes.jsx';
+import FinalScore from '../../features/GameSummary/components/FinalScore.jsx';
+import ShareSummaryButton from '../../features/GameSummary/components/ShareSummaryButton.jsx';
+import { getTotalPlayTime as utilGetTotalPlayTime, formatTime } from './utils';
 
 function GameSummaryScreen() {
   const { playerData, goals, ourScore, opponentScore, includeGKPlaytime, resetGame } = useStateContext();
 
   const getTotalPlayTime = (player) => {
-    let total = 0;
-    player.playIntervals.forEach((interval) => {
-      if (!includeGKPlaytime && interval.isGoalkeeper) return;
-      if (interval.endTime) {
-        total += interval.endTime - interval.startTime;
-      }
-    });
-    return Math.floor(total / 1000);
-  };
-
-  const formatTime = (timeInSeconds) => {
-    const minutes = Math.floor(timeInSeconds / 60);
-    const seconds = ('0' + (timeInSeconds % 60)).slice(-2);
-    return `${minutes}:${seconds}`;
+    return utilGetTotalPlayTime(player, includeGKPlaytime);
   };
 
   const navigate = useNavigate();
