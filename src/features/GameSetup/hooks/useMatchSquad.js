@@ -15,7 +15,7 @@ function useMatchSquad() {
       const initialPlayers = squadPlayers.map((name, index) => ({
         id: index,
         name,
-        isInMatch: false,
+        isInMatch: true, // Changed from false to true to auto-select all players
         isStartingPlayer: false
       }));
 
