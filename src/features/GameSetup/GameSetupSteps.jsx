@@ -55,7 +55,7 @@ export function GameSetupStepTwo({
             <li key={player.id}>
               {player.name}
               <button onClick={() => deletePlayer(player.id)}>Delete</button>
-              <button onClick={() => toggleStartingPlayer(player.id)}>Toggle Starting</button>
+              <button onClick={() => toggleStartingPlayer(player.name)}>Toggle Starting</button>
             </li>
           ))}
         </ul>
