@@ -1,8 +1,8 @@
 import React from 'react';
-import { CreateSquadScreen } from '../../features/SquadManagement/index.jsx';
+import CreateSquadForm from '../../features/SquadManagement/CreateSquadForm.jsx';
 
 const CreateSquad = () => {
-  return <CreateSquadScreen />;
+  return <CreateSquadForm />;
 };
 
 export default CreateSquad;
