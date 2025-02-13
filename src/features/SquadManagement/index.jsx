@@ -1,4 +1,9 @@
-export { default as SquadSelectionScreen } from './SquadSelectionScreen.jsx';
-export { default as SquadOptionsScreen } from './SquadOptionsScreen.jsx';
-export { default as CreateSquadScreen } from './CreateSquadScreen.jsx';
-export { default as EditSquadForm } from './EditSquadForm.jsx';
+import { SquadSelectionScreen, SquadOptionsScreen, CreateSquadScreen } from './SquadScreens.jsx';
+import { EditSquadForm } from './EditSquadForm.jsx';
+
+export {
+  SquadSelectionScreen,
+  SquadOptionsScreen,
+  CreateSquadScreen,
+  EditSquadForm
+};
