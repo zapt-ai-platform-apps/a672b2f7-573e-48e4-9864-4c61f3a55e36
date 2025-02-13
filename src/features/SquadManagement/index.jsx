@@ -1,5 +1,5 @@
 import { SquadSelectionScreen, SquadOptionsScreen, CreateSquadScreen } from './SquadScreens.jsx';
-import { EditSquadForm } from './EditSquadForm.jsx';
+import EditSquadForm from './EditSquadForm.jsx';
 
 export {
   SquadSelectionScreen,
