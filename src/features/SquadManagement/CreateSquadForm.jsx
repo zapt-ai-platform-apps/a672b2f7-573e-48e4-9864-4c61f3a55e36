@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createSquadAPI } from '../../api/squadAPI.js';
+import { createSquadAPI } from './api/squadAPI.js';
 import { useStateContext } from '../../state';
 import * as Sentry from '@sentry/browser';
 import Loading from '../../components/Loading.jsx';
