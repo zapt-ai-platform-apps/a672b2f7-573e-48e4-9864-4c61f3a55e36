@@ -8,7 +8,6 @@ function GameSetupComponents({
   setPlayerName,
   addPlayer,
   deletePlayer,
-  toggleStartingPlayer,
   errorMessage,
   setErrorMessage,
   startingPlayers,
@@ -18,7 +17,7 @@ function GameSetupComponents({
   setIncludeGKPlaytime,
   handleStartGame
 }) {
-  const { matchSquadPlayers, toggleMatchPlayer } = useMatchSquad();
+  const { matchSquadPlayers, toggleMatchPlayer, toggleStartingPlayer } = useMatchSquad();
   const selectedMatchPlayers = matchSquadPlayers.filter(player => player.isInMatch);
   const startingPlayersFromMatch = selectedMatchPlayers.filter(player => player.isStartingPlayer);
 
@@ -33,9 +32,9 @@ function GameSetupComponents({
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-2">Match Squad</h2>
           <ul>
-            {matchSquadPlayers.map((player, index) => (
+            {matchSquadPlayers.map((player) => (
               <li
-                key={index}
+                key={player.id}
                 onClick={() => toggleMatchPlayer(player.id)}
                 className={`p-4 mb-2 border rounded-lg cursor-pointer transition-colors duration-300 ease-in-out ${
                   player.isInMatch ? 'bg-green-100 border-green-500' : 'bg-gray-100 border-gray-300'
@@ -48,7 +47,6 @@ function GameSetupComponents({
         </div>
 
         <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-2">Starting Lineup</h2>
           <StartingLineupSelector
             players={selectedMatchPlayers}
             startingPlayersCount={startingPlayersFromMatch.length}

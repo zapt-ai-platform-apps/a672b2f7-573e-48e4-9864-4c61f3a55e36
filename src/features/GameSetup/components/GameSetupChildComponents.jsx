@@ -1,45 +1,46 @@
 import React from 'react';
 
-function StartingLineupSelector({ players, startingPlayersCount, toggleStartingPlayer }) {
+export function StartingLineupSelector({ players, startingPlayersCount, toggleStartingPlayer }) {
   return (
     <div>
+      <h2 className="text-2xl font-bold mb-2">Starting Lineup</h2>
       <ul>
-        {players.map(player => (
-          <li key={player.id} className="p-2 border-b flex items-center justify-between">
-            <span>
-              {player.name} {player.isStartingPlayer ? '(Starter)' : '(Bench)'}
-            </span>
-            <button
-              onClick={() => toggleStartingPlayer(player.name)}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-300"
-            >
-              Toggle Starter
-            </button>
+        {players.map((player) => (
+          <li
+            key={player.id}
+            onClick={() => toggleStartingPlayer(player.id)}
+            className={`p-4 mb-2 border rounded-lg cursor-pointer transition-colors duration-300 ease-in-out ${
+              player.isStartingPlayer ? 'bg-blue-100 border-blue-500' : 'bg-gray-100 border-gray-300'
+            }`}
+          >
+            {player.name} {player.isStartingPlayer ? '(Starter)' : ''}
           </li>
         ))}
       </ul>
-      <div className="mt-2 text-lg">Total Starters: {startingPlayersCount}</div>
+      <p>Selected {startingPlayersCount} starter(s).</p>
     </div>
   );
 }
 
-function GoalkeeperSettings({ startingPlayers, goalkeeper, setGoalkeeper, includeGKPlaytime, setIncludeGKPlaytime }) {
+export function GoalkeeperSettings({ startingPlayers, goalkeeper, setGoalkeeper, includeGKPlaytime, setIncludeGKPlaytime }) {
+  const handleGoalkeeperChange = (e) => {
+    const selectedId = e.target.value;
+    const selectedPlayer = startingPlayers.find((player) => player.id === selectedId);
+    setGoalkeeper(selectedPlayer);
+  };
+
   return (
     <div>
-      <h3 className="text-xl font-bold mb-2">Goalkeeper Settings</h3>
+      <h2 className="text-2xl font-bold mb-2">Goalkeeper Settings</h2>
       <div className="mb-4">
-        <label className="block mb-1">Select Goalkeeper:</label>
+        <label className="block mb-2">Select Goalkeeper:</label>
         <select
           value={goalkeeper ? goalkeeper.id : ''}
-          onChange={(e) => {
-            const selectedId = e.target.value;
-            const selectedPlayer = startingPlayers.find(p => p.id === selectedId) || null;
-            setGoalkeeper(selectedPlayer);
-          }}
-          className="p-2 border rounded w-full"
+          onChange={handleGoalkeeperChange}
+          className="p-2 border rounded"
         >
-          <option value="">Select...</option>
-          {startingPlayers.map(player => (
+          <option value="">Select a goalkeeper</option>
+          {startingPlayers.map((player) => (
             <option key={player.id} value={player.id}>
               {player.name}
             </option>
@@ -47,18 +48,13 @@ function GoalkeeperSettings({ startingPlayers, goalkeeper, setGoalkeeper, includ
         </select>
       </div>
       <div>
-        <label className="flex items-center">
-          <input
-            type="checkbox"
-            checked={includeGKPlaytime}
-            onChange={(e) => setIncludeGKPlaytime(e.target.checked)}
-            className="mr-2"
-          />
-          Include Goalkeeper Playtime
-        </label>
+        <label className="mr-2">Include Goalkeeper Playtime</label>
+        <input
+          type="checkbox"
+          checked={includeGKPlaytime}
+          onChange={(e) => setIncludeGKPlaytime(e.target.checked)}
+        />
       </div>
     </div>
   );
 }
-
-export { StartingLineupSelector, GoalkeeperSettings };
