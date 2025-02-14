@@ -17,7 +17,7 @@ function GameSetupComponents({
   setIncludeGKPlaytime,
   handleStartGame
 }) {
-  const { matchSquadPlayers, toggleStartingPlayer } = useMatchSquad();
+  const { matchSquadPlayers, toggleMatchPlayer, toggleStartingPlayer } = useMatchSquad();
   const selectedMatchPlayers = matchSquadPlayers.filter(player => player.isInMatch);
   const startingPlayersFromMatch = selectedMatchPlayers.filter(player => player.isStartingPlayer);
 
@@ -26,7 +26,7 @@ function GameSetupComponents({
       <div className="p-8 flex-grow">
         <h1 className="text-4xl font-bold mb-6 text-green-600">Choose Your Team</h1>
         <p className="mb-4 text-lg">
-          Tap to mark players as starters.
+          Tap to select players for the match and mark them as starters.
         </p>
 
         <div className="mb-8">
