@@ -1,6 +1,6 @@
 export function calculateTotalPlayTime(player, includeGKPlaytime, isRunning) {
+  if (!player || !player.playIntervals) return 0;
   let total = 0;
-  if (!player.playIntervals) return 0;
   player.playIntervals.forEach((interval) => {
     if (!includeGKPlaytime && interval.isGoalkeeper) return;
     if (interval.endTime) {
