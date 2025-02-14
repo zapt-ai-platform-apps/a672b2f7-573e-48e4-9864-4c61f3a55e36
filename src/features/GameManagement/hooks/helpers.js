@@ -1,39 +1,43 @@
 export function calculateTotalPlayTime(player, includeGKPlaytime, isRunning) {
-  if (!player || !player.playIntervals) return 0;
   let total = 0;
-  player.playIntervals.forEach((interval) => {
-    if (!includeGKPlaytime && interval.isGoalkeeper) return;
-    if (interval.endTime) {
-      total += interval.endTime - interval.startTime;
-    } else if (isRunning && interval.startTime) {
-      total += Date.now() - interval.startTime;
+  if (!player || !player.playIntervals) {
+    return total;
+  }
+  const now = Date.now();
+  player.playIntervals.forEach(interval => {
+    if (interval.start) {
+      const end = interval.end !== undefined ? interval.end : (isRunning ? now : interval.start);
+      total += (end - interval.start);
     }
   });
-  return Math.floor(total / 1000);
+  return total;
 }
 
 export function processPlayerLists(playerData, includeGKPlaytime, isRunning) {
-  const getTotalPlayTimeForPlayer = (player) => calculateTotalPlayTime(player, includeGKPlaytime, isRunning);
-  const onField = playerData
-    .filter((player) => player.isOnField)
-    .sort((a, b) => getTotalPlayTimeForPlayer(a) - getTotalPlayTimeForPlayer(b));
-  const offField = playerData
-    .filter((player) => !player.isOnField)
-    .sort((a, b) => getTotalPlayTimeForPlayer(a) - getTotalPlayTimeForPlayer(b));
+  const onField = [];
+  const offField = [];
+  playerData.forEach(player => {
+    const intervals = player.playIntervals || [];
+    if (intervals.length > 0) {
+      const lastInterval = intervals[intervals.length - 1];
+      if (!lastInterval.end) {
+        onField.push(player);
+        return;
+      }
+    }
+    offField.push(player);
+  });
   return { onField, offField };
 }
 
 export function calculateElapsedTime(gameIntervals, isRunning) {
   let total = 0;
-  gameIntervals.forEach((interval) => {
-    if (interval.endTime) {
-      total += interval.endTime - interval.startTime;
-    } else if (isRunning && interval.startTime) {
-      total += Date.now() - interval.startTime;
+  const now = Date.now();
+  gameIntervals.forEach(interval => {
+    if (interval.start) {
+      const end = interval.end !== undefined ? interval.end : (isRunning ? now : interval.start);
+      total += (end - interval.start);
     }
   });
-  const seconds = Math.floor(total / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const remaining = seconds % 60;
-  return `${minutes}:${remaining < 10 ? '0' : ''}${remaining}`;
+  return total;
 }

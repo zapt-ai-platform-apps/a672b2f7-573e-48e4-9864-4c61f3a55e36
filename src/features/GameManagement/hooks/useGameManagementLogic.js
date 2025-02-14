@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { calculateTotalPlayTime, processPlayerLists, calculateElapsedTime } from './helpers';
 
-function useGameManagementLogic() {
+export function useGameManagementLogic() {
   const [playerData, setPlayerData] = useState([]);
   const [goalkeeper, setGoalkeeper] = useState(null);
   const [ourScore, setOurScore] = useState(0);
@@ -101,5 +101,3 @@ function useGameManagementLogic() {
     handleDecreasePlayers
   };
 }
-
-export default useGameManagementLogic;
