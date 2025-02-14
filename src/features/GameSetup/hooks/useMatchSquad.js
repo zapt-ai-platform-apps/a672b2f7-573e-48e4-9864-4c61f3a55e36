@@ -1,11 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useStateContext } from '../../../state';
+import { parsePlayers } from '../../../utils/parsePlayers.js';
 
 function useMatchSquad() {
-  const [matchSquadPlayers, setMatchSquadPlayers] = useState([
-    { id: 1, name: 'Player 1', isInMatch: true, isStartingPlayer: false },
-    { id: 2, name: 'Player 2', isInMatch: true, isStartingPlayer: false },
-    { id: 3, name: 'Player 3', isInMatch: false, isStartingPlayer: false }
-  ]);
+  const { selectedSquad } = useStateContext();
+
+  const getInitialPlayers = () => {
+    if (selectedSquad && selectedSquad.players) {
+      const playersArray = Array.isArray(selectedSquad.players)
+        ? selectedSquad.players
+        : parsePlayers(selectedSquad.players);
+      return playersArray.map((playerName, index) => ({
+        id: index + 1,
+        name: playerName,
+        isInMatch: true,
+        isStartingPlayer: false
+      }));
+    }
+    return [];
+  };
+
+  const [matchSquadPlayers, setMatchSquadPlayers] = useState(getInitialPlayers());
+
+  useEffect(() => {
+    setMatchSquadPlayers(getInitialPlayers());
+  }, [selectedSquad]);
 
   function toggleMatchPlayer(playerId) {
     setMatchSquadPlayers(players =>
