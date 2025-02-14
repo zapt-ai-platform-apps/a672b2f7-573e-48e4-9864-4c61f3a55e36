@@ -4,7 +4,7 @@ import { useAuth } from '../../components/AuthProvider.jsx';
 import HeroSection from './HeroSection.jsx';
 import FeaturesSection from './FeaturesSection.jsx';
 
-function LandingPage() {
+function LandingScreen() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -14,17 +14,21 @@ function LandingPage() {
     }
   }, [user, navigate]);
 
+  const handleGetStarted = () => {
+    navigate('/setup');
+  };
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-700 opacity-90 -z-10"></div>
       <div className="min-h-screen flex flex-col justify-center items-center p-8">
-        <HeroSection onGetStarted={() => navigate('/setup')} />
+        <HeroSection onGetStarted={handleGetStarted} />
         <FeaturesSection />
         <footer className="absolute bottom-4 right-4">
-          <a 
-            href="https://www.zapt.ai" 
-            target="_blank" 
-            rel="noopener noreferrer" 
+          <a
+            href="https://www.zapt.ai"
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-white underline cursor-pointer"
           >
             Made on ZAPT
@@ -35,4 +39,4 @@ function LandingPage() {
   );
 }
 
-export default LandingPage;
+export default LandingScreen;
