@@ -7,6 +7,7 @@ function Checkbox({ checked, onChange }) {
         type="checkbox"
         checked={checked}
         onChange={onChange}
+        onClick={(e) => e.stopPropagation()}
         className="absolute w-6 h-6 opacity-0 z-10 cursor-pointer"
       />
       <div className="w-6 h-6 border border-gray-300 rounded flex items-center justify-center">
