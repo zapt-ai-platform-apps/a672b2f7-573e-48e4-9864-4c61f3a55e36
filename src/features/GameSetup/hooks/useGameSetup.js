@@ -3,7 +3,7 @@ import { useStateContext } from '../../../state';
 import { getInitialPlayers } from './gameSetupInit.js';
 
 function useGameSetup() {
-  const { selectedSquad, handleStartGame: contextHandleStartGame } = useStateContext();
+  const { selectedSquad, matchSquad, handleStartGame: contextHandleStartGame } = useStateContext();
   const [errorMessage, setErrorMessage] = useState('');
   const [goalkeeper, setGoalkeeper] = useState('');
   const [includeGKPlaytime, setIncludeGKPlaytime] = useState(true);
@@ -11,9 +11,14 @@ function useGameSetup() {
   const [playerName, setPlayerName] = useState('');
 
   useEffect(() => {
-    if (selectedSquad?.players) {
-      const initialPlayers = getInitialPlayers(selectedSquad);
-      const mappedPlayers = initialPlayers.map((name, index) => ({
+    let playersArr = [];
+    if (selectedSquad?.players && selectedSquad.players.length > 0) {
+      playersArr = getInitialPlayers(selectedSquad);
+    } else if (matchSquad && matchSquad.length > 0) {
+      playersArr = matchSquad.map(player => player.name);
+    }
+    if (playersArr.length > 0) {
+      const mappedPlayers = playersArr.map((name, index) => ({
         id: index + 1,
         name,
         isStartingPlayer: true
@@ -23,7 +28,7 @@ function useGameSetup() {
     } else {
       setStartingPlayers([]);
     }
-  }, [selectedSquad]);
+  }, [selectedSquad, matchSquad]);
 
   const addPlayer = () => {
     if (playerName.trim() !== '') {
