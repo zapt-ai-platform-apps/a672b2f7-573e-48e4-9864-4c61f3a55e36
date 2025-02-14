@@ -13,7 +13,7 @@ function Player({ player, handlePointerDown }) {
 
   return (
     <div
-      className={`absolute cursor-pointer flex items-center justify-center ${playerColorClass} text-white rounded-full`}
+      className={`player absolute cursor-pointer flex items-center justify-center ${playerColorClass} text-white rounded-full`}
       style={style}
       onMouseDown={(e) => handlePointerDown(e, player)}
     >

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import LandingScreen from './screens/Landing/index.jsx';
+import LandingScreen from './screens/Landing/LandingPage.jsx';
 import GameSetupParticipantsScreen from './screens/GameSetup/SelectParticipants/index.jsx';
 import GameSetupConfigurationScreen from './screens/GameSetup/ConfigureLineup/index.jsx';
-import GameManagementScreen from './screens/GameManagement/index.jsx';
+import GameManagementScreen from './screens/GameManagement/GameManagementScreen.jsx';
 import GameSummaryScreen from './screens/GameSummary/index.jsx';
-import SquadManagementScreen from './screens/SquadManagement/index.jsx';
+import SquadManagementScreen from './screens/SquadManagement/SquadManagementScreen.jsx';
 import NavBar from './components/navigation/NavBar.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 
