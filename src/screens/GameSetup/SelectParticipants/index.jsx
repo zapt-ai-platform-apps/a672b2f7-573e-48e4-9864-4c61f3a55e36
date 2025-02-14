@@ -18,7 +18,7 @@ function GameSetupParticipantsScreen() {
       return;
     }
     setSelectedSquad(prev => ({
-      ...prev,
+      ...(prev || {}),
       players: selectedMatchPlayers.map(p => p.name)
     }));
     navigate('/setup/configuration');
