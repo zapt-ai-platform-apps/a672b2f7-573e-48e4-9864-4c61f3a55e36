@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { calculateTotalPlayTime, processPlayerLists, calculateElapsedTime } from './helpers';
 
 function useGameManagementLogic() {
   const [playerData, setPlayerData] = useState([]);
@@ -8,23 +9,25 @@ function useGameManagementLogic() {
   const [goals, setGoals] = useState([]);
   const [includeGKPlaytime] = useState(true);
   const [isRunning, setIsRunning] = useState(false);
-  const [gameIntervals] = useState([]);
+  const [gameIntervals, setGameIntervals] = useState([]);
   const [onFieldPlayers, setOnFieldPlayers] = useState([]);
   const [offFieldPlayers, setOffFieldPlayers] = useState([]);
   const [showEndGameConfirm, setShowEndGameConfirm] = useState(false);
   const [showGoalModal, setShowGoalModal] = useState(false);
   const [showAddPlayerModal, setShowAddPlayerModal] = useState(false);
 
-  const updatePlayerLists = () => {
-    // Implement logic to update player lists if needed
+  const getTotalPlayTime = (player) => {
+    return calculateTotalPlayTime(player, includeGKPlaytime, isRunning);
   };
 
-  const getTotalPlayTime = () => {
-    return 0;
+  const updatePlayerLists = () => {
+    const { onField, offField } = processPlayerLists(playerData, includeGKPlaytime, isRunning);
+    setOnFieldPlayers(onField);
+    setOffFieldPlayers(offField);
   };
 
   const getTimeElapsed = () => {
-    return '00:00';
+    return calculateElapsedTime(gameIntervals, isRunning);
   };
 
   const handleEndGame = () => {
@@ -52,12 +55,19 @@ function useGameManagementLogic() {
   };
 
   const handleIncreasePlayers = () => {
-    setOnFieldPlayers((prev) => [...prev, { id: Date.now(), name: 'New Player' }]);
+    setOnFieldPlayers((prev) => [
+      ...prev,
+      { id: Date.now(), name: 'New Player', playIntervals: [] }
+    ]);
   };
 
   const handleDecreasePlayers = () => {
     setOnFieldPlayers((prev) => prev.slice(0, -1));
   };
+
+  useEffect(() => {
+    updatePlayerLists();
+  }, [playerData, isRunning]);
 
   return {
     playerData,
