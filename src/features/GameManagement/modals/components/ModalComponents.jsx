@@ -1,5 +1,5 @@
 import React from 'react';
-import ModalContainer from '../../../shared/components/ModalContainer.jsx';
+import ModalContainer from '../../../components/ModalContainer.jsx';
 
 export function ModalContainerWrapper({ children }) {
   return <ModalContainer>{children}</ModalContainer>;

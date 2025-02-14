@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useGameManagementLogic from '../../features/GameManagement/hooks/useGameManagementLogic.js';
-import GameManagementContent from './GameManagementContent.jsx';
+import GameManagementContent from './GameManagementContentBody.jsx';
 
 function GameManagementScreen() {
   const navigate = useNavigate();
@@ -18,7 +18,6 @@ function GameManagementScreen() {
     setGoals,
     includeGKPlaytime,
     isRunning,
-    setIsRunning,
     gameIntervals,
     onFieldPlayers,
     offFieldPlayers,
