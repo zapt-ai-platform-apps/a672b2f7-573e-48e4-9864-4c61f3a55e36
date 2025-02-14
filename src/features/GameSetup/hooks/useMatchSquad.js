@@ -1,47 +1,25 @@
-import { useState, useEffect } from 'react';
-import { useStateContext } from '../../../state';
-import { parsePlayers } from '../../../utils/parsePlayers.js';
+import { useState } from 'react';
+
+const initialPlayers = [
+  { id: 1, name: 'Player 1', isInMatch: true, isStartingPlayer: false },
+  { id: 2, name: 'Player 2', isInMatch: true, isStartingPlayer: false },
+  { id: 3, name: 'Player 3', isInMatch: true, isStartingPlayer: true }
+];
 
 function useMatchSquad() {
-  const [matchSquadPlayers, setMatchSquadPlayers] = useState([]);
-  const { selectedSquad } = useStateContext();
+  const [matchSquadPlayers, setMatchSquadPlayers] = useState(initialPlayers);
 
-  useEffect(() => {
-    if (selectedSquad?.players) {
-      let squadPlayers = Array.isArray(selectedSquad.players)
-        ? selectedSquad.players
-        : parsePlayers(selectedSquad.players);
-      
-      const initialPlayers = squadPlayers.map((name, index) => ({
-        id: index,
-        name,
-        isInMatch: true, // Changed from false to true to auto-select all players
-        isStartingPlayer: false
-      }));
-
-      setMatchSquadPlayers(initialPlayers);
-    } else {
-      setMatchSquadPlayers([]);
-    }
-  }, [selectedSquad]);
-
-  const toggleMatchPlayer = (id) => {
-    setMatchSquadPlayers(prev =>
-      prev.map(player =>
-        player.id === id ? { ...player, isInMatch: !player.isInMatch } : player
+  const toggleStartingPlayer = (playerId) => {
+    setMatchSquadPlayers(players =>
+      players.map(player =>
+        player.id === playerId
+          ? { ...player, isStartingPlayer: !player.isStartingPlayer }
+          : player
       )
     );
   };
 
-  const toggleStartingPlayer = (id) => {
-    setMatchSquadPlayers(prev =>
-      prev.map(player =>
-        player.id === id ? { ...player, isStartingPlayer: !player.isStartingPlayer } : player
-      )
-    );
-  };
-
-  return { matchSquadPlayers, toggleMatchPlayer, toggleStartingPlayer };
+  return { matchSquadPlayers, toggleStartingPlayer };
 }
 
 export default useMatchSquad;

@@ -17,7 +17,7 @@ function GameSetupComponents({
   setIncludeGKPlaytime,
   handleStartGame
 }) {
-  const { matchSquadPlayers, toggleMatchPlayer, toggleStartingPlayer } = useMatchSquad();
+  const { matchSquadPlayers, toggleStartingPlayer } = useMatchSquad();
   const selectedMatchPlayers = matchSquadPlayers.filter(player => player.isInMatch);
   const startingPlayersFromMatch = selectedMatchPlayers.filter(player => player.isStartingPlayer);
 
@@ -26,25 +26,8 @@ function GameSetupComponents({
       <div className="p-8 flex-grow">
         <h1 className="text-4xl font-bold mb-6 text-green-600">Choose Your Team</h1>
         <p className="mb-4 text-lg">
-          Tap to select players for the match and mark them as starters.
+          Tap to mark players as starters.
         </p>
-
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-2">Match Squad</h2>
-          <ul>
-            {matchSquadPlayers.map((player) => (
-              <li
-                key={player.id}
-                onClick={() => toggleMatchPlayer(player.id)}
-                className={`p-4 mb-2 border rounded-lg cursor-pointer transition-colors duration-300 ease-in-out ${
-                  player.isInMatch ? 'bg-green-100 border-green-500' : 'bg-gray-100 border-gray-300'
-                }`}
-              >
-                {player.name}
-              </li>
-            ))}
-          </ul>
-        </div>
 
         <div className="mb-8">
           <StartingLineupSelector
