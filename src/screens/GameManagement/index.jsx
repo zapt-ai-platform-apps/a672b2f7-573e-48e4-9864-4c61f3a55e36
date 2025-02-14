@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGameManagementLogic } from '../../features/GameManagement/hooks/useGameManagementLogic';
-import GameManagementContent from './GameManagementContent';
+import GameManagementScreenView from './GameManagementScreenView';
 
 function GameManagementScreen() {
   const {
@@ -31,20 +31,20 @@ function GameManagementScreen() {
   });
 
   return (
-    <GameManagementContent
-      isRunning={isRunning}
-      toggleTimer={toggleTimer}
-      getTimeElapsed={getTimeElapsed}
-      handleEndGame={handleEndGame}
-      ourScore={ourScore}
-      opponentScore={opponentScore}
+    <GameManagementScreenView
       playerData={playerData}
       setPlayerData={setPlayerData}
+      isRunning={isRunning}
       includeGKPlaytime={includeGKPlaytime}
       updatePlayerLists={updatePlayerLists}
       onFieldPlayers={onFieldPlayers}
       offFieldPlayers={offFieldPlayers}
       getTotalPlayTime={getTotalPlayTime}
+      getTimeElapsed={getTimeElapsed}
+      toggleTimer={toggleTimer}
+      handleEndGame={handleEndGame}
+      ourScore={ourScore}
+      opponentScore={opponentScore}
       showEndGameConfirm={showEndGameConfirm}
       confirmEndGame={confirmEndGame}
       cancelEndGame={cancelEndGame}

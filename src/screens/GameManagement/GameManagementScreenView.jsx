@@ -5,20 +5,20 @@ import SubstitutionPanel from '../../features/GameManagement/components/Substitu
 import PlayerGoalsList from '../../features/GameManagement/components/PlayerGoalsList.jsx';
 import { EndGameConfirmationModal } from '../../features/GameManagement/components/GameManagementComponents.jsx';
 
-function GameManagementContent({
-  isRunning,
-  toggleTimer,
-  getTimeElapsed,
-  handleEndGame,
-  ourScore,
-  opponentScore,
+function GameManagementScreenView({
   playerData,
   setPlayerData,
+  isRunning,
   includeGKPlaytime,
   updatePlayerLists,
   onFieldPlayers,
   offFieldPlayers,
   getTotalPlayTime,
+  getTimeElapsed,
+  toggleTimer,
+  handleEndGame,
+  ourScore,
+  opponentScore,
   showEndGameConfirm,
   confirmEndGame,
   cancelEndGame,
@@ -69,4 +69,4 @@ function GameManagementContent({
   );
 }
 
-export default GameManagementContent;
+export default GameManagementScreenView;
