@@ -14,7 +14,7 @@ function useMatchSquad() {
         id: index + 1,
         name: playerName,
         isInMatch: true,
-        isStartingPlayer: false
+        isStartingPlayer: true
       }));
     }
     return [];
