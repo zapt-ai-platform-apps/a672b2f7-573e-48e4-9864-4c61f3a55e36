@@ -1,5 +1,6 @@
 import React from 'react';
 import { Header, SubstitutionPanel, GameActions, EndGameConfirmationModal, PitchVisualization } from '../../features/GameManagement/components/GameManagementComponents.jsx';
+import PlayerList from '../../features/GameManagement/components/PlayerList.jsx';
 
 function GameManagementContent(props) {
   const {
@@ -58,6 +59,24 @@ function GameManagementContent(props) {
           confirmEndGame={confirmEndGameHandler}
           cancelEndGame={cancelEndGame}
         />
+
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <PlayerList 
+            players={onFieldPlayers} 
+            title="Players on Field" 
+            message="Select a player to sub off"
+            getTotalPlayTime={getTotalPlayTime}
+            handlePlayerClick={(player) => console.log('Sub off:', player.name)}
+          />
+          <PlayerList 
+            players={offFieldPlayers} 
+            title="Players Off Field" 
+            message="Select a player to sub on"
+            getTotalPlayTime={getTotalPlayTime}
+            handlePlayerClick={(player) => console.log('Sub on:', player.name)}
+          />
+        </div>
+
         <SubstitutionPanel
           playerData={playerData}
           setPlayerData={setPlayerData}
