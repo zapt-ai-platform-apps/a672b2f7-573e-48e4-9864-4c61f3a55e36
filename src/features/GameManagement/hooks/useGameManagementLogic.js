@@ -65,6 +65,13 @@ export function useGameManagementLogic() {
     setOnFieldPlayers((prev) => prev.slice(0, -1));
   };
 
+  const recordGoalForPlayer = (playerName) => {
+    console.log(`recordGoalForPlayer called for ${playerName}`);
+    const time = getTimeElapsed();
+    setOurScore((prev) => prev + 1);
+    setGoals((prevGoals) => [...prevGoals, { team: 'our', scorerName: playerName, time }]);
+  };
+
   useEffect(() => {
     updatePlayerLists();
   }, [playerData, isRunning]);
@@ -98,6 +105,9 @@ export function useGameManagementLogic() {
     setShowGoalModal,
     setShowAddPlayerModal,
     handleIncreasePlayers,
-    handleDecreasePlayers
+    handleDecreasePlayers,
+    recordGoalForPlayer
   };
 }
+
+export default useGameManagementLogic;

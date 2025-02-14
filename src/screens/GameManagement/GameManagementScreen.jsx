@@ -1,9 +1,6 @@
 import React from 'react';
 import { useGameManagementLogic } from '../../features/GameManagement/hooks/useGameManagementLogic';
-import Header from '../../features/GameManagement/components/Header.jsx';
-import PitchVisualization from '../../features/GameManagement/components/PitchVisualization.jsx';
-import SubstitutionPanel from '../../features/GameManagement/components/SubstitutionPanel.jsx';
-import { EndGameConfirmationModal } from '../../features/GameManagement/components/GameManagementComponents.jsx';
+import GameManagementContent from './GameManagementContent';
 
 function GameManagementScreen() {
   const {
@@ -23,6 +20,7 @@ function GameManagementScreen() {
     showEndGameConfirm,
     confirmEndGame,
     cancelEndGame,
+    recordGoalForPlayer
   } = useGameManagementLogic();
 
   console.log("GameManagementScreen rendered with state:", {
@@ -33,46 +31,25 @@ function GameManagementScreen() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
-      <Header
-        isRunning={isRunning}
-        toggleTimer={() => {
-          console.log("Toggle timer clicked");
-          toggleTimer();
-        }}
-        getTimeElapsed={getTimeElapsed}
-        handleEndGame={() => {
-          console.log("End game triggered");
-          handleEndGame();
-        }}
-        ourScore={ourScore}
-        opponentScore={opponentScore}
-      />
-      <PitchVisualization />
-      <SubstitutionPanel
-        playerData={playerData}
-        setPlayerData={setPlayerData}
-        isRunning={isRunning}
-        includeGKPlaytime={includeGKPlaytime}
-        updatePlayerLists={updatePlayerLists}
-        onFieldPlayers={onFieldPlayers}
-        offFieldPlayers={offFieldPlayers}
-        getTotalPlayTime={getTotalPlayTime}
-      />
-      {showEndGameConfirm && (
-        <EndGameConfirmationModal
-          showEndGameConfirm={showEndGameConfirm}
-          confirmEndGame={() => {
-            console.log("Confirming end game");
-            confirmEndGame();
-          }}
-          cancelEndGame={() => {
-            console.log("Cancelling end game");
-            cancelEndGame();
-          }}
-        />
-      )}
-    </div>
+    <GameManagementContent
+      isRunning={isRunning}
+      toggleTimer={toggleTimer}
+      getTimeElapsed={getTimeElapsed}
+      handleEndGame={handleEndGame}
+      ourScore={ourScore}
+      opponentScore={opponentScore}
+      playerData={playerData}
+      setPlayerData={setPlayerData}
+      includeGKPlaytime={includeGKPlaytime}
+      updatePlayerLists={updatePlayerLists}
+      onFieldPlayers={onFieldPlayers}
+      offFieldPlayers={offFieldPlayers}
+      getTotalPlayTime={getTotalPlayTime}
+      showEndGameConfirm={showEndGameConfirm}
+      confirmEndGame={confirmEndGame}
+      cancelEndGame={cancelEndGame}
+      recordGoalForPlayer={recordGoalForPlayer}
+    />
   );
 }
 

@@ -1,43 +1,33 @@
 export function calculateTotalPlayTime(player, includeGKPlaytime, isRunning) {
+  if (!player || !player.playIntervals) return 0;
   let total = 0;
-  if (!player || !player.playIntervals) {
-    return total;
-  }
   const now = Date.now();
-  player.playIntervals.forEach(interval => {
-    if (interval.start) {
-      const end = interval.end !== undefined ? interval.end : (isRunning ? now : interval.start);
-      total += (end - interval.start);
+  for (const interval of player.playIntervals) {
+    if (!interval.end && isRunning) {
+      total += now - interval.start;
+    } else if (interval.end) {
+      total += interval.end - interval.start;
     }
-  });
+  }
   return total;
 }
 
 export function processPlayerLists(playerData, includeGKPlaytime, isRunning) {
-  const onField = [];
-  const offField = [];
-  playerData.forEach(player => {
-    const intervals = player.playIntervals || [];
-    if (intervals.length > 0) {
-      const lastInterval = intervals[intervals.length - 1];
-      if (!lastInterval.end) {
-        onField.push(player);
-        return;
-      }
-    }
-    offField.push(player);
-  });
+  const onField = playerData.filter(player => player.onField !== false);
+  const offField = playerData.filter(player => player.onField === false);
   return { onField, offField };
 }
 
 export function calculateElapsedTime(gameIntervals, isRunning) {
-  let total = 0;
+  let elapsed = 0;
+  if (!gameIntervals || !Array.isArray(gameIntervals)) return elapsed;
   const now = Date.now();
-  gameIntervals.forEach(interval => {
-    if (interval.start) {
-      const end = interval.end !== undefined ? interval.end : (isRunning ? now : interval.start);
-      total += (end - interval.start);
+  for (const interval of gameIntervals) {
+    if (interval.end) {
+      elapsed += interval.end - interval.start;
+    } else if (isRunning) {
+      elapsed += now - interval.start;
     }
-  });
-  return total;
+  }
+  return elapsed;
 }
