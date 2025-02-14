@@ -15,11 +15,11 @@ function GameSetupConfigurationScreen() {
   const startingPlayers = selectedMatchPlayers.filter(player => player.isStartingPlayer);
 
   const handleStartGame = () => {
-    if (startingPlayers.length === 0 || !gameSetup.goalkeeper) {
-      gameSetup.setErrorMessage('Please select starting players and a goalkeeper.');
+    if (selectedMatchPlayers.length === 0 || !gameSetup.goalkeeper) {
+      gameSetup.setErrorMessage('Please select match participants and a goalkeeper.');
       return;
     }
-    gameSetup.handleStartGame(startingPlayers, gameSetup.goalkeeper, gameSetup.includeGKPlaytime);
+    gameSetup.handleStartGame(selectedMatchPlayers, gameSetup.goalkeeper, gameSetup.includeGKPlaytime);
     navigate('/manage');
   };
 
