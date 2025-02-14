@@ -1,3 +1,3 @@
-import GameSetupConfigurationScreen from '../../features/GameSetup/GameSetupStepTwo';
+import { GameSetupStepTwo } from '../../features/GameSetup/GameSetupStepTwo';
 
-export default GameSetupConfigurationScreen;
+export default GameSetupStepTwo;
