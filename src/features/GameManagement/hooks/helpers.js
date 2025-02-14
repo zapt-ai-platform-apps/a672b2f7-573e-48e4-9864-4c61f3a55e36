@@ -17,7 +17,7 @@ export function processPlayerLists(playerData, includeGKPlaytime, isRunning) {
   const offField = [];
   if (Array.isArray(playerData)) {
     for (const player of playerData) {
-      if (player.onField) {
+      if (player.isOnField) {
         onField.push(player);
       } else {
         offField.push(player);
