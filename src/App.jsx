@@ -5,7 +5,7 @@ import GameSetupParticipantsScreen from './screens/GameSetup/SelectParticipants/
 import GameSetupConfigurationScreen from './screens/GameSetup/ConfigureLineup/index.jsx';
 import GameManagementScreen from './screens/GameManagement/GameManagementScreen.jsx';
 import GameSummaryScreen from './screens/GameSummary/index.jsx';
-import SquadManagementScreen from './screens/SquadManagement/SquadManagementScreen.jsx';
+import SquadManagementScreen from './features/SquadManagement/SquadOptionsScreen.jsx';
 import NavBar from './components/navigation/NavBar.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 
