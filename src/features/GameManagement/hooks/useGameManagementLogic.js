@@ -1,13 +1,22 @@
 import { useState, useEffect } from 'react';
+import { useStateContext } from '../../../state';
 import { calculateTotalPlayTime, processPlayerLists, calculateElapsedTime } from './helpers';
 
 export function useGameManagementLogic() {
-  const [playerData, setPlayerData] = useState([]);
-  const [goalkeeper, setGoalkeeper] = useState(null);
-  const [ourScore, setOurScore] = useState(0);
-  const [opponentScore, setOpponentScore] = useState(0);
-  const [goals, setGoals] = useState([]);
-  const [includeGKPlaytime] = useState(true);
+  const {
+    playerData,
+    setPlayerData,
+    goalkeeper,
+    setGoalkeeper,
+    ourScore,
+    setOurScore,
+    opponentScore,
+    setOpponentScore,
+    goals,
+    setGoals,
+    includeGKPlaytime
+  } = useStateContext();
+
   const [isRunning, setIsRunning] = useState(false);
   const [gameIntervals, setGameIntervals] = useState([]);
   const [onFieldPlayers, setOnFieldPlayers] = useState([]);
@@ -47,7 +56,9 @@ export function useGameManagementLogic() {
   };
 
   const assignGoalkeeper = () => {
-    setGoalkeeper(playerData[0] || null);
+    if (!goalkeeper && playerData.length > 0) {
+      setGoalkeeper(playerData[0].name);
+    }
   };
 
   const handleRemoveLastGoal = () => {
@@ -66,7 +77,6 @@ export function useGameManagementLogic() {
   };
 
   const recordGoalForPlayer = (playerName) => {
-    console.log(`recordGoalForPlayer called for ${playerName}`);
     const time = getTimeElapsed();
     setOurScore((prev) => prev + 1);
     setGoals((prevGoals) => [...prevGoals, { team: 'our', scorerName: playerName, time }]);
@@ -74,7 +84,7 @@ export function useGameManagementLogic() {
 
   useEffect(() => {
     updatePlayerLists();
-  }, [playerData, isRunning]);
+  }, [playerData, includeGKPlaytime, isRunning]);
 
   return {
     playerData,
