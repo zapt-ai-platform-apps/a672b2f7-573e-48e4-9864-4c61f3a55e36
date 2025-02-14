@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useMatchSquad from '../../../features/GameSetup/hooks/useMatchSquad.js';
-import { GameSetupStepOne } from '../../../features/GameSetup/GameSetupSteps.jsx';
+import { GameSetupStepOne } from '../../../features/GameSetup/GameSetupStepOne.jsx';
 import { useStateContext } from '../../../state.jsx';
 
 function GameSetupParticipantsScreen() {

@@ -1,34 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useGameManagementLogic from '../../features/GameManagement/hooks/useGameManagementLogic.js';
 import { Header, GameActions, EndGameConfirmationModal, PitchVisualization } from '../../features/GameManagement/components/GameManagementComponents.jsx';
 import PlayerList from '../../features/GameManagement/components/PlayerList.jsx';
 
-function GameManagementContent(props) {
+function GameManagementScreen() {
+  const navigate = useNavigate();
   const {
-    isRunning,
-    toggleTimer,
-    getTimeElapsed,
-    handleEndGame,
-    ourScore,
-    opponentScore,
-    includeGKPlaytime,
     playerData,
     setPlayerData,
-    updatePlayerLists,
+    goalkeeper,
+    setGoalkeeper,
+    ourScore,
+    setOurScore,
+    opponentScore,
+    setOpponentScore,
+    goals,
+    setGoals,
+    includeGKPlaytime,
+    isRunning,
+    gameIntervals,
     onFieldPlayers,
     offFieldPlayers,
-    getTotalPlayTime,
     showEndGameConfirm,
+    updatePlayerLists,
+    getTotalPlayTime,
+    getTimeElapsed,
+    handleEndGame,
+    confirmEndGame,
     cancelEndGame,
+    toggleTimer,
     assignGoalkeeper,
     handleRemoveLastGoal,
     setShowGoalModal,
     setShowAddPlayerModal,
     handleIncreasePlayers,
-    handleDecreasePlayers,
-    showPitch,
-    setShowPitch,
-    confirmEndGameHandler
-  } = props;
+    handleDecreasePlayers
+  } = useGameManagementLogic();
+
+  const [showPitch, setShowPitch] = useState(false);
+
+  const confirmEndGameHandler = () => {
+    confirmEndGame();
+    navigate('/summary');
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-800 dark:text-white">
@@ -89,4 +104,4 @@ function GameManagementContent(props) {
   );
 }
 
-export default GameManagementContent;
+export default GameManagementScreen;
