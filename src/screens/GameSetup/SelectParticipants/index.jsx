@@ -17,11 +17,15 @@ function GameSetupParticipantsScreen() {
       setErrorMessage('Please select at least one player for the match.');
       return;
     }
-    // Updated: Pass the full player objects instead of just their names
+    
+    // Extract just player names from selected participants
+    const playerNames = selectedMatchPlayers.map(player => player.name);
+    
     setSelectedSquad(prev => ({
       ...(prev || {}),
-      players: selectedMatchPlayers
+      players: playerNames // Store array of strings instead of objects
     }));
+    
     navigate('/setup/configuration');
   };
 
