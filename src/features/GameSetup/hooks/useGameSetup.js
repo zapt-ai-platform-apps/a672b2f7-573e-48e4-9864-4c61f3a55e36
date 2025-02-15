@@ -15,7 +15,15 @@ function useGameSetup() {
     if (selectedSquad?.players && selectedSquad.players.length > 0) {
       playersArr = getInitialPlayers(selectedSquad);
     } else if (matchSquad && matchSquad.length > 0) {
-      playersArr = matchSquad.map(player => player.name);
+      playersArr = matchSquad.map((player) => player.name);
+    } else {
+      const stored = localStorage.getItem('selectedSquad');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed.players && parsed.players.length > 0) {
+          playersArr = parsed.players;
+        }
+      }
     }
     if (playersArr.length > 0) {
       const mappedPlayers = playersArr.map((name, index) => ({
@@ -37,21 +45,19 @@ function useGameSetup() {
         name: playerName.trim(),
         isStartingPlayer: true
       };
-      setStartingPlayers([...startingPlayers, newPlayer]);
+      setStartingPlayers(prev => [...prev, newPlayer]);
       setPlayerName('');
     }
   };
 
   const deletePlayer = (playerId) => {
-    setStartingPlayers(startingPlayers.filter(player => player.id !== playerId));
+    setStartingPlayers(prev => prev.filter(player => player.id !== playerId));
   };
 
   const toggleStartingPlayer = (playerId) => {
-    setStartingPlayers(
-      startingPlayers.map(player =>
-        player.id === playerId ? { ...player, isStartingPlayer: !player.isStartingPlayer } : player
-      )
-    );
+    setStartingPlayers(prev => prev.map(player =>
+      player.id === playerId ? { ...player, isStartingPlayer: !player.isStartingPlayer } : player
+    ));
   };
 
   const handleStartGameWrapper = () => {
