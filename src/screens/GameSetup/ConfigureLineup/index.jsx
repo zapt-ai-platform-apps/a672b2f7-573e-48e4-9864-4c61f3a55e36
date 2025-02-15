@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import StartingLineup from './StartingLineup';
 import GoalkeeperSettings from './GoalkeeperSettings';
+import { useNavigate } from 'react-router-dom';
+import { parsePlayers } from '../../../utils/parsePlayers';
+import { useStateContext } from '../../../state';
 
 export default function GameSetupConfiguration({
   playerName,
@@ -14,9 +17,29 @@ export default function GameSetupConfiguration({
   setGoalkeeper,
   includeGKPlaytime,
   setIncludeGKPlaytime,
-  handleBack,
   handleStartGame
 }) {
+  const { selectedSquad, setSelectedSquad } = useStateContext();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (startingPlayers.length === 0 && selectedSquad?.players) {
+      const parsedPlayers = parsePlayers(selectedSquad.players);
+      setSelectedSquad(prev => ({
+        ...prev,
+        players: parsedPlayers.map((name, index) => ({
+          id: index + 1,
+          name,
+          isStartingPlayer: true
+        }))
+      }));
+    }
+  }, [selectedSquad, setSelectedSquad]);
+
+  const handleBack = () => {
+    navigate('/setup/participants');
+  };
+
   return (
     <div className="p-8 flex-grow">
       <div className="flex justify-between items-center mb-8">
@@ -34,6 +57,7 @@ export default function GameSetupConfiguration({
           startingPlayers={startingPlayers}
           toggleStartingPlayer={toggleStartingPlayer}
         />
+
         <GoalkeeperSettings 
           startingPlayers={startingPlayers}
           goalkeeper={goalkeeper}
@@ -41,6 +65,7 @@ export default function GameSetupConfiguration({
           includeGKPlaytime={includeGKPlaytime}
           setIncludeGKPlaytime={setIncludeGKPlaytime}
         />
+
         <div className="flex justify-end">
           <button
             onClick={handleStartGame}

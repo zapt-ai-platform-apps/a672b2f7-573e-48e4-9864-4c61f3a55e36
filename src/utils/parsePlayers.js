@@ -3,16 +3,13 @@ export function parsePlayers(playersData) {
   if (typeof playersData === 'string') {
     try {
       const parsed = JSON.parse(playersData);
-      if (Array.isArray(parsed)) {
-        return parsed;
-      }
-    } catch (error) {
-      // Fallback: treat playersData as a comma-separated string and trim each name
-      return playersData.split(',').map(item => item.trim()).filter(item => item.length > 0);
+      if (Array.isArray(parsed)) return parsed;
+    } catch {
+      return playersData.split(',').map(p => {
+        const trimmed = p.trim();
+        return trimmed.startsWith('"') ? JSON.parse(trimmed) : trimmed;
+      }).filter(Boolean);
     }
   }
-  if (Array.isArray(playersData)) {
-    return playersData;
-  }
-  return [];
+  return Array.isArray(playersData) ? playersData : [];
 }

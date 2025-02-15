@@ -18,14 +18,16 @@ function GameSetupParticipantsScreen() {
       return;
     }
     
-    // Store proper player objects with IDs
+    // Convert to proper player objects with IDs
+    const playersWithIds = selectedMatchPlayers.map((player, index) => ({
+      id: player.id || index + 1,
+      name: player.name,
+      isStartingPlayer: true
+    }));
+
     setSelectedSquad(prev => ({
-      ...(prev || {}),
-      players: selectedMatchPlayers.map(player => ({
-        id: player.id,
-        name: player.name,
-        isStartingPlayer: true
-      }))
+      ...prev,
+      players: playersWithIds
     }));
     
     navigate('/setup/configuration');
@@ -70,5 +72,3 @@ function GameSetupParticipantsScreen() {
     </div>
   );
 }
-
-export default GameSetupParticipantsScreen;
