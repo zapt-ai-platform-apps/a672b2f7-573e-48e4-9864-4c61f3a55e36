@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useStateContext } from '../../../state';
-import { getInitialPlayers } from './gameSetupInit.js';
+import getStartingPlayers from '../helpers/getStartingPlayers.js';
 
 function useGameSetup() {
   const { selectedSquad, matchSquad, handleStartGame: contextHandleStartGame } = useStateContext();
@@ -11,28 +11,10 @@ function useGameSetup() {
   const [playerName, setPlayerName] = useState('');
 
   useEffect(() => {
-    let playersArr = [];
-    if (selectedSquad?.players && selectedSquad.players.length > 0) {
-      playersArr = getInitialPlayers(selectedSquad);
-    } else if (matchSquad && matchSquad.length > 0) {
-      playersArr = matchSquad.map((player) => player.name);
-    } else {
-      const stored = localStorage.getItem('selectedSquad');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (parsed.players && parsed.players.length > 0) {
-          playersArr = parsed.players;
-        }
-      }
-    }
+    const playersArr = getStartingPlayers(selectedSquad, matchSquad);
     if (playersArr.length > 0) {
-      const mappedPlayers = playersArr.map((name, index) => ({
-        id: index + 1,
-        name,
-        isStartingPlayer: true
-      }));
-      setStartingPlayers(mappedPlayers);
-      setGoalkeeper(mappedPlayers[0]?.name || '');
+      setStartingPlayers(playersArr);
+      setGoalkeeper(playersArr[0]?.name || '');
     } else {
       setStartingPlayers([]);
     }

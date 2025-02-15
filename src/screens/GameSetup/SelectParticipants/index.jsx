@@ -18,12 +18,14 @@ function GameSetupParticipantsScreen() {
       return;
     }
     
-    // Extract just player names from selected participants
-    const playerNames = selectedMatchPlayers.map(player => player.name);
-    
+    // Store proper player objects with IDs
     setSelectedSquad(prev => ({
       ...(prev || {}),
-      players: playerNames // Store array of strings instead of objects
+      players: selectedMatchPlayers.map(player => ({
+        id: player.id,
+        name: player.name,
+        isStartingPlayer: true
+      }))
     }));
     
     navigate('/setup/configuration');

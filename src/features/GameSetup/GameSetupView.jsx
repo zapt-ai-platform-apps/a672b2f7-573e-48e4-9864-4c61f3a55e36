@@ -38,7 +38,7 @@ function GameSetupView() {
 
   const handleBack = () => {
     if (step === 1) {
-      navigate('/squads/options');
+      navigate('/squads');
     } else {
       setStep(1);
     }
