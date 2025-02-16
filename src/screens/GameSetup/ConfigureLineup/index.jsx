@@ -1,29 +1,32 @@
 import React, { useEffect } from 'react';
-import StartingLineup from './StartingLineup';
-import GoalkeeperSettings from './GoalkeeperSettings';
 import { useNavigate } from 'react-router-dom';
 import { parsePlayers } from '../../../utils/parsePlayers';
 import { useStateContext } from '../../../state';
+import useGameSetup from '../../../features/GameSetup/hooks/useGameSetup';
+import StartingLineup from './StartingLineup';
+import GoalkeeperSettings from './GoalkeeperSettings';
 
-export default function GameSetupConfiguration({
-  playerName,
-  setPlayerName,
-  addPlayer,
-  deletePlayer,
-  toggleStartingPlayer,
-  errorMessage,
-  startingPlayers = [],
-  goalkeeper,
-  setGoalkeeper,
-  includeGKPlaytime,
-  setIncludeGKPlaytime,
-  handleStartGame
-}) {
+export default function GameSetupConfiguration() {
+  const {
+    playerName,
+    setPlayerName,
+    addPlayer,
+    deletePlayer,
+    toggleStartingPlayer,
+    errorMessage,
+    startingPlayers,
+    goalkeeper,
+    setGoalkeeper,
+    includeGKPlaytime,
+    setIncludeGKPlaytime,
+    handleStartGame
+  } = useGameSetup();
+
   const { selectedSquad, setSelectedSquad } = useStateContext();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (startingPlayers.length === 0 && selectedSquad?.players) {
+    if (startingPlayers.length === 0 && selectedSquad && selectedSquad.players) {
       const parsedPlayers = parsePlayers(selectedSquad.players);
       setSelectedSquad(prev => ({
         ...prev,
@@ -36,7 +39,9 @@ export default function GameSetupConfiguration({
     }
   }, [startingPlayers, selectedSquad, setSelectedSquad]);
 
-  const lineupPlayers = startingPlayers.length > 0 ? startingPlayers : (selectedSquad?.players || []);
+  const lineupPlayers = startingPlayers.length > 0 
+    ? startingPlayers 
+    : (selectedSquad && selectedSquad.players ? selectedSquad.players : []);
 
   const handleBack = () => {
     navigate('/setup/participants');
