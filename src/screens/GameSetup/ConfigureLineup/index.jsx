@@ -34,7 +34,9 @@ export default function GameSetupConfiguration({
         }))
       }));
     }
-  }, [selectedSquad, setSelectedSquad]);
+  }, [startingPlayers, selectedSquad, setSelectedSquad]);
+
+  const lineupPlayers = startingPlayers.length > 0 ? startingPlayers : (selectedSquad?.players || []);
 
   const handleBack = () => {
     navigate('/setup/participants');
@@ -54,12 +56,12 @@ export default function GameSetupConfiguration({
 
       <div className="max-w-3xl mx-auto space-y-8">
         <StartingLineup 
-          startingPlayers={startingPlayers}
+          startingPlayers={lineupPlayers}
           toggleStartingPlayer={toggleStartingPlayer}
         />
 
         <GoalkeeperSettings 
-          startingPlayers={startingPlayers}
+          startingPlayers={lineupPlayers}
           goalkeeper={goalkeeper}
           setGoalkeeper={setGoalkeeper}
           includeGKPlaytime={includeGKPlaytime}
@@ -70,7 +72,7 @@ export default function GameSetupConfiguration({
           <button
             onClick={handleStartGame}
             className="px-8 py-4 bg-purple-500 text-white text-xl rounded-full hover:bg-purple-600 transition-colors shadow-lg cursor-pointer disabled:opacity-50"
-            disabled={!goalkeeper || startingPlayers.length === 0}
+            disabled={!goalkeeper || lineupPlayers.length === 0}
           >
             Start Game
           </button>
