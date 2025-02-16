@@ -72,3 +72,5 @@ function GameSetupParticipantsScreen() {
     </div>
   );
 }
+
+export default GameSetupParticipantsScreen;
