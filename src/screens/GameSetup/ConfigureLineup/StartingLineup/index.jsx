@@ -9,8 +9,8 @@ export default function StartingLineup({ startingPlayers, toggleStartingPlayer }
           <li key={player.id || index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
             <span>{player.name}</span>
             <button
-              onClick={() => toggleStartingPlayer(player)}
-              className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+              onClick={() => toggleStartingPlayer(player.id)}
+              className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors cursor-pointer"
             >
               Toggle
             </button>
