@@ -27,9 +27,9 @@ export default function GameSetupConfiguration({
       const parsedPlayers = parsePlayers(selectedSquad.players);
       setSelectedSquad(prev => ({
         ...prev,
-        players: parsedPlayers.map((name, index) => ({
+        players: parsedPlayers.map((player, index) => ({
           id: index + 1,
-          name,
+          name: typeof player === 'object' ? player.name : player,
           isStartingPlayer: true
         }))
       }));
