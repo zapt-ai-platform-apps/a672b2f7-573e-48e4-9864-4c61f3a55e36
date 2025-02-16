@@ -1,6 +1,8 @@
 export function getTotalPlayTime(player, includeGKPlaytime) {
   let total = 0;
-  player.playIntervals.forEach((interval) => {
+  // Ensure that we always have an array for playIntervals
+  const intervals = Array.isArray(player.playIntervals) ? player.playIntervals : [];
+  intervals.forEach((interval) => {
     if (!includeGKPlaytime && interval.isGoalkeeper) return;
     if (interval.endTime) {
       total += interval.endTime - interval.startTime;
