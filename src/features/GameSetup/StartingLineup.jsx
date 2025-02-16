@@ -8,17 +8,19 @@ export default function StartingLineup({ startingPlayers, toggleStartingPlayer }
         {startingPlayers.map((player) => (
           <div
             key={player.id}
-            onClick={() => toggleStartingPlayer(player.id)}
-            className={`flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 cursor-pointer ${
+            className={`flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 ${
               player.isStartingPlayer ? 'bg-green-100' : 'bg-gray-100'
             }`}
           >
             <span className="font-medium">{player.name}</span>
-            {player.isStartingPlayer ? (
-              <span className="text-green-600 font-bold">Selected</span>
-            ) : (
-              <span className="text-gray-600">Tap to select</span>
-            )}
+            <button
+              onClick={() => toggleStartingPlayer(player.id)}
+              className={`cursor-pointer px-4 py-2 rounded-full focus:outline-none ${
+                player.isStartingPlayer ? 'bg-green-100 text-green-600 font-bold' : 'bg-gray-100 text-gray-600'
+              }`}
+            >
+              {player.isStartingPlayer ? 'Selected' : 'Select'}
+            </button>
           </div>
         ))}
       </div>

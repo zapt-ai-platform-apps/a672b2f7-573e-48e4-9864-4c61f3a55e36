@@ -37,9 +37,14 @@ function useGameSetup() {
   };
 
   const toggleStartingPlayer = (playerId) => {
-    setStartingPlayers(prev => prev.map(player =>
-      player.id === playerId ? { ...player, isStartingPlayer: !player.isStartingPlayer } : player
-    ));
+    console.log("Toggling starting player with id:", playerId);
+    setStartingPlayers(prev =>
+      prev.map(player =>
+        player.id === playerId
+          ? { ...player, isStartingPlayer: !player.isStartingPlayer }
+          : player
+      )
+    );
   };
 
   const handleStartGameWrapper = () => {
