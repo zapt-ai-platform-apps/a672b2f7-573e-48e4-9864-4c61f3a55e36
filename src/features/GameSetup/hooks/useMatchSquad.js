@@ -10,9 +10,11 @@ function useMatchSquad() {
       const playersArray = Array.isArray(selectedSquad.players)
         ? selectedSquad.players
         : parsePlayers(selectedSquad.players);
-      return playersArray.map((playerName, index) => ({
-        id: index + 1,
-        name: playerName,
+      return playersArray.map((player, index) => ({
+        id: player && player.id ? player.id : index + 1,
+        // If the player is a string, use it directly.
+        // Otherwise, extract the "name" property from the object.
+        name: typeof player === 'string' ? player : player.name,
         isInMatch: true,
         isStartingPlayer: true
       }));
