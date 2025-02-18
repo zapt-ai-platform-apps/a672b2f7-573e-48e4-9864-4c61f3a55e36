@@ -1,8 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useStateContext } from '../../../state';
 import getStartingPlayers from '../helpers/getStartingPlayers.js';
-import { addPlayer as addPlayerOp, deletePlayer as deletePlayerOp, toggleStartingPlayer as toggleStartingPlayerOp, handleStartGameWrapper as handleStartGameWrapperOp } from './gameSetupOperations';
+import { addPlayer as addPlayerOp, deletePlayer as deletePlayerOp, toggleStartingPlayer as toggleStartingPlayerOp } from './gameSetupPlayerOperations';
+import { handleStartGameWrapper as handleStartGameWrapperOp } from './gameSetupOperations';
 
+/**
+ * Custom hook for managing game setup operations.
+ * @returns {Object} Object containing state and handlers for game setup.
+ */
 function useGameSetup() {
   const { selectedSquad, matchSquad, handleStartGame: contextHandleStartGame } = useStateContext();
   const [errorMessage, setErrorMessage] = useState('');
