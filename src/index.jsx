@@ -10,6 +10,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { StateProvider } from './state.jsx';
 import { AuthProvider } from './components/AuthProvider.jsx';
+import ErrorBoundary from './components/ErrorBoundary.jsx';
 
 LogRocket.init('p29zbk/zapt');
 
@@ -54,13 +55,15 @@ const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
   <React.StrictMode>
-    <StateProvider>
-      <Router>
-        <AuthProvider>
-          <App />
-          <ToastContainer />
-        </AuthProvider>
-      </Router>
-    </StateProvider>
+    <ErrorBoundary>
+      <StateProvider>
+        <Router>
+          <AuthProvider>
+            <App />
+            <ToastContainer />
+          </AuthProvider>
+        </Router>
+      </StateProvider>
+    </ErrorBoundary>
   </React.StrictMode>
 );
