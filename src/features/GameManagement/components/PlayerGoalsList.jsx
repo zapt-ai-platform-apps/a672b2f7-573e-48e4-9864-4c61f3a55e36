@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function PlayerGoalsList({ playerData, recordGoalForPlayer }) {
+function PlayerGoalsList({ playerData = [], recordGoalForPlayer }) {
   const [disabledButtons, setDisabledButtons] = useState({});
 
   const handleRecordGoal = (playerName) => {
