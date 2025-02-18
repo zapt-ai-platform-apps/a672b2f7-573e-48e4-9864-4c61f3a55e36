@@ -1,3 +1,9 @@
+/**
+ * App component - The root component for the Football Subs application.
+ *
+ * @component
+ * @returns {JSX.Element} Rendered application routing with navigation.
+ */
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import LandingScreen from './screens/Landing/index.jsx';

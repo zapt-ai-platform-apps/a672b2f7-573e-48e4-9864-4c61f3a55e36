@@ -1,3 +1,8 @@
+/**
+ * NavBar component renders the navigation bar with logo and user controls.
+ *
+ * @returns {JSX.Element} The rendered navigation bar.
+ */
 import React from 'react';
 import NavBarUserControls from './NavBarUserControls.jsx';
 import ThemeToggle from './ThemeToggle.jsx';

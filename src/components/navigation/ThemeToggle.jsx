@@ -1,3 +1,8 @@
+/**
+ * ThemeToggle component allows the user to toggle between light and dark modes.
+ *
+ * @returns {JSX.Element} The rendered theme toggle button.
+ */
 import React, { useState, useEffect } from 'react';
 import { HiMoon, HiSun } from 'react-icons/hi';
 

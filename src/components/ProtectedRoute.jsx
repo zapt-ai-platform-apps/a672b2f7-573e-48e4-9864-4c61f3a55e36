@@ -1,3 +1,10 @@
+/**
+ * ProtectedRoute component restricts access to authenticated users.
+ *
+ * @param {Object} props - Component props.
+ * @param {React.ReactNode} props.children - Child components to render if authenticated.
+ * @returns {JSX.Element} The rendered child components or redirects to login.
+ */
 import React from 'react';
 import { useAuth } from './AuthProvider.jsx';
 import { Navigate, useLocation } from 'react-router-dom';

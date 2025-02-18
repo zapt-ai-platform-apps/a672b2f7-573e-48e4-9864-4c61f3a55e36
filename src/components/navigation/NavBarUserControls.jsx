@@ -1,3 +1,8 @@
+/**
+ * NavBarUserControls component displays user control buttons including sign out.
+ *
+ * @returns {JSX.Element|null} The rendered user controls if a user is logged in.
+ */
 import React from 'react';
 import { supabase } from '../../supabaseClient.js';
 import { useAuth } from '../AuthProvider.jsx';

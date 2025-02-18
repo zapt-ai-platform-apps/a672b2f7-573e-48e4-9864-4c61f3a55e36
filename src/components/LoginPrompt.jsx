@@ -1,3 +1,8 @@
+/**
+ * LoginPrompt component renders the authentication UI for user login via Supabase Auth.
+ *
+ * @returns {JSX.Element} The rendered login prompt UI.
+ */
 import React from 'react';
 import { supabase } from '../supabaseClient.js';
 import { Auth } from '@supabase/auth-ui-react';

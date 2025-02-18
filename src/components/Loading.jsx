@@ -1,3 +1,8 @@
+/**
+ * Loading component displays a spinner and loading text.
+ *
+ * @returns {JSX.Element} The rendered loading indicator.
+ */
 import React from 'react';
 
 function Loading() {

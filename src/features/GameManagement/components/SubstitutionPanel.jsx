@@ -1,3 +1,9 @@
+/**
+ * SubstitutionPanel component acts as a wrapper for substitution controls.
+ *
+ * @param {Object} props - Component props.
+ * @returns {JSX.Element} The rendered substitution panel.
+ */
 import SubstitutionControls from './SubstitutionControls.jsx';
 
 function SubstitutionPanel(props) {
