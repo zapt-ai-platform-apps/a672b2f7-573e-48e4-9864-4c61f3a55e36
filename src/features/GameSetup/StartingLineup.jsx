@@ -2,43 +2,21 @@ import React from 'react';
 
 export default function StartingLineup({ startingPlayers, toggleStartingPlayer }) {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Starting Lineup</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {startingPlayers.map((player) => (
-          <div
-            key={player.id}
-            className={`flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 ${
-              player.isStartingPlayer ? 'bg-green-100' : 'bg-gray-100'
-            }`}
-          >
-            <span className="font-medium">{player.name}</span>
+    <div>
+      <h2 className="text-2xl font-semibold mb-4">Starting Lineup</h2>
+      <ul className="space-y-2">
+        {startingPlayers.map((player, index) => (
+          <li key={player.id || index} className="flex items-center justify-between border p-2 rounded">
+            <span>{player.name || "Unnamed Player"}</span>
             <button
-              onClick={() => toggleStartingPlayer(player.id)}
-              className={`cursor-pointer px-4 py-2 rounded-full focus:outline-none ${
-                player.isStartingPlayer
-                  ? 'bg-green-100 text-green-600 font-bold'
-                  : 'bg-gray-100 text-gray-600'
-              }`}
+              onClick={() => toggleStartingPlayer(player)}
+              className="px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
             >
-              {player.isStartingPlayer ? 'Selected' : 'Select'}
+              Toggle Starter
             </button>
-          </div>
+          </li>
         ))}
-      </div>
-      <div className="mt-6">
-        <h3 className="text-lg font-semibold mb-2">Selected Players:</h3>
-        <ul className="list-disc list-inside">
-          {startingPlayers
-            .filter(player => player.isStartingPlayer)
-            .map(player => (
-              <li key={player.id} className="text-gray-800">
-                {player.name}
-              </li>
-            ))
-          }
-        </ul>
-      </div>
+      </ul>
     </div>
   );
 }
