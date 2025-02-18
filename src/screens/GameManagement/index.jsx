@@ -3,8 +3,8 @@ import { useGameManagementLogic } from '../../features/GameManagement/hooks/useG
 import Header from '../../features/GameManagement/components/Header';
 import PitchVisualization from '../../features/GameManagement/components/PitchVisualization';
 import SubstitutionPanel from '../../features/GameManagement/components/SubstitutionPanel';
-import PlayerGoalsList from '../../features/GameManagement/components/PlayerGoalsList';
 import EndGameConfirmationModal from '../../features/GameManagement/modals/EndGameConfirmationModal';
+import GoalScoredModal from '../../features/GameManagement/modals/GoalScoredModal';
 
 function GameManagementScreen() {
   const {
@@ -18,10 +18,12 @@ function GameManagementScreen() {
     showEndGameConfirm,
     confirmEndGame,
     cancelEndGame,
-    recordGoalForPlayer,
+    recordGoal,
     onFieldPlayers,
     offFieldPlayers,
-    getTotalPlayTime
+    getTotalPlayTime,
+    showGoalModal,
+    setShowGoalModal
   } = useGameManagementLogic();
 
   return (
@@ -46,16 +48,27 @@ function GameManagementScreen() {
           getTotalPlayTime={getTotalPlayTime}
         />
 
-        <PlayerGoalsList
-          players={playerData.filter(p => p.isOnField)}
-          recordGoalForPlayer={recordGoalForPlayer}
-        />
+        <div className="flex justify-center">
+          <button
+            onClick={() => setShowGoalModal(true)}
+            className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors"
+          >
+            Record Goal
+          </button>
+        </div>
       </div>
 
       <EndGameConfirmationModal
         showEndGameConfirm={showEndGameConfirm}
         confirmEndGame={confirmEndGame}
         cancelEndGame={cancelEndGame}
+      />
+
+      <GoalScoredModal
+        showGoalModal={showGoalModal}
+        setShowGoalModal={setShowGoalModal}
+        players={playerData}
+        recordGoal={recordGoal}
       />
     </div>
   );

@@ -52,8 +52,15 @@ export function useGameManagementLogic() {
   const confirmEndGame = () => setShowEndGameConfirm(false);
   const cancelEndGame = () => setShowEndGameConfirm(false);
 
-  const recordGoalForPlayer = (playerName) => {
-    recordGoalForPlayerLogic(playerName, getTimeElapsed, setOurScore, setGoals);
+  const recordGoal = (team, scorerName) => {
+    const time = getTimeElapsed();
+    if (team === 'our') {
+      setOurScore(prev => prev + 1);
+      setGoals(prev => [...prev, { team, scorerName, time }]);
+    } else if (team === 'opponent') {
+      setOpponentScore(prev => prev + 1);
+      setGoals(prev => [...prev, { team, scorerName: null, time }]);
+    }
   };
 
   const handlePlayerAdjustment = (playerId, isAdding) => {
@@ -63,7 +70,7 @@ export function useGameManagementLogic() {
   useEffect(() => {
     if (currentSquad?.players) {
       const squadPlayers = currentSquad.players.map(name =>
-        createPlayer({ name, isInMatchSquad: true })
+        createPlayer({ name, isInMatchSquad: true, isInStartingLineup: true })
       );
       setPlayerData(prev => [
         ...prev.filter(p => p.isInMatchSquad),
@@ -85,7 +92,9 @@ export function useGameManagementLogic() {
     confirmEndGame,
     cancelEndGame,
     showEndGameConfirm,
-    recordGoalForPlayer,
+    showGoalModal,
+    setShowGoalModal,
+    recordGoal,
     handlePlayerAdjustment,
     updatePlayerLists: () => updatePlayerLists(),
     onFieldPlayers: updatePlayerLists().onField,

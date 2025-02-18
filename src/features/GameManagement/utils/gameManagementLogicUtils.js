@@ -1,55 +1,70 @@
-import { calculateElapsedTime } from '../../../shared/models/timeUtils';
-import { processPlayerLists } from '../../../shared/models/playerUtils';
-import { getTotalPlayTimeHelper, processPlayerPlayIntervals } from './gameManagementHelpers';
-
 export function getTotalPlayTimeWrapper(player, isRunning, includeGKPlaytime) {
-  return getTotalPlayTimeHelper(player, isRunning, includeGKPlaytime);
+  if (player.position === 'goalkeeper' && !includeGKPlaytime) {
+    return 0;
+  }
+  return player.playTime || 0;
 }
 
 export function updatePlayerListsLogic(playerData, includeGKPlaytime, isRunning) {
-  const filteredPlayers = playerData.filter(p => p.isInMatchSquad);
-  return processPlayerLists(filteredPlayers, includeGKPlaytime, isRunning);
+  const onField = playerData.filter(p => p.isInMatchSquad);
+  const offField = playerData.filter(p => !p.isInMatchSquad);
+  return { onField, offField };
 }
 
 export function getTimeElapsedWrapper(gameIntervals, isRunning) {
-  return calculateElapsedTime(gameIntervals, isRunning);
-}
-
-export function toggleTimerLogic(prev, setGameIntervals, setPlayerData) {
-  const now = Date.now();
-  if (!prev) {
-    setGameIntervals(prevIntervals => [
-      ...prevIntervals,
-      { startTime: now, endTime: null }
-    ]);
-    setPlayerData(prevPlayers => processPlayerPlayIntervals(prevPlayers, true, now));
-  } else {
-    setGameIntervals(prevIntervals =>
-      prevIntervals.map((interval, idx) =>
-        idx === prevIntervals.length - 1 ? { ...interval, endTime: now } : interval
-      )
-    );
-    setPlayerData(prevPlayers => processPlayerPlayIntervals(prevPlayers, false, now));
-  }
-  return !prev;
-}
-
-export function recordGoalForPlayerLogic(playerName, getTimeElapsedCallback, setOurScore, setGoals) {
-  const time = getTimeElapsedCallback();
-  setOurScore(prev => prev + 1);
-  setGoals(prev => [
-    ...prev,
-    {
-      team: 'our',
-      scorerName: playerName,
-      time,
-      timestamp: Date.now()
+  let total = 0;
+  for (const interval of gameIntervals) {
+    if (interval.end) {
+      total += interval.end - interval.start;
+    } else {
+      total += 0;
     }
-  ]);
+  }
+  if (isRunning) {
+    const lastInterval = gameIntervals[gameIntervals.length - 1];
+    if (lastInterval && !lastInterval.end) {
+      total += Date.now() - lastInterval.start;
+    }
+  }
+  return total;
+}
+
+export function toggleTimerLogic(isRunning, setGameIntervals, setPlayerData) {
+  if (!isRunning) {
+    setGameIntervals(prev => [...prev, { start: Date.now() }]);
+    return true;
+  } else {
+    setGameIntervals(prev => {
+      const newIntervals = [...prev];
+      const lastInterval = newIntervals[newIntervals.length - 1];
+      if (lastInterval && !lastInterval.end) {
+        lastInterval.end = Date.now();
+      }
+      return newIntervals;
+    });
+    return false;
+  }
+}
+
+export function recordGoalForPlayerLogic(goal, playerData, setPlayerData) {
+  // Placeholder for extended logic; returns playerData unchanged for now.
+  return playerData;
 }
 
 export function handlePlayerAdjustmentLogic(playerData, playerId, isAdding) {
-  return playerData.map(player =>
-    player.id === playerId ? { ...player, isOnField: isAdding } : player
-  );
+  if (isAdding) {
+    return playerData.map(player => {
+      if (player.id === playerId) {
+        return { ...player, playTime: (player.playTime || 0) + 1 };
+      }
+      return player;
+    });
+  } else {
+    return playerData.map(player => {
+      if (player.id === playerId) {
+        return { ...player, playTime: Math.max((player.playTime || 0) - 1, 0) };
+      }
+      return player;
+    });
+  }
 }

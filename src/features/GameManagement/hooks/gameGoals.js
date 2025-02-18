@@ -7,17 +7,6 @@
  * @returns {Object} Handlers for recording and removing goals.
  */
 export function createGameGoalHandlers({ props, setShowRemoveGoalConfirm }) {
-  const recordGoal = (team, scorerName) => {
-    const time = props.getTimeElapsed();
-    if (team === 'our') {
-      props.setOurScore(props.ourScore + 1);
-      props.setGoals([...props.goals, { team, scorerName, time }]);
-    } else if (team === 'opponent') {
-      props.setOpponentScore(props.opponentScore + 1);
-      props.setGoals([...props.goals, { team, scorerName: null, time }]);
-    }
-  };
-
   const handleRemoveLastGoal = () => {
     if (props.goals.length === 0) {
       alert('No goals to remove.');
@@ -47,7 +36,6 @@ export function createGameGoalHandlers({ props, setShowRemoveGoalConfirm }) {
   };
 
   return {
-    recordGoal,
     handleRemoveLastGoal,
     confirmRemoveGoal,
     cancelRemoveGoal
