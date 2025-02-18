@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { sentryVitePlugin } from "@sentry/vite-plugin";
+import MagicString from 'magic-string';
 
 // Custom plugin to remove "use client" directives from react-toastify
 function removeUseClient() {
@@ -8,9 +9,18 @@ function removeUseClient() {
     name: 'remove-use-client',
     transform(code, id) {
       if (id.includes('react-toastify') && code.includes('"use client"')) {
-        return code.replace('"use client";', '');
+        const directive = '"use client";';
+        const index = code.indexOf(directive);
+        if (index !== -1) {
+          const s = new MagicString(code);
+          s.remove(index, index + directive.length);
+          return {
+            code: s.toString(),
+            map: s.generateMap({ hires: true })
+          };
+        }
       }
-      return code;
+      return null;
     },
   };
 }
