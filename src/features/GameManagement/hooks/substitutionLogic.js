@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { makeSubstitution } from '../../utils/substitutionUtils';
+import { makeSubstitution } from '../utils/substitutionUtils';
 
 export function useSubstitutionLogic(props) {
   const [selectedSubOffPlayer, setSelectedSubOffPlayer] = useState(null);
