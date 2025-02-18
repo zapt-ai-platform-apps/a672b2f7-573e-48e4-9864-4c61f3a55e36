@@ -16,11 +16,14 @@ export default function GoalkeeperSettings({
         className="w-full p-3 border rounded-lg cursor-pointer"
       >
         <option value="">Select Goalkeeper</option>
-        {startingPlayers.map((player) => (
-          <option key={player.id} value={player.name}>
-            {player.name}
-          </option>
-        ))}
+        {startingPlayers
+          .filter(player => player.isStartingPlayer)
+          .map((player) => (
+            <option key={player.id} value={player.name}>
+              {player.name}
+            </option>
+          ))
+        }
       </select>
       <label className="flex items-center mt-4 space-x-3">
         <input

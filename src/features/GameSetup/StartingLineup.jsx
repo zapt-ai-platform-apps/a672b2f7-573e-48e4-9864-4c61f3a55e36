@@ -16,13 +16,28 @@ export default function StartingLineup({ startingPlayers, toggleStartingPlayer }
             <button
               onClick={() => toggleStartingPlayer(player.id)}
               className={`cursor-pointer px-4 py-2 rounded-full focus:outline-none ${
-                player.isStartingPlayer ? 'bg-green-100 text-green-600 font-bold' : 'bg-gray-100 text-gray-600'
+                player.isStartingPlayer
+                  ? 'bg-green-100 text-green-600 font-bold'
+                  : 'bg-gray-100 text-gray-600'
               }`}
             >
               {player.isStartingPlayer ? 'Selected' : 'Select'}
             </button>
           </div>
         ))}
+      </div>
+      <div className="mt-6">
+        <h3 className="text-lg font-semibold mb-2">Selected Players:</h3>
+        <ul className="list-disc list-inside">
+          {startingPlayers
+            .filter(player => player.isStartingPlayer)
+            .map(player => (
+              <li key={player.id} className="text-gray-800">
+                {player.name}
+              </li>
+            ))
+          }
+        </ul>
       </div>
     </div>
   );
