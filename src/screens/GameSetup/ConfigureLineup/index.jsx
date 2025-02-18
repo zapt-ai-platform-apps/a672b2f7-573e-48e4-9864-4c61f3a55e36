@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { parsePlayers } from '../../../utils/parsePlayers';
 import { useStateContext } from '../../../state';
 import useGameSetup from '../../../features/GameSetup/hooks/useGameSetup';
-import StartingLineup from './StartingLineup';
+import StartingLineup from '../../../features/GameSetup/StartingLineup';
 import GoalkeeperSettings from './GoalkeeperSettings';
 
+/**
+ * GameSetupConfiguration component sets up the game configuration screen with starting lineup and goalkeeper settings.
+ */
 export default function GameSetupConfiguration() {
   const {
     playerName,
@@ -22,26 +24,12 @@ export default function GameSetupConfiguration() {
     handleStartGame
   } = useGameSetup();
 
-  const { selectedSquad, setSelectedSquad } = useStateContext();
+  const { selectedSquad } = useStateContext();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (startingPlayers.length === 0 && selectedSquad && selectedSquad.players) {
-      const parsedPlayers = parsePlayers(selectedSquad.players);
-      setSelectedSquad(prev => ({
-        ...prev,
-        players: parsedPlayers.map((player, index) => ({
-          id: index + 1,
-          name: typeof player === 'object' ? player.name : player,
-          isStartingPlayer: true
-        }))
-      }));
-    }
-  }, [startingPlayers, selectedSquad, setSelectedSquad]);
-
-  const lineupPlayers = startingPlayers.length > 0 
-    ? startingPlayers 
-    : (selectedSquad && selectedSquad.players ? selectedSquad.players : []);
+  // Removed fallback effect that was overriding the startingPlayers state.
+  // Use startingPlayers from the GameSetup hook as the single source of truth.
+  const lineupPlayers = startingPlayers;
 
   const handleBack = () => {
     navigate('/setup/participants');

@@ -18,10 +18,10 @@ function StartingLineup({ startingPlayers, toggleStartingPlayer }) {
               <button 
                 onClick={() => toggleStartingPlayer(player.id)}
                 className={`px-4 py-2 rounded transition-colors cursor-pointer ${
-                  player.isStartingPlayer ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'
+                  player.isStartingPlayer ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'
                 }`}
               >
-                {player.isStartingPlayer ? 'Active' : 'Inactive'}
+                {player.isStartingPlayer ? 'Selected ✓' : 'Not Selected'}
               </button>
             </li>
           ))}
