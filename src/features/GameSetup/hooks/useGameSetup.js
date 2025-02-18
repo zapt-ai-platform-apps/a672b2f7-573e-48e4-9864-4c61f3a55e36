@@ -1,13 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useStateContext } from '../../../state';
 import getStartingPlayers from '../helpers/getStartingPlayers.js';
-import { addPlayer as addPlayerOp, deletePlayer as deletePlayerOp, toggleStartingPlayer as toggleStartingPlayerOp } from './gameSetupPlayerOperations';
-import { handleStartGameWrapper as handleStartGameWrapperOp } from './gameSetupOperations';
+import { addPlayer, deletePlayer, toggleStartingPlayer, handleStartGameWrapper } from './operations.js';
 
-/**
- * Custom hook for managing game setup operations.
- * @returns {Object} Object containing state and handlers for game setup.
- */
 function useGameSetup() {
   const { selectedSquad, matchSquad, handleStartGame: contextHandleStartGame } = useStateContext();
   const [errorMessage, setErrorMessage] = useState('');
@@ -30,21 +25,21 @@ function useGameSetup() {
     }
   }, [selectedSquad, matchSquad]);
 
-  const addPlayer = () => {
-    addPlayerOp(playerName, setStartingPlayers, setPlayerName);
+  const addPlayerHandler = () => {
+    addPlayer(playerName, setStartingPlayers, setPlayerName);
   };
 
-  const deletePlayer = (playerId) => {
-    deletePlayerOp(playerId, setStartingPlayers);
+  const deletePlayerHandler = (playerId) => {
+    deletePlayer(playerId, setStartingPlayers);
   };
 
-  const toggleStartingPlayer = (playerId) => {
+  const toggleStartingPlayerHandler = (playerId) => {
     console.log("Toggling starting player with id:", playerId);
-    toggleStartingPlayerOp(playerId, setStartingPlayers);
+    toggleStartingPlayer(playerId, setStartingPlayers);
   };
 
-  const handleStartGameWrapper = () => {
-    handleStartGameWrapperOp(goalkeeper, startingPlayers, includeGKPlaytime, setErrorMessage, contextHandleStartGame);
+  const handleStartGame = () => {
+    handleStartGameWrapper(goalkeeper, startingPlayers, includeGKPlaytime, setErrorMessage, contextHandleStartGame);
   };
 
   return {
@@ -52,15 +47,15 @@ function useGameSetup() {
     setErrorMessage,
     playerName,
     setPlayerName,
-    addPlayer,
-    deletePlayer,
-    toggleStartingPlayer,
+    addPlayer: addPlayerHandler,
+    deletePlayer: deletePlayerHandler,
+    toggleStartingPlayer: toggleStartingPlayerHandler,
     startingPlayers,
     goalkeeper,
     setGoalkeeper,
     includeGKPlaytime,
     setIncludeGKPlaytime,
-    handleStartGame: handleStartGameWrapper
+    handleStartGame
   };
 }
 
