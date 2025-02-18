@@ -1,3 +1,5 @@
+import { createPlayer } from '../../../shared/models/player';
+
 /**
  * Creates a handler to add a new player.
  *
@@ -21,16 +23,14 @@ export function createAddNewPlayer({
         props.playerData.length > 0
           ? Math.min(...props.playerData.map((p) => p.totalPlayTime || 0))
           : 0;
-      props.setPlayerData([
-        ...props.playerData,
-        {
-          name,
-          playIntervals: [],
-          isOnField: false,
-          isGoalkeeper: false,
-          totalPlayTime: minPlayTime
-        }
-      ]);
+      const newPlayer = {
+        ...createPlayer({ name }),
+        playIntervals: [],
+        isOnField: false,
+        isGoalkeeper: false,
+        totalPlayTime: minPlayTime
+      };
+      props.setPlayerData([...props.playerData, newPlayer]);
       setNewPlayerName("");
       props.updatePlayerLists();
       setShowAddPlayerModal(false);
