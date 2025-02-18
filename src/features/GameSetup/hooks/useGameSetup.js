@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useStateContext } from '../../../state';
 import getStartingPlayers from '../helpers/getStartingPlayers.js';
+import { addPlayer as addPlayerOp, deletePlayer as deletePlayerOp, toggleStartingPlayer as toggleStartingPlayerOp, handleStartGameWrapper as handleStartGameWrapperOp } from './gameSetupOperations';
 
 function useGameSetup() {
   const { selectedSquad, matchSquad, handleStartGame: contextHandleStartGame } = useStateContext();
@@ -9,55 +10,36 @@ function useGameSetup() {
   const [includeGKPlaytime, setIncludeGKPlaytime] = useState(true);
   const [startingPlayers, setStartingPlayers] = useState([]);
   const [playerName, setPlayerName] = useState('');
+  const initializedRef = useRef(false);
 
   useEffect(() => {
-    const playersArr = getStartingPlayers(selectedSquad, matchSquad);
-    if (playersArr.length > 0) {
-      setStartingPlayers(playersArr);
-      setGoalkeeper(playersArr[0]?.name || '');
-    } else {
-      setStartingPlayers([]);
+    if (!initializedRef.current) {
+      const playersArr = getStartingPlayers(selectedSquad, matchSquad);
+      if (playersArr.length > 0) {
+        setStartingPlayers(playersArr);
+        setGoalkeeper(playersArr[0]?.name || '');
+      } else {
+        setStartingPlayers([]);
+      }
+      initializedRef.current = true;
     }
   }, [selectedSquad, matchSquad]);
 
   const addPlayer = () => {
-    if (playerName.trim() !== '') {
-      const newPlayer = {
-        id: startingPlayers.length + 1,
-        name: playerName.trim(),
-        isStartingPlayer: true
-      };
-      setStartingPlayers(prev => [...prev, newPlayer]);
-      setPlayerName('');
-    }
+    addPlayerOp(playerName, setStartingPlayers, setPlayerName);
   };
 
   const deletePlayer = (playerId) => {
-    setStartingPlayers(prev => prev.filter(player => player.id !== playerId));
+    deletePlayerOp(playerId, setStartingPlayers);
   };
 
   const toggleStartingPlayer = (playerId) => {
     console.log("Toggling starting player with id:", playerId);
-    setStartingPlayers(prev =>
-      prev.map(player =>
-        player.id === playerId
-          ? { ...player, isStartingPlayer: !player.isStartingPlayer }
-          : player
-      )
-    );
+    toggleStartingPlayerOp(playerId, setStartingPlayers);
   };
 
   const handleStartGameWrapper = () => {
-    if (!goalkeeper) {
-      setErrorMessage('Please select a goalkeeper');
-      return;
-    }
-    const playersToStart = startingPlayers.filter(player => player.isStartingPlayer);
-    if (playersToStart.length === 0) {
-      setErrorMessage('At least one player must be selected as starter');
-      return;
-    }
-    contextHandleStartGame(playersToStart, goalkeeper, includeGKPlaytime);
+    handleStartGameWrapperOp(goalkeeper, startingPlayers, includeGKPlaytime, setErrorMessage, contextHandleStartGame);
   };
 
   return {
