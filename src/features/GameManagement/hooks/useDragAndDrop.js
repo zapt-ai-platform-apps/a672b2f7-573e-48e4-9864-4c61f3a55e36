@@ -1,6 +1,16 @@
 import { useCallback } from 'react';
 import { useStateContext } from '../../../state';
 
+/**
+ * Custom hook to add drag and drop functionality for moving players on the pitch.
+ *
+ * Returns event handlers and functions to initialize and clean up pointer events.
+ *
+ * @returns {Object} An object containing:
+ *  - handlePointerDown: Function to handle pointer down events.
+ *  - init: Function to initialize drag and drop on a given pitch element.
+ *  - cleanup: Function to remove event listeners.
+ */
 export default function useDragAndDrop() {
   let pitchRefLocal = null;
   const { playerData, setPlayerData } = useStateContext();

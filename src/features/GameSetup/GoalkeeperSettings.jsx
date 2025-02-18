@@ -1,42 +1,41 @@
 import React from 'react';
 
-export default function GoalkeeperSettings({ startingPlayers, goalkeeper, setGoalkeeper, includeGKPlaytime, setIncludeGKPlaytime }) {
+function GoalkeeperSettings({
+  startingPlayers,
+  goalkeeper,
+  setGoalkeeper,
+  includeGKPlaytime,
+  setIncludeGKPlaytime
+}) {
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-4">Goalkeeper Settings</h2>
-      <div className="mb-4">
-        <label className="block mb-2 font-medium">Select Goalkeeper:</label>
+      <h2 className="text-2xl font-semibold">Goalkeeper Settings</h2>
+      <div className="mt-4">
+        <label className="block mb-2">Choose Goalkeeper:</label>
         <select
-          value={goalkeeper && goalkeeper.id ? goalkeeper.id : ""}
-          onChange={(e) => {
-            const selectedPlayer = startingPlayers.find(player => 
-              (player.id ? player.id.toString() : "") === e.target.value
-            );
-            setGoalkeeper(selectedPlayer);
-          }}
-          className="w-full border p-2 rounded"
+          value={goalkeeper || ''}
+          onChange={(e) => setGoalkeeper(e.target.value)}
+          className="px-4 py-2 border rounded"
         >
-          <option value="" disabled>
-            Select goalkeeper
-          </option>
+          <option value="">Select a goalkeeper</option>
           {startingPlayers.map((player, index) => (
-            <option key={player.id || index} value={player.id ? player.id : index}>
-              {player.name || "Unnamed Player"}
+            <option key={index} value={player.name || ''}>
+              {player.name || `Player ${index + 1}`}
             </option>
           ))}
         </select>
       </div>
-      <div>
-        <label className="inline-flex items-center">
-          <input
-            type="checkbox"
-            checked={includeGKPlaytime}
-            onChange={() => setIncludeGKPlaytime(!includeGKPlaytime)}
-            className="form-checkbox"
-          />
-          <span className="ml-2">Include Goalkeeper Playtime</span>
-        </label>
+      <div className="mt-4 flex items-center">
+        <input
+          type="checkbox"
+          checked={includeGKPlaytime}
+          onChange={(e) => setIncludeGKPlaytime(e.target.checked)}
+          className="mr-2"
+        />
+        <span>Include Goalkeeper Playtime</span>
       </div>
     </div>
   );
 }
+
+export default GoalkeeperSettings;

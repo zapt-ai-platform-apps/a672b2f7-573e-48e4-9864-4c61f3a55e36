@@ -1,39 +1,41 @@
 export function calculateTotalPlayTime(player, includeGKPlaytime, isRunning) {
   let total = 0;
-  const currentTime = Date.now();
-  if (player.playIntervals && Array.isArray(player.playIntervals)) {
-    for (const interval of player.playIntervals) {
-      total += interval.end ? (interval.end - interval.start) : (currentTime - interval.start);
-    }
-  }
-  if (!includeGKPlaytime && player.isGoalkeeper) {
-    total = 0;
+  if (player.playIntervals && player.playIntervals.length > 0) {
+    player.playIntervals.forEach(interval => {
+      if (interval.end) {
+        total += interval.end - interval.start;
+      } else if (isRunning) {
+        total += Date.now() - interval.start;
+      }
+    });
   }
   return total;
 }
 
 export function processPlayerLists(playerData, includeGKPlaytime, isRunning) {
-  const onField = [];
-  const offField = [];
-  if (Array.isArray(playerData)) {
-    for (const player of playerData) {
-      if (player.isOnField) {
-        onField.push(player);
-      } else {
-        offField.push(player);
-      }
+  const onField = playerData.filter(player => {
+    if (player.playIntervals && player.playIntervals.length > 0) {
+      return player.playIntervals.length % 2 !== 0;
     }
-  }
+    return false;
+  });
+  const offField = playerData.filter(player => {
+    if (player.playIntervals && player.playIntervals.length > 0) {
+      return player.playIntervals.length % 2 === 0;
+    }
+    return true;
+  });
   return { onField, offField };
 }
 
 export function calculateElapsedTime(gameIntervals, isRunning) {
-  let elapsed = 0;
-  const currentTime = Date.now();
-  if (Array.isArray(gameIntervals)) {
-    for (const interval of gameIntervals) {
-      elapsed += interval.end ? (interval.end - interval.start) : (currentTime - interval.start);
+  let total = 0;
+  gameIntervals.forEach(interval => {
+    if (interval.end) {
+      total += interval.end - interval.start;
+    } else if (isRunning) {
+      total += Date.now() - interval.start;
     }
-  }
-  return elapsed;
+  });
+  return total;
 }

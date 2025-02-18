@@ -4,6 +4,16 @@ import TeamSelection from './TeamSelection.jsx';
 import ScorerSelection from './ScorerSelection.jsx';
 import OpponentGoalConfirmation from './OpponentGoalConfirmation.jsx';
 
+/**
+ * Modal component that handles scoring a goal event.
+ *
+ * @param {Object} props - Component properties.
+ * @param {boolean} props.showGoalModal - Determines if the modal is visible.
+ * @param {function} props.setShowGoalModal - Function to toggle the modal visibility.
+ * @param {Array} props.players - Array of player objects for selecting a scorer.
+ * @param {function} props.recordGoal - Callback to record a goal.
+ * @returns {JSX.Element|null} Rendered modal component or null if not visible.
+ */
 function GoalScoredModal({ showGoalModal, setShowGoalModal, players, recordGoal }) {
   const [team, setTeam] = useState('');
   const [scorerName, setScorerName] = useState('');
