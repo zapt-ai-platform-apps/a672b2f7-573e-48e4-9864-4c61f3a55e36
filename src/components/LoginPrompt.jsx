@@ -1,5 +1,5 @@
 /**
- * LoginPrompt component renders the authentication UI for user login via Supabase Auth using magic link for email sign in.
+ * LoginPrompt component renders the authentication UI for user login via Supabase Auth using magic link.
  *
  * @returns {JSX.Element} The rendered login prompt UI.
  */
@@ -17,7 +17,9 @@ export default function LoginPrompt() {
           alt="Football Subs Logo"
           className="h-16 w-16 mx-auto mb-6"
         />
-        <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">Welcome to Football Subs</h2>
+        <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
+          Welcome to Football Subs
+        </h2>
         <p className="text-center text-xl mb-6">
           Sign in with{' '}
           <a
