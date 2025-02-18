@@ -1,5 +1,5 @@
 /**
- * LoginPrompt component renders the authentication UI for user login via Supabase Auth.
+ * LoginPrompt component renders the authentication UI for user login via Supabase Auth using magic link for email sign in.
  *
  * @returns {JSX.Element} The rendered login prompt UI.
  */
@@ -32,6 +32,7 @@ export default function LoginPrompt() {
         <Auth
           supabaseClient={supabase}
           providers={['google', 'facebook', 'apple']}
+          magicLink={true}
           appearance={{
             theme: ThemeSupa,
             variables: {
