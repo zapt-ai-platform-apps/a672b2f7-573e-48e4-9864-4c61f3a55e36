@@ -5,13 +5,13 @@ import GoalsList from '../../features/GameSummary/components/GoalsList.jsx';
 import PlayerPlaytimes from '../../features/GameSummary/components/PlayerPlaytimes.jsx';
 import FinalScore from '../../features/GameSummary/components/FinalScore.jsx';
 import ShareSummaryButton from '../../features/GameSummary/components/ShareSummaryButton.jsx';
-import { getTotalPlayTime as utilGetTotalPlayTime, formatTime } from './utils';
+import { calculateTotalPlayTime, formatTime } from '../../shared/models/playerUtils.js';
 
 function GameSummaryScreen() {
   const { playerData, goals, ourScore, opponentScore, includeGKPlaytime, resetGame } = useStateContext();
 
   const getTotalPlayTime = (player) => {
-    return utilGetTotalPlayTime(player, includeGKPlaytime);
+    return calculateTotalPlayTime(player, includeGKPlaytime, false);
   };
 
   const navigate = useNavigate();
