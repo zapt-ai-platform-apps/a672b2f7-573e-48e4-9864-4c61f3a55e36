@@ -5,9 +5,6 @@ import useGameSetup from '../../../features/GameSetup/hooks/useGameSetup';
 import StartingLineup from '../../../features/GameSetup/StartingLineup';
 import GoalkeeperSettings from './GoalkeeperSettings';
 
-/**
- * GameSetupConfiguration component sets up the game configuration screen with starting lineup and goalkeeper settings.
- */
 export default function GameSetupConfiguration() {
   const {
     playerName,
@@ -53,6 +50,12 @@ export default function GameSetupConfiguration() {
       </div>
 
       <div className="max-w-3xl mx-auto space-y-8">
+        {errorMessage && (
+          <div className="p-4 bg-red-100 text-red-700 rounded-md">
+            {errorMessage}
+          </div>
+        )}
+
         <StartingLineup 
           startingPlayers={lineupPlayers}
           toggleStartingPlayer={toggleStartingPlayer}
