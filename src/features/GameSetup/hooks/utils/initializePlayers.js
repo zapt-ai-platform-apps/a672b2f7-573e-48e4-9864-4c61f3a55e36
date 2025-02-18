@@ -1,4 +1,4 @@
-import { parsePlayers } from '../../../utils/parsePlayers.js';
+import { parsePlayers } from '../../../../utils/parsePlayers.js';
 
 function initializePlayers(selectedSquad) {
   if (selectedSquad && selectedSquad.players) {
