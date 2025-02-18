@@ -1,1 +1,0 @@
-export { fetchSquadsAPI, createSquadAPI, updateSquadAPI } from './squadService.js';

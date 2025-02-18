@@ -1,4 +1,9 @@
-import { fetchSquadsAPI, createSquadAPI, updateSquadAPI } from '../api/squadAPI.js';
+/**
+ * Service hooks for squad management, wrapping API calls.
+ *
+ * @module useSquadManagementService
+ */
+import { fetchSquadsAPI, createSquadAPI, updateSquadAPI } from '../api/squadService.js';
 
 export async function fetchSquads() {
   return await fetchSquadsAPI();
