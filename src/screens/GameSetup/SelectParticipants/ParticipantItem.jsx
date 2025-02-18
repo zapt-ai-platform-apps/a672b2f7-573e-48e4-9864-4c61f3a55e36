@@ -4,21 +4,9 @@ function ParticipantItem({ player, isSelected, onToggle }) {
   return (
     <div
       onClick={onToggle}
-      className={`p-6 border-2 rounded-xl cursor-pointer transition-all duration-300 ${
-        isSelected
-          ? 'border-green-500 bg-green-50 shadow-lg scale-[1.02]'
-          : 'border-gray-200 hover:border-gray-300 bg-white'
-      }`}
+      className={`p-4 border rounded cursor-pointer transition-colors ${isSelected ? 'bg-green-100 border-green-500' : 'bg-gray-100 border-gray-300'}`}
     >
-      <div className="flex items-center justify-between">
-        <span className="text-lg font-medium text-gray-800">{player.name}</span>
-        <input
-          type="checkbox"
-          checked={isSelected}
-          onChange={onToggle}
-          className="cursor-pointer"
-        />
-      </div>
+      <p className="text-xl font-medium">{player.name}</p>
     </div>
   );
 }

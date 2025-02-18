@@ -10,7 +10,7 @@ function GameSetupParticipantsScreen() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
 
-  const selectedMatchPlayers = matchSquadPlayers.filter(player => player.isInMatch);
+  const selectedMatchPlayers = matchSquadPlayers.filter(player => player.isInMatchSquad);
 
   const handleNext = () => {
     if (selectedMatchPlayers.length === 0) {
@@ -18,7 +18,6 @@ function GameSetupParticipantsScreen() {
       return;
     }
     
-    // Convert to proper player objects with IDs
     const playersWithIds = selectedMatchPlayers.map((player, index) => ({
       id: player.id || index + 1,
       name: player.name,
