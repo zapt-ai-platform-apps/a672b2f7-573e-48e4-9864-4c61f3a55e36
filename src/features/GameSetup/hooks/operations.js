@@ -9,7 +9,7 @@ export function addPlayer(playerName, setStartingPlayers, setPlayerName) {
   const newPlayer = {
     id: Date.now(), // simple unique id using timestamp
     name: playerName.trim(),
-    isStarting: false
+    isStartingPlayer: false
   };
   setStartingPlayers(prevPlayers => [...prevPlayers, newPlayer]);
   setPlayerName('');
@@ -32,7 +32,7 @@ export function deletePlayer(playerId, setStartingPlayers) {
 export function toggleStartingPlayer(playerId, setStartingPlayers) {
   setStartingPlayers(prevPlayers =>
     prevPlayers.map(player =>
-      player.id === playerId ? { ...player, isStarting: !player.isStarting } : player
+      player.id === playerId ? { ...player, isStartingPlayer: !player.isStartingPlayer } : player
     )
   );
 }
