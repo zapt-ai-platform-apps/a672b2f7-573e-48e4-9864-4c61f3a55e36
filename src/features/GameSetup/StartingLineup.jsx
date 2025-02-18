@@ -1,25 +1,33 @@
 import React from 'react';
 
+/**
+ * StartingLineup component displays the list of starting players with a toggle button to update their starting status.
+ * @param {Object} props - Component props.
+ * @param {Array} props.startingPlayers - Array of player objects.
+ * @param {function} props.toggleStartingPlayer - Function to toggle a player's starting status; expects a player ID.
+ */
 function StartingLineup({ startingPlayers, toggleStartingPlayer }) {
   return (
-    <div>
-      <h2 className="text-2xl font-semibold">Starting Lineup</h2>
+    <div className="min-h-screen h-full p-4 text-gray-900">
+      <h2 className="text-2xl font-semibold mb-4">Starting Lineup</h2>
       {startingPlayers.length ? (
         <ul>
           {startingPlayers.map((player, index) => (
-            <li key={index} className="flex items-center justify-between my-2">
+            <li key={player.id} className="flex items-center justify-between my-2 border p-2 rounded">
               <span>{player.name || `Player ${index + 1}`}</span>
               <button 
-                onClick={() => toggleStartingPlayer(player)}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                onClick={() => toggleStartingPlayer(player.id)}
+                className={`px-4 py-2 rounded transition-colors cursor-pointer ${
+                  player.isStartingPlayer ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'
+                }`}
               >
-                Toggle
+                {player.isStartingPlayer ? 'Active' : 'Inactive'}
               </button>
             </li>
           ))}
         </ul>
       ) : (
-        <p>No starting players added.</p>
+        <p className="text-gray-700">No starting players added.</p>
       )}
     </div>
   );
