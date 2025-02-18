@@ -45,11 +45,12 @@ export function deletePlayer(playerId, setStartingPlayers) {
  * @param {Function} setStartingPlayers - The state setter function for updating the starting players list.
  */
 export function toggleStartingPlayer(playerId, setStartingPlayers) {
-  setStartingPlayers(prev =>
-    prev.map(player =>
-      player.id === playerId
+  setStartingPlayers(prev => {
+    console.log("Toggling starting status for player:", playerId);
+    return prev.map(player =>
+      String(player.id) === String(playerId)
         ? { ...player, isStartingPlayer: !player.isStartingPlayer }
         : player
-    )
-  );
+    );
+  });
 }
