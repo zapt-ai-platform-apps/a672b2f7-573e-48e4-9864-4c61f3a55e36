@@ -7,7 +7,7 @@ import assignInitialPositions from '../utils/assignInitialPositions';
 function PitchVisualization() {
   const { playerData } = useStateContext();
   const pitchRef = useRef(null);
-  const { handlePointerDown, init, cleanup } = useDragAndDrop();
+  const { handlePointerDown, init } = useDragAndDrop();
 
   useEffect(() => {
     if (pitchRef.current) {
@@ -16,13 +16,14 @@ function PitchVisualization() {
   }, [playerData]);
 
   useEffect(() => {
+    let cleanup;
     if (pitchRef.current) {
-      init(pitchRef.current);
+      cleanup = init(pitchRef.current);
     }
     return () => {
-      cleanup();
+      if (cleanup) cleanup();
     };
-  }, [init, cleanup]);
+  }, [init]);
 
   return (
     <div className="mb-8">

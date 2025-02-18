@@ -22,7 +22,7 @@ export default function useDragAndDrop() {
         ? { ...p, position: { x, y } }
         : p
     ));
-  }, [draggingPlayer]);
+  }, [draggingPlayer, setPlayerData]);
 
   const handlePointerUp = useCallback(() => {
     setDraggingPlayer(null);
