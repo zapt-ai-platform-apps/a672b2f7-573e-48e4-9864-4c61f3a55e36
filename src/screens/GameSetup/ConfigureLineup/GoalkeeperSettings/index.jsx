@@ -1,9 +1,11 @@
 import React from 'react';
 
 export default function GoalkeeperSettings({ startingPlayers, goalkeeper, setGoalkeeper, includeGKPlaytime, setIncludeGKPlaytime }) {
+  const startingPlayersFiltered = startingPlayers.filter(player => player.isStartingPlayer);
+
   const handleSelectChange = (e) => {
     const selectedId = e.target.value;
-    const selectedPlayer = startingPlayers.find(player => String(player.id) === selectedId) || null;
+    const selectedPlayer = startingPlayersFiltered.find(player => String(player.id) === selectedId) || null;
     setGoalkeeper(selectedPlayer);
   };
 
@@ -24,7 +26,7 @@ export default function GoalkeeperSettings({ startingPlayers, goalkeeper, setGoa
           <option value="" disabled>
             Select a player
           </option>
-          {startingPlayers.map(player => (
+          {startingPlayersFiltered.map(player => (
             <option key={player.id} value={player.id}>
               {player.name}
             </option>

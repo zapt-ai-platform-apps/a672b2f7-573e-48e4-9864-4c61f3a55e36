@@ -6,7 +6,7 @@ import { addPlayer, deletePlayer, toggleStartingPlayer, handleStartGameWrapper }
 function useGameSetup() {
   const { selectedSquad, matchSquad, handleStartGame: contextHandleStartGame } = useStateContext();
   const [errorMessage, setErrorMessage] = useState('');
-  const [goalkeeper, setGoalkeeper] = useState('');
+  const [goalkeeper, setGoalkeeper] = useState(null);
   const [includeGKPlaytime, setIncludeGKPlaytime] = useState(true);
   const [startingPlayers, setStartingPlayers] = useState([]);
   const [playerName, setPlayerName] = useState('');
@@ -17,7 +17,9 @@ function useGameSetup() {
       const playersArr = getStartingPlayers(selectedSquad, matchSquad);
       if (playersArr.length > 0) {
         setStartingPlayers(playersArr);
-        setGoalkeeper(playersArr[0]?.name || '');
+        // Set initial goalkeeper to first starting player
+        const firstStarter = playersArr.find(player => player.isStartingPlayer);
+        setGoalkeeper(firstStarter || null);
       } else {
         setStartingPlayers([]);
       }
@@ -34,12 +36,17 @@ function useGameSetup() {
   };
 
   const toggleStartingPlayerHandler = (playerId) => {
-    console.log("Toggling starting player with id:", playerId);
     toggleStartingPlayer(playerId, setStartingPlayers);
   };
 
   const handleStartGame = () => {
-    handleStartGameWrapper(goalkeeper, startingPlayers, includeGKPlaytime, setErrorMessage, contextHandleStartGame);
+    return handleStartGameWrapper(
+      goalkeeper,
+      startingPlayers,
+      includeGKPlaytime,
+      setErrorMessage,
+      contextHandleStartGame
+    );
   };
 
   return {

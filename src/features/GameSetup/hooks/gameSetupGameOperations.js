@@ -14,16 +14,20 @@
  * @param {boolean} includeGKPlaytime - Flag indicating whether to include goalkeeper playtime.
  * @param {function} setErrorMessage - Function to update the error message state.
  * @param {function} contextHandleStartGame - The context function to start the game; invoked with the list of starting players, goalkeeper, and includeGKPlaytime flag.
+ * @returns {boolean} Returns true if validation passed and game was started, false otherwise
  */
 export function handleStartGameWrapper(goalkeeper, startingPlayers, includeGKPlaytime, setErrorMessage, contextHandleStartGame) {
   if (!goalkeeper) {
     setErrorMessage('Please select a goalkeeper');
-    return;
+    return false;
   }
+  
   const playersToStart = startingPlayers.filter(player => player.isStartingPlayer);
   if (playersToStart.length === 0) {
     setErrorMessage('At least one player must be selected as starter');
-    return;
+    return false;
   }
+
   contextHandleStartGame(playersToStart, goalkeeper, includeGKPlaytime);
+  return true;
 }

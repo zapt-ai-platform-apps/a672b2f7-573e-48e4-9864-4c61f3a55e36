@@ -27,12 +27,17 @@ export default function GameSetupConfiguration() {
   const { selectedSquad } = useStateContext();
   const navigate = useNavigate();
 
-  // Removed fallback effect that was overriding the startingPlayers state.
-  // Use startingPlayers from the GameSetup hook as the single source of truth.
   const lineupPlayers = startingPlayers;
 
   const handleBack = () => {
     navigate('/setup/participants');
+  };
+
+  const handleStartGameClick = () => {
+    const success = handleStartGame();
+    if (success) {
+      navigate('/game-management');
+    }
   };
 
   return (
@@ -63,7 +68,7 @@ export default function GameSetupConfiguration() {
 
         <div className="flex justify-end">
           <button
-            onClick={handleStartGame}
+            onClick={handleStartGameClick}
             className="px-8 py-4 bg-purple-500 text-white text-xl rounded-full hover:bg-purple-600 transition-colors shadow-lg cursor-pointer disabled:opacity-50"
             disabled={!goalkeeper || lineupPlayers.length === 0}
           >
