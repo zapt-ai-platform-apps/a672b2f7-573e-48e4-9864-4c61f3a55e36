@@ -2,6 +2,13 @@ import React, { createContext, useState, useContext } from 'react';
 
 const StateContext = createContext();
 
+/**
+ * Provides global state context for the app.
+ *
+ * @param {Object} props - Component props.
+ * @param {React.ReactNode} props.children - The child components.
+ * @returns {JSX.Element} The provider component.
+ */
 export function StateProvider({ children }) {
   const [playerData, setPlayerData] = useState([]);
   const [goalkeeper, setGoalkeeper] = useState(null);
@@ -71,6 +78,11 @@ export function StateProvider({ children }) {
   );
 }
 
+/**
+ * Custom hook to access the global state context.
+ *
+ * @returns {Object} The state context value.
+ */
 export function useStateContext() {
   return useContext(StateContext);
 }

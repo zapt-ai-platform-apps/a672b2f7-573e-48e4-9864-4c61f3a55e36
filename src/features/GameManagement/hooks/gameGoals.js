@@ -1,3 +1,11 @@
+/**
+ * Creates handlers for managing game goals.
+ *
+ * @param {Object} params - Parameters object.
+ * @param {Object} params.props - Props containing game state and handler functions.
+ * @param {Function} params.setShowRemoveGoalConfirm - Function to toggle remove goal confirmation modal.
+ * @returns {Object} Handlers for recording and removing goals.
+ */
 export function createGameGoalHandlers({ props, setShowRemoveGoalConfirm }) {
   const recordGoal = (team, scorerName) => {
     const time = props.getTimeElapsed();

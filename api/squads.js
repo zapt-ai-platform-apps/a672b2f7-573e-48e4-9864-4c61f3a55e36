@@ -2,6 +2,13 @@ import { authenticateUser } from './_apiUtils.js';
 import * as Sentry from '@sentry/node';
 import { handleGet, handlePost, handlePut } from './squadsHandlers.js';
 
+/**
+ * API handler for squads.
+ *
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} res - The HTTP response object.
+ * @returns {Promise<void>} A promise that resolves when the response is sent.
+ */
 export default async function handler(req, res) {
   try {
     const user = await authenticateUser(req);
