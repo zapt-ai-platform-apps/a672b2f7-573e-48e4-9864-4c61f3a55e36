@@ -1,34 +1,51 @@
 import React from 'react';
 
-/**
- * StartingLineup component displays the list of starting players and allows toggling their selection.
- * @param {Object} props
- * @param {Array} props.startingPlayers - Array of player objects.
- * @param {Function} props.toggleStartingPlayer - Handler to toggle player's starting status.
- * @returns {JSX.Element} The rendered StartingLineup component.
- */
 export default function StartingLineup({ startingPlayers, toggleStartingPlayer }) {
   return (
-    <div className="p-4 border rounded-md">
-      <h2 className="text-2xl font-semibold mb-4">Starting Lineup</h2>
-      <ul className="space-y-2">
+    <div>
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Starting XI</h2>
+      <div className="grid grid-cols-1 gap-3">
         {startingPlayers.map((player, index) => (
-          <li
+          <div
             key={player.id || index}
-            className={`flex items-center justify-between p-2 rounded ${player.isStartingPlayer ? 'bg-green-100' : 'bg-gray-50'}`}
+            className={`group flex items-center justify-between p-4 rounded-lg transition-all ${
+              player.isStartingPlayer 
+                ? 'bg-green-50 border-2 border-green-200' 
+                : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent'
+            }`}
           >
-            <span className={`${player.isStartingPlayer ? 'text-green-800 font-bold' : 'text-gray-700'}`}>
-              {player.name}
-            </span>
+            <div className="flex items-center gap-3">
+              <span className={`text-lg font-medium ${
+                player.isStartingPlayer ? 'text-green-800' : 'text-gray-700'
+              }`}>
+                {player.name}
+              </span>
+              {player.isStartingPlayer && (
+                <span className="px-2 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-full">
+                  SELECTED
+                </span>
+              )}
+            </div>
+            
             <button
               onClick={() => toggleStartingPlayer(player.id)}
-              className={`px-3 py-1 rounded transition-colors cursor-pointer ${player.isStartingPlayer ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
+              className={`px-4 py-2 rounded-md transition-colors cursor-pointer ${
+                player.isStartingPlayer
+                  ? 'bg-red-500 hover:bg-red-600 text-white'
+                  : 'bg-green-500 hover:bg-green-600 text-white'
+              }`}
             >
-              {player.isStartingPlayer ? 'Selected' : 'Select'}
+              {player.isStartingPlayer ? 'Remove' : 'Select'}
             </button>
-          </li>
+          </div>
         ))}
-      </ul>
+        
+        {startingPlayers.length === 0 && (
+          <div className="text-center p-6 bg-yellow-50 rounded-lg border-2 border-yellow-100">
+            <p className="text-yellow-700">No players in starting lineup</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
