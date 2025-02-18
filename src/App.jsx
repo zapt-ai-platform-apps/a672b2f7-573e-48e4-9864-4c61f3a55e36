@@ -26,7 +26,7 @@ function App() {
           <Route path="participants" element={<ProtectedRoute><GameSetupParticipantsScreen /></ProtectedRoute>} />
           <Route path="configuration" element={<ProtectedRoute><GameSetupConfigurationScreen /></ProtectedRoute>} />
         </Route>
-        <Route path="/manage" element={<ProtectedRoute><GameManagementScreen /></ProtectedRoute>} />
+        <Route path="/game-management" element={<ProtectedRoute><GameManagementScreen /></ProtectedRoute>} />
         <Route path="/summary" element={<ProtectedRoute><GameSummaryScreen /></ProtectedRoute>} />
         <Route path="/squads" element={<ProtectedRoute><SquadManagementScreen /></ProtectedRoute>} />
       </Routes>
