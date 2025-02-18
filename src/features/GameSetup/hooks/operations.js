@@ -21,7 +21,7 @@ export function addPlayer(playerName, setStartingPlayers, setPlayerName) {
  * @param {Function} setStartingPlayers - State setter for the starting players list.
  */
 export function deletePlayer(playerId, setStartingPlayers) {
-  setStartingPlayers(prevPlayers => prevPlayers.filter(player => player.id !== playerId));
+  setStartingPlayers(prevPlayers => prevPlayers.filter(player => String(player.id) !== String(playerId)));
 }
 
 /**
@@ -32,7 +32,7 @@ export function deletePlayer(playerId, setStartingPlayers) {
 export function toggleStartingPlayer(playerId, setStartingPlayers) {
   setStartingPlayers(prevPlayers =>
     prevPlayers.map(player =>
-      player.id === playerId ? { ...player, isStartingPlayer: !player.isStartingPlayer } : player
+      String(player.id) === String(playerId) ? { ...player, isStartingPlayer: !player.isStartingPlayer } : player
     )
   );
 }
