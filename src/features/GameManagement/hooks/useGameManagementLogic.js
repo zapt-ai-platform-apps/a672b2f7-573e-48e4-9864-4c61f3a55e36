@@ -1,18 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useStateContext } from '../../../state';
-import { 
-  getTotalPlayTime as getTotalPlayTimeHandler,
-  updatePlayerLists as updatePlayerListsHandler,
-  getTimeElapsed as getTimeElapsedHandler,
-  handleEndGame as handleEndGameHandler,
-  confirmEndGame as confirmEndGameHandler,
-  cancelEndGame as cancelEndGameHandler,
-  toggleTimer as toggleTimerHandler,
-  assignGoalkeeper as assignGoalkeeperHandler,
-  handleRemoveLastGoal as handleRemoveLastGoalHandler,
-  handlePlayerAdjustment as handlePlayerAdjustmentHandler,
-  recordGoalForPlayer as recordGoalForPlayerHandler
-} from './gameManagementHandlers.js';
+import { calculateElapsedTime, processPlayerLists } from '../../../shared/models/timeUtils';
+import { createPlayer } from '../../../shared/models/player';
+import { getTotalPlayTimeHelper, processPlayerPlayIntervals } from '../utils/gameManagementHelpers';
 
 export function useGameManagementLogic() {
   const {
@@ -32,82 +22,82 @@ export function useGameManagementLogic() {
 
   const [isRunning, setIsRunning] = useState(false);
   const [gameIntervals, setGameIntervals] = useState([]);
-  const [onFieldPlayers, setOnFieldPlayers] = useState([]);
-  const [offFieldPlayers, setOffFieldPlayers] = useState([]);
   const [showEndGameConfirm, setShowEndGameConfirm] = useState(false);
   const [showGoalModal, setShowGoalModal] = useState(false);
   const [showAddPlayerModal, setShowAddPlayerModal] = useState(false);
 
   const getTotalPlayTime = (player) => {
-    return getTotalPlayTimeHandler(player, includeGKPlaytime, isRunning);
+    return getTotalPlayTimeHelper(player, isRunning, includeGKPlaytime);
   };
 
   const updatePlayerLists = () => {
-    const squadPlayers = currentSquad?.players || [];
-    const { onField, offField } = updatePlayerListsHandler(
-      [...playerData, ...squadPlayers],
+    const { onField, offField } = processPlayerLists(
+      playerData.filter(p => p.isInMatchSquad),
       includeGKPlaytime,
       isRunning
     );
-    setOnFieldPlayers(onField);
-    setOffFieldPlayers(offField);
+    return { onField, offField };
   };
 
   const getTimeElapsed = () => {
-    return getTimeElapsedHandler(gameIntervals, isRunning);
-  };
-
-  const handleEndGame = () => {
-    handleEndGameHandler(setShowEndGameConfirm);
-  };
-
-  const confirmEndGame = () => {
-    confirmEndGameHandler(setShowEndGameConfirm);
-  };
-
-  const cancelEndGame = () => {
-    cancelEndGameHandler(setShowEndGameConfirm);
+    return calculateElapsedTime(gameIntervals, isRunning);
   };
 
   const toggleTimer = () => {
-    toggleTimerHandler(setIsRunning, gameIntervals, setGameIntervals);
+    setIsRunning(prev => {
+      const now = Date.now();
+      if (!prev) {
+        setGameIntervals(prevIntervals => [
+          ...prevIntervals, 
+          { startTime: now, endTime: null }
+        ]);
+        setPlayerData(prev => processPlayerPlayIntervals(prev, true, now));
+      } else {
+        setGameIntervals(prevIntervals =>
+          prevIntervals.map((interval, idx) =>
+            idx === prevIntervals.length - 1 ? { ...interval, endTime: now } : interval
+          )
+        );
+        setPlayerData(prev => processPlayerPlayIntervals(prev, false, now));
+      }
+      return !prev;
+    });
   };
 
-  const assignGoalkeeper = () => {
-    assignGoalkeeperHandler(goalkeeper, playerData, setGoalkeeper);
-  };
+  const handleEndGame = () => setShowEndGameConfirm(true);
+  const confirmEndGame = () => setShowEndGameConfirm(false);
+  const cancelEndGame = () => setShowEndGameConfirm(false);
 
-  const handleRemoveLastGoal = () => {
-    handleRemoveLastGoalHandler(setGoals, setOurScore);
+  const recordGoalForPlayer = (playerName) => {
+    const time = getTimeElapsed();
+    setOurScore(prev => prev + 1);
+    setGoals(prev => [
+      ...prev, 
+      { 
+        team: 'our',
+        scorerName: playerName,
+        time,
+        timestamp: Date.now()
+      }
+    ]);
   };
 
   const handlePlayerAdjustment = (playerId, isAdding) => {
-    handlePlayerAdjustmentHandler(playerId, setPlayerData, isAdding);
-  };
-
-  const recordGoalForPlayer = (playerId) => {
-    recordGoalForPlayerHandler(
-      playerId,
-      gameIntervals,
-      isRunning,
-      setGoals,
-      setOurScore
+    setPlayerData(prev =>
+      prev.map(player =>
+        player.id === playerId ? { ...player, isOnField: isAdding } : player
+      )
     );
   };
 
   useEffect(() => {
-    updatePlayerLists();
-  }, [playerData, currentSquad, includeGKPlaytime, isRunning]);
-
-  useEffect(() => {
     if (currentSquad?.players) {
+      const squadPlayers = currentSquad.players.map(name =>
+        createPlayer({ name, isInMatchSquad: true })
+      );
       setPlayerData(prev => [
         ...prev.filter(p => p.isInMatchSquad),
-        ...currentSquad.players.map(p => ({
-          ...p,
-          isInMatchSquad: true,
-          isInStartingLineup: false
-        }))
+        ...squadPlayers
       ]);
     }
   }, [currentSquad]);
@@ -115,34 +105,20 @@ export function useGameManagementLogic() {
   return {
     playerData,
     setPlayerData,
-    goalkeeper,
-    setGoalkeeper,
-    ourScore,
-    setOurScore,
-    opponentScore,
-    setOpponentScore,
-    goals,
-    setGoals,
-    includeGKPlaytime,
     isRunning,
-    gameIntervals,
-    onFieldPlayers,
-    offFieldPlayers,
-    showEndGameConfirm,
-    updatePlayerLists,
+    ourScore,
+    opponentScore,
     getTotalPlayTime,
     getTimeElapsed,
+    toggleTimer,
     handleEndGame,
     confirmEndGame,
     cancelEndGame,
-    toggleTimer,
-    assignGoalkeeper,
-    handleRemoveLastGoal,
-    setShowGoalModal,
-    setShowAddPlayerModal,
+    showEndGameConfirm,
+    recordGoalForPlayer,
     handlePlayerAdjustment,
-    recordGoalForPlayer
+    updatePlayerLists: () => updatePlayerLists(),
+    onFieldPlayers: updatePlayerLists().onField,
+    offFieldPlayers: updatePlayerLists().offField
   };
 }
-
-export default useGameManagementLogic;

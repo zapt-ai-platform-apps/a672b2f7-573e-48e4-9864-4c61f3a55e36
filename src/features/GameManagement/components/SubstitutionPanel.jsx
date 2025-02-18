@@ -2,45 +2,42 @@ import React from 'react';
 import { PlayerList, ConfirmSubstitutionModal } from './SubComponents.jsx';
 import { useSubstitutionLogic } from '../hooks/substitutionLogic.js';
 
-function SubstitutionPanel(props) {
+function SubstitutionPanel({ playerData, setPlayerData, isRunning, onFieldPlayers, offFieldPlayers, getTotalPlayTime }) {
   const {
     selectedSubOffPlayer,
-    setSelectedSubOffPlayer,
     selectedSubOnPlayer,
-    setSelectedSubOnPlayer,
     showSubstitutionConfirmModal,
-    setShowSubstitutionConfirmModal,
     confirmSubstitution,
     cancelSubstitution,
     handleSubOffPlayerClick,
-    handleSubOnPlayerClick,
+    handleSubOnPlayerClick
   } = useSubstitutionLogic({
-    playerData: props.playerData,
-    setPlayerData: props.setPlayerData,
-    isRunning: props.isRunning,
-    updatePlayerLists: props.updatePlayerLists,
+    playerData,
+    setPlayerData,
+    isRunning,
+    updatePlayerLists: () => ({ onFieldPlayers, offFieldPlayers })
   });
 
   return (
-    <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+    <div className="mt-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+      <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">Substitution Management</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <PlayerList
-          players={props.onFieldPlayers}
-          title="Players on Field"
-          message="Select a player to sub off"
-          selectedPlayer={selectedSubOffPlayer}
+          players={onFieldPlayers}
+          title="On Field"
+          message="Click player to substitute out"
+          getTotalPlayTime={getTotalPlayTime}
           handlePlayerClick={handleSubOffPlayerClick}
-          getTotalPlayTime={props.getTotalPlayTime}
         />
         <PlayerList
-          players={props.offFieldPlayers}
-          title="Players Off Field"
-          message="Select a player to sub on"
-          selectedPlayer={selectedSubOnPlayer}
+          players={offFieldPlayers}
+          title="Off Field"
+          message="Click player to substitute in"
+          getTotalPlayTime={getTotalPlayTime}
           handlePlayerClick={handleSubOnPlayerClick}
-          getTotalPlayTime={props.getTotalPlayTime}
         />
       </div>
+      
       <ConfirmSubstitutionModal
         showModal={showSubstitutionConfirmModal}
         selectedSubOffPlayer={selectedSubOffPlayer}
@@ -48,7 +45,7 @@ function SubstitutionPanel(props) {
         confirmSubstitution={confirmSubstitution}
         cancelSubstitution={cancelSubstitution}
       />
-    </>
+    </div>
   );
 }
 
