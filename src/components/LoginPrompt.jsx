@@ -35,6 +35,7 @@ export default function LoginPrompt() {
           supabaseClient={supabase}
           providers={['google', 'facebook', 'apple']}
           magicLink={true}
+          showLinks={true}
           appearance={{
             theme: ThemeSupa,
             variables: {
