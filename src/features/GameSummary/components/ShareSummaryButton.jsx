@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import * as Sentry from '@sentry/browser';
+import createGameSummary from '../utils/createGameSummary';
 
 function ShareSummaryButton({ ourScore, opponentScore, playerData, goals, includeGKPlaytime, getTotalPlayTime, formatTime }) {
   const [isSharing, setIsSharing] = useState(false);
@@ -7,40 +8,7 @@ function ShareSummaryButton({ ourScore, opponentScore, playerData, goals, includ
   const handleShareSummary = async () => {
     setIsSharing(true);
     try {
-      let summaryText = `Final Score: Our Team ${ourScore} - ${opponentScore} Opponent Team\n\n`;
-
-      const goalsByPlayerData = {};
-      goals
-        .filter((goal) => goal.team === 'our')
-        .forEach((goal) => {
-          const scorer = goal.scorerName;
-          if (goalsByPlayerData[scorer]) {
-            goalsByPlayerData[scorer]++;
-          } else {
-            goalsByPlayerData[scorer] = 1;
-          }
-        });
-
-      summaryText += 'Goals by Our Team:\n';
-      if (Object.keys(goalsByPlayerData).length > 0) {
-        Object.entries(goalsByPlayerData).forEach(([playerName, goalCount]) => {
-          summaryText += `- ${playerName}: ${goalCount} goal${goalCount !== 1 ? 's' : ''}\n`;
-        });
-      } else {
-        summaryText += 'No goals scored by our team.\n';
-      }
-
-      summaryText += '\nPlayer Playtimes:\n';
-      [...playerData]
-        .sort((a, b) => getTotalPlayTime(b) - getTotalPlayTime(a))
-        .forEach((player) => {
-          summaryText += `- ${player.name}: ${formatTime(getTotalPlayTime(player))}\n`;
-        });
-
-      if (!includeGKPlaytime) {
-        summaryText += '\nNote: Playtime for goalkeepers is not included.\n';
-      }
-
+      const summaryText = createGameSummary(ourScore, opponentScore, playerData, goals, includeGKPlaytime, getTotalPlayTime, formatTime);
       if (navigator.share) {
         await navigator.share({
           title: 'Match Summary',
@@ -62,9 +30,7 @@ function ShareSummaryButton({ ourScore, opponentScore, playerData, goals, includ
 
   return (
     <button
-      className={`px-8 py-4 bg-blue-500 text-white text-lg rounded-lg ${
-        isSharing ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-blue-600 hover:scale-105'
-      } transition duration-300 ease-in-out`}
+      className={`px-8 py-4 bg-blue-500 text-white text-lg rounded-lg ${isSharing ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-blue-600 hover:scale-105'} transition duration-300 ease-in-out`}
       onClick={handleShareSummary}
       disabled={isSharing}
     >

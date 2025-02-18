@@ -1,5 +1,17 @@
 import React from 'react';
 
+/**
+ * Header component for Game Management.
+ *
+ * @param {Object} props - Component props.
+ * @param {boolean} props.isRunning - Indicates if the game timer is currently running.
+ * @param {Function} props.toggleTimer - Function to start or pause the game timer.
+ * @param {Function} props.getTimeElapsed - Function that returns the elapsed game time in seconds.
+ * @param {Function} props.handleEndGame - Function to be called to end the game.
+ * @param {number} props.ourScore - Score of our team.
+ * @param {number} props.opponentScore - Score of the opponent team.
+ * @returns {JSX.Element} Rendered Header component.
+ */
 function Header({ isRunning, toggleTimer, getTimeElapsed, handleEndGame, ourScore, opponentScore }) {
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);

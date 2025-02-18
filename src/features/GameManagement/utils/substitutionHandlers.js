@@ -1,3 +1,15 @@
+/**
+ * Handles the substitution process by updating player data.
+ *
+ * @param {Object} params - Parameters for substitution.
+ * @param {Array} params.playerData - Array of player objects.
+ * @param {Function} params.setPlayerData - Function to update the player data state.
+ * @param {Object} params.selectedSubOffPlayer - Player object to be substituted off.
+ * @param {Object} params.selectedSubOnPlayer - Player object to be substituted on.
+ * @param {boolean} params.isRunning - Indicates if the game is currently running.
+ * @param {Function} params.updatePlayerLists - Function to refresh or update the player lists after substitution.
+ * @returns {void}
+ */
 export function makeSubstitution({
   playerData,
   setPlayerData,
