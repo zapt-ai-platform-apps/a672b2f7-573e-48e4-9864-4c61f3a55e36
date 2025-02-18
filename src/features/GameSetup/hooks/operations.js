@@ -1,61 +1,59 @@
-import { createPlayer } from '../../../shared/models/player.js';
-
 /**
- * Adds a new player using the shared player model.
+ * Adds a new player to the starting players list.
  * @param {string} playerName - The name of the player to add.
- * @param {function} setStartingPlayers - State setter for the starting players array.
- * @param {function} setPlayerName - State setter for resetting the input field.
+ * @param {Function} setStartingPlayers - State setter for the starting players list.
+ * @param {Function} setPlayerName - State setter for the player name input.
  */
-function addPlayer(playerName, setStartingPlayers, setPlayerName) {
-  if (!playerName) return;
-  const newPlayer = createPlayer({ name: playerName });
-  setStartingPlayers(prev => [...prev, newPlayer]);
+export function addPlayer(playerName, setStartingPlayers, setPlayerName) {
+  if (!playerName.trim()) return;
+  const newPlayer = {
+    id: Date.now(), // simple unique id using timestamp
+    name: playerName.trim(),
+    isStarting: false
+  };
+  setStartingPlayers(prevPlayers => [...prevPlayers, newPlayer]);
   setPlayerName('');
 }
 
 /**
  * Deletes a player from the starting players list.
- * @param {string} playerId - The ID of the player to delete.
- * @param {function} setStartingPlayers - State setter for the starting players array.
+ * @param {number|string} playerId - The ID of the player to delete.
+ * @param {Function} setStartingPlayers - State setter for the starting players list.
  */
-function deletePlayer(playerId, setStartingPlayers) {
-  setStartingPlayers(prev => prev.filter(player => player.id !== playerId));
+export function deletePlayer(playerId, setStartingPlayers) {
+  setStartingPlayers(prevPlayers => prevPlayers.filter(player => player.id !== playerId));
 }
 
 /**
- * Toggles a player's starting status.
- * @param {string} playerId - The ID of the player to toggle.
- * @param {function} setStartingPlayers - State setter for the starting players array.
+ * Toggles the starting status of a player.
+ * @param {number|string} playerId - The ID of the player to toggle.
+ * @param {Function} setStartingPlayers - State setter for the starting players list.
  */
-function toggleStartingPlayer(playerId, setStartingPlayers) {
-  setStartingPlayers(prev =>
-    prev.map(player =>
-      player.id === playerId
-        ? { ...player, isStartingPlayer: !player.isStartingPlayer }
-        : player
+export function toggleStartingPlayer(playerId, setStartingPlayers) {
+  setStartingPlayers(prevPlayers =>
+    prevPlayers.map(player =>
+      player.id === playerId ? { ...player, isStarting: !player.isStarting } : player
     )
   );
 }
 
 /**
- * Validates the game setup and triggers the start game process.
- * @param {Object} goalkeeper - The selected goalkeeper object.
- * @param {Array} startingPlayers - The array of starting players.
- * @param {boolean} includeGKPlaytime - Flag to include goalkeeper playtime.
- * @param {function} setErrorMessage - Function to set an error message.
- * @param {function} contextHandleStartGame - Function to handle starting the game.
+ * Validates game setup parameters and triggers game start.
+ * @param {string} goalkeeper - The name of the selected goalkeeper.
+ * @param {Array} startingPlayers - Array of starting player objects.
+ * @param {boolean} includeGKPlaytime - Flag indicating if goalkeeper playtime is included.
+ * @param {Function} setErrorMessage - State setter for error messages.
+ * @param {Function} contextHandleStartGame - Context handler to start the game.
  */
-function handleStartGameWrapper(goalkeeper, startingPlayers, includeGKPlaytime, setErrorMessage, contextHandleStartGame) {
+export function handleStartGameWrapper(goalkeeper, startingPlayers, includeGKPlaytime, setErrorMessage, contextHandleStartGame) {
   if (!goalkeeper) {
-    setErrorMessage("Please select a goalkeeper.");
+    setErrorMessage('Goalkeeper must be selected.');
     return;
   }
-  if (startingPlayers.length < 1) {
-    setErrorMessage("Not enough players.");
+  if (startingPlayers.length === 0) {
+    setErrorMessage('At least one starting player must be selected.');
     return;
   }
-  setErrorMessage('');
-  contextHandleStartGame({ goalkeeper, startingPlayers, includeGKPlaytime });
+  // Additional validations can be added as needed.
+  contextHandleStartGame(goalkeeper, startingPlayers, includeGKPlaytime);
 }
-
-export { addPlayer, deletePlayer, toggleStartingPlayer, handleStartGameWrapper };
