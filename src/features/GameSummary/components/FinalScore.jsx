@@ -1,5 +1,13 @@
 import React from 'react';
 
+/**
+ * FinalScore component displays the final score of the match.
+ *
+ * @param {Object} props - Component props.
+ * @param {number} props.ourScore - Score of our team.
+ * @param {number} props.opponentScore - Score of the opponent team.
+ * @returns {JSX.Element} Rendered final score component.
+ */
 function FinalScore({ ourScore, opponentScore }) {
   return (
     <div className="mb-8">

@@ -1,5 +1,16 @@
 import React from 'react';
 
+/**
+ * ConfirmSubstitutionModal component displays a confirmation modal for player substitution.
+ *
+ * @param {Object} props - Component props.
+ * @param {boolean} props.showModal - Determines if the modal is visible.
+ * @param {Object} props.selectedSubOffPlayer - Player object to be substituted off.
+ * @param {Object} props.selectedSubOnPlayer - Player object to be substituted on.
+ * @param {Function} props.confirmSubstitution - Callback to confirm the substitution.
+ * @param {Function} props.cancelSubstitution - Callback to cancel the substitution.
+ * @returns {JSX.Element|null} Rendered modal component or null if showModal is false.
+ */
 function ConfirmSubstitutionModal({ showModal, selectedSubOffPlayer, selectedSubOnPlayer, confirmSubstitution, cancelSubstitution }) {
   if (!showModal) return null;
 

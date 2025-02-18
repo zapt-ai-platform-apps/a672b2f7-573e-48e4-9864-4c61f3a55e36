@@ -1,5 +1,13 @@
 import React from 'react';
 
+/**
+ * StartGameButton component renders a button to start the game.
+ *
+ * @param {Object} props - Component props.
+ * @param {boolean} props.disabled - Flag that disables the button when true.
+ * @param {Function} props.onStartGame - Callback function invoked when the button is clicked.
+ * @returns {JSX.Element} Rendered start game button.
+ */
 export default function StartGameButton({ disabled, onStartGame }) {
   return (
     <button
