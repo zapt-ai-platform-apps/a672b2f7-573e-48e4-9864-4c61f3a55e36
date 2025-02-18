@@ -1,4 +1,4 @@
-import { calculateTotalPlayTime, processPlayerLists, calculateElapsedTime } from '../../shared/models/playerUtils.js';
+import { calculateTotalPlayTime, processPlayerLists, calculateElapsedTime } from '../../../shared/models/playerUtils.js';
 
 export function getTotalPlayTime(player, includeGKPlaytime, isRunning) {
   return calculateTotalPlayTime(player, includeGKPlaytime, isRunning);
