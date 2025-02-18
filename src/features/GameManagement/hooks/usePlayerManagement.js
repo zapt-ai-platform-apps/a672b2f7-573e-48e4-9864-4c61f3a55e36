@@ -1,5 +1,20 @@
 import { useState, useEffect } from 'react';
 
+/**
+ * Custom hook for managing player lists based on field status.
+ *
+ * @param {Object} params - Parameters for the hook.
+ * @param {Array} params.playerData - Array of player objects.
+ * @param {Function} params.setPlayerData - Function to update player data.
+ * @param {boolean} params.includeGKPlaytime - Flag determining whether to include goalkeeper playtime.
+ * @param {boolean} params.isRunning - Flag indicating if the game timer is running.
+ * @param {number} params.now - Current timestamp for playtime calculations.
+ * @returns {Object} An object containing:
+ *   - onFieldPlayers: Array of players currently on the field.
+ *   - offFieldPlayers: Array of players currently off the field.
+ *   - updatePlayerLists: Function to update the on/off field lists.
+ *   - getTotalPlayTime: Function that calculates and returns total playtime for a given player.
+ */
 function usePlayerManagement({ playerData = [], setPlayerData, includeGKPlaytime, isRunning, now }) {
   const [onFieldPlayers, setOnFieldPlayers] = useState([]);
   const [offFieldPlayers, setOffFieldPlayers] = useState([]);

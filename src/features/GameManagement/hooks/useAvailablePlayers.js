@@ -1,5 +1,13 @@
 import { useState, useEffect } from 'react';
 
+/**
+ * Custom hook to determine available players that are not currently in the game.
+ * It compares the players listed in the selected squad with the players already in the current game.
+ *
+ * @param {Object} selectedSquad - The squad object containing a "players" property.
+ * @param {Array} currentGamePlayers - Array of player objects currently in the game.
+ * @returns {Array<string>} An array of available player names.
+ */
 export function useAvailablePlayers(selectedSquad, currentGamePlayers) {
   const [availablePlayers, setAvailablePlayers] = useState([]);
 
@@ -21,3 +29,5 @@ export function useAvailablePlayers(selectedSquad, currentGamePlayers) {
 
   return availablePlayers;
 }
+
+export default useAvailablePlayers;

@@ -2,6 +2,16 @@ import { useState, useEffect } from 'react';
 import { useStateContext } from '../../../state';
 import { parsePlayers } from '../../../utils/parsePlayers.js';
 
+/**
+ * Custom hook for managing match squad selection.
+ * It initializes match squad players from the selected squad and provides functions
+ * to toggle a player's participation in the match as well as their starting status.
+ *
+ * @returns {Object} An object containing:
+ *   - matchSquadPlayers: Array of player objects for the match.
+ *   - toggleMatchPlayer: Function to toggle a player's "isInMatch" status.
+ *   - toggleStartingPlayer: Function to toggle a player's "isStartingPlayer" status.
+ */
 function useMatchSquad() {
   const { selectedSquad } = useStateContext();
 
