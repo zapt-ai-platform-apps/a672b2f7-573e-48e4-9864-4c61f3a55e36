@@ -6,19 +6,12 @@ import SubstitutionPanel from '../../features/GameManagement/components/Substitu
 import PlayerGoalsList from '../../features/GameManagement/components/PlayerGoalsList.jsx';
 import { EndGameConfirmationModal } from '../../features/GameManagement/components/GameModalAndVisualization.jsx';
 
-/**
- * GameManagementScreen component - main view for managing the game.
- *
- * @component
- * @returns {JSX.Element} The game management screen.
- */
 function GameManagementScreen() {
   const {
     playerData,
     setPlayerData,
     isRunning,
     includeGKPlaytime,
-    updatePlayerLists,
     onFieldPlayers,
     offFieldPlayers,
     getTotalPlayTime,
@@ -30,6 +23,7 @@ function GameManagementScreen() {
     showEndGameConfirm,
     confirmEndGame,
     cancelEndGame,
+    handlePlayerAdjustment,
     recordGoalForPlayer
   } = useGameManagementLogic();
 
@@ -43,18 +37,28 @@ function GameManagementScreen() {
         ourScore={ourScore}
         opponentScore={opponentScore}
       />
-      <PitchVisualization />
+      
+      <PitchVisualization 
+        players={onFieldPlayers}
+        getTotalPlayTime={getTotalPlayTime}
+      />
+      
       <SubstitutionPanel
         playerData={playerData}
         setPlayerData={setPlayerData}
         isRunning={isRunning}
         includeGKPlaytime={includeGKPlaytime}
-        updatePlayerLists={updatePlayerLists}
         onFieldPlayers={onFieldPlayers}
         offFieldPlayers={offFieldPlayers}
         getTotalPlayTime={getTotalPlayTime}
+        handlePlayerAdjustment={handlePlayerAdjustment}
       />
-      <PlayerGoalsList playerData={playerData} recordGoalForPlayer={recordGoalForPlayer} />
+      
+      <PlayerGoalsList 
+        players={playerData}
+        recordGoalForPlayer={recordGoalForPlayer}
+      />
+      
       {showEndGameConfirm && (
         <EndGameConfirmationModal
           showEndGameConfirm={showEndGameConfirm}

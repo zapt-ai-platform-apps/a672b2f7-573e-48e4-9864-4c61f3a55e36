@@ -10,8 +10,7 @@ import {
   toggleTimer as toggleTimerHandler,
   assignGoalkeeper as assignGoalkeeperHandler,
   handleRemoveLastGoal as handleRemoveLastGoalHandler,
-  handleIncreasePlayers as handleIncreasePlayersHandler,
-  handleDecreasePlayers as handleDecreasePlayersHandler,
+  handlePlayerAdjustment as handlePlayerAdjustmentHandler,
   recordGoalForPlayer as recordGoalForPlayerHandler
 } from './gameManagementHandlers.js';
 
@@ -27,7 +26,8 @@ export function useGameManagementLogic() {
     setOpponentScore,
     goals,
     setGoals,
-    includeGKPlaytime
+    includeGKPlaytime,
+    currentSquad
   } = useStateContext();
 
   const [isRunning, setIsRunning] = useState(false);
@@ -43,7 +43,12 @@ export function useGameManagementLogic() {
   };
 
   const updatePlayerLists = () => {
-    const { onField, offField } = updatePlayerListsHandler(playerData, includeGKPlaytime, isRunning);
+    const squadPlayers = currentSquad?.players || [];
+    const { onField, offField } = updatePlayerListsHandler(
+      [...playerData, ...squadPlayers],
+      includeGKPlaytime,
+      isRunning
+    );
     setOnFieldPlayers(onField);
     setOffFieldPlayers(offField);
   };
@@ -65,7 +70,7 @@ export function useGameManagementLogic() {
   };
 
   const toggleTimer = () => {
-    toggleTimerHandler(setIsRunning);
+    toggleTimerHandler(setIsRunning, gameIntervals, setGameIntervals);
   };
 
   const assignGoalkeeper = () => {
@@ -73,24 +78,39 @@ export function useGameManagementLogic() {
   };
 
   const handleRemoveLastGoal = () => {
-    handleRemoveLastGoalHandler(setGoals);
+    handleRemoveLastGoalHandler(setGoals, setOurScore);
   };
 
-  const handleIncreasePlayers = () => {
-    handleIncreasePlayersHandler(setOnFieldPlayers);
+  const handlePlayerAdjustment = (playerId, isAdding) => {
+    handlePlayerAdjustmentHandler(playerId, setPlayerData, isAdding);
   };
 
-  const handleDecreasePlayers = () => {
-    handleDecreasePlayersHandler(setOnFieldPlayers);
-  };
-
-  const recordGoalForPlayer = (playerName) => {
-    recordGoalForPlayerHandler(playerName, gameIntervals, isRunning, setOurScore, setGoals);
+  const recordGoalForPlayer = (playerId) => {
+    recordGoalForPlayerHandler(
+      playerId,
+      gameIntervals,
+      isRunning,
+      setGoals,
+      setOurScore
+    );
   };
 
   useEffect(() => {
     updatePlayerLists();
-  }, [playerData, includeGKPlaytime, isRunning]);
+  }, [playerData, currentSquad, includeGKPlaytime, isRunning]);
+
+  useEffect(() => {
+    if (currentSquad?.players) {
+      setPlayerData(prev => [
+        ...prev.filter(p => p.isInMatchSquad),
+        ...currentSquad.players.map(p => ({
+          ...p,
+          isInMatchSquad: true,
+          isInStartingLineup: false
+        }))
+      ]);
+    }
+  }, [currentSquad]);
 
   return {
     playerData,
@@ -120,8 +140,7 @@ export function useGameManagementLogic() {
     handleRemoveLastGoal,
     setShowGoalModal,
     setShowAddPlayerModal,
-    handleIncreasePlayers,
-    handleDecreasePlayers,
+    handlePlayerAdjustment,
     recordGoalForPlayer
   };
 }
