@@ -36,6 +36,7 @@ export default function LoginPrompt() {
           providers={['google', 'facebook', 'apple']}
           magicLink={true}
           showLinks={true}
+          view="magic_link"
           appearance={{
             theme: ThemeSupa,
             variables: {
