@@ -18,7 +18,7 @@ export function createPlayer({ name }) {
     id: generateId(),
     name,
     isInMatchSquad: false,      // Indicates if the player is part of the match squad
-    isInStartingLineup: false   // Indicates if the player is in the starting lineup
+    isStartingPlayer: false     // Indicates if the player is in the starting lineup
   };
 }
 
@@ -33,7 +33,7 @@ export function createPlayer({ name }) {
 export function updatePlayerStatus(player, updates) {
   const updatedPlayer = { ...player, ...updates };
 
-  if (updatedPlayer.isInStartingLineup && !updatedPlayer.isInMatchSquad) {
+  if (updatedPlayer.isStartingPlayer && !updatedPlayer.isInMatchSquad) {
     throw new Error('Player cannot be in starting lineup if not in match squad');
   }
 
