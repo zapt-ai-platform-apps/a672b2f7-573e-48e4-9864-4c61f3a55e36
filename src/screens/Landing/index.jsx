@@ -4,23 +4,29 @@ import { useAuth } from '../../components/AuthProvider.jsx';
 import HeroSection from './HeroSection.jsx';
 import FeaturesSection from './FeaturesSection.jsx';
 
-function LandingScreen() {
+/**
+ * LandingPage – the main entry page of the app.
+ * When mounted, it logs its status and redirects signed‑in users.
+ */
+function LandingPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
   useEffect(() => {
+    console.log("LandingPage mounted");
     if (user) {
       navigate('/squads', { replace: true });
     }
   }, [user, navigate]);
 
   const handleGetStarted = () => {
+    console.log("Get Started button clicked");
     navigate('/setup');
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-700 opacity-90 -z-10"></div>
+    <div className="min-h-screen relative overflow-hidden animate-fadeIn">
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 opacity-90 -z-10"></div>
       <div className="min-h-screen flex flex-col justify-center items-center p-8">
         <HeroSection onGetStarted={handleGetStarted} />
         <FeaturesSection />
@@ -39,4 +45,4 @@ function LandingScreen() {
   );
 }
 
-export default LandingScreen;
+export default LandingPage;
