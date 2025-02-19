@@ -18,7 +18,7 @@ export default function StartingLineup({ startingPlayers, toggleStartingPlayer }
               <span className={`text-lg font-medium ${
                 player.isStartingPlayer ? 'text-green-800' : 'text-gray-700'
               }`}>
-                {player.name}
+                {String(player.name)} {/* Ensure name is rendered as string */}
               </span>
               {player.isStartingPlayer && (
                 <span className="px-2 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-full">

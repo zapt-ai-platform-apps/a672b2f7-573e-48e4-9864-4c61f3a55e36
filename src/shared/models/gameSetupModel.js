@@ -24,6 +24,7 @@ export function getStartingPlayers(selectedSquad, matchSquad) {
     if (!selectedSquad || !selectedSquad.players) {
       return [];
     }
+    
     let playersArray = [];
     if (Array.isArray(selectedSquad.players)) {
       playersArray = selectedSquad.players;
@@ -34,14 +35,17 @@ export function getStartingPlayers(selectedSquad, matchSquad) {
     } else {
       return [];
     }
+
     return playersArray.map(player => {
+      // Ensure name is always a string
       let nameValue = player.name;
       if (nameValue && typeof nameValue === 'object') {
-        nameValue = nameValue.name ? nameValue.name : JSON.stringify(nameValue);
+        nameValue = nameValue.name || JSON.stringify(nameValue);
       }
+      
       return { 
         ...player, 
-        name: typeof nameValue === 'string' ? nameValue : '',
+        name: String(nameValue || ''), // Force string conversion
         isStartingPlayer: player.isStartingPlayer !== undefined ? player.isStartingPlayer : false 
       };
     });
