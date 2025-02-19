@@ -1,20 +1,18 @@
 import { useState } from 'react';
 import { useStateContext } from '../../../state';
-import {
-  getTotalPlayTime,
-  getTimeElapsedHandler,
-  toggleTimerHandler,
-  recordGoalHandler,
-  handlePlayerAdjustmentHandler,
-  updatePlayerListsHandler
+import { 
+  getTotalPlayTime as getTotalPlayTimeHandler, 
+  getTimeElapsed as getTimeElapsedHandler, 
+  toggleTimer as toggleTimerHandler, 
+  recordGoal as recordGoalHandler, 
+  handlePlayerAdjustment as handlePlayerAdjustmentHandler, 
+  updatePlayerLists as updatePlayerListsHandler 
 } from './gameManagementLogicHelpers';
 
-function useGameManagementLogic() {
+export function useGameManagementLogic() {
   const {
     playerData,
     setPlayerData,
-    goalkeeper,
-    setGoalkeeper,
     ourScore,
     setOurScore,
     opponentScore,
@@ -22,8 +20,6 @@ function useGameManagementLogic() {
     goals,
     setGoals,
     includeGKPlaytime,
-    currentSquad,
-    handleStartGame: contextHandleStartGame,
     resetGame
   } = useStateContext();
 
@@ -34,7 +30,7 @@ function useGameManagementLogic() {
   const [showAddPlayerModal, setShowAddPlayerModal] = useState(false);
 
   const getTotalPlayTimeFunc = (player) => {
-    return getTotalPlayTime(player, includeGKPlaytime, isRunning);
+    return getTotalPlayTimeHandler(player, includeGKPlaytime, isRunning);
   };
 
   const getTimeElapsedFunc = () => {
@@ -87,5 +83,3 @@ function useGameManagementLogic() {
     resetGame
   };
 }
-
-export default useGameManagementLogic;
