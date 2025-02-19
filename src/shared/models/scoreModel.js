@@ -1,5 +1,8 @@
-export function recordGoal(team, scorerName, currentOurScore, currentOpponentScore, goals, time) {
-  const newGoal = { team, scorerName: team === 'our' ? scorerName : null, time, timestamp: Date.now() };
+import { getTimeElapsed } from './timerModel.js';
+
+export function recordGoal(team, scorerName, currentOurScore, currentOpponentScore, goals, gameIntervals, isRunning) {
+  const timeElapsed = getTimeElapsed(gameIntervals, isRunning);
+  const newGoal = { team, scorerName: team === 'our' ? scorerName : null, time: timeElapsed, timestamp: Date.now() };
   if (team === 'our') {
     return { newOurScore: currentOurScore + 1, newOpponentScore: currentOpponentScore, newGoals: [...goals, newGoal] };
   } else if (team === 'opponent') {
