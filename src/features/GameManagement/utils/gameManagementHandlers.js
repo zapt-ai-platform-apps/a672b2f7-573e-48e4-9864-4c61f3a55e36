@@ -1,5 +1,5 @@
 import { calculateTotalPlayTime } from '../../../shared/models/timeUtils.js';
-import { toggleTimer, recordGoal, handlePlayerAdjustment, updatePlayerLists, getTimeElapsed } from '../../shared/models/gameModel.js';
+import { toggleTimer, recordGoal, handlePlayerAdjustment, updatePlayerLists, getTimeElapsed } from '../../../shared/models/gameModel.js';
 
 export function getTotalPlayTimeValue(player, includeGKPlaytime, isRunning) {
   return calculateTotalPlayTime(player, includeGKPlaytime, isRunning);
