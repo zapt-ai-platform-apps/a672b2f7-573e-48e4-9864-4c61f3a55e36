@@ -1,18 +1,15 @@
 import { useState } from 'react';
 import { useStateContext } from '../../../state';
-import { getTimeElapsed, toggleTimer, recordGoal, handlePlayerAdjustment, updatePlayerLists } from '../../../shared/models/gameModel';
-import { calculateTotalPlayTime } from '../../../shared/models/timeUtils';
-import useSquadSetup from './useSquadSetup';
 import {
-  getTotalPlayTimeFunc as getTotalPlayTimeFuncUtil,
-  getTimeElapsedFunc as getTimeElapsedFuncUtil,
-  toggleTimerHandler as toggleTimerHandlerUtil,
-  recordGoalFunc as recordGoalFuncUtil,
-  handlePlayerAdjustmentFunc as handlePlayerAdjustmentFuncUtil,
-  updatePlayerListsFunc as updatePlayerListsFuncUtil
-} from '../utils/gameManagementHandlers';
+  getTotalPlayTime,
+  getTimeElapsedHandler,
+  toggleTimerHandler,
+  recordGoalHandler,
+  handlePlayerAdjustmentHandler,
+  updatePlayerListsHandler
+} from './gameManagementLogicHelpers';
 
-export function useGameManagementLogic() {
+function useGameManagementLogic() {
   const {
     playerData,
     setPlayerData,
@@ -25,7 +22,9 @@ export function useGameManagementLogic() {
     goals,
     setGoals,
     includeGKPlaytime,
-    currentSquad
+    currentSquad,
+    handleStartGame: contextHandleStartGame,
+    resetGame
   } = useStateContext();
 
   const [isRunning, setIsRunning] = useState(false);
@@ -34,34 +33,33 @@ export function useGameManagementLogic() {
   const [showGoalModal, setShowGoalModal] = useState(false);
   const [showAddPlayerModal, setShowAddPlayerModal] = useState(false);
 
-  useSquadSetup(currentSquad, setPlayerData);
-
   const getTotalPlayTimeFunc = (player) => {
-    return getTotalPlayTimeFuncUtil(player, includeGKPlaytime, isRunning, calculateTotalPlayTime);
+    return getTotalPlayTime(player, includeGKPlaytime, isRunning);
   };
 
   const getTimeElapsedFunc = () => {
-    return getTimeElapsedFuncUtil(gameIntervals, isRunning, getTimeElapsed);
+    return getTimeElapsedHandler(gameIntervals, isRunning);
   };
 
-  const toggleTimerHandler = () => {
-    toggleTimerHandlerUtil(isRunning, gameIntervals, setGameIntervals, setIsRunning, toggleTimer);
+  const toggleTimerFunc = () => {
+    const { newIntervals, newIsRunning } = toggleTimerHandler(isRunning, gameIntervals);
+    setGameIntervals(newIntervals);
+    setIsRunning(newIsRunning);
   };
 
   const recordGoalFunc = (team, scorerName) => {
-    const timeElapsed = getTimeElapsedFuncUtil(gameIntervals, isRunning, getTimeElapsed);
-    const result = recordGoalFuncUtil(team, scorerName, ourScore, opponentScore, goals, timeElapsed, recordGoal);
+    const result = recordGoalHandler(team, scorerName, ourScore, opponentScore, goals, gameIntervals, isRunning);
     setOurScore(result.newOurScore);
     setOpponentScore(result.newOpponentScore);
     setGoals(result.newGoals);
   };
 
   const handlePlayerAdjustmentFunc = (playerId, isAdding) => {
-    setPlayerData(prev => handlePlayerAdjustmentFuncUtil(prev, playerId, isAdding, handlePlayerAdjustment));
+    setPlayerData(prev => handlePlayerAdjustmentHandler(prev, playerId, isAdding));
   };
 
   const updatePlayerListsFunc = () => {
-    return updatePlayerListsFuncUtil(playerData, includeGKPlaytime, isRunning, updatePlayerLists);
+    return updatePlayerListsHandler(playerData, includeGKPlaytime, isRunning);
   };
 
   return {
@@ -72,7 +70,7 @@ export function useGameManagementLogic() {
     opponentScore,
     getTotalPlayTime: getTotalPlayTimeFunc,
     getTimeElapsed: getTimeElapsedFunc,
-    toggleTimer: toggleTimerHandler,
+    toggleTimer: toggleTimerFunc,
     handleEndGame: () => setShowEndGameConfirm(true),
     confirmEndGame: () => setShowEndGameConfirm(false),
     cancelEndGame: () => setShowEndGameConfirm(false),
@@ -85,7 +83,8 @@ export function useGameManagementLogic() {
     onFieldPlayers: updatePlayerListsFunc().onField,
     offFieldPlayers: updatePlayerListsFunc().offField,
     showAddPlayerModal,
-    setShowAddPlayerModal
+    setShowAddPlayerModal,
+    resetGame
   };
 }
 

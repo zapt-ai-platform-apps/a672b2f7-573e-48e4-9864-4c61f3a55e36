@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { useStateContext } from '../../../state';
-import getStartingPlayers from '../helpers/getStartingPlayers.js';
-import { addPlayer, deletePlayer, toggleStartingPlayer, handleStartGameWrapper } from './operations.js';
+import { useStateContext } from '../../../state.jsx';
+import { getStartingPlayers } from '../../shared/models/gameSetupModel.js';
 
 function useGameSetup() {
   const { selectedSquad, matchSquad, handleStartGame: contextHandleStartGame } = useStateContext();
@@ -17,7 +16,6 @@ function useGameSetup() {
       const playersArr = getStartingPlayers(selectedSquad, matchSquad);
       if (playersArr.length > 0) {
         setStartingPlayers(playersArr);
-        // Set initial goalkeeper to first starting player
         const firstStarter = playersArr.find(player => player.isStartingPlayer);
         setGoalkeeper(firstStarter || null);
       } else {
@@ -28,25 +26,36 @@ function useGameSetup() {
   }, [selectedSquad, matchSquad]);
 
   const addPlayerHandler = () => {
-    addPlayer(playerName, setStartingPlayers, setPlayerName);
+    if (playerName.trim() !== "") {
+      setStartingPlayers(prev => {
+        const player = {
+          id: Date.now() + Math.random(),
+          name: playerName.trim(),
+          isStartingPlayer: true,
+          isInMatchSquad: true,
+          playIntervals: []
+        };
+        return [...prev, player];
+      });
+      setPlayerName("");
+    }
   };
 
   const deletePlayerHandler = (playerId) => {
-    deletePlayer(playerId, setStartingPlayers);
+    setStartingPlayers(prev => prev.filter(player => player.id !== playerId));
   };
 
   const toggleStartingPlayerHandler = (playerId) => {
-    toggleStartingPlayer(playerId, setStartingPlayers);
+    setStartingPlayers(prev => prev.map(player => {
+      if (player.id === playerId) {
+        return { ...player, isStartingPlayer: !player.isStartingPlayer };
+      }
+      return player;
+    }));
   };
 
   const handleStartGame = () => {
-    return handleStartGameWrapper(
-      goalkeeper,
-      startingPlayers,
-      includeGKPlaytime,
-      setErrorMessage,
-      contextHandleStartGame
-    );
+    return contextHandleStartGame(startingPlayers, goalkeeper, includeGKPlaytime);
   };
 
   return {
