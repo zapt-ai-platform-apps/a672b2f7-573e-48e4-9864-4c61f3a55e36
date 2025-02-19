@@ -1,4 +1,5 @@
 import { parsePlayers } from '../../utils/parsePlayers.js';
+import * as Sentry from '@sentry/browser';
 
 /**
  * @typedef {Object} Player
@@ -19,26 +20,34 @@ import { parsePlayers } from '../../utils/parsePlayers.js';
  * @returns {Array<Player>} Array of starting players.
  */
 export function getStartingPlayers(selectedSquad, matchSquad) {
-  if (selectedSquad && selectedSquad.players) {
+  try {
+    if (!selectedSquad || !selectedSquad.players) {
+      return [];
+    }
     let playersArray = [];
     if (Array.isArray(selectedSquad.players)) {
       playersArray = selectedSquad.players;
     } else if (typeof selectedSquad.players === 'object') {
-      playersArray = [selectedSquad.players];
+      playersArray = selectedSquad.players ? [selectedSquad.players] : [];
     } else if (typeof selectedSquad.players === 'string') {
       playersArray = parsePlayers(selectedSquad.players);
+    } else {
+      return [];
     }
     return playersArray.map(player => {
       let nameValue = player.name;
-      if (typeof nameValue === 'object') {
+      if (nameValue && typeof nameValue === 'object') {
         nameValue = nameValue.name ? nameValue.name : JSON.stringify(nameValue);
       }
       return { 
         ...player, 
-        name: nameValue,
+        name: typeof nameValue === 'string' ? nameValue : '',
         isStartingPlayer: player.isStartingPlayer !== undefined ? player.isStartingPlayer : false 
       };
     });
+  } catch (error) {
+    console.error('Error processing starting players:', error);
+    Sentry.captureException(error);
+    return [];
   }
-  return [];
 }
