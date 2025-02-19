@@ -1,3 +1,15 @@
+/**
+ * @typedef {Object} Interval
+ * @property {number} startTime - Start timestamp.
+ * @property {number|null} endTime - End timestamp or null if ongoing.
+ */
+
+/**
+ * Calculates the elapsed time for the game.
+ * @param {Array<Interval>} gameIntervals - Array of game intervals.
+ * @param {boolean} isRunning - Indicates if the game is running.
+ * @returns {number} Elapsed time in seconds.
+ */
 export function getTimeElapsed(gameIntervals, isRunning) {
   let total = 0;
   if (Array.isArray(gameIntervals)) {
@@ -12,6 +24,12 @@ export function getTimeElapsed(gameIntervals, isRunning) {
   return Math.floor(total / 1000);
 }
 
+/**
+ * Toggles the game timer.
+ * @param {boolean} isRunning - Current running state.
+ * @param {Array<Interval>} intervals - Array of game intervals.
+ * @returns {{newIntervals: Array<Interval>, newIsRunning: boolean}} Updated intervals and running state.
+ */
 export function toggleTimer(isRunning, intervals) {
   if (!isRunning) {
     const newInterval = { startTime: Date.now(), endTime: null };

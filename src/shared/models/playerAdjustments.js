@@ -1,3 +1,18 @@
+/**
+ * @typedef {Object} Player
+ * @property {number|string} id - Unique identifier.
+ * @property {string} name - Name of the player.
+ * @property {number} playTime - Total play time.
+ * @property {Array<{startTime: number, endTime: number|null}>} [playIntervals] - Array of play intervals.
+ */
+
+/**
+ * Adjusts the player's playTime by incrementing or decrementing.
+ * @param {Array<Player>} playerData - Array of player objects.
+ * @param {number|string} playerId - Identifier of the player to adjust.
+ * @param {boolean} isAdding - If true, increment playTime; otherwise, decrement.
+ * @returns {Array<Player>} The updated array of player objects.
+ */
 export function handlePlayerAdjustment(playerData, playerId, isAdding) {
   return playerData.map(player => {
     if (player.id === playerId) {
@@ -11,6 +26,14 @@ export function handlePlayerAdjustment(playerData, playerId, isAdding) {
   });
 }
 
+/**
+ * Applies a player adjustment based on the adjustment type.
+ * @param {Array<Player>} playerData - Array of player objects.
+ * @param {string} adjustmentType - Type of adjustment ("increase" or "decrease").
+ * @param {Player} selectedPlayer - The player object to adjust.
+ * @param {boolean} isRunning - Indicates if the game is currently running.
+ * @returns {Array<Player>} The updated array of player objects.
+ */
 export function applyPlayerAdjustment(playerData, adjustmentType, selectedPlayer, isRunning) {
   return playerData.map(player => {
     if (player.id === selectedPlayer.id) {

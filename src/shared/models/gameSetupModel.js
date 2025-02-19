@@ -1,8 +1,20 @@
 /**
+ * @typedef {Object} Player
+ * @property {number|string} id - Unique identifier of the player.
+ * @property {string} name - Name of the player.
+ * @property {boolean} [isStartingPlayer] - Indicates if the player is a starting player.
+ */
+
+/**
+ * @typedef {Object} Squad
+ * @property {Array<Player>} players - Array of player objects.
+ */
+
+/**
  * Processes the selected squad to extract the starting players with default starting status.
- * @param {Object} selectedSquad - The selected squad object.
- * @param {Object} matchSquad - (Optional) The match squad data.
- * @returns {Array} Array of starting players.
+ * @param {Squad} selectedSquad - The selected squad object.
+ * @param {any} [matchSquad] - (Optional) The match squad data.
+ * @returns {Array<Player>} Array of starting players.
  */
 export function getStartingPlayers(selectedSquad, matchSquad) {
   if (selectedSquad && selectedSquad.players) {

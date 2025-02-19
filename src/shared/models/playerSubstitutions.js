@@ -1,35 +1,12 @@
-export function updatePlayerLists(playerData, includeGKPlaytime, isRunning) {
-  const onField = playerData.filter(player => player.isInMatchSquad);
-  const offField = playerData.filter(player => !player.isInMatchSquad);
-  return { onField, offField };
-}
+/**
+ * @typedef {Object} Player
+ * @property {number|string} id - Unique identifier.
+ * @property {boolean} isInMatchSquad - Whether the player is in the match squad.
+ * @property {boolean} isOnField - Whether the player is currently on the field.
+ * @property {Array<{startTime: number, endTime: number|null}>} [playIntervals] - Array of play intervals.
+ */
 
-export function performSubstitution(playerData, selectedSubOffPlayer, selectedSubOnPlayer, isRunning) {
-  return playerData.map(player => {
-    if (player.id === selectedSubOffPlayer.id) {
-      return {
-        ...selectedSubOffPlayer,
-        isOnField: false,
-        playIntervals:
-          isRunning &&
-          selectedSubOffPlayer.playIntervals &&
-          selectedSubOffPlayer.playIntervals.length > 0 &&
-          !selectedSubOffPlayer.playIntervals[selectedSubOffPlayer.playIntervals.length - 1].endTime
-            ? [
-                ...selectedSubOffPlayer.playIntervals.slice(0, -1),
-                { ...selectedSubOffPlayer.playIntervals[selectedSubOffPlayer.playIntervals.length - 1], endTime: Date.now() }
-              ]
-            : selectedSubOffPlayer.playIntervals
-      };
-    } else if (player.id === selectedSubOnPlayer.id) {
-      return {
-        ...selectedSubOnPlayer,
-        isOnField: true,
-        playIntervals: isRunning
-          ? [...(selectedSubOnPlayer.playIntervals || []), { startTime: Date.now(), endTime: null }]
-          : selectedSubOnPlayer.playIntervals
-      };
-    }
-    return player;
-  });
-}
+import { updatePlayerLists } from './updatePlayerLists.js';
+import { performSubstitution } from './performSubstitution.js';
+
+export { updatePlayerLists, performSubstitution };

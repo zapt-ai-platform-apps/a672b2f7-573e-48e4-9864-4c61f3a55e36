@@ -1,9 +1,15 @@
 /**
+ * @typedef {Object} Player
+ * @property {string} name - Name of the player.
+ * @property {boolean} [isOnField] - Indicates if the player is on the field.
+ */
+
+/**
  * Processes the player list by partitioning players into on-field and off-field groups.
- * @param {Array} playerData - Array of player objects.
+ * @param {Array<Player>} playerData - Array of player objects.
  * @param {boolean} includeGKPlaytime - (Unused parameter, kept for compatibility)
  * @param {boolean} isRunning - (Unused parameter, kept for compatibility)
- * @returns {Object} Object with properties "onField" and "offField" containing player arrays.
+ * @returns {{onField: Array<Player>, offField: Array<Player>}} Object with properties "onField" and "offField" containing player arrays.
  */
 export function processPlayerLists(playerData, includeGKPlaytime, isRunning) {
   const onField = playerData.filter(player => player.isOnField);

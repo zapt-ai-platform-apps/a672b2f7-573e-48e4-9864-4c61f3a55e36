@@ -1,11 +1,19 @@
 /**
+ * @typedef {Object} Player
+ * @property {string} name - Name of the player.
+ * @property {boolean} [isOnField] - Indicates if the player is currently on the field.
+ * @property {boolean} [isGoalkeeper] - Specifies if the player is a goalkeeper.
+ * @property {Array<{startTime: number, endTime: number|null, isGoalkeeper?: boolean}>} [playIntervals] - Array of play intervals.
+ */
+
+/**
  * Handles the business logic for changing the goalkeeper.
  *
- * @param {Array} playerData - Array of player objects.
+ * @param {Array<Player>} playerData - Array of player objects.
  * @param {string} newGoalkeeperName - The name of the new goalkeeper.
  * @param {string} previousGoalkeeperName - The name of the previous goalkeeper.
  * @param {boolean} isRunning - Indicates if the game is currently running.
- * @returns {Array} Updated array of player objects after the goalkeeper change.
+ * @returns {Array<Player>} Updated array of player objects after the goalkeeper change.
  */
 export function changeGoalkeeper(playerData, newGoalkeeperName, previousGoalkeeperName, isRunning) {
   const now = Date.now();

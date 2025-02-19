@@ -1,8 +1,14 @@
 import { parsePlayers } from '../../utils/parsePlayers.js';
 
 /**
+ * @typedef {Object} Squad
+ * @property {string} name - The name of the squad.
+ * @property {Array<any>} players - Array of player objects.
+ */
+
+/**
  * Validates squad creation data.
- * @param {Object} data - Squad data object.
+ * @param {Squad} data - Squad data object.
  * @throws {Error} If required fields are missing.
  */
 export function validateSquadCreation(data) {
@@ -13,7 +19,7 @@ export function validateSquadCreation(data) {
 
 /**
  * Transforms players data for database insertion.
- * @param {Array|string} players - Players array or string.
+ * @param {Array<any>|string} players - Players array or string.
  * @returns {string} JSON string of players.
  */
 export function transformPlayersForDB(players) {
@@ -25,8 +31,8 @@ export function transformPlayersForDB(players) {
 
 /**
  * Transforms a squad row from the database.
- * @param {Object} row - Database row object.
- * @returns {Object} Transformed squad object with parsed players.
+ * @param {Squad} row - Database row object.
+ * @returns {Squad} Transformed squad object with parsed players.
  */
 export function transformSquadFromDB(row) {
   return {
