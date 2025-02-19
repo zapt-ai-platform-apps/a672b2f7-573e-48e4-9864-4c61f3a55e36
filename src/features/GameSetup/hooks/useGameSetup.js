@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useStateContext } from '../../../state.jsx';
-import { getStartingPlayers } from '../../shared/models/gameSetupModel.js';
+import { getStartingPlayers } from '../../../shared/models/gameSetupModel.js';
 
 function useGameSetup() {
   const { selectedSquad, matchSquad, handleStartGame: contextHandleStartGame } = useStateContext();
