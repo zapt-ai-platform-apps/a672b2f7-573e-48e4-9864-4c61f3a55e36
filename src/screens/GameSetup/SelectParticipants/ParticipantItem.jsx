@@ -4,9 +4,13 @@ function ParticipantItem({ player, isSelected, onToggle }) {
   return (
     <div
       onClick={onToggle}
-      className={`p-4 border rounded cursor-pointer transition-colors ${isSelected ? 'bg-green-100 border-green-500' : 'bg-gray-100 border-gray-300'}`}
+      className={`p-4 border rounded cursor-pointer ${isSelected ? 'bg-green-100' : 'bg-white'}`}
     >
-      <p className="text-xl font-medium">{player.name}</p>
+      <p>
+        {typeof player.name === 'object'
+          ? player.name.name || JSON.stringify(player.name)
+          : player.name}
+      </p>
     </div>
   );
 }

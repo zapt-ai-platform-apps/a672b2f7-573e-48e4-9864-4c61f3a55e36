@@ -20,7 +20,7 @@ function GameSetupParticipantsScreen() {
     
     const playersWithIds = selectedMatchPlayers.map((player, index) => ({
       id: player.id || index + 1,
-      name: player.name,
+      name: typeof player.name === 'object' ? (player.name.name || JSON.stringify(player.name)) : player.name,
       isStartingPlayer: true
     }));
 
