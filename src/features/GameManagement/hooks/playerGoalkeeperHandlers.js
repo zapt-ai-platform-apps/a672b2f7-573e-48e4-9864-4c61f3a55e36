@@ -1,34 +1,21 @@
+import { changeGoalkeeper } from '../../../shared/models/goalkeeperModel.js';
+
+/**
+ * Provides UI handlers for goalkeeper assignment.
+ *
+ * @param {Object} props - Contains playerData, goalkeeper, isRunning, updatePlayerLists, and setter functions.
+ * @param {function} setShowGKModal - Sets the visibility of the goalkeeper selection modal.
+ * @param {function} setShowGKConfirmModal - Sets the visibility of the goalkeeper confirmation modal.
+ * @returns {Object} An object containing functions to assign and confirm goalkeeper changes.
+ */
 export function createGoalkeeperHandlers(props, setShowGKModal, setShowGKConfirmModal) {
   const assignGoalkeeper = () => {
     setShowGKModal(true);
   };
 
   const confirmGoalkeeper = (playerName) => {
-    const previousGoalkeeperName = props.goalkeeper;
-    props.setPlayerData(
-      props.playerData.map((player) => {
-        if (player.name === playerName) {
-          if (props.isRunning && player.isOnField) {
-            if (player.playIntervals.length > 0 && !player.playIntervals[player.playIntervals.length - 1].endTime) {
-              player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();
-            }
-            player.playIntervals.push({ startTime: Date.now(), endTime: null, isGoalkeeper: true });
-          }
-          return { ...player, isGoalkeeper: true };
-        } else if (player.name === previousGoalkeeperName) {
-          if (props.isRunning && player.isOnField) {
-            if (player.playIntervals.length > 0 && !player.playIntervals[player.playIntervals.length - 1].endTime) {
-              player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();
-            }
-            player.playIntervals.push({ startTime: Date.now(), endTime: null, isGoalkeeper: false });
-          }
-          return { ...player, isGoalkeeper: false };
-        } else {
-          return player;
-        }
-      })
-    );
-
+    const updatedPlayers = changeGoalkeeper(props.playerData, playerName, props.goalkeeper, props.isRunning);
+    props.setPlayerData(updatedPlayers);
     props.setGoalkeeper(playerName);
     setShowGKConfirmModal(false);
     setShowGKModal(false);
@@ -36,7 +23,7 @@ export function createGoalkeeperHandlers(props, setShowGKModal, setShowGKConfirm
   };
 
   const availableGoalkeepers = () => {
-    return props.onFieldPlayers.filter((player) => player.name !== props.goalkeeper);
+    return props.onFieldPlayers.filter(player => player.name !== props.goalkeeper);
   };
 
   return {
