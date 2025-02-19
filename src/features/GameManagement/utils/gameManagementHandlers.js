@@ -1,27 +1,25 @@
-import { calculateTotalPlayTime } from '../../../shared/models/timeUtils.js';
-import { toggleTimer, recordGoal, handlePlayerAdjustment, updatePlayerLists, getTimeElapsed } from '../../../shared/models/gameModel.js';
-
-export function getTotalPlayTimeValue(player, includeGKPlaytime, isRunning) {
+export function getTotalPlayTimeFunc(player, includeGKPlaytime, isRunning, calculateTotalPlayTime) {
   return calculateTotalPlayTime(player, includeGKPlaytime, isRunning);
 }
 
-export function updateLists(playerData, includeGKPlaytime, isRunning) {
-  return updatePlayerLists(playerData, includeGKPlaytime, isRunning);
-}
-
-export function getTimeElapsedValue(gameIntervals, isRunning) {
+export function getTimeElapsedFunc(gameIntervals, isRunning, getTimeElapsed) {
   return getTimeElapsed(gameIntervals, isRunning);
 }
 
-export function toggleTimerHandler(isRunning, gameIntervals) {
-  return toggleTimer(isRunning, gameIntervals);
+export function toggleTimerHandler(isRunning, gameIntervals, setGameIntervals, setIsRunning, toggleTimer) {
+  const { newIntervals, newIsRunning } = toggleTimer(isRunning, gameIntervals);
+  setGameIntervals(newIntervals);
+  setIsRunning(newIsRunning);
 }
 
-export function recordGoalHandler(team, scorerName, ourScore, opponentScore, goals, gameIntervals, isRunning) {
-  const time = getTimeElapsed(gameIntervals, isRunning);
-  return recordGoal(team, scorerName, ourScore, opponentScore, goals, time);
+export function recordGoalFunc(team, scorerName, ourScore, opponentScore, goals, timeElapsed, recordGoal) {
+  return recordGoal(team, scorerName, ourScore, opponentScore, goals, timeElapsed);
 }
 
-export function handlePlayerAdjustmentHandler(playerData, playerId, isAdding) {
+export function handlePlayerAdjustmentFunc(playerData, playerId, isAdding, handlePlayerAdjustment) {
   return handlePlayerAdjustment(playerData, playerId, isAdding);
+}
+
+export function updatePlayerListsFunc(playerData, includeGKPlaytime, isRunning, updatePlayerLists) {
+  return updatePlayerLists(playerData, includeGKPlaytime, isRunning);
 }

@@ -1,16 +1,5 @@
 import { createPlayer } from '../../../shared/models/player';
-
-/**
- * Calculates the minimum total play time among a list of players.
- *
- * @param {Array<Object>} players - The list of player objects.
- * @returns {number} The minimum total play time, or 0 if the list is empty.
- */
-function calculateMinPlayTime(players) {
-  return players.length > 0
-    ? Math.min(...players.map((p) => p.totalPlayTime || 0))
-    : 0;
-}
+import { calculateMinPlayTime } from '../../../shared/models/playerUtils';
 
 /**
  * Creates a handler to add a new player.
