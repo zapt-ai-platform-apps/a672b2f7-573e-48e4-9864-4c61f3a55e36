@@ -1,7 +1,8 @@
-## Troubleshooting
+# Player Positions - Troubleshooting
 
-- **Player Icon Not Draggable**:
-  - Ensure you are attempting to move players who are currently on the field.
+Resolve common issues related to player positioning with the following steps:
 
-- **Positions Not Saving**:
-  - Positions are saved automatically; if you experience issues, try refreshing the page, but note that this may reset the game data.
+1. Verify that the player data loads correctly and reflects the current state.
+2. Ensure there are no conflicting settings in the player management interface.
+3. Refresh the game view if changes do not appear immediately.
+4. Consult this guide for further assistance if issues persist.

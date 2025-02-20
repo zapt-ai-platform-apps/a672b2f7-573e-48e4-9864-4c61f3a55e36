@@ -1,21 +1,9 @@
 # Setting Up the Game
 
-This guide provides step-by-step instructions to configure your game before it starts.
+A comprehensive walkthrough for initiating a new game session.
 
-1. **Navigate to Game Setup:**  
-   After signing in, the app will redirect you to the game setup section.
-
-2. **Enter Game Information:**  
-   Fill in details such as game name, location, and time.
-
-3. **Configure Team Squads:**  
-   Set up your squads by selecting players and defining positions.
-
-4. **Adjust Player Settings:**  
-   Assign specific roles like goalkeeper and set playtime configurations.
-
-5. **Review Setup Information:**  
-   Verify all settings and details before starting the game.
-
-6. **Start the Game:**  
-   Confirm the setup to launch the game management interface.
+1. Begin by accessing the game setup page after signing in.
+2. Follow the guided prompts to select teams and lineups.
+3. Configure match-specific settings such as duration and scoring.
+4. Review the setup summary to ensure all details are correct.
+5. Start the game session, and the live management interface will load.

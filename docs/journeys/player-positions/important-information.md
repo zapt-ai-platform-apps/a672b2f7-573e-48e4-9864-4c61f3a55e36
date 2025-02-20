@@ -1,11 +1,8 @@
-## Important Information
+# Player Positions - Important Information
 
-- **Responsiveness**: The pitch visualization is designed to adapt to different screen sizes, ensuring usability on both mobile devices and larger screens.
+Understand the roles and positions of players within the game.
 
-- **No Impact on Playtime Tracking**: Adjusting player positions does not affect the tracking of playtime or other statistics.
-
-- **Data Persistence**: Player positions are stored locally and reset when the game ends.
-
-- **Usage Suggestions**:
-  - Use the visualization to plan formations and strategies.
-  - Great for communicating positions to assistant coaches or players.
+1. Review the default positions assigned during game setup.
+2. Note the critical role of the goalkeeper and how their data is handled.
+3. Understand that each player’s position affects game strategy and performance.
+4. Refer to this guide when encountering issues with player positioning.

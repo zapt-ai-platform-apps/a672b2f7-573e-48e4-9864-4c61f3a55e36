@@ -1,21 +1,8 @@
 # Managing the Game
 
-This guide explains how to manage game events and make real-time substitutions.
+Manage live game events and substitutions with ease.
 
-1. **Access the Game Management Screen:**  
-   Once the game starts, navigate to the game management interface.
-
-2. **Monitor Game Events:**  
-   Use the dashboard to view live statistics, scores, and player performance.
-
-3. **Perform Substitutions:**  
-   Select the substitution panel to make player changes, ensuring minimal disruption to gameplay.
-
-4. **Use Real-Time Analytics:**  
-   Leverage game analytics to make informed decisions during the match.
-
-5. **Interact with Controls:**  
-   Utilize in-game controls to adjust playtime, set tactics, and handle unexpected events.
-
-6. **Conclude Game Management:**  
-   Once the game ends, review the summary screen for final statistics and key moments.
+1. Once signed in, navigate to the game management screen.
+2. Use the on-screen controls to add, remove, or substitute players as the game progresses.
+3. Monitor real-time updates reflecting player changes and game events.
+4. Adjust game settings through the control panel as necessary.
