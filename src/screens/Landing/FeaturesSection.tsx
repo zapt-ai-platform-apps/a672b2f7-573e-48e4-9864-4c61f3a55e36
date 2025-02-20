@@ -1,16 +1,8 @@
 import React from 'react';
 
-/**
- * FeaturesSection component displays key app features in stylish card format.
- *
- * @returns {JSX.Element} The rendered features section.
- */
-function FeaturesSection(): JSX.Element {
+export default function FeaturesSection(): JSX.Element {
   return (
-    <section
-      className="features-section mt-20 w-full max-w-5xl mx-auto px-4 animate-fadeIn"
-      style={{ animationDelay: '1.5s' }}
-    >
+    <section className="features-section mt-20 w-full max-w-5xl mx-auto px-4 animate-fadeIn" style={{ animationDelay: '1.5s' }}>
       <h2 className="text-4xl font-bold text-white mb-10 text-center">
         Discover the Power of Football Subs
       </h2>
@@ -43,5 +35,3 @@ function FeaturesSection(): JSX.Element {
     </section>
   );
 }
-
-export default FeaturesSection;

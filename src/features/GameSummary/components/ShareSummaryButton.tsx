@@ -9,32 +9,16 @@ interface ShareSummaryButtonProps {
   goals: any[];
   includeGKPlaytime: boolean;
   getTotalPlayTime: (player: any) => number;
-  formatTime: (timeInSeconds: number) => string;
+  formatTime: (time: number) => string;
 }
 
-export default function ShareSummaryButton({
-  ourScore,
-  opponentScore,
-  playerData,
-  goals,
-  includeGKPlaytime,
-  getTotalPlayTime,
-  formatTime
-}: ShareSummaryButtonProps): JSX.Element {
-  const [isSharing, setIsSharing] = useState<boolean>(false);
+function ShareSummaryButton({ ourScore, opponentScore, playerData, goals, includeGKPlaytime, getTotalPlayTime, formatTime }: ShareSummaryButtonProps): JSX.Element {
+  const [isSharing, setIsSharing] = useState(false);
 
   const handleShareSummary = async () => {
     setIsSharing(true);
     try {
-      const summaryText = createGameSummary(
-        ourScore,
-        opponentScore,
-        playerData,
-        goals,
-        includeGKPlaytime,
-        getTotalPlayTime,
-        formatTime
-      );
+      const summaryText = createGameSummary(ourScore, opponentScore, playerData, goals, includeGKPlaytime, getTotalPlayTime, formatTime);
       if (navigator.share) {
         await navigator.share({
           title: 'Match Summary',
@@ -64,3 +48,5 @@ export default function ShareSummaryButton({
     </button>
   );
 }
+
+export default ShareSummaryButton;

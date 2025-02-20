@@ -9,9 +9,9 @@ interface GoalsListProps {
   goals?: Goal[];
 }
 
-export default function GoalsList({ goals = [] }: GoalsListProps): JSX.Element {
-  const goalsByPlayer = (): { [key: string]: number } => {
-    const counts: { [key: string]: number } = {};
+function GoalsList({ goals = [] }: GoalsListProps): JSX.Element {
+  const goalsByPlayer = (): Record<string, number> => {
+    const counts: Record<string, number> = {};
     goals
       .filter((goal) => goal.team === 'our')
       .forEach((goal) => {
@@ -47,3 +47,5 @@ export default function GoalsList({ goals = [] }: GoalsListProps): JSX.Element {
     </div>
   );
 }
+
+export default GoalsList;

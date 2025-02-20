@@ -4,22 +4,13 @@ interface HeroSectionProps {
   onGetStarted: () => void;
 }
 
-/**
- * HeroSection component displaying the landing page main call-to-action.
- *
- * @param {HeroSectionProps} props
- * @returns {JSX.Element}
- */
-function HeroSection({ onGetStarted }: HeroSectionProps): JSX.Element {
+export default function HeroSection({ onGetStarted }: HeroSectionProps): JSX.Element {
   return (
     <section className="hero-section text-center py-20">
       <h1 className="text-5xl font-extrabold bg-gradient-to-r from-pink-300 to-yellow-300 bg-clip-text text-transparent animate-fadeIn">
         Welcome to Football Subs
       </h1>
-      <p
-        className="mt-6 text-xl text-gray-200 animate-fadeIn"
-        style={{ animationDelay: '0.5s' }}
-      >
+      <p className="mt-6 text-xl text-gray-200 animate-fadeIn" style={{ animationDelay: '0.5s' }}>
         Revolutionize your game management with real-time substitutions and dynamic insights.
       </p>
       <button
@@ -32,5 +23,3 @@ function HeroSection({ onGetStarted }: HeroSectionProps): JSX.Element {
     </section>
   );
 }
-
-export default HeroSection;

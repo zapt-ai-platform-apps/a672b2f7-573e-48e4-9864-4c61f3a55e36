@@ -1,18 +1,18 @@
 import React from 'react';
 
-interface PlayerPlaytimesProps {
-  playerData: any[];
-  includeGKPlaytime: boolean;
-  getTotalPlayTime: (player: any) => number;
-  formatTime: (timeInSeconds: number) => string;
+interface Player {
+  name: string;
+  // Additional player properties can be defined here
 }
 
-export default function PlayerPlaytimes({
-  playerData,
-  includeGKPlaytime,
-  getTotalPlayTime,
-  formatTime
-}: PlayerPlaytimesProps): JSX.Element {
+interface PlayerPlaytimesProps {
+  playerData: Player[];
+  includeGKPlaytime: boolean;
+  getTotalPlayTime: (player: Player) => number;
+  formatTime: (time: number) => string;
+}
+
+function PlayerPlaytimes({ playerData, includeGKPlaytime, getTotalPlayTime, formatTime }: PlayerPlaytimesProps): JSX.Element {
   const dataArray = Array.isArray(playerData) ? playerData : [];
   const sortedPlayerData = dataArray.sort((a, b) => getTotalPlayTime(b) - getTotalPlayTime(a));
 
@@ -33,3 +33,5 @@ export default function PlayerPlaytimes({
     </div>
   );
 }
+
+export default PlayerPlaytimes;
