@@ -1,11 +1,16 @@
 import { parsePlayers } from '../../utils/parsePlayers';
 
+export interface SquadData {
+  name?: string;
+  players?: unknown[] | string;
+}
+
 /**
  * Validates squad creation data.
  * @param data - Squad data object.
  * @throws {Error} If required fields are missing.
  */
-export function validateSquadCreation(data: { name?: string; players?: any }): void {
+export function validateSquadCreation(data: SquadData): void {
   if (!data.name || !data.players) {
     throw new Error('Name and players are required');
   }
@@ -16,7 +21,7 @@ export function validateSquadCreation(data: { name?: string; players?: any }): v
  * @param players - Players array or string.
  * @returns JSON string of players.
  */
-export function transformPlayersForDB(players: any[] | string): string {
+export function transformPlayersForDB(players: unknown[] | string): string {
   if (Array.isArray(players)) {
     return JSON.stringify(players);
   }
@@ -28,9 +33,9 @@ export function transformPlayersForDB(players: any[] | string): string {
  * @param row - Database row object.
  * @returns Transformed squad object with parsed players.
  */
-export function transformSquadFromDB(row: any): any {
+export function transformSquadFromDB(row: Record<string, unknown>): Record<string, unknown> {
   return {
     ...row,
-    players: parsePlayers(row.players)
+    players: parsePlayers(row.players as string)
   };
 }

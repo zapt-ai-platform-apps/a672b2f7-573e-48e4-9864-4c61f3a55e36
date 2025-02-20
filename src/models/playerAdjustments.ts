@@ -55,7 +55,7 @@ export function applyPlayerAdjustment(
         let updatedIntervals = player.playIntervals || [];
         if (isRunning && updatedIntervals.length > 0 && updatedIntervals[updatedIntervals.length - 1].endTime === null) {
           updatedIntervals = [
-            ...updatedIntervals.slice(0, -1),
+            ...updatedIntervals.slice(0, updatedIntervals.length - 1),
             { ...updatedIntervals[updatedIntervals.length - 1], endTime: Date.now() }
           ];
         }

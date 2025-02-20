@@ -1,17 +1,11 @@
-/**
- * Performs a substitution by replacing one player with another.
- * @param playerData - Array of player objects.
- * @param selectedSubOffPlayer - The player to substitute off the field.
- * @param selectedSubOnPlayer - The player to substitute onto the field.
- * @param isRunning - Indicates if the game is currently running.
- * @returns The updated array of player objects.
- */
+import { Player } from './playerModel';
+
 export function performSubstitution(
-  playerData: any[],
-  selectedSubOffPlayer: any,
-  selectedSubOnPlayer: any,
+  playerData: Player[],
+  selectedSubOffPlayer: Player,
+  selectedSubOnPlayer: Player,
   isRunning: boolean
-): any[] {
+): Player[] {
   return playerData.map(player => {
     if (player.id === selectedSubOffPlayer.id) {
       return {

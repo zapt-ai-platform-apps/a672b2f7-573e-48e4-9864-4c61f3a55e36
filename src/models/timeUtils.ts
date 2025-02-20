@@ -1,3 +1,8 @@
+interface Interval {
+  startTime: number;
+  endTime: number | null;
+}
+
 /**
  * Calculates the total play time of a player.
  * @param player - The player object.
@@ -5,7 +10,11 @@
  * @param isRunning - Indicates if the game is running.
  * @returns Total play time in seconds.
  */
-export function calculateTotalPlayTime(player: any, includeGKPlaytime: boolean, isRunning: boolean): number {
+export function calculateTotalPlayTime(
+  player: { playIntervals?: Interval[]; position?: string },
+  includeGKPlaytime: boolean,
+  isRunning: boolean
+): number {
   let total = 0;
   if (player.playIntervals && Array.isArray(player.playIntervals)) {
     for (const interval of player.playIntervals) {
@@ -39,17 +48,15 @@ export function formatTime(timeInSeconds: number): string {
  * @param isRunning - Indicates if the game is running.
  * @returns Elapsed time in seconds.
  */
-export function calculateElapsedTime(gameIntervals: any[], isRunning: boolean): number {
+export function calculateElapsedTime(gameIntervals: Interval[], isRunning: boolean): number {
   let total = 0;
-  if (Array.isArray(gameIntervals)) {
-    gameIntervals.forEach(interval => {
-      if (interval.endTime) {
-        total += interval.endTime - interval.startTime;
-      } else if (isRunning) {
-        total += Date.now() - interval.startTime;
-      }
-    });
-  }
+  gameIntervals.forEach(interval => {
+    if (interval.endTime) {
+      total += interval.endTime - interval.startTime;
+    } else if (isRunning) {
+      total += Date.now() - interval.startTime;
+    }
+  });
   return Math.floor(total / 1000);
 }
 

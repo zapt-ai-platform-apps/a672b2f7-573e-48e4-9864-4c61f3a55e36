@@ -1,3 +1,8 @@
+interface Interval {
+  startTime: number;
+  endTime: number | null;
+}
+
 /**
  * Calculates the elapsed time for the game.
  * @param gameIntervals - Array of game intervals.
@@ -5,7 +10,7 @@
  * @returns Elapsed time in seconds.
  */
 export function getTimeElapsed(
-  gameIntervals: { startTime: number; endTime: number | null }[],
+  gameIntervals: Interval[],
   isRunning: boolean
 ): number {
   let total = 0;
@@ -27,8 +32,8 @@ export function getTimeElapsed(
  */
 export function toggleTimer(
   isRunning: boolean,
-  intervals: { startTime: number; endTime: number | null }[]
-): { newIntervals: { startTime: number; endTime: number | null }[]; newIsRunning: boolean } {
+  intervals: Interval[]
+): { newIntervals: Interval[]; newIsRunning: boolean } {
   if (!isRunning) {
     const newInterval = { startTime: Date.now(), endTime: null };
     return { newIntervals: [...intervals, newInterval], newIsRunning: true };
