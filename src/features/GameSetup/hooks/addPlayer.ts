@@ -1,13 +1,12 @@
 import { createPlayer } from '../../../shared/models/player';
-import { Dispatch, SetStateAction } from 'react';
 
 export function addPlayer(
   playerName: string,
-  setStartingPlayers: Dispatch<SetStateAction<any[]>>,
-  setPlayerName: Dispatch<SetStateAction<string>>
+  setStartingPlayers: (update: (prev: any[]) => any[]) => void,
+  setPlayerName: (name: string) => void
 ): void {
   if (playerName.trim() !== '') {
-    setStartingPlayers(prev => {
+    setStartingPlayers((prev) => {
       const player = createPlayer({ name: playerName.trim() });
       const newPlayer = {
         ...player,

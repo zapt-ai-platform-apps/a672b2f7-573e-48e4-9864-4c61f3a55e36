@@ -1,8 +1,5 @@
-# Player Positions - Troubleshooting
+# Troubleshooting Player Positions
 
-Resolve common issues related to player positioning with the following steps:
-
-1. Verify that the player data loads correctly and reflects the current state.
-2. Ensure there are no conflicting settings in the player management interface.
-3. Refresh the game view if changes do not appear immediately.
-4. Consult this guide for further assistance if issues persist.
+1. If a player’s position is not updating, refresh the app and try again.
+2. Ensure that the player is eligible for the selected position.
+3. Contact support if the issue persists.

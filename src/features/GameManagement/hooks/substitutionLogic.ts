@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { performSubstitution } from '../../../shared/models/playerSubstitutions';
 
-interface SubstitutionLogicProps {
+interface SubstitutionLogicParams {
   playerData: any[];
-  setPlayerData: (updater: (prev: any[]) => any[]) => void;
+  setPlayerData: (players: any[]) => void;
   isRunning: boolean;
 }
 
-export function useSubstitutionLogic({ playerData, setPlayerData, isRunning }: SubstitutionLogicProps) {
+export function useSubstitutionLogic({ playerData, setPlayerData, isRunning }: SubstitutionLogicParams) {
   const [selectedSubOffPlayer, setSelectedSubOffPlayer] = useState<any>(null);
   const [selectedSubOnPlayer, setSelectedSubOnPlayer] = useState<any>(null);
   const [showSubstitutionConfirmModal, setShowSubstitutionConfirmModal] = useState<boolean>(false);

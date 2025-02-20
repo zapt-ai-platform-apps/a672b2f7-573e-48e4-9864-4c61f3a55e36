@@ -1,18 +1,17 @@
 import { createPlayer } from '../../../shared/models/player';
 import { calculateMinPlayTime } from '../../../shared/models/playerUtils';
-import { Dispatch, SetStateAction } from 'react';
 
-interface PlayerDataProps {
+interface PlayerProps {
   playerData: any[];
-  setPlayerData: Dispatch<SetStateAction<any[]>>;
+  setPlayerData: (players: any[]) => void;
   updatePlayerLists: () => void;
 }
 
-interface CreateAddNewPlayerParams {
-  props: PlayerDataProps;
+interface AddNewPlayerParams {
+  props: PlayerProps;
   newPlayerName: string;
-  setNewPlayerName: Dispatch<SetStateAction<string>>;
-  setShowAddPlayerModal: Dispatch<SetStateAction<boolean>>;
+  setNewPlayerName: (name: string) => void;
+  setShowAddPlayerModal: (show: boolean) => void;
 }
 
 export function createAddNewPlayer({
@@ -20,14 +19,14 @@ export function createAddNewPlayer({
   newPlayerName,
   setNewPlayerName,
   setShowAddPlayerModal
-}: CreateAddNewPlayerParams): (playerNameOptional?: string) => void {
+}: AddNewPlayerParams): (playerNameOptional?: string) => void {
   return (playerNameOptional?: string): void => {
     const name = playerNameOptional ? playerNameOptional : newPlayerName.trim();
     if (name !== "") {
       const minPlayTime = calculateMinPlayTime(props.playerData);
       const newPlayer = {
         ...createPlayer({ name }),
-        playIntervals: [],
+        playIntervals: [] as any[],
         isOnField: false,
         isGoalkeeper: false,
         totalPlayTime: minPlayTime

@@ -1,8 +1,5 @@
-# Player Positions - Important Information
+# Important Information on Player Positions
 
-Understand the roles and positions of players within the game.
-
-1. Review the default positions assigned during game setup.
-2. Note the critical role of the goalkeeper and how their data is handled.
-3. Understand that each player’s position affects game strategy and performance.
-4. Refer to this guide when encountering issues with player positioning.
+1. Understand the roles and responsibilities of each position.
+2. The app provides detailed information on positioning strategies.
+3. Ensure players are assigned to positions that best suit their skills.

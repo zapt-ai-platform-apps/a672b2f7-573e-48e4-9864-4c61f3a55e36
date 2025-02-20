@@ -1,13 +1,11 @@
-import { Dispatch, SetStateAction } from 'react';
-
 interface EndGameManagerParams {
   isRunning: boolean;
-  setIsRunning: Dispatch<SetStateAction<boolean>>;
-  gameIntervals: { startTime: number; endTime?: number }[];
-  setGameIntervals: Dispatch<SetStateAction<{ startTime: number; endTime?: number }[]>>;
+  setIsRunning: (value: boolean) => void;
+  gameIntervals: any[];
+  setGameIntervals: (intervals: any[]) => void;
   playerData: any[];
-  setPlayerData: (updater: (prev: any[]) => any[]) => void;
-  setShowEndGameConfirm: Dispatch<SetStateAction<boolean>>;
+  setPlayerData: (players: any[]) => void;
+  setShowEndGameConfirm: (show: boolean) => void;
 }
 
 function useEndGameManager({
@@ -26,7 +24,7 @@ function useEndGameManager({
   const confirmEndGame = (): void => {
     if (isRunning) {
       setIsRunning(false);
-      setGameIntervals(prev =>
+      setGameIntervals((prev) =>
         prev.map((interval, idx) =>
           idx === prev.length - 1 && !interval.endTime
             ? { ...interval, endTime: Date.now() }
@@ -35,7 +33,7 @@ function useEndGameManager({
       );
 
       setPlayerData(
-        playerData.map(player => {
+        playerData.map((player) => {
           if (player.isOnField) {
             if (player.playIntervals.length > 0 && !player.playIntervals[player.playIntervals.length - 1].endTime) {
               player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();

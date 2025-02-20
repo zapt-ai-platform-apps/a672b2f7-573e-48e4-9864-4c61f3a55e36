@@ -1,8 +1,5 @@
-# Setting Up the Game Info
+# Setting up the Game Info
 
-Set up the necessary game information to start a new session.
-
-1. Access the game information setup page after signing in.
-2. Fill in details such as game date, location, and participating teams.
-3. Validate the entered information for accuracy.
-4. Save your changes to proceed to the next step in game configuration.
+1. In the game setup section, fill in the required game information.
+2. Provide details such as match date, venue, and team information.
+3. Confirm the entered information and proceed.

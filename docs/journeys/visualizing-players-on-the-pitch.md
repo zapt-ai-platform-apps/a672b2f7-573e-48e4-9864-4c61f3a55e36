@@ -1,8 +1,5 @@
 # Visualizing Players on the Pitch
 
-View and analyze player positions dynamically during a game.
-
-1. After game setup, navigate to the pitch visualization screen.
-2. Observe the real-time placement of players on the field.
-3. Interact with individual player elements to view detailed statistics.
-4. Adjust the visualization settings to highlight specific player roles.
+1. On the main dashboard, view the pitch visualization section.
+2. Players are displayed according to their positions and play status.
+3. Use interactive elements to view player details and stats.

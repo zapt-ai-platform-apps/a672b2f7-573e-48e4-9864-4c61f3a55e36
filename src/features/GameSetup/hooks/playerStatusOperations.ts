@@ -1,19 +1,17 @@
-import { Dispatch, SetStateAction } from 'react';
-
 export function deletePlayer(
   playerId: string | number,
-  setStartingPlayers: Dispatch<SetStateAction<any[]>>
+  setStartingPlayers: (update: (prev: any[]) => any[]) => void
 ): void {
-  setStartingPlayers(prev => prev.filter(player => player.id !== playerId));
+  setStartingPlayers((prev) => prev.filter((player) => player.id !== playerId));
 }
 
 export function toggleStartingPlayer(
   playerId: string | number,
-  setStartingPlayers: Dispatch<SetStateAction<any[]>>
+  setStartingPlayers: (update: (prev: any[]) => any[]) => void
 ): void {
-  setStartingPlayers(prev => {
+  setStartingPlayers((prev) => {
     console.log("Toggling starting status for player:", playerId);
-    return prev.map(player => {
+    return prev.map((player) => {
       if (String(player.id) === String(playerId)) {
         const newStartingStatus = !player.isStartingPlayer;
         if (newStartingStatus && !player.isInMatchSquad) {

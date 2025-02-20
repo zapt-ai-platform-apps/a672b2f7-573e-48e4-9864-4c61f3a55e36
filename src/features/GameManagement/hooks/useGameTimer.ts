@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 
-interface Interval {
-  startTime: number;
-  endTime?: number | null;
+interface GameTimerParams {
+  isRunning: boolean;
+  gameIntervals: Array<{ startTime: number; endTime: number | null }>;
 }
 
-function useGameTimer({ isRunning, gameIntervals }: { isRunning: boolean; gameIntervals: Interval[] }) {
+function useGameTimer({ isRunning, gameIntervals }: GameTimerParams) {
   const [now, setNow] = useState<number>(Date.now());
+
   useEffect(() => {
     const uiTimer = setInterval(() => {
       setNow(Date.now());
@@ -17,9 +18,9 @@ function useGameTimer({ isRunning, gameIntervals }: { isRunning: boolean; gameIn
   const getTimeElapsed = (): number => {
     let total = 0;
     const intervals = Array.isArray(gameIntervals) ? gameIntervals : [];
-    intervals.forEach(interval => {
+    intervals.forEach((interval) => {
       if (interval.endTime) {
-        total += (interval.endTime as number) - interval.startTime;
+        total += interval.endTime - interval.startTime;
       } else {
         total += isRunning ? Date.now() - interval.startTime : 0;
       }

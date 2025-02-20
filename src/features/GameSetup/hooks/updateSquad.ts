@@ -1,24 +1,16 @@
-/**
- * Retrieves the players array from the selected squad.
- *
- * @param selectedSquad - The squad object.
- * @returns Array of players or an empty array if no players found.
- */
-export function getSquadPlayers(selectedSquad: { players?: any[] }): any[] {
+interface Squad {
+  players: any[];
+  [key: string]: any;
+}
+
+export function getSquadPlayers(selectedSquad: Squad | null): any[] {
   return selectedSquad && selectedSquad.players ? selectedSquad.players : [];
 }
 
-/**
- * Updates the selected squad with a new players list and persists the updated squad in localStorage.
- *
- * @param selectedSquad - The current squad object.
- * @param updatedSquadPlayers - Array of updated player names or objects.
- * @param setSelectedSquad - State setter function to update the selected squad.
- */
 export function updateSquad(
-  selectedSquad: any,
+  selectedSquad: Squad | null,
   updatedSquadPlayers: any[],
-  setSelectedSquad: (squad: any) => void
+  setSelectedSquad: (squad: Squad) => void
 ): void {
   if (selectedSquad) {
     const updatedSquad = { ...selectedSquad, players: updatedSquadPlayers };

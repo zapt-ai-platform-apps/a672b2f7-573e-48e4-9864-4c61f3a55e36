@@ -1,10 +1,8 @@
-import { Dispatch, SetStateAction } from 'react';
-
 export function addPlayerAction(
   playerName: string,
   players: any[],
-  setPlayers: Dispatch<SetStateAction<any[]>>,
-  setPlayerName: Dispatch<SetStateAction<string>>
+  setPlayers: (players: any[]) => void,
+  setPlayerName: (name: string) => void
 ): boolean {
   if (playerName.trim() !== '') {
     const newPlayer = {
@@ -23,13 +21,11 @@ export function addPlayerAction(
 export function deletePlayerAction(
   playerNameToDelete: string,
   players: any[],
-  setPlayers: Dispatch<SetStateAction<any[]>>
+  setPlayers: (players: any[]) => void
 ): boolean {
   const confirmDelete = window.confirm(`Are you sure you want to delete ${playerNameToDelete}?`);
   if (confirmDelete) {
-    const updatedPlayers = players.filter(
-      (player) => player.name !== playerNameToDelete
-    );
+    const updatedPlayers = players.filter((player) => player.name !== playerNameToDelete);
     setPlayers(updatedPlayers);
     localStorage.setItem('players', JSON.stringify(updatedPlayers));
     return true;
@@ -40,9 +36,9 @@ export function deletePlayerAction(
 export function toggleStartingPlayerAction(
   playerNameToToggle: string,
   players: any[],
-  setPlayers: Dispatch<SetStateAction<any[]>>,
-  setStartingPlayersCount: Dispatch<SetStateAction<number>>,
-  setStartingPlayers: Dispatch<SetStateAction<any[]>>
+  setPlayers: (players: any[]) => void,
+  setStartingPlayersCount: (count: number) => void,
+  setStartingPlayers: (players: any[]) => void
 ): void {
   const updatedPlayers = players.map(player =>
     player.name === playerNameToToggle

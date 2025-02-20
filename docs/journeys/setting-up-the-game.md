@@ -1,9 +1,6 @@
-# Setting Up the Game
+# Setting up the Game
 
-A comprehensive walkthrough for initiating a new game session.
-
-1. Begin by accessing the game setup page after signing in.
-2. Follow the guided prompts to select teams and lineups.
-3. Configure match-specific settings such as duration and scoring.
-4. Review the setup summary to ensure all details are correct.
-5. Start the game session, and the live management interface will load.
+1. Navigate to the Game Setup section from the home screen.
+2. Follow the step-by-step instructions to configure the game lineup.
+3. Enter team names, select players, and adjust game time settings.
+4. Save your game setup to proceed to the match.

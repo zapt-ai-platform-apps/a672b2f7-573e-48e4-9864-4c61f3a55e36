@@ -1,53 +1,29 @@
 import { calculateTotalPlayTime, calculateElapsedTime } from '../../../shared/models/playerUtils';
-import { Dispatch, SetStateAction } from 'react';
 
 export function getTotalPlayTime(player: any, includeGKPlaytime: boolean, isRunning: boolean): number {
   return calculateTotalPlayTime(player, includeGKPlaytime, isRunning);
 }
 
-export function getTimeElapsed(
-  gameIntervals: { startTime: number; endTime: number | null }[],
-  isRunning: boolean
-): number {
+export function getTimeElapsed(gameIntervals: any[], isRunning: boolean): number {
   return calculateElapsedTime(gameIntervals, isRunning);
 }
 
 export function toggleTimer(
-  setIsRunning: Dispatch<SetStateAction<boolean>>,
-  gameIntervals: { startTime: number; endTime: number | null }[],
-  setGameIntervals: Dispatch<SetStateAction<{ startTime: number; endTime: number | null }[]>>
+  setIsRunning: (value: boolean | ((prev: boolean) => boolean)) => void,
+  gameIntervals: any[],
+  setGameIntervals: (intervals: any[]) => void
 ): void {
-  setIsRunning(prev => {
+  setIsRunning((prev) => {
     if (!prev) {
-      setGameIntervals([...gameIntervals, { startTime: Date.now(), endTime: null }]);
+      setGameIntervals([...gameIntervals, { start: Date.now(), end: null }]);
     } else {
       const lastInterval = gameIntervals[gameIntervals.length - 1];
-      if (lastInterval && !lastInterval.endTime) {
+      if (lastInterval && !lastInterval.end) {
         const updatedIntervals = [...gameIntervals];
-        updatedIntervals[updatedIntervals.length - 1].endTime = Date.now();
+        updatedIntervals[updatedIntervals.length - 1].end = Date.now();
         setGameIntervals(updatedIntervals);
       }
     }
     return !prev;
   });
-}
-
-export function recordGoalForPlayer(
-  playerId: string | number,
-  gameIntervals: { startTime: number; endTime: number | null }[],
-  isRunning: boolean,
-  setGoals: Dispatch<SetStateAction<any[]>>,
-  setOurScore: Dispatch<SetStateAction<number>>
-): void {
-  const time = calculateElapsedTime(gameIntervals, isRunning);
-  setOurScore(prev => prev + 1);
-  setGoals(prevGoals => [
-    ...prevGoals,
-    {
-      team: 'our',
-      scorerId: playerId,
-      time,
-      timestamp: Date.now()
-    }
-  ]);
 }

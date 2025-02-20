@@ -1,26 +1,21 @@
 import React from 'react';
-import { AuthProvider } from './components/AuthProvider';
-import LandingPage from './screens/Landing/index';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LandingPage from './screens/Landing';
 
-function App(): JSX.Element {
+function App() {
   return (
-    <AuthProvider>
-      <div className="min-h-screen flex flex-col">
-        <div className="flex-grow">
-          <LandingPage />
-        </div>
-        <footer className="bg-gray-800 text-white text-center py-2">
-          <a
-            href="https://www.zapt.ai"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="cursor-pointer underline"
-          >
-            Made on ZAPT
-          </a>
-        </footer>
-      </div>
-    </AuthProvider>
+    <div className="min-h-screen h-full text-gray-900">
+      <Router>
+        <Routes>
+          <Route path="/*" element={<LandingPage />} />
+        </Routes>
+      </Router>
+      <footer className="p-4 text-center">
+        <a href="https://www.zapt.ai" target="_blank" rel="noopener noreferrer" className="cursor-pointer">
+          Made on ZAPT
+        </a>
+      </footer>
+    </div>
   );
 }
 
