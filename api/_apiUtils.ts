@@ -1,5 +1,4 @@
 import { initializeZapt } from '@zapt/zapt-js';
-import type { VercelRequest } from '@vercel/node';
 
 const { supabase } = initializeZapt(process.env.VITE_PUBLIC_APP_ID as string);
 
