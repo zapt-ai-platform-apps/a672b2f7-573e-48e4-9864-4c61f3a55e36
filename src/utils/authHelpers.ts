@@ -1,28 +1,28 @@
-import { recordLogin, supabase } from '../supabaseClient';
+import * as Sentry from '@sentry/browser';
+import { supabase, recordLogin } from '../supabaseClient';
 
-let recordedEmail: string | null = null;
+let recordedLoginEmails: Set<string> = new Set();
 
 /**
- * Processes the Supabase session to update user state and record a user login.
+ * Processes the current Supabase session and sets the user state.
+ * Also records the login event if the user hasn't been recorded yet.
  *
- * @param session - The Supabase session object.
- * @param setUser - Function to update the user state.
+ * @param session - The session object from Supabase.
+ * @param setUser - Function to update user state.
  */
-export function processSession(session: any, setUser: (user: any) => void): void {
+export async function processSession(session: any, setUser: (user: any) => void): Promise<void> {
   if (session && session.user) {
     setUser(session.user);
-    const userEmail = session.user.email;
-    if (userEmail && recordedEmail !== userEmail) {
-      recordLogin(userEmail, import.meta.env.VITE_PUBLIC_APP_ENV as string)
-        .then(() => {
-          recordedEmail = userEmail;
-        })
-        .catch((error) => {
-          console.error('Failed to record login:', error);
-        });
+    if (session.user.email && !recordedLoginEmails.has(session.user.email)) {
+      try {
+        await recordLogin(session.user.email, import.meta.env.VITE_PUBLIC_APP_ENV);
+        recordedLoginEmails.add(session.user.email);
+      } catch (error) {
+        console.error('Failed to record login:', error);
+        Sentry.captureException(error);
+      }
     }
   } else {
     setUser(null);
-    recordedEmail = null;
   }
 }
