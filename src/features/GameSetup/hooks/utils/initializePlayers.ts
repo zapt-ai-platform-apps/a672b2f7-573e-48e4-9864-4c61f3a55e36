@@ -7,7 +7,7 @@ export interface Player {
   number?: number;
 }
 
-export function initializePlayers(rawData: string): Player[] {
+function initializePlayers(rawData: string): Player[] {
   try {
     const players = parsePlayers(rawData) as Player[];
     return players;
@@ -16,3 +16,5 @@ export function initializePlayers(rawData: string): Player[] {
     return [];
   }
 }
+
+export default initializePlayers;
