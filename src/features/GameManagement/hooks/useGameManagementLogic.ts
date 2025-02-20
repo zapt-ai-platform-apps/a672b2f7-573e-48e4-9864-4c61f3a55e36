@@ -1,21 +1,27 @@
 import { useState } from 'react';
 import { useStateContext } from '../../../state';
+import { Player } from '../../../context/StateContext';
 import {
-  getTotalPlayTime as getTotalPlayTimeHandler,
-  getTimeElapsed as getTimeElapsedHandler,
-  toggleTimer as toggleTimerHandler,
-  recordGoal as recordGoalHandler,
-  handlePlayerAdjustment as handlePlayerAdjustmentHandler,
-  updatePlayerLists as updatePlayerListsHandler
+  getTotalPlayTimeHandler,
+  getTimeElapsedHandler,
+  toggleTimerHandler,
+  recordGoalHandler,
+  handlePlayerAdjustmentHandler,
+  updatePlayerListsHandler
 } from './gameManagementLogicHelpers';
 
+interface PlayerLists {
+  onField: Player[];
+  offField: Player[];
+}
+
 interface UseGameManagementLogicReturn {
-  playerData: any;
-  setPlayerData: React.Dispatch<React.SetStateAction<any>>;
+  playerData: Player[];
+  setPlayerData: React.Dispatch<React.SetStateAction<Player[]>>;
   isRunning: boolean;
   ourScore: number;
   opponentScore: number;
-  getTotalPlayTime: (player: any) => number;
+  getTotalPlayTime: (player: Player) => number;
   getTimeElapsed: () => number;
   toggleTimer: () => void;
   handleEndGame: () => void;
@@ -26,9 +32,9 @@ interface UseGameManagementLogicReturn {
   setShowGoalModal: React.Dispatch<React.SetStateAction<boolean>>;
   recordGoal: (team: 'our' | 'opponent', scorerName: string) => void;
   handlePlayerAdjustment: (playerId: number | string, isAdding: boolean) => void;
-  updatePlayerLists: () => any;
-  onFieldPlayers: any;
-  offFieldPlayers: any;
+  updatePlayerLists: () => PlayerLists;
+  onFieldPlayers: Player[];
+  offFieldPlayers: Player[];
   showAddPlayerModal: boolean;
   setShowAddPlayerModal: React.Dispatch<React.SetStateAction<boolean>>;
   resetGame: () => void;
@@ -49,12 +55,12 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
   } = useStateContext();
 
   const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [gameIntervals, setGameIntervals] = useState<any[]>([]);
+  const [gameIntervals, setGameIntervals] = useState<number[]>([]);
   const [showEndGameConfirm, setShowEndGameConfirm] = useState<boolean>(false);
   const [showGoalModal, setShowGoalModal] = useState<boolean>(false);
   const [showAddPlayerModal, setShowAddPlayerModal] = useState<boolean>(false);
 
-  const getTotalPlayTimeFunc = (player: any): number => {
+  const getTotalPlayTimeFunc = (player: Player): number => {
     return getTotalPlayTimeHandler(player, includeGKPlaytime, isRunning);
   };
 
@@ -76,10 +82,10 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
   };
 
   const handlePlayerAdjustmentFunc = (playerId: number | string, isAdding: boolean): void => {
-    setPlayerData((prev: any[]) => handlePlayerAdjustmentHandler(prev, playerId, isAdding));
+    setPlayerData((prev: Player[]) => handlePlayerAdjustmentHandler(prev, playerId, isAdding));
   };
 
-  const updatePlayerListsFunc = (): any => {
+  const updatePlayerListsFunc = (): PlayerLists => {
     return updatePlayerListsHandler(playerData, includeGKPlaytime, isRunning);
   };
 

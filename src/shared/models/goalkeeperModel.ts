@@ -1,3 +1,11 @@
+export interface Player {
+  name: string;
+  playIntervals: { startTime: number; endTime: number | null; isGoalkeeper?: boolean }[];
+  isOnField?: boolean;
+  isGoalkeeper?: boolean;
+  [key: string]: unknown;
+}
+
 /**
  * Handles the business logic for changing the goalkeeper.
  *
@@ -8,16 +16,16 @@
  * @returns Updated array of player objects after the goalkeeper change.
  */
 export function changeGoalkeeper(
-  playerData: any[],
+  playerData: Player[],
   newGoalkeeperName: string,
   previousGoalkeeperName: string,
   isRunning: boolean
-): any[] {
+): Player[] {
   const now = Date.now();
   return playerData.map(player => {
     if (player.name === newGoalkeeperName) {
       if (isRunning && player.isOnField) {
-        if (player.playIntervals.length > 0 && !player.playIntervals[player.playIntervals.length - 1].endTime) {
+        if (player.playIntervals.length > 0 && player.playIntervals[player.playIntervals.length - 1].endTime === null) {
           player.playIntervals[player.playIntervals.length - 1].endTime = now;
         }
         player.playIntervals.push({ startTime: now, endTime: null, isGoalkeeper: true });
@@ -25,7 +33,7 @@ export function changeGoalkeeper(
       return { ...player, isGoalkeeper: true };
     } else if (player.name === previousGoalkeeperName) {
       if (isRunning && player.isOnField) {
-        if (player.playIntervals.length > 0 && !player.playIntervals[player.playIntervals.length - 1].endTime) {
+        if (player.playIntervals.length > 0 && player.playIntervals[player.playIntervals.length - 1].endTime === null) {
           player.playIntervals[player.playIntervals.length - 1].endTime = now;
         }
         player.playIntervals.push({ startTime: now, endTime: null, isGoalkeeper: false });

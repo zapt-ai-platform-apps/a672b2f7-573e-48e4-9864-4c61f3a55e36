@@ -1,14 +1,14 @@
 import { parsePlayers } from '../../utils/parsePlayers';
 import * as Sentry from '@sentry/browser';
 
-export interface Player {
+export interface GamePlayer {
   name: string;
   isStartingPlayer?: boolean;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface Squad {
-  players: Player[] | Player;
+  players: GamePlayer[] | GamePlayer | string;
 }
 
 /**
@@ -18,27 +18,27 @@ export interface Squad {
  * @param matchSquad - (Optional) The match squad data.
  * @returns Array of starting players.
  */
-export function getStartingPlayers(selectedSquad: Squad, matchSquad?: any): Player[] {
+export function getStartingPlayers(selectedSquad: Squad, matchSquad?: unknown): GamePlayer[] {
   try {
     if (!selectedSquad || !selectedSquad.players) {
       return [];
     }
     
-    let playersArray: any[] = [];
+    let playersArray: GamePlayer[] = [];
     if (Array.isArray(selectedSquad.players)) {
       playersArray = selectedSquad.players;
     } else if (typeof selectedSquad.players === 'object') {
-      playersArray = selectedSquad.players ? [selectedSquad.players] : [];
+      playersArray = selectedSquad.players ? [selectedSquad.players as GamePlayer] : [];
     } else if (typeof selectedSquad.players === 'string') {
-      playersArray = parsePlayers(selectedSquad.players);
+      playersArray = parsePlayers(selectedSquad.players) as GamePlayer[];
     } else {
       return [];
     }
 
     return playersArray.map(player => {
-      let nameValue = player.name;
+      let nameValue: unknown = player.name;
       if (nameValue && typeof nameValue === 'object') {
-        nameValue = nameValue.name || JSON.stringify(nameValue);
+        nameValue = (nameValue as { name?: string }).name || JSON.stringify(nameValue);
       }
       
       return { 

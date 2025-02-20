@@ -1,72 +1,58 @@
-export function getTotalPlayTime(player: any, includeGKPlaytime: boolean, isRunning: boolean): number {
-  // Assume player has a playTime property in seconds.
-  // Optionally adjust playTime if timer is running.
-  const extra = isRunning ? 1 : 0;
-  if (!includeGKPlaytime && player.position === 'GK') {
-    return player.playTime;
+import { Player } from '../../../context/StateContext';
+
+export function getTotalPlayTimeHandler(player: Player, includeGKPlaytime: boolean, isRunning: boolean): number {
+  if (!includeGKPlaytime && player.isGoalKeeper) {
+    return 0;
   }
-  return player.playTime + extra;
+  return player.playTime || 0;
 }
 
-export function getTimeElapsed(gameIntervals: any[], isRunning: boolean): number {
-  // If the timer is running, the last interval is expected to be a start timestamp.
-  if (isRunning && gameIntervals.length > 0) {
-    const startTime = gameIntervals[gameIntervals.length - 1];
-    const completedIntervals = gameIntervals.slice(0, gameIntervals.length - 1);
-    const totalCompleted = completedIntervals.reduce((sum: number, duration: number) => sum + duration, 0);
-    return totalCompleted + (Date.now() - startTime);
+export function getTimeElapsedHandler(gameIntervals: number[], isRunning: boolean): number {
+  let total = 0;
+  const now = Date.now();
+  for (let i = 0; i < gameIntervals.length; i += 2) {
+    if (i + 1 < gameIntervals.length) {
+      total += gameIntervals[i + 1] - gameIntervals[i];
+    } else if (isRunning) {
+      total += now - gameIntervals[i];
+    }
   }
-  return gameIntervals.reduce((sum: number, duration: number) => sum + duration, 0);
+  return total;
 }
 
-export function toggleTimer(isRunning: boolean, gameIntervals: any[]): { newIntervals: any[]; newIsRunning: boolean } {
-  if (!isRunning) {
-    // Starting the timer: add the current timestamp as the start of a new interval.
-    return { newIntervals: [...gameIntervals, Date.now()], newIsRunning: true };
-  } else {
-    // Stopping the timer: calculate the duration of the current interval.
-    const startTime = gameIntervals[gameIntervals.length - 1];
-    const duration = Date.now() - startTime;
-    const newIntervals = [...gameIntervals.slice(0, gameIntervals.length - 1), duration];
-    return { newIntervals, newIsRunning: false };
-  }
+export function toggleTimerHandler(isRunning: boolean, gameIntervals: number[]): { newIntervals: number[], newIsRunning: boolean } {
+  const currentTime = Date.now();
+  const newIntervals = [...gameIntervals, currentTime];
+  return { newIntervals, newIsRunning: !isRunning };
 }
 
-export function recordGoal(
+export function recordGoalHandler(
   team: 'our' | 'opponent',
   scorerName: string,
   ourScore: number,
   opponentScore: number,
-  goals: any[],
-  gameIntervals: any[],
+  goals: Array<{ team: string; scorerName: string; timestamp: number }>,
+  gameIntervals: number[],
   isRunning: boolean
-): { newOurScore: number; newOpponentScore: number; newGoals: any[] } {
-  const timeElapsed = getTimeElapsed(gameIntervals, isRunning);
-  const newGoal = { team, scorerName, time: timeElapsed };
-  const newGoals = [...goals, newGoal];
+): { newOurScore: number; newOpponentScore: number; newGoals: Array<{ team: string; scorerName: string; timestamp: number }> } {
+  const timestamp = Date.now();
+  const newGoals = [...goals, { team, scorerName, timestamp }];
+  let newOurScore = ourScore;
+  let newOpponentScore = opponentScore;
   if (team === 'our') {
-    return { newOurScore: ourScore + 1, newOpponentScore: opponentScore, newGoals };
-  }
-  return { newOurScore: ourScore, newOpponentScore: opponentScore + 1, newGoals };
-}
-
-export function handlePlayerAdjustment(prevPlayers: any[], playerId: number | string, isAdding: boolean): any[] {
-  if (isAdding) {
-    // Add a new player with default values. Ensure no duplicate by checking id.
-    const exists = prevPlayers.some((player) => player.id === playerId);
-    if (!exists) {
-      return [...prevPlayers, { id: playerId, playTime: 0, position: 'field', active: true }];
-    }
-    return prevPlayers;
+    newOurScore += 1;
   } else {
-    // Remove the player with the given id.
-    return prevPlayers.filter((player) => player.id !== playerId);
+    newOpponentScore += 1;
   }
+  return { newOurScore, newOpponentScore, newGoals };
 }
 
-export function updatePlayerLists(playerData: any[], includeGKPlaytime: boolean, isRunning: boolean): { onField: any[]; offField: any[] } {
-  // For this example, partition players based on an 'active' flag.
-  const onField = playerData.filter((player) => player.active !== false);
-  const offField = playerData.filter((player) => player.active === false);
+export function handlePlayerAdjustmentHandler(prev: Player[], playerId: number | string, isAdding: boolean): Player[] {
+  return prev.map(player => player.id === playerId ? { ...player, onField: isAdding } : player);
+}
+
+export function updatePlayerListsHandler(playerData: Player[], includeGKPlaytime: boolean, isRunning: boolean): { onField: Player[]; offField: Player[] } {
+  const onField = playerData.filter(player => player.onField);
+  const offField = playerData.filter(player => !player.onField);
   return { onField, offField };
 }

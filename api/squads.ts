@@ -1,6 +1,7 @@
-import { authenticateUser } from './_apiUtils.js';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { authenticateUser, AuthUser } from './_apiUtils.ts';
 import * as Sentry from '@sentry/node';
-import { handleGet, handlePost, handlePut } from './squadsHandlers.js';
+import { handleGet, handlePost, handlePut } from './squadsHandlers.ts';
 
 /**
  * API handler for squads.
@@ -8,9 +9,9 @@ import { handleGet, handlePost, handlePut } from './squadsHandlers.js';
  * @param req - The HTTP request object.
  * @param res - The HTTP response object.
  */
-export default async function handler(req: any, res: any): Promise<void> {
+export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
   try {
-    const user = await authenticateUser(req);
+    const user: AuthUser = await authenticateUser(req);
     if (req.method === 'GET') {
       return await handleGet(user, req, res);
     } else if (req.method === 'POST') {

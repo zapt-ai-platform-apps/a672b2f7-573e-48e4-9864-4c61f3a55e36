@@ -1,3 +1,11 @@
+export interface Player {
+  id: string | number;
+  playTime?: number;
+  playIntervals?: { startTime: number; endTime: number | null; isGoalkeeper?: boolean }[];
+  isOnField?: boolean;
+  [key: string]: unknown;
+}
+
 /**
  * Adjusts the player's playTime by incrementing or decrementing.
  * @param playerData - Array of player objects.
@@ -6,10 +14,10 @@
  * @returns The updated array of player objects.
  */
 export function handlePlayerAdjustment(
-  playerData: any[],
+  playerData: Player[],
   playerId: string | number,
   isAdding: boolean
-): any[] {
+): Player[] {
   return playerData.map(player => {
     if (player.id === playerId) {
       if (isAdding) {
@@ -31,21 +39,21 @@ export function handlePlayerAdjustment(
  * @returns The updated array of player objects.
  */
 export function applyPlayerAdjustment(
-  playerData: any[],
-  adjustmentType: string,
-  selectedPlayer: any,
+  playerData: Player[],
+  adjustmentType: 'increase' | 'decrease',
+  selectedPlayer: Player,
   isRunning: boolean
-): any[] {
+): Player[] {
   return playerData.map(player => {
     if (player.id === selectedPlayer.id) {
       if (adjustmentType === "increase") {
-        const updatedIntervals = isRunning
+        const updatedIntervals = isRunning && player.isOnField
           ? [...(player.playIntervals || []), { startTime: Date.now(), endTime: null, isGoalkeeper: player.isGoalkeeper }]
           : (player.playIntervals || []);
         return { ...player, isOnField: true, playIntervals: updatedIntervals };
       } else if (adjustmentType === "decrease") {
         let updatedIntervals = player.playIntervals || [];
-        if (isRunning && updatedIntervals.length > 0 && !updatedIntervals[updatedIntervals.length - 1].endTime) {
+        if (isRunning && updatedIntervals.length > 0 && updatedIntervals[updatedIntervals.length - 1].endTime === null) {
           updatedIntervals = [
             ...updatedIntervals.slice(0, -1),
             { ...updatedIntervals[updatedIntervals.length - 1], endTime: Date.now() }
