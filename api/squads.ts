@@ -1,6 +1,6 @@
-import { authenticateUser } from './_apiUtils';
+import { authenticateUser } from './_apiUtils.js';
 import * as Sentry from '@sentry/node';
-import { handleGet, handlePost, handlePut } from './squadsHandlers';
+import { handleGet, handlePost, handlePut } from './squadsHandlers.js';
 
 /**
  * API handler for squads.

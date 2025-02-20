@@ -1,7 +1,7 @@
-import { squads } from '../drizzle/schema';
+import { squads } from '../drizzle/schema.js';
 import { eq } from 'drizzle-orm/expressions';
-import db from '../lib/db';
-import { parsePlayers } from '../src/utils/parsePlayers';
+import db from '../lib/db.js';
+import { parsePlayers } from '../src/utils/parsePlayers.js';
 
 /**
  * Handles GET requests for squads.
