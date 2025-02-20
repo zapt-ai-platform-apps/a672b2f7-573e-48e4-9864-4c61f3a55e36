@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import * as Sentry from "@sentry/browser";
-import { AuthContext } from '../context/AuthContext';
+import * as Sentry from '@sentry/browser';
+import { AuthContext, Session } from '../context/AuthContext';
 import { supabase, recordLogin } from '../supabaseClient';
 import SignIn from './SignIn';
 
 export { useAuth } from '../context/AuthContext';
 
 export function AuthProvider({ children }: { children: React.ReactNode }): JSX.Element {
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loginRecorded, setLoginRecorded] = useState<boolean>(false);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }): JSX.E
     };
   }, [loginRecorded]);
 
-  const handleSignOut = async () => {
+  const handleSignOut = async (): Promise<void> => {
     try {
       await supabase.auth.signOut();
       setSession(null);

@@ -5,7 +5,7 @@ import SignIn from './components/SignIn';
 import ProtectedRoute from './components/ProtectedRoute';
 import SelectParticipants from './screens/GameSetup/SelectParticipants';
 import SquadManagementScreen from './screens/SquadManagement';
-import GameSetupStepTwo from './features/GameSetup/GameSetupStepTwo';
+import GameSetupStepTwo from './screens/GameSetup/GameSetupStepTwo';
 
 function App() {
   return (
