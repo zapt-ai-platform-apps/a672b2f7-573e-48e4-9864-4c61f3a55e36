@@ -1,15 +1,23 @@
-/**
- * Creates a new player object.
- * @param param0 - Player input data.
- * @returns The newly created player object.
- */
-export function createPlayer({ name, isInMatchSquad, isInStartingLineup }: { name: string; isInMatchSquad?: boolean; isInStartingLineup?: boolean }): any {
+import type { Player } from '../../types/GameTypes';
+
+export function createPlayer({
+  name,
+  isInMatchSquad,
+  isInStartingLineup
+}: {
+  name: string;
+  isInMatchSquad?: boolean;
+  isInStartingLineup?: boolean;
+}): Player & { isInMatchSquad?: boolean; isInStartingLineup?: boolean } {
   return {
     id: Date.now() + Math.random(),
     name,
-    isInMatchSquad: isInMatchSquad || false,
-    isInStartingLineup: isInStartingLineup || false,
-    playTime: 0,
-    position: 'field'
+    playIntervals: [],
+    isOnField: false,
+    isGoalkeeper: false,
+    totalPlayTime: 0,
+    position: { x: null, y: null },
+    isInMatchSquad: isInMatchSquad ?? false,
+    isInStartingLineup: isInStartingLineup ?? false,
   };
 }

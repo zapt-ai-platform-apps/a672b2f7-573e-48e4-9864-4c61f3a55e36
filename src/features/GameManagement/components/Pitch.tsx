@@ -1,10 +1,11 @@
 import React from 'react';
 import Player from './Player';
+import type { Player as PlayerType } from '../../../types/GameTypes';
 
 interface PitchProps {
   pitchRef: React.RefObject<HTMLDivElement>;
-  playerData: any[];
-  handlePointerDown: (event: React.PointerEvent<HTMLDivElement>, player: any) => void;
+  playerData: PlayerType[];
+  handlePointerDown: (event: React.PointerEvent<HTMLDivElement>, player: PlayerType) => void;
 }
 
 function Pitch({ pitchRef, playerData, handlePointerDown }: PitchProps) {
@@ -18,7 +19,7 @@ function Pitch({ pitchRef, playerData, handlePointerDown }: PitchProps) {
         <div className="border-2 border-white rounded-full w-32 h-32"></div>
       </div>
       <div className="absolute inset-y-0 left-1/2 w-0.5 bg-white opacity-75"></div>
-      {playerData.filter((p: any) => p.isOnField).map((player: any) => (
+      {playerData.filter((p) => p.isOnField).map((player) => (
         <Player 
           key={player.id}
           player={player}

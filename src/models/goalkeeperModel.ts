@@ -1,10 +1,4 @@
-export interface Player {
-  name: string;
-  playIntervals: { startTime: number; endTime: number | null; isGoalkeeper?: boolean }[];
-  isOnField?: boolean;
-  isGoalkeeper?: boolean;
-  [key: string]: unknown;
-}
+import type { Player } from "../types/GameTypes";
 
 /**
  * Handles the business logic for changing the goalkeeper.
@@ -22,21 +16,25 @@ export function changeGoalkeeper(
   isRunning: boolean
 ): Player[] {
   const now = Date.now();
-  return playerData.map(player => {
+  return playerData.map((player) => {
     if (player.name === newGoalkeeperName) {
       if (isRunning && player.isOnField) {
-        if (player.playIntervals.length > 0 && player.playIntervals[player.playIntervals.length - 1].endTime === null) {
+        if (player.playIntervals && player.playIntervals.length > 0 && player.playIntervals[player.playIntervals.length - 1].endTime === null) {
           player.playIntervals[player.playIntervals.length - 1].endTime = now;
         }
-        player.playIntervals.push({ startTime: now, endTime: null, isGoalkeeper: true });
+        if (player.playIntervals) {
+          player.playIntervals.push({ startTime: now, endTime: null, isGoalkeeper: true });
+        }
       }
       return { ...player, isGoalkeeper: true };
     } else if (player.name === previousGoalkeeperName) {
       if (isRunning && player.isOnField) {
-        if (player.playIntervals.length > 0 && player.playIntervals[player.playIntervals.length - 1].endTime === null) {
+        if (player.playIntervals && player.playIntervals.length > 0 && player.playIntervals[player.playIntervals.length - 1].endTime === null) {
           player.playIntervals[player.playIntervals.length - 1].endTime = now;
         }
-        player.playIntervals.push({ startTime: now, endTime: null, isGoalkeeper: false });
+        if (player.playIntervals) {
+          player.playIntervals.push({ startTime: now, endTime: null, isGoalkeeper: false });
+        }
       }
       return { ...player, isGoalkeeper: false };
     } else {
