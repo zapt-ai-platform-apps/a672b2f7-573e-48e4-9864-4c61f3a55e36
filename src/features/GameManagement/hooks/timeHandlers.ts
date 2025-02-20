@@ -1,26 +1,30 @@
 import { calculateTotalPlayTime, calculateElapsedTime } from '../../../shared/models/playerUtils';
+import { Dispatch, SetStateAction } from 'react';
 
 export function getTotalPlayTime(player: any, includeGKPlaytime: boolean, isRunning: boolean): number {
   return calculateTotalPlayTime(player, includeGKPlaytime, isRunning);
 }
 
-export function getTimeElapsed(gameIntervals: any[], isRunning: boolean): number {
+export function getTimeElapsed(
+  gameIntervals: { startTime: number; endTime: number | null }[],
+  isRunning: boolean
+): number {
   return calculateElapsedTime(gameIntervals, isRunning);
 }
 
 export function toggleTimer(
-  setIsRunning: (value: boolean | ((prev: boolean) => boolean)) => boolean,
-  gameIntervals: any[],
-  setGameIntervals: (intervals: any[]) => void
+  setIsRunning: Dispatch<SetStateAction<boolean>>,
+  gameIntervals: { startTime: number; endTime: number | null }[],
+  setGameIntervals: Dispatch<SetStateAction<{ startTime: number; endTime: number | null }[]>>
 ): void {
   setIsRunning(prev => {
     if (!prev) {
-      setGameIntervals([...gameIntervals, { start: Date.now(), end: null }]);
+      setGameIntervals([...gameIntervals, { startTime: Date.now(), endTime: null }]);
     } else {
       const lastInterval = gameIntervals[gameIntervals.length - 1];
-      if (lastInterval && !lastInterval.end) {
+      if (lastInterval && !lastInterval.endTime) {
         const updatedIntervals = [...gameIntervals];
-        updatedIntervals[updatedIntervals.length - 1].end = Date.now();
+        updatedIntervals[updatedIntervals.length - 1].endTime = Date.now();
         setGameIntervals(updatedIntervals);
       }
     }
@@ -30,16 +34,16 @@ export function toggleTimer(
 
 export function recordGoalForPlayer(
   playerId: string | number,
-  gameIntervals: any[],
+  gameIntervals: { startTime: number; endTime: number | null }[],
   isRunning: boolean,
-  setGoals: (goals: any[]) => void,
-  setOurScore: (score: number) => void
+  setGoals: Dispatch<SetStateAction<any[]>>,
+  setOurScore: Dispatch<SetStateAction<number>>
 ): void {
   const time = calculateElapsedTime(gameIntervals, isRunning);
   setOurScore(prev => prev + 1);
   setGoals(prevGoals => [
     ...prevGoals,
-    { 
+    {
       team: 'our',
       scorerId: playerId,
       time,

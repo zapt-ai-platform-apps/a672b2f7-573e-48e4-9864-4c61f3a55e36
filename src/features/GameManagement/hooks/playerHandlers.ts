@@ -14,9 +14,9 @@ export function updatePlayerLists(
 }
 
 export function assignGoalkeeper(
-  goalkeeper: string | null,
+  goalkeeper: string,
   playerData: any[],
-  setGoalkeeper: (id: string) => void
+  setGoalkeeper: (goalkeeper: string) => void
 ): void {
   if (!goalkeeper && playerData.length > 0) {
     const firstGK = playerData.find(p => p.position === 'Goalkeeper');
@@ -26,15 +26,15 @@ export function assignGoalkeeper(
 
 export function handlePlayerAdjustment(
   playerId: string | number,
-  setPlayerData: (players: any[]) => void,
+  setPlayerData: (updater: (prev: any[]) => any[]) => void,
   isAdding: boolean
 ): void {
-  setPlayerData(prevPlayers =>
-    prevPlayers.map(player => {
+  setPlayerData(prevPlayers => {
+    return prevPlayers.map(player => {
       if (player.id === playerId) {
         return { ...player, isInStartingLineup: isAdding };
       }
       return player;
-    })
-  );
+    });
+  });
 }

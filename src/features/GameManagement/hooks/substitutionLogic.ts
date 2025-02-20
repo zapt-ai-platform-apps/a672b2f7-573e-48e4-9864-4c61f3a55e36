@@ -2,28 +2,28 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { performSubstitution } from '../../../shared/models/playerSubstitutions';
 
-interface SubstitutionLogicParams {
+interface SubstitutionLogicProps {
   playerData: any[];
-  setPlayerData: (players: any[]) => void;
+  setPlayerData: (updater: (prev: any[]) => any[]) => void;
   isRunning: boolean;
 }
 
-export function useSubstitutionLogic({ playerData, setPlayerData, isRunning }: SubstitutionLogicParams) {
+export function useSubstitutionLogic({ playerData, setPlayerData, isRunning }: SubstitutionLogicProps) {
   const [selectedSubOffPlayer, setSelectedSubOffPlayer] = useState<any>(null);
   const [selectedSubOnPlayer, setSelectedSubOnPlayer] = useState<any>(null);
   const [showSubstitutionConfirmModal, setShowSubstitutionConfirmModal] = useState<boolean>(false);
 
-  const handleSubOffPlayerClick = (player: any) => {
+  const handleSubOffPlayerClick = (player: any): void => {
     setSelectedSubOffPlayer(player);
     if (selectedSubOnPlayer) setShowSubstitutionConfirmModal(true);
   };
 
-  const handleSubOnPlayerClick = (player: any) => {
+  const handleSubOnPlayerClick = (player: any): void => {
     setSelectedSubOnPlayer(player);
     if (selectedSubOffPlayer) setShowSubstitutionConfirmModal(true);
   };
 
-  const confirmSubstitution = () => {
+  const confirmSubstitution = (): void => {
     if (!selectedSubOffPlayer || !selectedSubOnPlayer) return;
     const updatedPlayers = performSubstitution(playerData, selectedSubOffPlayer, selectedSubOnPlayer, isRunning);
     setPlayerData(updatedPlayers);
@@ -33,7 +33,7 @@ export function useSubstitutionLogic({ playerData, setPlayerData, isRunning }: S
     setSelectedSubOnPlayer(null);
   };
 
-  const cancelSubstitution = () => {
+  const cancelSubstitution = (): void => {
     setShowSubstitutionConfirmModal(false);
     setSelectedSubOffPlayer(null);
     setSelectedSubOnPlayer(null);

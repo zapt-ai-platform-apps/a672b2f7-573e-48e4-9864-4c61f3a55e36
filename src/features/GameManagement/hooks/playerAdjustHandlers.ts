@@ -1,38 +1,39 @@
 import { applyPlayerAdjustment } from '../../../shared/models/playerModel';
+import { Dispatch, SetStateAction } from 'react';
 
 interface PlayerAdjustProps {
   playerData: any[];
-  setPlayerData: (players: any[]) => void;
-  isRunning: boolean;
+  setPlayerData: Dispatch<SetStateAction<any[]>>;
   updatePlayerLists: () => void;
-}
-
-export function createHandleIncreasePlayers(
-  setAdjustType: (value: string) => void,
-  setShowAdjustModal: (value: boolean) => void
-): () => void {
-  return () => {
-    setAdjustType("increase");
-    setShowAdjustModal(true);
-  };
-}
-
-export function createHandleDecreasePlayers(
-  setAdjustType: (value: string) => void,
-  setShowAdjustModal: (value: boolean) => void
-): () => void {
-  return () => {
-    setAdjustType("decrease");
-    setShowAdjustModal(true);
-  };
+  isRunning: boolean;
 }
 
 interface ConfirmAdjustmentParams {
   props: PlayerAdjustProps;
   adjustType: string;
   selectedPlayer: any;
-  setShowConfirmModal: (value: boolean) => void;
-  setSelectedPlayer: (player: any | null) => void;
+  setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
+  setSelectedPlayer: Dispatch<SetStateAction<any>>;
+}
+
+export function createHandleIncreasePlayers(
+  setAdjustType: Dispatch<SetStateAction<string>>,
+  setShowAdjustModal: Dispatch<SetStateAction<boolean>>
+): () => void {
+  return (): void => {
+    setAdjustType("increase");
+    setShowAdjustModal(true);
+  };
+}
+
+export function createHandleDecreasePlayers(
+  setAdjustType: Dispatch<SetStateAction<string>>,
+  setShowAdjustModal: Dispatch<SetStateAction<boolean>>
+): () => void {
+  return (): void => {
+    setAdjustType("decrease");
+    setShowAdjustModal(true);
+  };
 }
 
 export function createConfirmAdjustment({
@@ -42,7 +43,7 @@ export function createConfirmAdjustment({
   setShowConfirmModal,
   setSelectedPlayer
 }: ConfirmAdjustmentParams): () => void {
-  return () => {
+  return (): void => {
     if (selectedPlayer) {
       const updatedPlayers = applyPlayerAdjustment(props.playerData, adjustType, selectedPlayer, props.isRunning);
       props.setPlayerData(updatedPlayers);

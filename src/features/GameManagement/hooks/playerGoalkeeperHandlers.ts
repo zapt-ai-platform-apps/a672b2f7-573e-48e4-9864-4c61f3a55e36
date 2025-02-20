@@ -1,25 +1,30 @@
 import { changeGoalkeeper } from '../../../shared/models/goalkeeperModel';
+import { Dispatch, SetStateAction } from 'react';
 
-interface GoalkeeperProps {
+interface PlayerGoalkeeperProps {
   playerData: any[];
   goalkeeper: string;
   isRunning: boolean;
   updatePlayerLists: () => void;
-  setPlayerData: (players: any[]) => void;
-  onFieldPlayers: any[];
+  setPlayerData: Dispatch<SetStateAction<any[]>>;
   setGoalkeeper: (goalkeeper: string) => void;
+  onFieldPlayers: any[];
 }
 
 export function createGoalkeeperHandlers(
-  props: GoalkeeperProps,
-  setShowGKModal: (show: boolean) => void,
-  setShowGKConfirmModal: (show: boolean) => void
-) {
-  const assignGoalkeeper = () => {
+  props: PlayerGoalkeeperProps,
+  setShowGKModal: Dispatch<SetStateAction<boolean>>,
+  setShowGKConfirmModal: Dispatch<SetStateAction<boolean>>
+): {
+  assignGoalkeeper: () => void;
+  confirmGoalkeeper: (playerName: string) => void;
+  availableGoalkeepers: () => any[];
+} {
+  const assignGoalkeeper = (): void => {
     setShowGKModal(true);
   };
 
-  const confirmGoalkeeper = (playerName: string) => {
+  const confirmGoalkeeper = (playerName: string): void => {
     const updatedPlayers = changeGoalkeeper(props.playerData, playerName, props.goalkeeper, props.isRunning);
     props.setPlayerData(updatedPlayers);
     props.setGoalkeeper(playerName);
@@ -28,7 +33,7 @@ export function createGoalkeeperHandlers(
     props.updatePlayerLists();
   };
 
-  const availableGoalkeepers = () => {
+  const availableGoalkeepers = (): any[] => {
     return props.onFieldPlayers.filter(player => player.name !== props.goalkeeper);
   };
 
