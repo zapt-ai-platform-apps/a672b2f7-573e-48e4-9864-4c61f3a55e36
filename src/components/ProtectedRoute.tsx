@@ -8,12 +8,12 @@ interface ProtectedRouteProps {
 }
 
 function ProtectedRoute({ children }: ProtectedRouteProps): JSX.Element {
-  const { user } = useAuth();
+  const { session } = useAuth();
   const { selectedSquad } = useStateContext();
   const location = useLocation();
 
-  if (!user) {
-    return <Navigate to="/" replace />;
+  if (!session) {
+    return <Navigate to="/login" replace />;
   }
 
   if (

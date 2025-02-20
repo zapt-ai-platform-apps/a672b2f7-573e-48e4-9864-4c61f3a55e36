@@ -45,10 +45,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }): JSX.E
     };
   }, [loginRecorded]);
 
-  if (!session) {
-    return <SignIn />;
-  }
-
   const handleSignOut = async () => {
     try {
       await supabase.auth.signOut();
@@ -63,14 +59,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }): JSX.E
   return (
     <AuthContext.Provider value={{ session, setSession }}>
       <div className="min-h-screen">
-        <div className="p-4 flex justify-end">
-          <button
-            onClick={handleSignOut}
-            className="cursor-pointer px-4 py-2 bg-red-500 text-white rounded"
-          >
-            Sign Out
-          </button>
-        </div>
+        {session && (
+          <div className="p-4 flex justify-end">
+            <button
+              onClick={handleSignOut}
+              className="cursor-pointer px-4 py-2 bg-red-500 text-white rounded"
+            >
+              Sign Out
+            </button>
+          </div>
+        )}
         {children}
       </div>
     </AuthContext.Provider>
