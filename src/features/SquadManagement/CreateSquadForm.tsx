@@ -1,25 +1,28 @@
-import React from 'react';
+import React, { useState, FormEvent, ChangeEvent } from "react";
 
 function CreateSquadForm() {
-  const [squadName, setSquadName] = React.useState('');
+  const [squadName, setSquadName] = useState<string>("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('New squad created with name:', squadName);
-    setSquadName('');
+    console.log("New squad created with name:", squadName);
+    setSquadName("");
   };
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-sm">
       <div className="mb-4">
-        <label className="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2" htmlFor="squadName">
+        <label
+          className="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2"
+          htmlFor="squadName"
+        >
           Squad Name
         </label>
         <input
           id="squadName"
           type="text"
           value={squadName}
-          onChange={(e) => setSquadName(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setSquadName(e.target.value)}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
           placeholder="Enter squad name"
           required

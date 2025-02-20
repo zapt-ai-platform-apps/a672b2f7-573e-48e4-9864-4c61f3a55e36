@@ -1,9 +1,9 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent } from "react";
 
 interface GoalkeeperSettingsProps {
-  startingPlayers: any[];
-  goalkeeper: string | null;
-  setGoalkeeper: (value: string | null) => void;
+  startingPlayers: string[];
+  goalkeeper: string;
+  setGoalkeeper: (g: string) => void;
   includeGKPlaytime: boolean;
   setIncludeGKPlaytime: (value: boolean) => void;
 }
@@ -13,8 +13,8 @@ export default function GoalkeeperSettings({
   goalkeeper,
   setGoalkeeper,
   includeGKPlaytime,
-  setIncludeGKPlaytime
-}: GoalkeeperSettingsProps): JSX.Element {
+  setIncludeGKPlaytime,
+}: GoalkeeperSettingsProps) {
   const handleSelectGoalkeeper = (e: ChangeEvent<HTMLSelectElement>) => {
     setGoalkeeper(e.target.value);
   };
@@ -31,14 +31,14 @@ export default function GoalkeeperSettings({
         <select
           value={goalkeeper || ""}
           onChange={handleSelectGoalkeeper}
-          className="w-full p-3 border border-gray-300 rounded-lg box-border"
+          className="w-full p-3 border border-gray-300 rounded-lg"
         >
           <option value="" disabled>
             Select a player
           </option>
           {startingPlayers && startingPlayers.length > 0 && startingPlayers.map((player, index) => (
-            <option key={index} value={player.name}>
-              {player.name}
+            <option key={index} value={player}>
+              {player}
             </option>
           ))}
         </select>

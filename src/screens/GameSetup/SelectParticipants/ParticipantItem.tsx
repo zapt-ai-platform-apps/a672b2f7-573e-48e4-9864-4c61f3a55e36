@@ -1,18 +1,26 @@
-import React from 'react';
+import React from "react";
 
 interface ParticipantItemProps {
-  player: any;
+  player: {
+    name: string | { name?: string };
+  };
   isSelected: boolean;
   onToggle: () => void;
 }
 
-export default function ParticipantItem({ player, isSelected, onToggle }: ParticipantItemProps): JSX.Element {
+function ParticipantItem({ player, isSelected, onToggle }: ParticipantItemProps) {
   return (
     <div
       onClick={onToggle}
-      className={`p-4 border rounded cursor-pointer transition-colors ${isSelected ? 'bg-green-100 border-green-500' : 'bg-white border-gray-300'}`}
+      className={`p-4 border rounded cursor-pointer ${isSelected ? "bg-green-100" : "bg-white"}`}
     >
-      <p className="text-xl">{player.name}</p>
+      <p>
+        {typeof player.name === "object"
+          ? player.name.name || JSON.stringify(player.name)
+          : player.name}
+      </p>
     </div>
   );
 }
+
+export default ParticipantItem;
