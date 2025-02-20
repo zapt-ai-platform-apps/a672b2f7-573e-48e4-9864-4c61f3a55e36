@@ -1,49 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { runGetStarted } from '../../services/landingService';
-import FeaturesSection from './FeaturesSection';
-import HeroSection from './HeroSection';
+import { useAuth } from '../../context/AuthContext';
 
-function LandingScreen(): JSX.Element {
+export default function LandingScreen(): JSX.Element {
   const navigate = useNavigate();
-  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
+  const { session } = useAuth();
 
-  const handleGetStarted = async () => {
-    if (isButtonDisabled) return;
-    await runGetStarted(navigate, setIsButtonDisabled);
-  };
+  useEffect(() => {
+    if (session) {
+      navigate('/squads');
+    }
+  }, [session, navigate]);
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-      <header className="text-center p-8">
-        <h1 className="text-5xl font-extrabold mb-4">Football Subs</h1>
-        <p className="text-xl mb-8">
-          Elevate your football substitution experience with style and precision.
-        </p>
-        <button
-          onClick={handleGetStarted}
-          disabled={isButtonDisabled}
-          className="cursor-pointer bg-white text-blue-600 font-bold py-3 px-6 rounded-full shadow-lg transform transition hover:scale-105 disabled:opacity-50"
-        >
-          Get Started
-        </button>
-      </header>
-      <section className="flex-1 flex flex-col justify-center items-center p-4">
-        <HeroSection onGetStarted={handleGetStarted} />
-        <FeaturesSection />
-      </section>
-      <footer className="w-full p-4 text-center">
-        <a
-          href="https://www.zapt.ai"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="cursor-pointer underline font-medium"
-        >
-          Made on ZAPT
-        </a>
-      </footer>
+    <div className="min-h-screen flex flex-col justify-center items-center bg-blue-100">
+      <h1 className="text-5xl font-bold mb-4">Welcome to Football Subs</h1>
+      <p className="text-xl mb-8">Manage your squad and substitutions with ease.</p>
+      <button
+        onClick={() => navigate('/login')}
+        className="px-8 py-4 bg-green-500 text-white text-xl rounded-full cursor-pointer"
+      >
+        Get Started
+      </button>
     </div>
   );
 }
-
-export default LandingScreen;

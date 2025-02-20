@@ -1,20 +1,11 @@
-import { parsePlayers } from "../../../../utils/parsePlayers";
-
-export interface Player {
-  id: string;
-  name: string;
-  position?: string;
-  number?: number;
-}
-
-function initializePlayers(rawData: string): Player[] {
-  try {
-    const players = parsePlayers(rawData) as Player[];
-    return players;
-  } catch (error) {
-    console.error("Failed to initialize players", error);
-    return [];
+function initializePlayers(squad: any): any[] {
+  if (squad && Array.isArray(squad.players)) {
+    return squad.players.map((player: any) => ({
+      ...player,
+      isInMatchSquad: false
+    }));
   }
+  return [];
 }
 
 export default initializePlayers;

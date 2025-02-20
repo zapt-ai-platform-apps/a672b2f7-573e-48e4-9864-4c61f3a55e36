@@ -30,7 +30,7 @@ export default function SquadList({ squads = [], loading, handleSelectSquad, han
                   type="button"
                   onClick={() => {
                     handleSelectSquad(squad);
-                    navigate('/setup');
+                    navigate('/setup/participants');
                   }}
                   className="mr-2 px-3 py-1 bg-blue-500 text-white rounded cursor-pointer"
                 >
