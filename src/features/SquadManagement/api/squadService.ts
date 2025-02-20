@@ -1,7 +1,7 @@
 import { supabase } from '../../../supabaseClient';
 import * as Sentry from '@sentry/browser';
 
-export async function fetchSquadsAPI(): Promise<any[]> {
+export async function fetchSquadsAPI() {
   try {
     const { data: { session } } = await supabase.auth.getSession();
     const response = await fetch('/api/squads', {
@@ -21,13 +21,13 @@ export async function fetchSquadsAPI(): Promise<any[]> {
   }
 }
 
-export async function createSquadAPI(squadName: string, squadPlayers: any): Promise<any> {
+export async function createSquadAPI(squadName: string, squadPlayers: string | string[]) {
   try {
-    let playersArray;
+    let playersArray: string[];
     if (Array.isArray(squadPlayers)) {
       playersArray = squadPlayers;
     } else {
-      playersArray = squadPlayers.split(',').map((player: string) => player.trim());
+      playersArray = squadPlayers.split(',').map(player => player.trim());
     }
     const { data: { session } } = await supabase.auth.getSession();
     const response = await fetch('/api/squads', {
@@ -38,8 +38,8 @@ export async function createSquadAPI(squadName: string, squadPlayers: any): Prom
       },
       body: JSON.stringify({
         name: squadName,
-        players: playersArray
-      })
+        players: playersArray,
+      }),
     });
     if (!response.ok) {
       throw new Error('Error creating squad');
@@ -52,13 +52,13 @@ export async function createSquadAPI(squadName: string, squadPlayers: any): Prom
   }
 }
 
-export async function updateSquadAPI(squadId: string, squadName: string, squadPlayers: any): Promise<any> {
+export async function updateSquadAPI(squadId: string, squadName: string, squadPlayers: string | string[]) {
   try {
-    let playersArray;
+    let playersArray: string[];
     if (Array.isArray(squadPlayers)) {
       playersArray = squadPlayers;
     } else {
-      playersArray = squadPlayers.split(',').map((player: string) => player.trim());
+      playersArray = squadPlayers.split(',').map(player => player.trim());
     }
     const { data: { session } } = await supabase.auth.getSession();
     const response = await fetch('/api/squads', {
@@ -70,8 +70,8 @@ export async function updateSquadAPI(squadId: string, squadName: string, squadPl
       body: JSON.stringify({
         id: squadId,
         name: squadName,
-        players: playersArray
-      })
+        players: playersArray,
+      }),
     });
     if (!response.ok) {
       throw new Error('Error updating squad');
