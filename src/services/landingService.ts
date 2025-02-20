@@ -24,7 +24,7 @@ export async function runGetStarted(
           Sentry.captureException(loginError);
         }
       }
-      navigate('/setup/participants');
+      navigate('/squads');
     }
   } catch (error) {
     console.error('Error on Get Started:', error);

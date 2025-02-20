@@ -4,6 +4,7 @@ import LandingScreen from './screens/Landing';
 import SignIn from './components/SignIn';
 import ProtectedRoute from './components/ProtectedRoute';
 import SelectParticipants from './screens/GameSetup/SelectParticipants';
+import SquadManagementScreen from './screens/SquadManagement';
 
 function App() {
   return (
@@ -12,6 +13,14 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingScreen />} />
           <Route path="/login" element={<SignIn />} />
+          <Route
+            path="/squads"
+            element={
+              <ProtectedRoute>
+                <SquadManagementScreen />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/setup/participants"
             element={

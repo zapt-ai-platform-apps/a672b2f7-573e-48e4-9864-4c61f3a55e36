@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Auth } from '@supabase/auth-ui-react';
 import { supabase } from '../supabaseClient';
+import { useAuth } from './AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 export default function SignIn() {
+  const { session } = useAuth();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    if (session) {
+      navigate('/squads');
+    }
+  }, [session, navigate]);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
       <h2 className="text-2xl font-bold mb-4">Sign in with ZAPT</h2>

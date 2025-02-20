@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import useSquadManagement from '../../features/SquadManagement/hooks/useSquadManagement';
 import SquadListSection from '../../features/SquadManagement/components/SquadListSection';
 import { useStateContext } from '../../state';
@@ -6,9 +7,10 @@ import { useStateContext } from '../../state';
 export default function SquadManagementScreen(): JSX.Element {
   const { squads, loading, handleSelectSquad, handleEditSquad } = useSquadManagement();
   const { selectedSquad } = useStateContext();
+  const navigate = useNavigate();
 
   const handleProceedToSetup = () => {
-    // Extend functionality to navigate to game setup
+    navigate('/setup/participants');
   };
 
   return (
