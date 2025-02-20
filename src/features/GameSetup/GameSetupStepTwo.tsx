@@ -18,7 +18,7 @@ interface GameSetupStepTwoProps {
   handleStartGame: () => boolean;
 }
 
-export function GameSetupStepTwo({
+export default function GameSetupStepTwo({
   playerName,
   setPlayerName,
   addPlayer,
