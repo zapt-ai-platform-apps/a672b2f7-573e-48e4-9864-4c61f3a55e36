@@ -1,7 +1,24 @@
 import { useState, useEffect, useRef } from 'react';
 import { useStateContext } from '../../../state';
 import { getStartingPlayers } from '../../../shared/models/gameSetupModel';
-import { Player, UseGameSetupReturn } from '../types/gameSetupTypes';
+import { Player } from '../../../types/GameTypes';
+import { addPlayerToList, removePlayerFromList, togglePlayerInList } from '../utils/gameSetupActions';
+
+export interface UseGameSetupReturn {
+  errorMessage: string;
+  setErrorMessage: (msg: string) => void;
+  playerName: string;
+  setPlayerName: (name: string) => void;
+  addPlayer: () => void;
+  deletePlayer: (playerId: number | string) => void;
+  toggleStartingPlayer: (playerId: number | string) => void;
+  startingPlayers: Player[];
+  goalkeeper: Player | null;
+  setGoalkeeper: (player: Player | null) => void;
+  includeGKPlaytime: boolean;
+  setIncludeGKPlaytime: (value: boolean) => void;
+  handleStartGame: () => void;
+}
 
 export default function useGameSetup(): UseGameSetupReturn {
   const { selectedSquad, matchSquad, handleStartGame: contextHandleStartGame } = useStateContext();
@@ -28,31 +45,17 @@ export default function useGameSetup(): UseGameSetupReturn {
 
   const addPlayerHandler = () => {
     if (playerName.trim() !== "") {
-      setStartingPlayers(prev => {
-        const player: Player = {
-          id: Date.now() + Math.random(),
-          name: playerName.trim(),
-          isStartingPlayer: true,
-          isInMatchSquad: true,
-          playIntervals: []
-        };
-        return [...prev, player];
-      });
+      setStartingPlayers(prev => addPlayerToList(prev, playerName));
       setPlayerName("");
     }
   };
 
   const deletePlayerHandler = (playerId: number | string) => {
-    setStartingPlayers(prev => prev.filter(player => player.id !== playerId));
+    setStartingPlayers(prev => removePlayerFromList(prev, playerId));
   };
 
   const toggleStartingPlayerHandler = (playerId: number | string) => {
-    setStartingPlayers(prev => prev.map(player => {
-      if (player.id === playerId) {
-        return { ...player, isStartingPlayer: !player.isStartingPlayer };
-      }
-      return player;
-    }));
+    setStartingPlayers(prev => togglePlayerInList(prev, playerId));
   };
 
   const handleStartGame = () => {

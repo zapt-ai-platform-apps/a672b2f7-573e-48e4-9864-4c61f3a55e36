@@ -1,12 +1,20 @@
+import { Player } from '../../../types/GameTypes';
+
 export function addPlayerAction(
   playerName: string,
-  players: any[],
-  setPlayers: (players: any[]) => void,
+  players: Player[],
+  setPlayers: (players: Player[]) => void,
   setPlayerName: (name: string) => void
 ): boolean {
   if (playerName.trim() !== '') {
-    const newPlayer = {
+    const newPlayer: Player = {
+      id: Date.now(),
       name: playerName.trim(),
+      playIntervals: [],
+      isOnField: false,
+      isGoalkeeper: false,
+      totalPlayTime: 0,
+      position: { x: null, y: null },
       isStartingPlayer: false
     };
     const updatedPlayers = [...players, newPlayer];
@@ -20,8 +28,8 @@ export function addPlayerAction(
 
 export function deletePlayerAction(
   playerNameToDelete: string,
-  players: any[],
-  setPlayers: (players: any[]) => void
+  players: Player[],
+  setPlayers: (players: Player[]) => void
 ): boolean {
   const confirmDelete = window.confirm(`Are you sure you want to delete ${playerNameToDelete}?`);
   if (confirmDelete) {
@@ -35,10 +43,10 @@ export function deletePlayerAction(
 
 export function toggleStartingPlayerAction(
   playerNameToToggle: string,
-  players: any[],
-  setPlayers: (players: any[]) => void,
+  players: Player[],
+  setPlayers: (players: Player[]) => void,
   setStartingPlayersCount: (count: number) => void,
-  setStartingPlayers: (players: any[]) => void
+  setStartingPlayers: (players: Player[]) => void
 ): void {
   const updatedPlayers = players.map(player =>
     player.name === playerNameToToggle

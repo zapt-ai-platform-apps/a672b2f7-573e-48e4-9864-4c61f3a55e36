@@ -1,10 +1,10 @@
-import { Player } from './playerModel';
+import { Player, Goal } from '../types/GameTypes';
 
 export function getTotalPlayTime(player: Player, includeGKPlaytime: boolean, isRunning: boolean): number {
   if (!includeGKPlaytime && player.isGoalkeeper) {
     return 0;
   }
-  return player.playTime || 0;
+  return player.totalPlayTime || 0;
 }
 
 export function getTimeElapsed(gameIntervals: number[], isRunning: boolean): number {
@@ -26,12 +26,6 @@ export function toggleTimer(isRunning: boolean, gameIntervals: number[]): { newI
   return { newIntervals, newIsRunning: !isRunning };
 }
 
-export interface Goal {
-  team: 'our' | 'opponent';
-  scorerName: string;
-  timestamp: number;
-}
-
 export function recordGoal(
   team: 'our' | 'opponent',
   scorerName: string,
@@ -42,7 +36,7 @@ export function recordGoal(
   isRunning: boolean
 ): { newOurScore: number; newOpponentScore: number; newGoals: Goal[] } {
   const timestamp = Date.now();
-  const newGoals = [...goals, { team, scorerName, timestamp }];
+  const newGoal: Goal = { team, scorerName, timestamp };
   let newOurScore = ourScore;
   let newOpponentScore = opponentScore;
   if (team === 'our') {
@@ -50,15 +44,17 @@ export function recordGoal(
   } else {
     newOpponentScore += 1;
   }
-  return { newOurScore, newOpponentScore, newGoals };
+  return { newOurScore, newOpponentScore, newGoals: [...goals, newGoal] };
 }
 
 export function handlePlayerAdjustment(players: Player[], playerId: number | string, isAdding: boolean): Player[] {
-  return players.map(player => player.id === playerId ? { ...player, onField: isAdding } : player);
+  return players.map(player =>
+    player.id === playerId ? { ...player, isOnField: isAdding } : player
+  );
 }
 
 export function updatePlayerLists(players: Player[], includeGKPlaytime: boolean, isRunning: boolean): { onField: Player[]; offField: Player[] } {
-  const onField = players.filter(player => player.onField);
-  const offField = players.filter(player => !player.onField);
+  const onField = players.filter(player => player.isOnField);
+  const offField = players.filter(player => !player.isOnField);
   return { onField, offField };
 }

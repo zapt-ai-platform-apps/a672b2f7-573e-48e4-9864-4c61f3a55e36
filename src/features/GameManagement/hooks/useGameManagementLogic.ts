@@ -1,21 +1,21 @@
 import { useState } from 'react';
 import { useStateContext } from '../../../state';
-import { Player } from '../../../context/StateContext';
+import { Player } from '../../../types/GameTypes';
 import {
-  getTotalPlayTimeHandler,
-  getTimeElapsedHandler,
-  toggleTimerHandler,
-  recordGoalHandler,
-  handlePlayerAdjustmentHandler,
-  updatePlayerListsHandler
-} from './gameManagementLogicHelpers';
+  getTotalPlayTimeHelper,
+  getTimeElapsedHelper,
+  toggleTimerHelper,
+  recordGoalHelper,
+  handlePlayerAdjustmentHelper,
+  updatePlayerListsHelper
+} from './gameManagementOperations';
 
 interface PlayerLists {
   onField: Player[];
   offField: Player[];
 }
 
-interface UseGameManagementLogicReturn {
+export interface UseGameManagementLogicReturn {
   playerData: Player[];
   setPlayerData: React.Dispatch<React.SetStateAction<Player[]>>;
   isRunning: boolean;
@@ -61,32 +61,32 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
   const [showAddPlayerModal, setShowAddPlayerModal] = useState<boolean>(false);
 
   const getTotalPlayTimeFunc = (player: Player): number => {
-    return getTotalPlayTimeHandler(player, includeGKPlaytime, isRunning);
+    return getTotalPlayTimeHelper(player, includeGKPlaytime, isRunning);
   };
 
   const getTimeElapsedFunc = (): number => {
-    return getTimeElapsedHandler(gameIntervals, isRunning);
+    return getTimeElapsedHelper(gameIntervals, isRunning);
   };
 
   const toggleTimerFunc = (): void => {
-    const { newIntervals, newIsRunning } = toggleTimerHandler(isRunning, gameIntervals);
+    const { newIntervals, newIsRunning } = toggleTimerHelper(isRunning, gameIntervals);
     setGameIntervals(newIntervals);
     setIsRunning(newIsRunning);
   };
 
   const recordGoalFunc = (team: 'our' | 'opponent', scorerName: string): void => {
-    const result = recordGoalHandler(team, scorerName, ourScore, opponentScore, goals, gameIntervals, isRunning);
+    const result = recordGoalHelper(team, scorerName, ourScore, opponentScore, goals, gameIntervals, isRunning);
     setOurScore(result.newOurScore);
     setOpponentScore(result.newOpponentScore);
     setGoals(result.newGoals);
   };
 
   const handlePlayerAdjustmentFunc = (playerId: number | string, isAdding: boolean): void => {
-    setPlayerData((prev: Player[]) => handlePlayerAdjustmentHandler(prev, playerId, isAdding));
+    setPlayerData((prev: Player[]) => handlePlayerAdjustmentHelper(prev, playerId, isAdding));
   };
 
   const updatePlayerListsFunc = (): PlayerLists => {
-    return updatePlayerListsHandler(playerData, includeGKPlaytime, isRunning);
+    return updatePlayerListsHelper(playerData, includeGKPlaytime, isRunning);
   };
 
   const lists = updatePlayerListsFunc();

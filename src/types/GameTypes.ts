@@ -1,9 +1,7 @@
-import React from 'react';
-
 export interface Player {
   id?: number;
   name: string;
-  playIntervals: number[];
+  playIntervals?: { startTime: number; endTime: number | null }[];
   isOnField: boolean;
   isGoalkeeper: boolean;
   totalPlayTime: number;

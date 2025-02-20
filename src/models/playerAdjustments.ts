@@ -1,18 +1,11 @@
 export interface Player {
   id: string | number;
-  playTime?: number;
+  totalPlayTime?: number;
   playIntervals?: { startTime: number; endTime: number | null; isGoalkeeper?: boolean }[];
   isOnField?: boolean;
   [key: string]: unknown;
 }
 
-/**
- * Adjusts the player's playTime by incrementing or decrementing.
- * @param playerData - Array of player objects.
- * @param playerId - Identifier of the player to adjust.
- * @param isAdding - If true, increment playTime; otherwise, decrement.
- * @returns The updated array of player objects.
- */
 export function handlePlayerAdjustment(
   playerData: Player[],
   playerId: string | number,
@@ -21,23 +14,15 @@ export function handlePlayerAdjustment(
   return playerData.map(player => {
     if (player.id === playerId) {
       if (isAdding) {
-        return { ...player, playTime: (player.playTime || 0) + 1 };
+        return { ...player, totalPlayTime: (player.totalPlayTime || 0) + 1 };
       } else {
-        return { ...player, playTime: Math.max((player.playTime || 0) - 1, 0) };
+        return { ...player, totalPlayTime: Math.max((player.totalPlayTime || 0) - 1, 0) };
       }
     }
     return player;
   });
 }
 
-/**
- * Applies a player adjustment based on the adjustment type.
- * @param playerData - Array of player objects.
- * @param adjustmentType - Type of adjustment ("increase" or "decrease").
- * @param selectedPlayer - The player object to adjust.
- * @param isRunning - Indicates if the game is currently running.
- * @returns The updated array of player objects.
- */
 export function applyPlayerAdjustment(
   playerData: Player[],
   adjustmentType: 'increase' | 'decrease',
