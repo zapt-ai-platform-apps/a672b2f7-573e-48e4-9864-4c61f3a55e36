@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Player } from '../../../context/StateContext';
+import type { Player } from '../../../types/GameTypes';
 
 interface ParticipantItemProps {
   player: Player & { isInMatchSquad?: boolean };

@@ -1,4 +1,5 @@
 import { applyPlayerAdjustment } from '../../../shared/models/playerModel';
+import type { Player } from '../../../types/GameTypes';
 
 export function createHandleIncreasePlayers(
   setAdjustType: (type: string) => void,
@@ -22,15 +23,15 @@ export function createHandleDecreasePlayers(
 
 interface ConfirmAdjustmentParams {
   props: {
-    playerData: any[];
+    playerData: Player[];
     isRunning: boolean;
-    setPlayerData: (players: any[]) => void;
+    setPlayerData: (players: Player[]) => void;
     updatePlayerLists: () => void;
   };
   adjustType: string;
-  selectedPlayer: any;
+  selectedPlayer: Player | null;
   setShowConfirmModal: (show: boolean) => void;
-  setSelectedPlayer: (player: any) => void;
+  setSelectedPlayer: (player: Player | null) => void;
 }
 
 export function createConfirmAdjustment({

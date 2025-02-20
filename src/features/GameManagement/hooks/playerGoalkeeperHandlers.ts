@@ -1,13 +1,14 @@
 import { changeGoalkeeper } from '../../../shared/models/goalkeeperModel';
+import type { Player } from '../../../types/GameTypes';
 
 interface GoalkeeperProps {
-  playerData: any[];
+  playerData: Player[];
   goalkeeper: string;
   isRunning: boolean;
-  setPlayerData: (players: any[]) => void;
+  setPlayerData: (players: Player[]) => void;
   setGoalkeeper: (name: string) => void;
   updatePlayerLists: () => void;
-  onFieldPlayers: any[];
+  onFieldPlayers: Player[];
 }
 
 export function createGoalkeeperHandlers(
@@ -28,7 +29,7 @@ export function createGoalkeeperHandlers(
     props.updatePlayerLists();
   };
 
-  const availableGoalkeepers = (): any[] => {
+  const availableGoalkeepers = (): Player[] => {
     return props.onFieldPlayers.filter((player) => player.name !== props.goalkeeper);
   };
 

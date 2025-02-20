@@ -1,10 +1,11 @@
 import { processPlayerLists } from '../../../shared/models/playerUtils';
+import type { Player } from '../../../types/GameTypes';
 
 export function updatePlayerLists(
-  playerData: any[],
+  playerData: Player[],
   includeGKPlaytime: boolean,
   isRunning: boolean
-): { onField: any[]; offField: any[] } {
+): { onField: Player[]; offField: Player[] } {
   const { onField, offField } = processPlayerLists(
     playerData.filter((p) => p.isInMatchSquad),
     includeGKPlaytime,
@@ -15,7 +16,7 @@ export function updatePlayerLists(
 
 export function assignGoalkeeper(
   goalkeeper: string,
-  playerData: any[],
+  playerData: Player[],
   setGoalkeeper: (id: string | undefined) => void
 ): void {
   if (!goalkeeper && playerData.length > 0) {
@@ -26,7 +27,7 @@ export function assignGoalkeeper(
 
 export function handlePlayerAdjustment(
   playerId: string | number,
-  setPlayerData: (update: (prev: any[]) => any[]) => void,
+  setPlayerData: (update: (prev: Player[]) => Player[]) => void,
   isAdding: boolean
 ): void {
   setPlayerData((prevPlayers) => {
