@@ -1,60 +1,82 @@
-import React, { useState, useEffect, createContext, useContext, ReactNode } from 'react';
-import { useLocation } from 'react-router-dom';
-import { supabase } from '../supabaseClient';
-import { processSession } from '../utils/authHelpers';
-import LoginPrompt from './LoginPrompt';
-
-interface AuthContextType {
-  user: any;
-}
-
-const AuthContext = createContext<AuthContextType>({ user: null });
+import React, { useState, useEffect, ReactNode } from 'react';
+import * as Sentry from '@sentry/browser';
+import { supabase, recordLogin } from '../supabaseClient';
+import { AuthContext, useAuth as useAuthHook } from './AuthContext';
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-/**
- * Authentication provider component that manages user session state.
- *
- * @returns The authentication provider that wraps child components.
- */
-export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
+function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const [user, setUser] = useState<any>(null);
-  const location = useLocation();
+  const [loginRecorded, setLoginRecorded] = useState<boolean>(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      processSession(session, setUser);
-    });
+    async function getUser() {
+      try {
+        const { data: { user: currentUser }, error } = await supabase.auth.getUser();
+        if (error) {
+          throw error;
+        }
+        if (currentUser) {
+          setUser(currentUser);
+          if (currentUser.email && !loginRecorded) {
+            try {
+              await recordLogin(currentUser.email, import.meta.env.VITE_PUBLIC_APP_ENV);
+              setLoginRecorded(true);
+            } catch (err) {
+              console.error('Failed to record login:', err);
+              Sentry.captureException(err);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user:', error);
+        Sentry.captureException(error);
+      }
+    }
+    getUser();
 
-    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
-      processSession(session, setUser);
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        setUser(session.user);
+        if (session.user.email && !loginRecorded) {
+          try {
+            await recordLogin(session.user.email, import.meta.env.VITE_PUBLIC_APP_ENV);
+            setLoginRecorded(true);
+          } catch (err) {
+            console.error('Failed to record login:', err);
+            Sentry.captureException(err);
+          }
+        }
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setLoginRecorded(false);
+      }
     });
 
     return () => {
-      listener.subscription.unsubscribe();
+      authListener?.subscription?.unsubscribe();
     };
-  }, []);
+  }, [loginRecorded]);
 
-  if (location.pathname === "/") {
-    return <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>;
+  async function signOut() {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      setUser(null);
+      setLoginRecorded(false);
+    } catch (err) {
+      console.error('Error signing out:', err);
+      Sentry.captureException(err);
+    }
   }
 
-  if (!user) {
-    return <LoginPrompt />;
-  }
-
-  return <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, signOut }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
-/**
- * Custom hook to access authentication context.
- *
- * @returns The auth context value, including the user object.
- */
-export function useAuth(): AuthContextType {
-  return useContext(AuthContext);
-}
-
-export { AuthContext };
+export { AuthProvider, useAuthHook as useAuth };
