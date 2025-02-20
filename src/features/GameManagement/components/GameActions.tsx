@@ -17,7 +17,7 @@ export function GameActions({
   setShowAddPlayerModal,
   handleIncreasePlayers,
   handleDecreasePlayers,
-  isRunning
+  isRunning,
 }: GameActionsProps): JSX.Element {
   return (
     <div className="mt-6 flex flex-wrap gap-4">
