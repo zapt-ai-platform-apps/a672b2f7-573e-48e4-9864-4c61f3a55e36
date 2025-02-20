@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { runGetStarted } from '../../services/landingService';
+import FeaturesSection from './FeaturesSection';
+import HeroSection from './HeroSection';
 
 function LandingScreen(): JSX.Element {
   const navigate = useNavigate();
@@ -27,10 +29,8 @@ function LandingScreen(): JSX.Element {
         </button>
       </header>
       <section className="flex-1 flex flex-col justify-center items-center p-4">
-        <h2 className="text-3xl font-bold mb-3">Revolutionize Your Game</h2>
-        <p className="max-w-xl text-center mb-6">
-          Discover modern UX, dynamic animations, and an intuitive experience built for football enthusiasts.
-        </p>
+        <HeroSection onGetStarted={handleGetStarted} />
+        <FeaturesSection />
       </section>
       <footer className="w-full p-4 text-center">
         <a
