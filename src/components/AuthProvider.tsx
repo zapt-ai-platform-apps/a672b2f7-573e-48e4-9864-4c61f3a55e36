@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import * as Sentry from "@sentry/browser";
 import { AuthContext } from '../context/AuthContext';
-import supabase, { recordLogin } from '../supabaseClient';
+import { supabase, recordLogin } from '../supabaseClient';
 import SignIn from './SignIn';
 
 export { useAuth } from '../context/AuthContext';
