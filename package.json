@@ -1,35 +1,31 @@
 {
   "name": "football-subs",
   "version": "1.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
+    "start": "vite",
     "build": "vite build",
-    "serve": "vite preview",
-    "start": "vite --host"
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@sentry/browser": "^8.41.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@supabase/auth-ui-react": "^0.4.7",
-    "@supabase/auth-ui-shared": "^0.1.8",
     "@zapt/zapt-js": "^1.0.20",
-    "logrocket": "^3.0.0",
-    "react-router-dom": "^6.3.0",
-    "react-toastify": "^9.1.1",
+    "@supabase/auth-ui-shared": "^0.1.8",
+    "@supabase/auth-ui-react": "^0.4.7",
+    "drizzle-orm": "^0.33.0",
+    "postgres": "^3.4.5",
     "stream-chat": "^8.56.0",
     "stream-chat-react": "^12.11.1",
-    "@vercel/analytics": "^1.4.0",
-    "react-icons": "^4.10.1"
+    "@sentry/browser": "^8.35.0",
+    "@sentry/node": "^8.54.0",
+    "resend": "^4.0.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.13",
-    "vite": "^5.4.7",
-    "@sentry/vite-plugin": "^2.23.0",
-    "typescript": "^5.0.0"
+    "typescript": "^4.9.5",
+    "vite": "^4.0.0",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "postcss": "^8.4.16",
+    "tailwindcss": "^3.2.4"
   }
 }
