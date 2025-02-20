@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useStateContext } from '../../../state';
-import type { Player } from '../../../context/StateContext';
+import type { Player } from '../../../types/GameTypes';
 
 export default function useDragAndDrop() {
   const { playerData, setPlayerData } = useStateContext();
@@ -25,9 +25,7 @@ export default function useDragAndDrop() {
 
       setPlayerData((prev: Player[]) =>
         prev.map((p) =>
-          p.id === draggingPlayer.id
-            ? { ...p, position: { x, y } }
-            : p
+          p.id === draggingPlayer.id ? { ...p, position: { x, y } } : p
         )
       );
     },

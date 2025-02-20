@@ -1,7 +1,7 @@
-import { recordGoal as recordGoalModel } from '../../../shared/models/scoreModel.ts';
-import { handlePlayerAdjustment as handlePlayerAdjustmentModel } from '../../../shared/models/playerAdjustments.ts';
-import { processPlayerLists } from '../../../shared/models/listUtils.ts';
-import { Goal, Player } from '../../../context/StateContext';
+import { recordGoal as recordGoalModel } from '../../../shared/models/scoreModel';
+import { handlePlayerAdjustment as handlePlayerAdjustmentModel } from '../../../shared/models/playerAdjustments';
+import { processPlayerLists } from '../../../shared/models/listUtils';
+import type { Goal, Player } from '../../../types/GameTypes';
 
 export interface GameInterval {
   startTime: number;

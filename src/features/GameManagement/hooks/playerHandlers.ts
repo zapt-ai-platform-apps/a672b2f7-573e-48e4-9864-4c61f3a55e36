@@ -1,5 +1,6 @@
 import { processPlayerLists } from '../../../shared/models/playerUtils';
 import type { Player } from '../../../types/GameTypes';
+import { handlePlayerAdjustment as adjustPlayer } from '../../../shared/models/playerAdjustments';
 
 export function updatePlayerLists(
   playerData: Player[],
@@ -15,7 +16,7 @@ export function updatePlayerLists(
 }
 
 export function assignGoalkeeper(
-  goalkeeper: string,
+  goalkeeper: string | undefined,
   playerData: Player[],
   setGoalkeeper: (id: string | undefined) => void
 ): void {
@@ -30,12 +31,5 @@ export function handlePlayerAdjustment(
   setPlayerData: (update: (prev: Player[]) => Player[]) => void,
   isAdding: boolean
 ): void {
-  setPlayerData((prevPlayers) => {
-    return prevPlayers.map((player) => {
-      if (player.id === playerId) {
-        return { ...player, isInStartingLineup: isAdding };
-      }
-      return player;
-    });
-  });
+  setPlayerData((prevPlayers) => adjustPlayer(prevPlayers, playerId, isAdding));
 }

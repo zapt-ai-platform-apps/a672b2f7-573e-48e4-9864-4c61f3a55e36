@@ -7,6 +7,7 @@ export interface Player {
   totalPlayTime: number;
   position: { x: number | null; y: number | null };
   isStartingPlayer?: boolean;
+  isInMatchSquad?: boolean;
 }
 
 export interface Goal {

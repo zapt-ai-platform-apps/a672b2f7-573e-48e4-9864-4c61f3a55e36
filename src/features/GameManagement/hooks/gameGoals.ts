@@ -1,13 +1,15 @@
 import { removeLastGoal } from "../../../shared/models/scoreModel";
+import * as Sentry from "@sentry/browser";
+import type { Goal } from "../../../types/GameTypes";
 
 interface GoalHandlersProps {
   props: {
-    goals: any[];
+    goals: Goal[];
     ourScore: number;
     opponentScore: number;
     setOurScore: (score: number) => void;
     setOpponentScore: (score: number) => void;
-    setGoals: (goals: any[]) => void;
+    setGoals: (goals: Goal[]) => void;
   };
   setShowRemoveGoalConfirm: (value: boolean) => void;
 }
@@ -32,8 +34,15 @@ export function createGameGoalHandlers({ props, setShowRemoveGoalConfirm }: Goal
       props.setOpponentScore(newOpponentScore);
       props.setGoals(newGoals);
       setShowRemoveGoalConfirm(false);
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+        Sentry.captureException(error);
+      } else {
+        const unknownError = new Error("Unknown error in confirmRemoveGoal");
+        alert(unknownError.message);
+        Sentry.captureException(unknownError);
+      }
     }
   };
 
