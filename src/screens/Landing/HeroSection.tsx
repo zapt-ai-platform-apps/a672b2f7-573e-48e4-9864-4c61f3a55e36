@@ -4,7 +4,11 @@ interface HeroSectionProps {
   onGetStarted: () => void;
 }
 
-export default function HeroSection({ onGetStarted }: HeroSectionProps): JSX.Element {
+/**
+ * HeroSection component displaying the landing page main call-to-action.
+ * @param props - Contains onGetStarted function.
+ */
+function HeroSection({ onGetStarted }: HeroSectionProps): JSX.Element {
   return (
     <section className="hero-section text-center py-20">
       <h1 className="text-5xl font-extrabold bg-gradient-to-r from-pink-300 to-yellow-300 bg-clip-text text-transparent animate-fadeIn">
@@ -23,3 +27,5 @@ export default function HeroSection({ onGetStarted }: HeroSectionProps): JSX.Ele
     </section>
   );
 }
+
+export default HeroSection;

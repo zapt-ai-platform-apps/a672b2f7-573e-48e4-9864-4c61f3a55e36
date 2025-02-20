@@ -1,21 +1,12 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter as Router } from 'react-router-dom';
+import ReactDOM from 'react-dom';
 import App from './App';
+import * as Sentry from "@sentry/browser";
 import './index.css';
-import * as Sentry from '@sentry/browser';
-import { inject } from '@vercel/analytics';
-import LogRocket from 'logrocket';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { StateProvider } from './state';
-import { AuthProvider } from './components/AuthProvider';
-import ErrorBoundary from './components/ErrorBoundary';
 
-LogRocket.init('p29zbk/zapt');
-
+// Initialize Sentry for error tracking
 Sentry.init({
-  dsn: import.meta.env.VITE_PUBLIC_SENTRY_DSN as string,
+  dsn: import.meta.env.VITE_PUBLIC_SENTRY_DSN,
   environment: import.meta.env.VITE_PUBLIC_APP_ENV,
   initialScope: {
     tags: {
@@ -25,45 +16,30 @@ Sentry.init({
   }
 });
 
-// Vercel Analytics
-inject();
+// Setup Progressier PWA integration
+window.progressierAppRuntimeSettings = {
+  uid: import.meta.env.VITE_PUBLIC_APP_ID,
+  icon512: "https://otebnzqfzytqyyjdfhzr.supabase.co/storage/v1/render/image/public/icons/a672b2f7-573e-48e4-9864-4c61f3a55e36/a07d10c7-40ae-490b-922a-cffd0ccb2aea.png?width=512&height=512",
+  name: "Football Subs",
+  shortName: "Football Sub"
+};
+const progressierScript = document.createElement('script');
+progressierScript.setAttribute('src', 'https://progressier.app/z8yY3IKmfpDIw3mSncPh/script.ts');
+progressierScript.setAttribute('defer', 'true');
+document.head.appendChild(progressierScript);
 
-// Add Umami Analytics script conditionally
+// Setup Umami analytics if not in development
 if (import.meta.env.VITE_PUBLIC_APP_ENV !== 'development') {
-  const script = document.createElement('script');
-  script.defer = true;
-  script.src = 'https://cloud.umami.is/script.js';
-  script.setAttribute('data-website-id', import.meta.env.VITE_PUBLIC_UMAMI_WEBSITE_ID as string);
-  document.head.appendChild(script);
+  const umamiScript = document.createElement('script');
+  umamiScript.defer = true;
+  umamiScript.src = 'https://cloud.umami.is/script.ts';
+  umamiScript.setAttribute('data-website-id', import.meta.env.VITE_PUBLIC_UMAMI_WEBSITE_ID);
+  document.head.appendChild(umamiScript);
 }
 
-// Add PWA support to the app
-window.progressierAppRuntimeSettings = {
-  uid: import.meta.env.VITE_PUBLIC_APP_ID as string,
-  icon512:
-    'https://otebnzqfzytqyyjdfhzr.supabase.co/storage/v1/render/image/public/icons/a672b2f7-573e-48e4-9864-4c61f3a55e36/a07d10c7-40ae-490b-922a-cffd0ccb2aea.png?width=512&height=512',
-  name: 'Football Subs',
-  shortName: 'Football Subs'
-};
-
-const progressierScript = document.createElement('script');
-progressierScript.src = 'https://progressier.app/z8yY3IKmfpDIw3mSncPh/script.js';
-progressierScript.defer = true;
-document.querySelector('head')?.appendChild(progressierScript);
-
-const container = document.getElementById('root');
-const root = createRoot(container!);
-root.render(
+ReactDOM.render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <StateProvider>
-        <Router>
-          <AuthProvider>
-            <App />
-            <ToastContainer />
-          </AuthProvider>
-        </Router>
-      </StateProvider>
-    </ErrorBoundary>
-  </React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
 );

@@ -1,82 +1,78 @@
-import React, { useState, useEffect, ReactNode } from 'react';
-import * as Sentry from '@sentry/browser';
-import { supabase, recordLogin } from '../supabaseClient';
-import { AuthContext, useAuth as useAuthHook } from './AuthContext';
+import React, { useEffect, useState } from 'react';
+import * as Sentry from "@sentry/browser";
+import { AuthContext } from '../context/AuthContext';
+import supabase, { recordLogin } from '../supabaseClient';
+import SignIn from './SignIn';
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
+export { useAuth } from '../context/AuthContext';
 
-function AuthProvider({ children }: AuthProviderProps): JSX.Element {
-  const [user, setUser] = useState<any>(null);
+export function AuthProvider({ children }: { children: React.ReactNode }): JSX.Element {
+  const [session, setSession] = useState<any>(null);
   const [loginRecorded, setLoginRecorded] = useState<boolean>(false);
 
   useEffect(() => {
-    async function getUser() {
-      try {
-        const { data: { user: currentUser }, error } = await supabase.auth.getUser();
-        if (error) {
-          throw error;
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        setSession(session);
+        if (session?.user?.email && !loginRecorded) {
+          recordLogin(session.user.email, import.meta.env.VITE_PUBLIC_APP_ENV)
+            .then(() => setLoginRecorded(true))
+            .catch((error) => {
+              console.error('Failed to record login:', error);
+              Sentry.captureException(error);
+            });
         }
-        if (currentUser) {
-          setUser(currentUser);
-          if (currentUser.email && !loginRecorded) {
-            try {
-              await recordLogin(currentUser.email, import.meta.env.VITE_PUBLIC_APP_ENV);
-              setLoginRecorded(true);
-            } catch (err) {
-              console.error('Failed to record login:', err);
-              Sentry.captureException(err);
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching user:', error);
+      })
+      .catch((error) => {
+        console.error('Error getting session:', error);
         Sentry.captureException(error);
-      }
-    }
-    getUser();
+      });
 
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session?.user) {
-        setUser(session.user);
-        if (session.user.email && !loginRecorded) {
-          try {
-            await recordLogin(session.user.email, import.meta.env.VITE_PUBLIC_APP_ENV);
-            setLoginRecorded(true);
-          } catch (err) {
-            console.error('Failed to record login:', err);
-            Sentry.captureException(err);
-          }
-        }
-      } else if (event === 'SIGNED_OUT') {
-        setUser(null);
-        setLoginRecorded(false);
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      setSession(session);
+      if (event === 'SIGNED_IN' && session?.user?.email && !loginRecorded) {
+        recordLogin(session.user.email, import.meta.env.VITE_PUBLIC_APP_ENV)
+          .then(() => setLoginRecorded(true))
+          .catch((error) => {
+            console.error('Failed to record login:', error);
+            Sentry.captureException(error);
+          });
       }
     });
 
     return () => {
-      authListener?.subscription?.unsubscribe();
+      authListener.subscription.unsubscribe();
     };
   }, [loginRecorded]);
 
-  async function signOut() {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      setUser(null);
-      setLoginRecorded(false);
-    } catch (err) {
-      console.error('Error signing out:', err);
-      Sentry.captureException(err);
-    }
+  if (!session) {
+    return <SignIn />;
   }
 
+  const handleSignOut = async () => {
+    try {
+      await supabase.auth.signOut();
+      setSession(null);
+      setLoginRecorded(false);
+    } catch (error) {
+      console.error('Error signing out:', error);
+      Sentry.captureException(error);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, signOut }}>
-      {children}
+    <AuthContext.Provider value={{ session, setSession }}>
+      <div className="min-h-screen">
+        <div className="p-4 flex justify-end">
+          <button
+            onClick={handleSignOut}
+            className="cursor-pointer px-4 py-2 bg-red-500 text-white rounded"
+          >
+            Sign Out
+          </button>
+        </div>
+        {children}
+      </div>
     </AuthContext.Provider>
   );
 }
-
-export { AuthProvider, useAuthHook as useAuth };
