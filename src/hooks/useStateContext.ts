@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import { StateContext } from '../context/StateContext';
+import { StateContext, StateContextType } from '../context/StateContext';
 
-export function useStateContext(): any {
+export function useStateContext(): StateContextType {
   return useContext(StateContext);
 }

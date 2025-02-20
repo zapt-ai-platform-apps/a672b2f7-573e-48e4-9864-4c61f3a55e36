@@ -1,9 +1,15 @@
+export interface PlayInterval {
+  startTime: number;
+  endTime: number | null;
+  isGoalkeeper?: boolean;
+}
+
 export interface Player {
   id?: number | string;
   name: string;
   isStartingPlayer?: boolean;
   isInMatchSquad?: boolean;
-  playIntervals?: any[];
+  playIntervals?: PlayInterval[];
 }
 
 export interface UseGameSetupReturn {
@@ -19,5 +25,5 @@ export interface UseGameSetupReturn {
   setGoalkeeper: React.Dispatch<React.SetStateAction<Player | null>>;
   includeGKPlaytime: boolean;
   setIncludeGKPlaytime: React.Dispatch<React.SetStateAction<boolean>>;
-  handleStartGame: () => any;
+  handleStartGame: () => void;
 }
