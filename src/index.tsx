@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { AuthProvider } from './components/AuthProvider';
+import { StateProvider } from './state';
 import * as Sentry from "@sentry/browser";
 import "./index.css";
 
@@ -30,6 +31,7 @@ window.progressierAppRuntimeSettings = {
   name: "Football Subs",
   shortName: "Football Sub"
 };
+
 const progressierScript = document.createElement('script');
 progressierScript.setAttribute('src', 'https://progressier.app/z8yY3IKmfpDIw3mSncPh/script.ts');
 progressierScript.setAttribute('defer', 'true');
@@ -38,7 +40,9 @@ document.querySelector('head')?.appendChild(progressierScript);
 ReactDOM.render(
   <React.StrictMode>
     <AuthProvider>
-      <App />
+      <StateProvider>
+        <App />
+      </StateProvider>
     </AuthProvider>
   </React.StrictMode>,
   document.getElementById('root')
