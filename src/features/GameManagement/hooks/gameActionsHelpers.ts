@@ -1,31 +1,48 @@
-import { recordGoal as recordGoalModel } from '../../../shared/models/scoreModel.js';
-import { handlePlayerAdjustment as handlePlayerAdjustmentModel } from '../../../shared/models/playerAdjustments.js';
-import { processPlayerLists } from '../../../shared/models/listUtils.js';
+import { recordGoal as recordGoalModel } from '../../../shared/models/scoreModel.ts';
+import { handlePlayerAdjustment as handlePlayerAdjustmentModel } from '../../../shared/models/playerAdjustments.ts';
+import { processPlayerLists } from '../../../shared/models/listUtils.ts';
+import { Goal, Player } from '../../../context/StateContext';
+
+export interface GameInterval {
+  startTime: number;
+  endTime: number | null;
+}
+
+export interface GoalRecordResult {
+  updatedGoals: Goal[];
+  updatedOurScore: number;
+  updatedOpponentScore: number;
+}
+
+export interface PlayerLists {
+  onField: Player[];
+  offField: Player[];
+}
 
 export function recordGoal(
   team: 'our' | 'opponent',
   scorerName: string,
   ourScore: number,
   opponentScore: number,
-  goals: any[],
-  gameIntervals: any[],
+  goals: Goal[],
+  gameIntervals: GameInterval[],
   isRunning: boolean
-): any {
+): GoalRecordResult {
   return recordGoalModel(team, scorerName, ourScore, opponentScore, goals, gameIntervals, isRunning);
 }
 
 export function handlePlayerAdjustment(
-  prevPlayerData: any[],
-  playerId: number | string,
+  prevPlayerData: Player[],
+  playerId: string | number,
   isAdding: boolean
-): any[] {
+): Player[] {
   return handlePlayerAdjustmentModel(prevPlayerData, playerId, isAdding);
 }
 
 export function updatePlayerLists(
-  playerData: any[],
+  playerData: Player[],
   includeGKPlaytime: boolean,
   isRunning: boolean
-): any {
+): PlayerLists {
   return processPlayerLists(playerData, includeGKPlaytime, isRunning);
 }

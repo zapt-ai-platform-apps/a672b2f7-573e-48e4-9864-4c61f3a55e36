@@ -1,3 +1,5 @@
+import type { Player } from '../../context/StateContext';
+
 /**
  * Processes the player list by partitioning players into on-field and off-field groups.
  * @param playerData - Array of player objects.
@@ -6,10 +8,10 @@
  * @returns Object with properties "onField" and "offField" containing player arrays.
  */
 export function processPlayerLists(
-  playerData: any[],
+  playerData: Player[],
   includeGKPlaytime: boolean,
   isRunning: boolean
-): { onField: any[]; offField: any[] } {
+): { onField: Player[]; offField: Player[] } {
   const onField = playerData.filter(player => player.isOnField);
   const offField = playerData.filter(player => !player.isOnField);
   return { onField, offField };
