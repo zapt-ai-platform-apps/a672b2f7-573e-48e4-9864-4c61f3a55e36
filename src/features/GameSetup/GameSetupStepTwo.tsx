@@ -1,6 +1,6 @@
 import React from 'react';
-import StartingLineup from "./StartingLineup";
-import GoalkeeperSettings from "./GoalkeeperSettings";
+import StartingLineup from "../../screens/GameSetup/ConfigureLineup/StartingLineup";
+import GoalkeeperSettings from "../../screens/GameSetup/ConfigureLineup/GoalkeeperSettings";
 
 interface GameSetupStepTwoProps {
   playerName: string;
