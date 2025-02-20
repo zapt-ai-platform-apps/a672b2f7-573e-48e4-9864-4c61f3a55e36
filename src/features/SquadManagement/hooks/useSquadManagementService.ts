@@ -1,18 +1,37 @@
-/**
- * Service hooks for squad management, wrapping API calls.
- *
- * @module useSquadManagementService
- */
-import { fetchSquadsAPI, createSquadAPI, updateSquadAPI } from '../api/squadService';
+import { Squad } from './useSquadManagementTypes';
 
-export async function fetchSquads() {
-  return await fetchSquadsAPI();
+let squadsDB: Squad[] = [];
+let idCounter = 1;
+
+export async function fetchSquads(): Promise<Squad[]> {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve([...squadsDB]), 100);
+  });
 }
 
-export async function createSquad(squadName: string, squadPlayers: string | string[]) {
-  return await createSquadAPI(squadName, squadPlayers);
+export async function createSquad(name: string, players: string[]): Promise<void> {
+  return new Promise((resolve) => {
+    const newSquad: Squad = {
+      id: idCounter,
+      name,
+      players: [...players]
+    };
+    idCounter++;
+    squadsDB.push(newSquad);
+    setTimeout(resolve, 100);
+  });
 }
 
-export async function updateSquad(squadId: string, squadName: string, squadPlayers: string | string[]) {
-  return await updateSquadAPI(squadId, squadName, squadPlayers);
+export async function updateSquad(id: number, name: string, players: string[]): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const index = squadsDB.findIndex(squad => squad.id === id);
+    if (index === -1) {
+      setTimeout(() => {
+        reject(new Error("Squad not found"));
+      }, 100);
+    } else {
+      squadsDB[index] = { ...squadsDB[index], name, players: [...players] };
+      setTimeout(resolve, 100);
+    }
+  });
 }

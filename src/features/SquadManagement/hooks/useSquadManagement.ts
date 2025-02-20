@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import * as squadService from './useSquadManagementService';
 import { useStateContext } from '../../../state';
 import { Squad } from './useSquadManagementTypes';
+import * as Sentry from "@sentry/browser";
 
 function useSquadManagement() {
   const { setSelectedSquad } = useStateContext();
@@ -19,7 +20,8 @@ function useSquadManagement() {
         const fetchedSquads = await squadService.fetchSquads();
         setSquads(fetchedSquads);
       } catch (error) {
-        // Error handled in service
+        console.error('Error loading squads:', error);
+        Sentry.captureException(error);
       } finally {
         setLoading(false);
       }
@@ -50,7 +52,8 @@ function useSquadManagement() {
       setSquadPlayersList([]);
       setNewSquadPlayer('');
     } catch (error) {
-      // Error handled in service
+      console.error('Error in handleCreateSquad:', error);
+      Sentry.captureException(error);
     } finally {
       setLoading(false);
     }
@@ -68,7 +71,8 @@ function useSquadManagement() {
       setSquadPlayersList([]);
       setNewSquadPlayer('');
     } catch (error) {
-      // Error handled in service
+      console.error('Error in handleUpdateSquad:', error);
+      Sentry.captureException(error);
     } finally {
       setLoading(false);
     }
