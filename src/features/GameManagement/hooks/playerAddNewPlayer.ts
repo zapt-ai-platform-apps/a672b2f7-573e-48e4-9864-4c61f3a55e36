@@ -1,9 +1,10 @@
 import { createPlayer } from '../../../shared/models/player';
 import { calculateMinPlayTime } from '../../../shared/models/playerUtils';
+import type { Player } from '../../../shared/models/player';
 
 interface PlayerProps {
-  playerData: any[];
-  setPlayerData: (players: any[]) => void;
+  playerData: Player[];
+  setPlayerData: (players: Player[]) => void;
   updatePlayerLists: () => void;
 }
 
@@ -24,12 +25,12 @@ export function createAddNewPlayer({
     const name = playerNameOptional ? playerNameOptional : newPlayerName.trim();
     if (name !== "") {
       const minPlayTime = calculateMinPlayTime(props.playerData);
-      const newPlayer = {
+      const newPlayer: Player = {
         ...createPlayer({ name }),
-        playIntervals: [] as any[],
+        playIntervals: [] as number[],
         isOnField: false,
         isGoalkeeper: false,
-        totalPlayTime: minPlayTime
+        totalPlayTime: minPlayTime,
       };
       props.setPlayerData([...props.playerData, newPlayer]);
       setNewPlayerName("");

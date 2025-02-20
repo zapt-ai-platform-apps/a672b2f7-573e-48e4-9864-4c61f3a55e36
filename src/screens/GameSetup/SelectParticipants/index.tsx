@@ -3,6 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import useMatchSquad from '../../../features/GameSetup/hooks/useMatchSquad';
 import { useStateContext } from '../../../state';
 import ParticipantItem from './ParticipantItem';
+import type { Player } from '../../../context/StateContext';
+import type { Squad } from '../../../components/StateProvider';
+
+interface ExtendedPlayer extends Player {
+  isInMatchSquad?: boolean;
+}
 
 export default function GameSetupParticipantsScreen(): JSX.Element {
   const { matchSquadPlayers, toggleMatchPlayer } = useMatchSquad();
@@ -10,29 +16,32 @@ export default function GameSetupParticipantsScreen(): JSX.Element {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string>('');
   
-  const selectedMatchPlayers = matchSquadPlayers.filter((player: any) => player.isInMatchSquad);
+  const selectedMatchPlayers = matchSquadPlayers.filter((player: Player) => (player as ExtendedPlayer).isInMatchSquad) as ExtendedPlayer[];
 
-  const handleNext = () => {
+  const handleNext = (): void => {
     if (selectedMatchPlayers.length === 0) {
       setErrorMessage('Please select at least one player for the match.');
       return;
     }
     
-    const playersWithIds = selectedMatchPlayers.map((player: any, index: number) => ({
-      id: player.id || index + 1,
-      name: typeof player.name === 'object' ? (player.name.name || JSON.stringify(player.name)) : player.name,
+    const playersWithIds = selectedMatchPlayers.map((player: ExtendedPlayer, index: number) => ({
+      id: player.id ? player.id : index + 1,
+      name: typeof player.name === 'object'
+        ? ((player.name as { name: string }).name || JSON.stringify(player.name))
+        : player.name,
       isStartingPlayer: true
     }));
 
-    setSelectedSquad((prev: any) => ({
-      ...prev,
+    setSelectedSquad((prev: Squad | null) => ({
+      id: prev?.id ?? '',
+      name: prev?.name ?? '',
       players: playersWithIds
     }));
     
     navigate('/setup/configuration');
   };
 
-  const handleBack = () => {
+  const handleBack = (): void => {
     navigate('/squads');
   };
 
@@ -42,12 +51,12 @@ export default function GameSetupParticipantsScreen(): JSX.Element {
         <h1 className="text-4xl font-bold mb-6 text-green-600">Select Match Participants</h1>
         {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          {matchSquadPlayers.map((player: any) => (
+          {matchSquadPlayers.map((player: Player) => (
             <ParticipantItem
               key={player.id}
-              player={player}
-              isSelected={selectedMatchPlayers.some((p: any) => p.id === player.id)}
-              onToggle={() => toggleMatchPlayer(player.id)}
+              player={player as ExtendedPlayer}
+              isSelected={selectedMatchPlayers.some((p: ExtendedPlayer) => p.id === player.id)}
+              onToggle={() => toggleMatchPlayer(String(player.id))}
             />
           ))}
         </div>

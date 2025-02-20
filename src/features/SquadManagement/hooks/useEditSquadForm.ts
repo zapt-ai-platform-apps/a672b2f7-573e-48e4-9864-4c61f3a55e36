@@ -4,14 +4,14 @@ import { useStateContext } from '../../../state';
 
 interface Squad {
   name: string;
-  players: any[];
-  [key: string]: any;
+  players: string[];
+  [key: string]: unknown;
 }
 
 function useEditSquadForm() {
   const { selectedSquad } = useStateContext<{ selectedSquad: Squad | null }>();
   const [squadName, setSquadName] = useState<string>(selectedSquad?.name || '');
-  const [squadPlayersList, setSquadPlayersList] = useState<any[]>(selectedSquad?.players || []);
+  const [squadPlayersList, setSquadPlayersList] = useState<string[]>(selectedSquad?.players || []);
   const [newPlayerName, setNewPlayerName] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');

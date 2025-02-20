@@ -1,26 +1,23 @@
-import React from "react";
+import React from 'react';
+import type { Player } from '../../../context/StateContext';
 
 interface ParticipantItemProps {
-  player: {
-    name: string | { name?: string };
-  };
+  player: Player & { isInMatchSquad?: boolean };
   isSelected: boolean;
   onToggle: () => void;
 }
 
-function ParticipantItem({ player, isSelected, onToggle }: ParticipantItemProps) {
+export default function ParticipantItem({ player, isSelected, onToggle }: ParticipantItemProps): JSX.Element {
   return (
     <div
       onClick={onToggle}
-      className={`p-4 border rounded cursor-pointer ${isSelected ? "bg-green-100" : "bg-white"}`}
+      className={`p-4 border rounded cursor-pointer hover:shadow-lg ${isSelected ? 'bg-green-100 border-green-500' : 'bg-white border-gray-300'}`}
     >
-      <p>
-        {typeof player.name === "object"
-          ? player.name.name || JSON.stringify(player.name)
+      <p className="text-lg">
+        {typeof player.name === 'object'
+          ? (player.name as { name?: string }).name || JSON.stringify(player.name)
           : player.name}
       </p>
     </div>
   );
 }
-
-export default ParticipantItem;

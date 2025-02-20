@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
 import * as squadService from './useSquadManagementService';
 import { useStateContext } from '../../../state';
+import { Squad } from './useSquadManagementTypes';
 
 function useSquadManagement() {
   const { setSelectedSquad } = useStateContext();
   const [squadName, setSquadName] = useState<string>('');
   const [newSquadPlayer, setNewSquadPlayer] = useState<string>('');
-  const [squadPlayersList, setSquadPlayersList] = useState<any[]>([]);
-  const [squads, setSquads] = useState<any[]>([]);
+  const [squadPlayersList, setSquadPlayersList] = useState<string[]>([]);
+  const [squads, setSquads] = useState<Squad[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [editingSquad, setEditingSquad] = useState<any>(null);
+  const [editingSquad, setEditingSquad] = useState<Squad | null>(null);
 
   useEffect(() => {
     async function loadSquads() {
@@ -26,7 +27,7 @@ function useSquadManagement() {
     loadSquads();
   }, []);
 
-  function handleAddSquadPlayer() {
+  function handleAddSquadPlayer(): void {
     const trimmedPlayer = newSquadPlayer.trim();
     if (trimmedPlayer !== '') {
       setSquadPlayersList([...squadPlayersList, trimmedPlayer]);
@@ -34,11 +35,11 @@ function useSquadManagement() {
     }
   }
 
-  function handleDeleteSquadPlayer(player: string) {
+  function handleDeleteSquadPlayer(player: string): void {
     setSquadPlayersList(squadPlayersList.filter((p) => p !== player));
   }
 
-  async function handleCreateSquad() {
+  async function handleCreateSquad(): Promise<void> {
     if (squadName.trim() === '') return;
     setLoading(true);
     try {
@@ -55,7 +56,7 @@ function useSquadManagement() {
     }
   }
 
-  async function handleUpdateSquad() {
+  async function handleUpdateSquad(): Promise<void> {
     if (!editingSquad || squadName.trim() === '') return;
     setLoading(true);
     try {
@@ -73,21 +74,21 @@ function useSquadManagement() {
     }
   }
 
-  function handleSelectSquad(squad: any) {
+  function handleSelectSquad(squad: Squad): void {
     setSquadName(squad.name);
     setSquadPlayersList(squad.players || []);
     setNewSquadPlayer('');
     setSelectedSquad(squad);
   }
 
-  function handleEditSquad(squad: any) {
+  function handleEditSquad(squad: Squad): void {
     setEditingSquad(squad);
     setSquadName(squad.name);
     setSquadPlayersList(squad.players || []);
     setNewSquadPlayer('');
   }
 
-  function cancelEdit() {
+  function cancelEdit(): void {
     setEditingSquad(null);
     setSquadName('');
     setSquadPlayersList([]);
