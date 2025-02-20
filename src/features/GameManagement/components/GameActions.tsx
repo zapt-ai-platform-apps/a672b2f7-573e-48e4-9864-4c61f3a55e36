@@ -3,8 +3,8 @@ import React from 'react';
 interface GameActionsProps {
   assignGoalkeeper: () => void;
   handleRemoveLastGoal: () => void;
-  setShowGoalModal: (show: boolean) => void;
-  setShowAddPlayerModal: (show: boolean) => void;
+  setShowGoalModal: (value: boolean) => void;
+  setShowAddPlayerModal: (value: boolean) => void;
   handleIncreasePlayers: () => void;
   handleDecreasePlayers: () => void;
   isRunning: boolean;
@@ -17,8 +17,8 @@ export function GameActions({
   setShowAddPlayerModal,
   handleIncreasePlayers,
   handleDecreasePlayers,
-  isRunning,
-}: GameActionsProps): JSX.Element {
+  isRunning
+}: GameActionsProps) {
   return (
     <div className="mt-6 flex flex-wrap gap-4">
       <button 

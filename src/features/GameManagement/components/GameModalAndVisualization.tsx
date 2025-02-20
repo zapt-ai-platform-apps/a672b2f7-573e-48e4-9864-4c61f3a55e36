@@ -6,11 +6,7 @@ interface EndGameConfirmationModalProps {
   cancelEndGame: () => void;
 }
 
-export function EndGameConfirmationModal({
-  showEndGameConfirm,
-  confirmEndGame,
-  cancelEndGame,
-}: EndGameConfirmationModalProps): JSX.Element | null {
+export function EndGameConfirmationModal({ showEndGameConfirm, confirmEndGame, cancelEndGame }: EndGameConfirmationModalProps) {
   if (!showEndGameConfirm) return null;
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -31,6 +27,15 @@ export function EndGameConfirmationModal({
           </button>
         </div>
       </div>
+    </div>
+  );
+}
+
+export function PitchVisualization() {
+  return (
+    <div className="mt-4 p-4 border rounded bg-green-100">
+      <h2 className="text-2xl font-bold mb-2">Pitch Visualization</h2>
+      <p>This is where the pitch will be visualized.</p>
     </div>
   );
 }

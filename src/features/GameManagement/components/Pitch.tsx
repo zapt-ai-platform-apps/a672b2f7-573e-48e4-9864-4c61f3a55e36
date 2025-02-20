@@ -1,13 +1,13 @@
-import React, { RefObject } from 'react';
+import React from 'react';
 import Player from './Player';
 
 interface PitchProps {
-  pitchRef: RefObject<HTMLDivElement>;
+  pitchRef: React.RefObject<HTMLDivElement>;
   playerData: any[];
-  handlePointerDown: (e: React.PointerEvent<HTMLDivElement>, player: any) => void;
+  handlePointerDown: (event: React.PointerEvent<HTMLDivElement>, player: any) => void;
 }
 
-function Pitch({ pitchRef, playerData, handlePointerDown }: PitchProps): JSX.Element {
+function Pitch({ pitchRef, playerData, handlePointerDown }: PitchProps) {
   return (
     <div
       className="relative bg-green-600 w-full max-w-4xl mx-auto h-96 rounded-lg overflow-hidden"
@@ -18,7 +18,7 @@ function Pitch({ pitchRef, playerData, handlePointerDown }: PitchProps): JSX.Ele
         <div className="border-2 border-white rounded-full w-32 h-32"></div>
       </div>
       <div className="absolute inset-y-0 left-1/2 w-0.5 bg-white opacity-75"></div>
-      {playerData.filter(p => p.isOnField).map((player) => (
+      {playerData.filter((p: any) => p.isOnField).map((player: any) => (
         <Player 
           key={player.id}
           player={player}

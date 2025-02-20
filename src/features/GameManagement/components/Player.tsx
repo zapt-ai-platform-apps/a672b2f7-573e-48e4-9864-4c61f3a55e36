@@ -1,11 +1,23 @@
 import React from 'react';
 
-interface PlayerProps {
-  player: any;
-  handlePointerDown: (e: React.PointerEvent<HTMLDivElement>, player: any) => void;
+interface Position {
+  x: number;
+  y: number;
 }
 
-function Player({ player, handlePointerDown }: PlayerProps): JSX.Element {
+interface Player {
+  id: string | number;
+  position?: Position;
+  isGoalkeeper?: boolean;
+  name: string;
+}
+
+interface PlayerProps {
+  player: Player;
+  handlePointerDown: (e: React.PointerEvent<HTMLDivElement>, player: Player) => void;
+}
+
+function Player({ player, handlePointerDown }: PlayerProps) {
   const positionStyle = player.position ? {
     left: `${player.position.x}px`,
     top: `${player.position.y}px`

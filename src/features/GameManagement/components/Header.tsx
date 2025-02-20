@@ -9,20 +9,13 @@ interface HeaderProps {
   opponentScore: number;
 }
 
-function formatTime(seconds: number): string {
-  const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
-  const secs = (seconds % 60).toString().padStart(2, '0');
-  return `${mins}:${secs}`;
-}
+function Header({ isRunning, toggleTimer, getTimeElapsed, handleEndGame, ourScore, opponentScore }: HeaderProps) {
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const secs = (seconds % 60).toString().padStart(2, '0');
+    return `${mins}:${secs}`;
+  };
 
-function Header({
-  isRunning,
-  toggleTimer,
-  getTimeElapsed,
-  handleEndGame,
-  ourScore,
-  opponentScore,
-}: HeaderProps): JSX.Element {
   return (
     <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
