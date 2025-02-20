@@ -1,4 +1,4 @@
-import { supabase, recordLogin } from '../../supabaseClient';
+import { supabase, recordLogin } from '../supabaseClient';
 import * as Sentry from '@sentry/browser';
 
 export async function runGetStarted(
