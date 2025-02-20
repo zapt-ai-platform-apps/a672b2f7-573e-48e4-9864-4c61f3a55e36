@@ -7,13 +7,14 @@ export async function runGetStarted(
 ): Promise<void> {
   setIsButtonDisabled(true);
   try {
-    const { data: { user }, error } = await supabase.auth.getUser();
+    const { data: { session }, error } = await supabase.auth.getSession();
     if (error) {
       throw error;
     }
-    if (!user) {
+    if (!session || !session.user) {
       navigate('/login');
     } else {
+      const user = session.user;
       if (user.email && !sessionStorage.getItem('recordLoginCalled')) {
         try {
           await recordLogin(user.email, import.meta.env.VITE_PUBLIC_APP_ENV);
