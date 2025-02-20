@@ -19,7 +19,8 @@
         "react-router-dom": "^6.3.0",
         "react-toastify": "^9.1.1",
         "stream-chat": "^8.56.0",
-        "stream-chat-react": "^12.11.1"
+        "stream-chat-react": "^12.11.1",
+        "@vercel/analytics": "^1.4.0"
     },
     "devDependencies": {
         "@vitejs/plugin-react": "^4.3.4",
