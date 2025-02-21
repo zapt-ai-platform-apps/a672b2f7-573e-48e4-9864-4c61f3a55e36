@@ -17,7 +17,7 @@ function initializePlayers(squad: Squad): Player[] {
         return {
           id: String(index + 1),
           name: player,
-          isInMatchSquad: false,
+          isInMatchSquad: true,
         };
       } else if (typeof player === "object" && player !== null) {
         // If the player is an object, use its name property if available.
@@ -29,14 +29,14 @@ function initializePlayers(squad: Squad): Player[] {
           id: player.id ? player.id : String(index + 1),
           ...player,
           name: playerName,
-          isInMatchSquad: false,
+          isInMatchSquad: true,
         };
       }
       // Fallback in case player is neither a string nor an object.
       return {
         id: String(index + 1),
         name: `Player ${index + 1}`,
-        isInMatchSquad: false,
+        isInMatchSquad: true,
       };
     });
   }

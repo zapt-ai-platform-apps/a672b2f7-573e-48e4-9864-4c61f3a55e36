@@ -6,6 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import SelectParticipants from './screens/GameSetup/SelectParticipants';
 import SquadManagementScreen from './screens/SquadManagement';
 import GameSetupStepTwo from './screens/GameSetup/GameSetupStepTwo';
+import GameManagementScreen from './screens/GameManagement';
 
 function App() {
   return (
@@ -35,6 +36,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <GameSetupStepTwo />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/game-management"
+            element={
+              <ProtectedRoute>
+                <GameManagementScreen />
               </ProtectedRoute>
             }
           />
