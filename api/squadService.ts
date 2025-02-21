@@ -3,7 +3,7 @@ import type { AuthUser } from './_apiUtils.js';
 import { squads } from '../drizzle/schema.js';
 import { eq } from 'drizzle-orm/expressions';
 import db from './db.js';
-import { parsePlayers } from '../src/utils/parsePlayers';
+import { parsePlayers } from '../src/utils/parsePlayers.js';
 
 export async function handleGet(user: AuthUser, req: VercelRequest, res: VercelResponse): Promise<void> {
   const result = await db.select().from(squads).where(eq(squads.userId, user.id));
