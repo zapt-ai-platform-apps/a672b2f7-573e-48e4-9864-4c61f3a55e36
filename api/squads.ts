@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { authenticateUser, AuthUser } from './_apiUtils';
 import * as Sentry from '@sentry/node';
-import { handleGet, handlePost, handlePut } from './squadsHandlers';
+import { handleGet, handlePost, handlePut } from '../services/squadService.ts';
 
 /**
  * API handler for squads.
