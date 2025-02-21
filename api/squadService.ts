@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { AuthUser } from './_apiUtils.js';
 import { squads } from '../drizzle/schema.js';
 import { eq } from 'drizzle-orm/expressions';
-import db from './db';
+import db from './db.js';
 import { parsePlayers } from '../src/utils/parsePlayers';
 
 export async function handleGet(user: AuthUser, req: VercelRequest, res: VercelResponse): Promise<void> {
