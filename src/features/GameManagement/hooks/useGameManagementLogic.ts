@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { useStateContext } from '../../../state';
 import { Player } from '../../../types/GameTypes';
 import {
-  getTotalPlayTimeHelper,
-  getTimeElapsedHelper,
-  toggleTimerHelper,
-  recordGoalHelper,
-  handlePlayerAdjustmentHelper,
-  updatePlayerListsHelper
+  getTotalPlayTime,
+  getTimeElapsed,
+  toggleTimer,
+  recordGoal,
+  handlePlayerAdjustment,
+  updatePlayerLists
 } from './gameManagementOperations';
 
 interface PlayerLists {
@@ -61,32 +61,32 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
   const [showAddPlayerModal, setShowAddPlayerModal] = useState<boolean>(false);
 
   const getTotalPlayTimeFunc = (player: Player): number => {
-    return getTotalPlayTimeHelper(player, includeGKPlaytime, isRunning);
+    return getTotalPlayTime(player, includeGKPlaytime, isRunning);
   };
 
   const getTimeElapsedFunc = (): number => {
-    return getTimeElapsedHelper(gameIntervals, isRunning);
+    return getTimeElapsed(gameIntervals, isRunning);
   };
 
   const toggleTimerFunc = (): void => {
-    const { newIntervals, newIsRunning } = toggleTimerHelper(isRunning, gameIntervals);
+    const { newIntervals, newIsRunning } = toggleTimer(isRunning, gameIntervals);
     setGameIntervals(newIntervals);
     setIsRunning(newIsRunning);
   };
 
   const recordGoalFunc = (team: 'our' | 'opponent', scorerName: string): void => {
-    const result = recordGoalHelper(team, scorerName, ourScore, opponentScore, goals, gameIntervals, isRunning);
+    const result = recordGoal(team, scorerName, ourScore, opponentScore, goals, gameIntervals, isRunning);
     setOurScore(result.newOurScore);
     setOpponentScore(result.newOpponentScore);
     setGoals(result.newGoals);
   };
 
   const handlePlayerAdjustmentFunc = (playerId: number | string, isAdding: boolean): void => {
-    setPlayerData((prev: Player[]) => handlePlayerAdjustmentHelper(prev, playerId, isAdding));
+    setPlayerData((prev: Player[]) => handlePlayerAdjustment(prev, playerId, isAdding));
   };
 
-  const updatePlayerListsFunc = (): PlayerLists => {
-    return updatePlayerListsHelper(playerData, includeGKPlaytime, isRunning);
+  const updatePlayerListsFunc = (): { onField: Player[]; offField: Player[] } => {
+    return updatePlayerLists(playerData, includeGKPlaytime, isRunning);
   };
 
   const lists = updatePlayerListsFunc();
