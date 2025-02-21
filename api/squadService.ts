@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import type { AuthUser } from '../api/_apiUtils.ts';
+import type { AuthUser } from './_apiUtils.ts';
 import { squads } from '../drizzle/schema.ts';
 import { eq } from 'drizzle-orm/expressions';
 import db from '../lib/db';
