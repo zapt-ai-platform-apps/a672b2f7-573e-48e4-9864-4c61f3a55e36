@@ -18,6 +18,7 @@ function useSquadManagement() {
       setLoading(true);
       try {
         const fetchedSquads = await squadService.fetchSquads();
+        console.log('Fetched squads:', fetchedSquads);
         setSquads(fetchedSquads);
       } catch (error) {
         console.error('Error loading squads:', error);
