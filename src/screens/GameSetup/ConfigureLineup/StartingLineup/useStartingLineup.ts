@@ -1,19 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useStateContext } from '../../../../state';
 import { Player } from '../../../../types/GameTypes';
 
 export default function useStartingLineup() {
   const { selectedSquad } = useStateContext();
-  const startingPlayers: Player[] = selectedSquad ? selectedSquad.players : [];
+  const [lineupPlayers, setLineupPlayers] = useState<Player[]>(selectedSquad ? [...selectedSquad.players] : []);
   const [currentGoalkeeper, setCurrentGoalkeeper] = useState<Player | null>(null);
   const [isGKModalOpen, setGKModalOpen] = useState(false);
 
+  useEffect(() => {
+    if (selectedSquad) {
+      // Initialize local lineup state when selected squad changes
+      setLineupPlayers([...selectedSquad.players]);
+      setCurrentGoalkeeper(null);
+    }
+  }, [selectedSquad]);
+
   const toggleStartingPlayer = (player: Player) => {
-    console.log(`Toggled player with id ${player.id}`);
+    setLineupPlayers(prevPlayers =>
+      prevPlayers.map(p =>
+        p.id === player.id ? { ...p, isStartingPlayer: !p.isStartingPlayer } : p
+      )
+    );
   };
 
   const handleContinue = () => {
-    console.log('Continue to configuration with players:', startingPlayers);
+    console.log('Continue to configuration with players:', lineupPlayers);
   };
 
   const goBack = () => {
@@ -21,7 +33,7 @@ export default function useStartingLineup() {
   };
 
   const setGoalkeeperForPlayer = (playerId: number) => {
-    const player = startingPlayers.find(p => p.id === playerId) || null;
+    const player = lineupPlayers.find(p => p.id === playerId) || null;
     setCurrentGoalkeeper(player);
   };
 
@@ -34,7 +46,7 @@ export default function useStartingLineup() {
   };
 
   return {
-    startingPlayers,
+    startingPlayers: lineupPlayers,
     toggleStartingPlayer,
     handleContinue,
     goBack,
