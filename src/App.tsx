@@ -7,6 +7,7 @@ import SelectParticipants from './screens/GameSetup/SelectParticipants';
 import SquadManagementScreen from './screens/SquadManagement';
 import GameSetupStepTwo from './screens/GameSetup/GameSetupStepTwo';
 import GameManagementScreen from './screens/GameManagement';
+import StartingLineup from './screens/GameSetup/ConfigureLineup/StartingLineup';
 
 function App() {
   return (
@@ -28,6 +29,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <SelectParticipants />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/setup/starting-lineup"
+            element={
+              <ProtectedRoute>
+                <StartingLineup />
               </ProtectedRoute>
             }
           />
