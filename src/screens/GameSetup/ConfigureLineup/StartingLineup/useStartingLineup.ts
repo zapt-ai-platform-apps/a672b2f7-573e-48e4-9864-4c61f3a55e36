@@ -1,16 +1,10 @@
 import { useState } from 'react';
-
-type Player = {
-  id: number;
-  name: string;
-};
+import { useStateContext } from '../../../../state';
+import { Player } from '../../../../types/GameTypes';
 
 export default function useStartingLineup() {
-  const [startingPlayers, setStartingPlayers] = useState<Player[]>([
-    { id: 1, name: 'Player One' },
-    { id: 2, name: 'Player Two' },
-    { id: 3, name: 'Player Three' }
-  ]);
+  const { selectedSquad } = useStateContext();
+  const startingPlayers: Player[] = selectedSquad ? selectedSquad.players : [];
   const [currentGoalkeeper, setCurrentGoalkeeper] = useState<Player | null>(null);
   const [isGKModalOpen, setGKModalOpen] = useState(false);
 
