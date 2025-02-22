@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useStateContext } from '../../../state';
 import { Player } from '../../../types/GameTypes';
 import {
@@ -51,7 +51,8 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
     goals,
     setGoals,
     includeGKPlaytime,
-    resetGame
+    resetGame,
+    selectedSquad
   } = useStateContext();
 
   const [isRunning, setIsRunning] = useState<boolean>(false);
@@ -59,6 +60,18 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
   const [showEndGameConfirm, setShowEndGameConfirm] = useState<boolean>(false);
   const [showGoalModal, setShowGoalModal] = useState<boolean>(false);
   const [showAddPlayerModal, setShowAddPlayerModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (
+      playerData.length === 0 &&
+      selectedSquad &&
+      Array.isArray(selectedSquad.players) &&
+      selectedSquad.players.length > 0
+    ) {
+      setPlayerData(selectedSquad.players);
+      console.log("Initialized playerData from selectedSquad.");
+    }
+  }, [playerData, selectedSquad, setPlayerData]);
 
   const getTotalPlayTimeFunc = (player: Player): number => {
     return getTotalPlayTime(player, includeGKPlaytime, isRunning);
