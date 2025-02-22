@@ -13,7 +13,7 @@ export default function StartingLineup(): JSX.Element {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           {startingPlayers.map((player, index) => (
             <PlayerCard
-              key={player.id || index}
+              key={player.id ? player.id : index}
               player={player}
               onToggle={toggleStartingPlayer}
             />
