@@ -1,6 +1,9 @@
 import { Player } from '../../../types/GameTypes';
 
-export function getTotalPlayTime(player: Player, includeGKPlaytime: boolean, isRunning: boolean): number {
+export function getTotalPlayTime(player: Player | undefined, includeGKPlaytime: boolean, isRunning: boolean): number {
+  if (!player) {
+    return 0;
+  }
   if (player.isGoalkeeper && !includeGKPlaytime) {
     return 0;
   }
@@ -21,7 +24,7 @@ export function handlePlayerAdjustment(players: Player[], playerId: number | str
         playTime: 0, 
         isOnField: true, 
         isGoalkeeper: false 
-      } as Player;
+      };
       return [...players, newPlayer];
     }
     return players;

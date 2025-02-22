@@ -1,62 +1,53 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useStateContext } from '../../../../state';
-import { parsePlayers } from '../../../../utils/parsePlayers';
-import type { Player } from '../../../context/StateContext';
+import { useState } from 'react';
 
-function useStartingLineup() {
-  const { selectedSquad, matchSquad, setSelectedSquad } = useStateContext();
-  const navigate = useNavigate();
-  const [startingPlayers, setStartingPlayers] = useState<Player[]>([]);
+type Player = {
+  id: number;
+  name: string;
+};
 
-  useEffect(() => {
-    let playersData: Player[] = [];
-    const hasSelectedPlayers =
-      selectedSquad &&
-      selectedSquad.players &&
-      ((typeof selectedSquad.players === 'string' && parsePlayers(selectedSquad.players).length > 0) ||
-        (Array.isArray(selectedSquad.players) && selectedSquad.players.length > 0));
+export default function useStartingLineup() {
+  const [startingPlayers, setStartingPlayers] = useState<Player[]>([
+    { id: 1, name: 'Player One' },
+    { id: 2, name: 'Player Two' },
+    { id: 3, name: 'Player Three' }
+  ]);
+  const [currentGoalkeeper, setCurrentGoalkeeper] = useState<Player | null>(null);
+  const [isGKModalOpen, setGKModalOpen] = useState(false);
 
-    if (hasSelectedPlayers) {
-      playersData =
-        typeof selectedSquad.players === 'string'
-          ? (parsePlayers(selectedSquad.players) as Player[])
-          : selectedSquad.players;
-    } else if (matchSquad && matchSquad.length > 0) {
-      playersData = matchSquad;
-    } else {
-      navigate('/setup/participants');
-      return;
-    }
-
-    setStartingPlayers(playersData);
-  }, [selectedSquad, matchSquad, navigate]);
-
-  const toggleStartingPlayer = (playerId: string | number): void => {
-    setStartingPlayers(prevPlayers =>
-      prevPlayers.map(player =>
-        player.id === playerId
-          ? { ...player, isStartingPlayer: !player.isStartingPlayer }
-          : player
-      )
-    );
+  const toggleStartingPlayer = (player: Player) => {
+    console.log(`Toggled player with id ${player.id}`);
   };
 
-  const handleContinue = (): void => {
-    if (!selectedSquad) return;
-    const updatedSquad = {
-      ...selectedSquad,
-      players: startingPlayers,
-    };
-    setSelectedSquad(updatedSquad);
-    navigate('/setup/configuration');
+  const handleContinue = () => {
+    console.log('Continue to configuration with players:', startingPlayers);
   };
 
-  const goBack = (): void => {
-    navigate('/setup/participants');
+  const goBack = () => {
+    console.log('Going back');
   };
 
-  return { startingPlayers, toggleStartingPlayer, handleContinue, goBack };
+  const setGoalkeeperForPlayer = (playerId: number) => {
+    const player = startingPlayers.find(p => p.id === playerId) || null;
+    setCurrentGoalkeeper(player);
+  };
+
+  const openGKModal = () => {
+    setGKModalOpen(true);
+  };
+
+  const closeGKModal = () => {
+    setGKModalOpen(false);
+  };
+
+  return {
+    startingPlayers,
+    toggleStartingPlayer,
+    handleContinue,
+    goBack,
+    setGoalkeeperForPlayer,
+    isGKModalOpen,
+    openGKModal,
+    closeGKModal,
+    currentGoalkeeper
+  };
 }
-
-export default useStartingLineup;
