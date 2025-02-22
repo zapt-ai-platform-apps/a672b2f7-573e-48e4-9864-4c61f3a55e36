@@ -40,7 +40,8 @@ export default function StartingLineup(): JSX.Element {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <div className="p-8 flex-grow">
-        <h1 className="text-4xl font-bold mb-6 text-green-600">Select Starting Lineup</h1>
+        <h1 className="text-4xl font-bold mb-2 text-green-600">Select Starting Lineup</h1>
+        <p className="text-sm text-gray-600 mb-6">Tap on a player to toggle selection.</p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           {startingPlayers.map((player, index) => (
             <PlayerCard 
