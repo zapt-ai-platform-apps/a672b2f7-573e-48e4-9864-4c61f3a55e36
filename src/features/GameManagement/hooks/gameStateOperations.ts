@@ -40,7 +40,7 @@ export function handlePlayerAdjustment(players: Player[], playerId: number | str
 }
 
 export function updatePlayerLists(playerData: Player[], includeGKPlaytime: boolean, isRunning: boolean): { onField: Player[]; offField: Player[] } {
-  const onField = playerData.filter((_, index) => index % 2 === 0);
-  const offField = playerData.filter((_, index) => index % 2 !== 0);
+  const onField = playerData.filter(player => player.isOnField);
+  const offField = playerData.filter(player => !player.isOnField);
   return { onField, offField };
 }
