@@ -5,23 +5,32 @@ import { parsePlayers } from '../../../../utils/parsePlayers';
 import type { Player } from '../../../context/StateContext';
 
 function useStartingLineup() {
-  const { selectedSquad, setSelectedSquad } = useStateContext();
+  const { selectedSquad, matchSquad, setSelectedSquad } = useStateContext();
   const navigate = useNavigate();
   const [startingPlayers, setStartingPlayers] = useState<Player[]>([]);
 
   useEffect(() => {
-    if (selectedSquad && selectedSquad.players) {
-      let playersData: Player[] = [];
-      if (typeof selectedSquad.players === 'string') {
-        playersData = parsePlayers(selectedSquad.players) as Player[];
-      } else if (Array.isArray(selectedSquad.players)) {
-        playersData = selectedSquad.players;
-      }
-      setStartingPlayers(playersData);
+    let playersData: Player[] = [];
+    const hasSelectedPlayers =
+      selectedSquad &&
+      selectedSquad.players &&
+      ((typeof selectedSquad.players === 'string' && parsePlayers(selectedSquad.players).length > 0) ||
+        (Array.isArray(selectedSquad.players) && selectedSquad.players.length > 0));
+
+    if (hasSelectedPlayers) {
+      playersData =
+        typeof selectedSquad.players === 'string'
+          ? (parsePlayers(selectedSquad.players) as Player[])
+          : selectedSquad.players;
+    } else if (matchSquad && matchSquad.length > 0) {
+      playersData = matchSquad;
     } else {
       navigate('/setup/participants');
+      return;
     }
-  }, [selectedSquad, navigate]);
+
+    setStartingPlayers(playersData);
+  }, [selectedSquad, matchSquad, navigate]);
 
   const toggleStartingPlayer = (playerId: string | number): void => {
     setStartingPlayers(prevPlayers =>
