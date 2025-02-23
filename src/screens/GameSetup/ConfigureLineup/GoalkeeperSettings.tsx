@@ -49,6 +49,11 @@ export default function GoalkeeperSettings({
             </option>
           ))}
         </select>
+        {goalkeeper && (
+          <p className="mt-2 text-sm text-green-600 font-medium">
+            Current Goalkeeper: {goalkeeper.name}
+          </p>
+        )}
       </div>
       <div className="flex items-center">
         <input

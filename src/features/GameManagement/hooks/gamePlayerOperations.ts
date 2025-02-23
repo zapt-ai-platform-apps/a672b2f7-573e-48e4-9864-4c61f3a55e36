@@ -11,7 +11,7 @@ export function getTotalPlayTime(player: Player | undefined, includeGKPlaytime: 
   if (isRunning && player.lastStart) {
     additional = Date.now() - player.lastStart;
   }
-  return (player.playTime || 0) + additional;
+  return Math.round(((player.playTime || 0) + additional) / 1000);
 }
 
 export function handlePlayerAdjustment(players: Player[], playerId: number | string, isAdding: boolean): Player[] {

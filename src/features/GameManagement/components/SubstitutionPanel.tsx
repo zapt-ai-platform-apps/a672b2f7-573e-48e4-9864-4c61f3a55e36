@@ -25,8 +25,9 @@ function SubstitutionPanel({
     <div className="mt-6 p-4 border rounded">
       <h2 className="text-2xl font-bold mb-4">Substitution Panel</h2>
       <p className="text-sm text-gray-600 mb-4">
-        This panel displays the current playtime for players and allows you to manage substitutions during the game.
-        Use the 'Update Players' button to refresh the latest on-field status.
+        This panel displays real-time playtime statistics and enables substitution management. 
+        Track current player statuses, view accumulated playtimes, and initiate substitutions. 
+        Use the 'Update Players' button to refresh on-field/off-field statuses and apply any changes.
       </p>
       <div>
         <span className="block mb-2">Playtime: {getTotalPlayTime()}</span>

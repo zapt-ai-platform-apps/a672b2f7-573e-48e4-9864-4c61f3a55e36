@@ -7,7 +7,7 @@ export function getTimeElapsed(gameIntervals: number[], isRunning: boolean): num
       total += Date.now() - gameIntervals[i];
     }
   }
-  return total;
+  return Math.floor(total / 1000);
 }
 
 export function toggleTimer(isRunning: boolean, gameIntervals: number[]): { newIntervals: number[], newIsRunning: boolean } {
