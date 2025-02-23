@@ -1,57 +1,50 @@
-import { useState, useEffect } from 'react';
-import { useStateContext } from '../../../../hooks/useStateContext';
-import { Player } from '../../../../context/StateContext';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+interface Player {
+  id: number | string;
+  name: string;
+  selected?: boolean;
+}
 
 export default function useStartingLineup() {
-  const { matchSquad, setMatchSquad, selectedSquad, goalkeeper, setGoalkeeper } = useStateContext();
+  const [startingPlayers, setStartingPlayers] = useState<Player[]>([
+    { id: 1, name: 'John Doe', selected: false },
+    { id: 2, name: 'Jane Smith', selected: false },
+    { id: 3, name: 'Alice Johnson', selected: false }
+  ]);
   const [isGKModalOpen, setIsGKModalOpen] = useState<boolean>(false);
+  const [currentGoalkeeper, setCurrentGoalkeeper] = useState<Player | null>(null);
+  const navigate = useNavigate();
 
-  // If matchSquad is empty and selectedSquad has players, update matchSquad with all players selected by default
-  useEffect(() => {
-    if (
-      matchSquad.length === 0 &&
-      selectedSquad &&
-      Array.isArray(selectedSquad.players) &&
-      selectedSquad.players.length > 0
-    ) {
-      setMatchSquad(selectedSquad.players.map(player => ({ ...player, isStartingPlayer: true })));
-    }
-  }, [matchSquad, selectedSquad, setMatchSquad]);
-
-  const toggleStartingPlayer = (player: Player): void => {
-    const updatedSquad = matchSquad.map((p) =>
-      p.id === player.id ? { ...p, isStartingPlayer: !p.isStartingPlayer } : p
+  const toggleStartingPlayer = (id: number | string) => {
+    setStartingPlayers(prev =>
+      prev.map(player => player.id === id ? { ...player, selected: !player.selected } : player)
     );
-    setMatchSquad(updatedSquad);
   };
 
-  const goBack = (): void => {
-    window.history.back();
+  const goBack = () => {
+    navigate(-1);
   };
 
-  const setGoalkeeperForPlayer = (playerId: number): void => {
-    const player = matchSquad.find((p) => p.id === playerId);
+  const setGoalkeeperForPlayer = (id: number | string) => {
+    const player = startingPlayers.find(p => p.id === id);
     if (player) {
-      setGoalkeeper(player);
+      setCurrentGoalkeeper(player);
     }
   };
 
-  const openGKModal = (): void => {
-    setIsGKModalOpen(true);
-  };
-
-  const closeGKModal = (): void => {
-    setIsGKModalOpen(false);
-  };
+  const openGKModal = () => setIsGKModalOpen(true);
+  const closeGKModal = () => setIsGKModalOpen(false);
 
   return {
-    startingPlayers: matchSquad,
+    startingPlayers,
     toggleStartingPlayer,
     goBack,
     setGoalkeeperForPlayer,
     isGKModalOpen,
     openGKModal,
     closeGKModal,
-    currentGoalkeeper: goalkeeper,
+    currentGoalkeeper
   };
 }

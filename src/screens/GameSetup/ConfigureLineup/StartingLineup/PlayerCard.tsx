@@ -1,23 +1,23 @@
 import React from 'react';
 
-type Player = {
-  id: number;
+interface Player {
+  id: number | string;
   name: string;
-  isStartingPlayer?: boolean;
-};
+  selected?: boolean;
+}
 
-type PlayerCardProps = {
+interface PlayerCardProps {
   player: Player;
-  onToggle: (player: Player) => void;
-};
+  onToggle: (id: number | string) => void;
+}
 
-export default function PlayerCard({ player, onToggle }: PlayerCardProps) {
+export default function PlayerCard({ player, onToggle }: PlayerCardProps): JSX.Element {
   return (
     <div
-      onClick={() => onToggle(player)}
-      className={`p-4 border rounded-lg shadow cursor-pointer ${player.isStartingPlayer ? 'bg-green-100' : 'bg-white'}`}
+      onClick={() => onToggle(player.id)}
+      className={`cursor-pointer px-4 py-2 border rounded-lg shadow-sm ${player.selected ? 'bg-green-100' : 'bg-white'}`}
     >
-      <p className="text-lg">{player.name}</p>
+      {player.name}
     </div>
   );
 }

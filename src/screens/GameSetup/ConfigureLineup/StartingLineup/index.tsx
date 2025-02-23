@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useStartingLineup from './useStartingLineup';
 import PlayerCard from './PlayerCard';
+import { useStateContext } from "../../../../hooks/useStateContext";
 
 export default function StartingLineup(): JSX.Element {
   const {
@@ -16,12 +17,14 @@ export default function StartingLineup(): JSX.Element {
   } = useStartingLineup();
   
   const navigate = useNavigate();
+  const { handleStartGame: startGame, matchSquad, includeGKPlaytime } = useStateContext();
 
-  const handleStartGame = () => {
+  const onStartGame = () => {
     if (!currentGoalkeeper) {
       alert("Please select a goalkeeper before starting the game.");
       return;
     }
+    startGame(matchSquad, currentGoalkeeper.name, includeGKPlaytime);
     navigate('/game-management');
   };
 
@@ -60,7 +63,7 @@ export default function StartingLineup(): JSX.Element {
         </div>
         <div className="flex justify-end">
           <button
-            onClick={handleStartGame}
+            onClick={onStartGame}
             disabled={startingPlayers.length === 0}
             className="px-8 py-4 bg-green-500 text-white text-xl rounded-full hover:bg-green-600 transition-colors shadow-lg cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
