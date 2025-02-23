@@ -95,7 +95,10 @@ export default function StartingLineup(): JSX.Element {
                     className={`w-full text-left px-4 py-2 border-b hover:bg-gray-100 cursor-pointer ${
                       confirmedGoalkeeper?.id === player.id ? 'bg-blue-50 border-blue-200' : ''
                     }`}
-                    onClick={() => setGoalkeeperForPlayer(player.id)}
+                    onClick={() => {
+                      setGoalkeeperForPlayer(player.id);
+                      closeGKModal();
+                    }}
                   >
                     <div className="flex items-center justify-between">
                       <span>{player.name}</span>
@@ -110,17 +113,6 @@ export default function StartingLineup(): JSX.Element {
               )}
             </div>
             <div className="mt-4 flex justify-end gap-2">
-              <button
-                onClick={() => {
-                  if (confirmedGoalkeeper) {
-                    closeGKModal();
-                  }
-                }}
-                className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors shadow-lg cursor-pointer"
-                disabled={!confirmedGoalkeeper}
-              >
-                {confirmedGoalkeeper ? 'Keep Selection' : 'Select First'}
-              </button>
               <button
                 onClick={closeGKModal}
                 className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors shadow-lg cursor-pointer"
