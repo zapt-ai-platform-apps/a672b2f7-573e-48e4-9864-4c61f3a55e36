@@ -1,11 +1,14 @@
 export interface Player {
-  id?: number;
+  id: string | number;
   name: string;
-  playIntervals?: { startTime: number; endTime: number | null }[];
+  playIntervals?: Array<{
+    startTime: number;
+    endTime: number | null;
+    isGoalkeeper?: boolean;
+  }>;
   isOnField: boolean;
   isGoalkeeper: boolean;
-  totalPlayTime: number;
-  position: { x: number | null; y: number | null };
+  position: { x: number; y: number };
   isStartingPlayer?: boolean;
   isInMatchSquad?: boolean;
 }
@@ -13,7 +16,7 @@ export interface Player {
 export interface Goal {
   team: 'our' | 'opponent';
   scorerName: string;
-  timestamp?: number;
+  timestamp: number;
 }
 
 export interface Squad {
@@ -22,11 +25,11 @@ export interface Squad {
   players: Player[];
 }
 
-export interface RawPlayer {
-  name: string;
-  isStartingPlayer?: boolean;
-}
-
 export interface StateProviderProps {
   children: React.ReactNode;
+}
+
+export interface Interval {
+  startTime: number;
+  endTime: number | null;
 }

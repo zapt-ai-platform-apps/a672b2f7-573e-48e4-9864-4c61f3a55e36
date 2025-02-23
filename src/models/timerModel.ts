@@ -34,18 +34,24 @@ export function toggleTimer(
   isRunning: boolean,
   intervals: Interval[]
 ): { newIntervals: Interval[]; newIsRunning: boolean } {
+  const now = Date.now();
+  let newIntervals = [...intervals];
+  
   if (!isRunning) {
-    const newInterval = { startTime: Date.now(), endTime: null };
-    return { newIntervals: [...intervals, newInterval], newIsRunning: true };
+    // Start new interval
+    newIntervals.push({ startTime: now, endTime: null });
+    return { newIntervals, newIsRunning: true };
   } else {
-    if (intervals.length > 0) {
-      const lastInterval = { ...intervals[intervals.length - 1] };
-      if (lastInterval.endTime === null) {
-        lastInterval.endTime = Date.now();
-        const newIntervals = [...intervals.slice(0, intervals.length - 1), lastInterval];
-        return { newIntervals, newIsRunning: false };
+    // End current interval
+    if (newIntervals.length > 0) {
+      const lastIndex = newIntervals.length - 1;
+      if (newIntervals[lastIndex].endTime === null) {
+        newIntervals[lastIndex] = {
+          ...newIntervals[lastIndex],
+          endTime: now
+        };
       }
     }
-    return { newIntervals: intervals, newIsRunning: false };
+    return { newIntervals, newIsRunning: false };
   }
 }

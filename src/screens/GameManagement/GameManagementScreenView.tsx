@@ -5,27 +5,7 @@ import SubstitutionPanel from '../../features/GameManagement/components/Substitu
 import EndGameConfirmationModal from '../../features/GameManagement/modals/EndGameConfirmationModal';
 import GoalScoredModal from '../../features/GameManagement/modals/GoalScoredModal';
 import PlayerList from '../../features/GameManagement/components/PlayerList';
-import { Player } from '../../types/GameTypes';
-
-interface GameManagementScreenViewProps {
-  playerData: any;
-  isRunning: boolean;
-  ourScore: number;
-  opponentScore: number;
-  getTimeElapsed: () => string;
-  toggleTimer: () => void;
-  handleEndGame: () => void;
-  showEndGameConfirm: boolean;
-  confirmEndGame: () => void;
-  cancelEndGame: () => void;
-  recordGoal: (player: Player) => void;
-  onFieldPlayers: Player[];
-  offFieldPlayers: Player[];
-  getTotalPlayTime: (player: Player) => string;
-  showGoalModal: boolean;
-  setShowGoalModal: (show: boolean) => void;
-  handlePlayerClick: (player: Player) => void;
-}
+import type { GameManagementScreenViewProps } from './GameManagementScreenView.types';
 
 export default function GameManagementScreenView({
   playerData,

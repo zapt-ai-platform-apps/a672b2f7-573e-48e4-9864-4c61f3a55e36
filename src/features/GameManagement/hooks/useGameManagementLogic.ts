@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import * as Sentry from '@sentry/browser';
 import { useStateContext } from '../../../state';
 import { Player } from '../../../types/GameTypes';
 import {
@@ -13,6 +14,11 @@ import {
 interface PlayerLists {
   onField: Player[];
   offField: Player[];
+}
+
+interface Interval {
+  startTime: number;
+  endTime: number | null;
 }
 
 export interface UseGameManagementLogicReturn {
@@ -38,6 +44,7 @@ export interface UseGameManagementLogicReturn {
   showAddPlayerModal: boolean;
   setShowAddPlayerModal: React.Dispatch<React.SetStateAction<boolean>>;
   resetGame: () => void;
+  timeElapsed: number;
 }
 
 export function useGameManagementLogic(): UseGameManagementLogicReturn {
@@ -52,26 +59,48 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
     setGoals,
     includeGKPlaytime,
     resetGame,
-    selectedSquad
+    selectedSquad,
+    goalkeeper,
+    setGoalkeeper
   } = useStateContext();
 
   const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [gameIntervals, setGameIntervals] = useState<number[]>([]);
+  const [gameIntervals, setGameIntervals] = useState<Interval[]>([]);
   const [showEndGameConfirm, setShowEndGameConfirm] = useState<boolean>(false);
   const [showGoalModal, setShowGoalModal] = useState<boolean>(false);
   const [showAddPlayerModal, setShowAddPlayerModal] = useState<boolean>(false);
+  const [timeElapsed, setTimeElapsed] = useState<number>(0);
 
   useEffect(() => {
-    if (
-      playerData.length === 0 &&
-      selectedSquad &&
-      Array.isArray(selectedSquad.players) &&
-      selectedSquad.players.length > 0
-    ) {
-      setPlayerData(selectedSquad.players);
-      console.log("Initialized playerData from selectedSquad.");
+    let interval: NodeJS.Timeout | null = null;
+    if (isRunning) {
+      interval = setInterval(() => {
+        setTimeElapsed(getTimeElapsed(gameIntervals, isRunning));
+      }, 1000);
+    } else if (interval) {
+      clearInterval(interval);
     }
-  }, [playerData, selectedSquad, setPlayerData]);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isRunning, gameIntervals]);
+
+  useEffect(() => {
+    if (playerData.length === 0 && selectedSquad?.players?.length) {
+      try {
+        const initializedPlayers = selectedSquad.players.map(p => ({
+          ...p,
+          playIntervals: [],
+          isOnField: p.isStartingPlayer
+        }));
+        setPlayerData(initializedPlayers);
+        console.log('Initialized players from squad:', initializedPlayers);
+      } catch (error) {
+        Sentry.captureException(error);
+        console.error('Player initialization error:', error);
+      }
+    }
+  }, [selectedSquad, setPlayerData, playerData.length]);
 
   const getTotalPlayTimeFunc = (player: Player): number => {
     return getTotalPlayTime(player, includeGKPlaytime, isRunning);
@@ -82,20 +111,38 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
   };
 
   const toggleTimerFunc = (): void => {
-    const { newIntervals, newIsRunning } = toggleTimer(isRunning, gameIntervals);
-    setGameIntervals(newIntervals);
-    setIsRunning(newIsRunning);
+    try {
+      const { newIntervals, newIsRunning } = toggleTimer(isRunning, gameIntervals);
+      setGameIntervals(newIntervals);
+      setIsRunning(newIsRunning);
+      console.log('Timer toggled:', newIsRunning ? 'Started' : 'Paused', newIntervals);
+    } catch (error) {
+      Sentry.captureException(error);
+      console.error('Timer toggle error:', error);
+    }
   };
 
   const recordGoalFunc = (team: 'our' | 'opponent', scorerName: string): void => {
-    const result = recordGoal(team, scorerName, ourScore, opponentScore, goals, gameIntervals, isRunning);
-    setOurScore(result.newOurScore);
-    setOpponentScore(result.newOpponentScore);
-    setGoals(result.newGoals);
+    try {
+      const result = recordGoal(team, scorerName, ourScore, opponentScore, goals, gameIntervals, isRunning);
+      setOurScore(result.newOurScore);
+      setOpponentScore(result.newOpponentScore);
+      setGoals(result.newGoals);
+      console.log('Goal recorded:', result.newGoals);
+    } catch (error) {
+      Sentry.captureException(error);
+      console.error('Goal recording error:', error);
+    }
   };
 
   const handlePlayerAdjustmentFunc = (playerId: number | string, isAdding: boolean): void => {
-    setPlayerData((prev: Player[]) => handlePlayerAdjustment(prev, playerId, isAdding));
+    try {
+      setPlayerData(prev => handlePlayerAdjustment(prev, playerId, isAdding));
+      console.log('Player adjusted:', playerId, isAdding ? 'added' : 'removed');
+    } catch (error) {
+      Sentry.captureException(error);
+      console.error('Player adjustment error:', error);
+    }
   };
 
   const updatePlayerListsFunc = (): { onField: Player[]; offField: Player[] } => {
@@ -114,7 +161,10 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
     getTimeElapsed: getTimeElapsedFunc,
     toggleTimer: toggleTimerFunc,
     handleEndGame: () => setShowEndGameConfirm(true),
-    confirmEndGame: () => setShowEndGameConfirm(false),
+    confirmEndGame: () => {
+      resetGame();
+      setShowEndGameConfirm(false);
+    },
     cancelEndGame: () => setShowEndGameConfirm(false),
     showEndGameConfirm,
     showGoalModal,
@@ -126,6 +176,7 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
     offFieldPlayers: lists.offField,
     showAddPlayerModal,
     setShowAddPlayerModal,
-    resetGame
+    resetGame,
+    timeElapsed
   };
 }
