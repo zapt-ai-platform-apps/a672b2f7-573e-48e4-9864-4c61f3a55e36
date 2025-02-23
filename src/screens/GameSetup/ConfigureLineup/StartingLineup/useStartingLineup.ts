@@ -8,7 +8,7 @@ interface LineupPlayer extends GamePlayer {
 }
 
 export default function useStartingLineup() {
-  const { matchSquad } = useStateContext();
+  const { matchSquad, selectedSquad } = useStateContext();
 
   const [startingPlayers, setStartingPlayers] = useState<LineupPlayer[]>([]);
   const [isGKModalOpen, setIsGKModalOpen] = useState<boolean>(false);
@@ -16,13 +16,14 @@ export default function useStartingLineup() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const players = matchSquad.length > 0 ? matchSquad : (selectedSquad?.players || []);
     setStartingPlayers(
-      matchSquad.map(player => ({
+      players.map(player => ({
         ...player,
         selected: player.isStartingPlayer || false,
       }))
     );
-  }, [matchSquad]);
+  }, [matchSquad, selectedSquad]);
 
   const toggleStartingPlayer = (id: number | string) => {
     setStartingPlayers(prev =>
