@@ -21,10 +21,16 @@ export default function StartingLineup(): JSX.Element {
 
   const onStartGame = () => {
     if (!currentGoalkeeper) {
-      alert("Please select a goalkeeper before starting the game.");
+      openGKModal();
       return;
     }
-    startGame(matchSquad, currentGoalkeeper.name, includeGKPlaytime);
+
+    const updatedSquad = startingPlayers.map(player => ({
+      ...player,
+      isStartingPlayer: player.selected
+    }));
+
+    startGame(updatedSquad, currentGoalkeeper.name, includeGKPlaytime);
     navigate('/game-management');
   };
 
@@ -33,19 +39,6 @@ export default function StartingLineup(): JSX.Element {
       <div className="p-8 flex-grow">
         <h1 className="text-4xl font-bold mb-2 text-green-600">Select Starting Lineup</h1>
         <p className="text-sm text-gray-600 mb-6">Tap on a player to toggle selection.</p>
-        
-        <div className="mb-6 p-4 border rounded-lg shadow-sm">
-          <h2 className="text-xl font-semibold mb-2">Goalkeeper Selection</h2>
-          <p className="text-sm text-gray-600">
-            {currentGoalkeeper ? `Current Goalkeeper: ${currentGoalkeeper.name}` : "No goalkeeper selected."}
-          </p>
-          <button
-            onClick={openGKModal}
-            className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors shadow-lg cursor-pointer"
-          >
-            Select Goalkeeper
-          </button>
-        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           {startingPlayers.map((player, index) => (
@@ -86,8 +79,8 @@ export default function StartingLineup(): JSX.Element {
           <div className="bg-white p-6 rounded-lg z-[60] shadow-xl w-80">
             <h2 className="text-lg font-bold mb-4">Select a Goalkeeper</h2>
             <div className="max-h-64 overflow-y-auto">
-              {startingPlayers.length > 0 ? (
-                startingPlayers.map(player => (
+              {startingPlayers.filter(player => player.selected).length > 0 ? (
+                startingPlayers.filter(player => player.selected).map(player => (
                   <button
                     key={player.id}
                     onClick={() => { setGoalkeeperForPlayer(player.id); closeGKModal(); }}
@@ -97,7 +90,7 @@ export default function StartingLineup(): JSX.Element {
                   </button>
                 ))
               ) : (
-                <p className="text-sm text-gray-600">No players available.</p>
+                <p className="text-sm text-gray-600">No starting players available</p>
               )}
             </div>
             <div className="mt-4 flex justify-end">
