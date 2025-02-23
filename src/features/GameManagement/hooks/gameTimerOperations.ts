@@ -1,23 +1,37 @@
-export function getTimeElapsed(gameIntervals: number[], isRunning: boolean): number {
+export interface Interval {
+  startTime: number;
+  endTime: number | null;
+}
+
+export function getTimeElapsed(gameIntervals: Interval[], isRunning: boolean): number {
   let total = 0;
-  for (let i = 0; i < gameIntervals.length; i += 2) {
-    if (gameIntervals[i + 1]) {
-      total += gameIntervals[i + 1] - gameIntervals[i];
-    } else {
-      total += Date.now() - gameIntervals[i];
-    }
+  const now = Date.now();
+  
+  for (const interval of gameIntervals) {
+    const end = interval.endTime || (isRunning ? now : interval.startTime);
+    total += end - interval.startTime;
   }
+  
   return Math.floor(total / 1000);
 }
 
-export function toggleTimer(isRunning: boolean, gameIntervals: number[]): { newIntervals: number[], newIsRunning: boolean } {
+export function toggleTimer(
+  isRunning: boolean,
+  gameIntervals: Interval[]
+): { newIntervals: Interval[]; newIsRunning: boolean } {
   const now = Date.now();
-  let newIntervals = [...gameIntervals];
-  let newIsRunning = !isRunning;
+  const newIntervals = [...gameIntervals];
+  
   if (!isRunning) {
-    newIntervals.push(now);
+    // Starting the timer - add new interval with null endTime
+    newIntervals.push({ startTime: now, endTime: null });
   } else {
-    newIntervals.push(now);
+    // Pausing the timer - update last interval's endTime
+    const lastInterval = newIntervals[newIntervals.length - 1];
+    if (lastInterval && !lastInterval.endTime) {
+      lastInterval.endTime = now;
+    }
   }
-  return { newIntervals, newIsRunning };
+  
+  return { newIntervals, newIsRunning: !isRunning };
 }

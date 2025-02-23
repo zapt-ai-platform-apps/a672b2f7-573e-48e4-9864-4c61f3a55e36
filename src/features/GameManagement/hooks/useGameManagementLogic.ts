@@ -16,11 +16,6 @@ interface PlayerLists {
   offField: Player[];
 }
 
-interface Interval {
-  startTime: number;
-  endTime: number | null;
-}
-
 export interface UseGameManagementLogicReturn {
   playerData: Player[];
   setPlayerData: React.Dispatch<React.SetStateAction<Player[]>>;
@@ -65,7 +60,7 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
   } = useStateContext();
 
   const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [gameIntervals, setGameIntervals] = useState<Interval[]>([]);
+  const [gameIntervals, setGameIntervals] = useState<any[]>([]);
   const [showEndGameConfirm, setShowEndGameConfirm] = useState<boolean>(false);
   const [showGoalModal, setShowGoalModal] = useState<boolean>(false);
   const [showAddPlayerModal, setShowAddPlayerModal] = useState<boolean>(false);
