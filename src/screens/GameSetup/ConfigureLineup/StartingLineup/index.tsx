@@ -80,7 +80,7 @@ export default function StartingLineup(): JSX.Element {
       {isGKModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="absolute inset-0 bg-black opacity-50" onClick={closeGKModal}></div>
-          <div className="bg-white p-6 rounded-lg z-60 shadow-xl w-80">
+          <div className="bg-white p-6 rounded-lg z-[60] shadow-xl w-80">
             <h2 className="text-lg font-bold mb-4">Select a Goalkeeper</h2>
             <div className="max-h-64 overflow-y-auto">
               {startingPlayers.length > 0 ? (

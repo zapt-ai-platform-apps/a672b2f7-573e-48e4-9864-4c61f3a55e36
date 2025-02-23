@@ -1,20 +1,23 @@
 import React from 'react';
-import { Player } from './useStartingLineup';
 
-interface PlayerCardProps {
+type Player = {
+  id: number;
+  name: string;
+  selected?: boolean;
+};
+
+type PlayerCardProps = {
   player: Player;
   onToggle: (player: Player) => void;
-}
+};
 
-export default function PlayerCard({ player, onToggle }: PlayerCardProps): JSX.Element {
+export default function PlayerCard({ player, onToggle }: PlayerCardProps) {
   return (
     <div
       onClick={() => onToggle(player)}
-      className={`p-4 border rounded-lg shadow-md cursor-pointer transition-colors ${
-        player.selected ? 'bg-green-100 border-green-500' : 'bg-white'
-      }`}
+      className={`p-4 border rounded-lg shadow cursor-pointer ${player.selected ? 'bg-green-100' : 'bg-white'}`}
     >
-      <h3 className="text-lg font-semibold">{player.name}</h3>
+      <p className="text-lg">{player.name}</p>
     </div>
   );
 }
