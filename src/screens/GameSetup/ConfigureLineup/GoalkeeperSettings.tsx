@@ -1,17 +1,6 @@
-import React, { ChangeEvent } from "react";
-
-interface Player {
-  id: string | number;
-  name: string;
-}
-
-interface GoalkeeperSettingsProps {
-  startingPlayers: Player[];
-  goalkeeper: Player | null;
-  setGoalkeeper: (g: Player | null) => void;
-  includeGKPlaytime: boolean;
-  setIncludeGKPlaytime: (value: boolean) => void;
-}
+import React from "react";
+import { GoalkeeperSettingsProps } from "./GoalkeeperTypes";
+import GoalkeeperSelector from "./GoalkeeperSelector";
 
 export default function GoalkeeperSettings({
   startingPlayers,
@@ -19,13 +8,9 @@ export default function GoalkeeperSettings({
   setGoalkeeper,
   includeGKPlaytime,
   setIncludeGKPlaytime,
+  confirmedGoalkeeper,
+  setConfirmedGoalkeeper,
 }: GoalkeeperSettingsProps) {
-  const handleSelectGoalkeeper = (e: ChangeEvent<HTMLSelectElement>) => {
-    const selectedId = e.target.value;
-    const selectedPlayer = startingPlayers.find(player => String(player.id) === selectedId);
-    setGoalkeeper(selectedPlayer || null);
-  };
-
   const handleTogglePlaytime = () => {
     setIncludeGKPlaytime(!includeGKPlaytime);
   };
@@ -33,28 +18,13 @@ export default function GoalkeeperSettings({
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Goalkeeper Settings</h2>
-      <div className="mb-4">
-        <label className="block text-gray-700 mb-2">Select Goalkeeper</label>
-        <select
-          value={goalkeeper ? String(goalkeeper.id) : ""}
-          onChange={handleSelectGoalkeeper}
-          className="w-full p-3 border border-gray-300 rounded-lg"
-        >
-          <option value="" disabled>
-            Select a player
-          </option>
-          {startingPlayers && startingPlayers.length > 0 && startingPlayers.map((player) => (
-            <option key={player.id} value={String(player.id)}>
-              {player.name}
-            </option>
-          ))}
-        </select>
-        {goalkeeper && (
-          <p className="mt-2 text-sm text-green-600 font-medium">
-            Current Goalkeeper: {goalkeeper.name}
-          </p>
-        )}
-      </div>
+      <GoalkeeperSelector
+        startingPlayers={startingPlayers}
+        goalkeeper={goalkeeper}
+        setGoalkeeper={setGoalkeeper}
+        confirmedGoalkeeper={confirmedGoalkeeper}
+        setConfirmedGoalkeeper={setConfirmedGoalkeeper}
+      />
       <div className="flex items-center">
         <input
           id="includeGKPlaytime"

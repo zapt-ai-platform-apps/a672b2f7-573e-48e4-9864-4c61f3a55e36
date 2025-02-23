@@ -11,8 +11,8 @@ export default function useStartingLineup() {
   const [startingPlayers, setStartingPlayers] = useState<StartingPlayer[]>([]);
   const [isGKModalOpen, setGKModalOpen] = useState(false);
   const [currentGoalkeeper, setCurrentGoalkeeper] = useState<Player | null>(null);
+  const [confirmedGoalkeeper, setConfirmedGoalkeeper] = useState<Player | null>(null);
 
-  // Initialize starting players from selected squad
   useEffect(() => {
     if (selectedSquad?.players) {
       const initialPlayers = selectedSquad.players.map(player => ({
@@ -39,6 +39,7 @@ export default function useStartingLineup() {
     const player = startingPlayers.find(p => p.id === id);
     if (player) {
       setCurrentGoalkeeper(player);
+      setConfirmedGoalkeeper(player);
     }
   };
 
@@ -53,6 +54,8 @@ export default function useStartingLineup() {
     isGKModalOpen,
     openGKModal,
     closeGKModal,
-    currentGoalkeeper
+    currentGoalkeeper,
+    confirmedGoalkeeper,
+    setConfirmedGoalkeeper
   };
 }

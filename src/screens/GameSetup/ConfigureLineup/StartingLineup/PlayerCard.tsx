@@ -1,21 +1,24 @@
 import React from 'react';
 
 interface Player {
-  id: number;
+  id: number | string;
   name: string;
   selected: boolean;
 }
 
 interface PlayerCardProps {
   player: Player;
-  onToggle: (id: number) => void;
+  onToggle: (playerId: number | string) => void;
 }
 
 export default function PlayerCard({ player, onToggle }: PlayerCardProps): JSX.Element {
   return (
-    <div onClick={() => onToggle(player.id)} className={`p-4 border rounded cursor-pointer ${player.selected ? 'bg-green-200' : 'bg-white'}`}>
-      <h3 className="text-xl font-bold">{player.name}</h3>
-      {player.selected && <p className="text-sm text-green-700">Selected</p>}
+    <div
+      className={`p-4 border rounded-lg cursor-pointer ${player.selected ? 'bg-green-100' : 'bg-white'}`}
+      onClick={() => onToggle(player.id)}
+    >
+      <h3 className="text-lg font-semibold">{player.name}</h3>
+      {player.selected && <span className="text-green-500">Selected</span>}
     </div>
   );
 }
