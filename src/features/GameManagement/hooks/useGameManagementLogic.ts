@@ -163,6 +163,8 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
     handleEndGame: () => setShowEndGameConfirm(true),
     confirmEndGame: () => {
       resetGame();
+      setGameIntervals([]);
+      setTimeElapsed(0);
       setShowEndGameConfirm(false);
     },
     cancelEndGame: () => setShowEndGameConfirm(false),
