@@ -1,55 +1,45 @@
 import { useState } from 'react';
-
-type Player = {
-  id: number;
-  name: string;
-  selected?: boolean;
-};
+import { useStateContext } from '../../../../hooks/useStateContext';
+import { Player } from '../../../../context/StateContext';
 
 export default function useStartingLineup() {
-  const [startingPlayers, setStartingPlayers] = useState<Player[]>([
-    { id: 1, name: "Player 1", selected: false },
-    { id: 2, name: "Player 2", selected: false },
-    { id: 3, name: "Player 3", selected: false }
-  ]);
-  const [currentGoalkeeper, setCurrentGoalkeeper] = useState<Player | null>(null);
-  const [isGKModalOpen, setIsGKModalOpen] = useState(false);
+  const { matchSquad, setMatchSquad, goalkeeper, setGoalkeeper } = useStateContext();
+  const [isGKModalOpen, setIsGKModalOpen] = useState<boolean>(false);
 
-  const toggleStartingPlayer = (player: Player) => {
-    setStartingPlayers(prev =>
-      prev.map(p =>
-        p.id === player.id ? { ...p, selected: !p.selected } : p
-      )
+  const toggleStartingPlayer = (player: Player): void => {
+    const updatedSquad = matchSquad.map((p) =>
+      p.id === player.id ? { ...p, isStartingPlayer: !p.isStartingPlayer } : p
     );
+    setMatchSquad(updatedSquad);
   };
 
-  const goBack = () => {
+  const goBack = (): void => {
     window.history.back();
   };
 
-  const setGoalkeeperForPlayer = (playerId: number) => {
-    const player = startingPlayers.find(p => p.id === playerId);
+  const setGoalkeeperForPlayer = (playerId: number): void => {
+    const player = matchSquad.find((p) => p.id === playerId);
     if (player) {
-      setCurrentGoalkeeper(player);
+      setGoalkeeper(player);
     }
   };
 
-  const openGKModal = () => {
+  const openGKModal = (): void => {
     setIsGKModalOpen(true);
   };
 
-  const closeGKModal = () => {
+  const closeGKModal = (): void => {
     setIsGKModalOpen(false);
   };
 
   return {
-    startingPlayers,
+    startingPlayers: matchSquad,
     toggleStartingPlayer,
     goBack,
     setGoalkeeperForPlayer,
     isGKModalOpen,
     openGKModal,
     closeGKModal,
-    currentGoalkeeper
+    currentGoalkeeper: goalkeeper,
   };
 }
