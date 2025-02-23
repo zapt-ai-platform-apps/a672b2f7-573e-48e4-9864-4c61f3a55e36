@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useStateContext } from '../../../../../hooks/useStateContext';
-import { Player } from '../../../../../context/StateContext';
+import { useStateContext } from '../../../../hooks/useStateContext';
+import { Player } from '../../../../context/StateContext';
 
 interface StartingPlayer extends Player {
   selected: boolean;
