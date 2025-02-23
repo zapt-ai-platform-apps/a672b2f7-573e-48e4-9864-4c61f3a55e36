@@ -1,25 +1,34 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useStateContext } from '../../../../hooks/useStateContext';
+import { Player as GamePlayer } from '../../../../types/GameTypes';
 
-interface Player {
-  id: number | string;
-  name: string;
+interface LineupPlayer extends GamePlayer {
   selected?: boolean;
 }
 
 export default function useStartingLineup() {
-  const [startingPlayers, setStartingPlayers] = useState<Player[]>([
-    { id: 1, name: 'John Doe', selected: false },
-    { id: 2, name: 'Jane Smith', selected: false },
-    { id: 3, name: 'Alice Johnson', selected: false }
-  ]);
+  const { matchSquad } = useStateContext();
+
+  const [startingPlayers, setStartingPlayers] = useState<LineupPlayer[]>([]);
   const [isGKModalOpen, setIsGKModalOpen] = useState<boolean>(false);
-  const [currentGoalkeeper, setCurrentGoalkeeper] = useState<Player | null>(null);
+  const [currentGoalkeeper, setCurrentGoalkeeper] = useState<LineupPlayer | null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setStartingPlayers(
+      matchSquad.map(player => ({
+        ...player,
+        selected: player.isStartingPlayer || false,
+      }))
+    );
+  }, [matchSquad]);
 
   const toggleStartingPlayer = (id: number | string) => {
     setStartingPlayers(prev =>
-      prev.map(player => player.id === id ? { ...player, selected: !player.selected } : player)
+      prev.map(player =>
+        player.id === id ? { ...player, selected: !player.selected } : player
+      )
     );
   };
 
@@ -45,6 +54,6 @@ export default function useStartingLineup() {
     isGKModalOpen,
     openGKModal,
     closeGKModal,
-    currentGoalkeeper
+    currentGoalkeeper,
   };
 }
