@@ -1,19 +1,18 @@
-import { useState } from 'react';
-
-export interface Player {
-  id: number;
-  name: string;
-  selected?: boolean;
-}
+import { useState, useEffect } from 'react';
+import { useStateContext } from 'src/hooks/useStateContext';
+import type { Player } from 'src/context/StateContext';
 
 export default function useStartingLineup() {
-  const [startingPlayers, setStartingPlayers] = useState<Player[]>([
-    { id: 1, name: 'Player One' },
-    { id: 2, name: 'Player Two' },
-    { id: 3, name: 'Player Three' }
-  ]);
+  const { selectedSquad } = useStateContext();
+  const [startingPlayers, setStartingPlayers] = useState<Player[]>([]);
   const [currentGoalkeeper, setCurrentGoalkeeper] = useState<Player | null>(null);
   const [isGKModalOpen, setIsGKModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (selectedSquad && selectedSquad.players) {
+      setStartingPlayers(selectedSquad.players);
+    }
+  }, [selectedSquad]);
 
   const toggleStartingPlayer = (player: Player) => {
     setStartingPlayers(prevPlayers =>
@@ -23,7 +22,7 @@ export default function useStartingLineup() {
     );
   };
 
-  const setGoalkeeperForPlayer = (id: number) => {
+  const setGoalkeeperForPlayer = (id: string | number) => {
     const player = startingPlayers.find(p => p.id === id);
     if (player) {
       setCurrentGoalkeeper(player);
