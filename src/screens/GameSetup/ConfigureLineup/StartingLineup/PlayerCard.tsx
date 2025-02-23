@@ -3,7 +3,7 @@ import React from 'react';
 type Player = {
   id: number;
   name: string;
-  selected?: boolean;
+  isStartingPlayer?: boolean;
 };
 
 type PlayerCardProps = {
@@ -15,7 +15,7 @@ export default function PlayerCard({ player, onToggle }: PlayerCardProps) {
   return (
     <div
       onClick={() => onToggle(player)}
-      className={`p-4 border rounded-lg shadow cursor-pointer ${player.selected ? 'bg-green-100' : 'bg-white'}`}
+      className={`p-4 border rounded-lg shadow cursor-pointer ${player.isStartingPlayer ? 'bg-green-100' : 'bg-white'}`}
     >
       <p className="text-lg">{player.name}</p>
     </div>

@@ -6,7 +6,7 @@ export default function useStartingLineup() {
   const { matchSquad, setMatchSquad, selectedSquad, goalkeeper, setGoalkeeper } = useStateContext();
   const [isGKModalOpen, setIsGKModalOpen] = useState<boolean>(false);
 
-  // If matchSquad is empty and selectedSquad has players, update matchSquad from selectedSquad
+  // If matchSquad is empty and selectedSquad has players, update matchSquad with all players selected by default
   useEffect(() => {
     if (
       matchSquad.length === 0 &&
@@ -14,7 +14,7 @@ export default function useStartingLineup() {
       Array.isArray(selectedSquad.players) &&
       selectedSquad.players.length > 0
     ) {
-      setMatchSquad(selectedSquad.players);
+      setMatchSquad(selectedSquad.players.map(player => ({ ...player, isStartingPlayer: true })));
     }
   }, [matchSquad, selectedSquad, setMatchSquad]);
 
