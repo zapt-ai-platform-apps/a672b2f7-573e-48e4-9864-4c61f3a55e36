@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useStateContext } from 'src/hooks/useStateContext';
-import type { Player } from 'src/context/StateContext';
+import { useStateContext } from '@/hooks/useStateContext';
+import type { Player } from '@/context/StateContext';
 
 export default function useStartingLineup() {
   const { selectedSquad } = useStateContext();
