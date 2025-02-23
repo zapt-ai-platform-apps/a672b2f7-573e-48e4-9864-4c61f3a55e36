@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import useStartingLineup from './useStartingLineup';
 import PlayerCard from './PlayerCard';
 
@@ -6,7 +7,6 @@ export default function StartingLineup(): JSX.Element {
   const {
     startingPlayers,
     toggleStartingPlayer,
-    handleContinue,
     goBack,
     setGoalkeeperForPlayer,
     isGKModalOpen,
@@ -14,6 +14,16 @@ export default function StartingLineup(): JSX.Element {
     closeGKModal,
     currentGoalkeeper
   } = useStartingLineup();
+  
+  const navigate = useNavigate();
+
+  const handleStartGame = () => {
+    if (!currentGoalkeeper) {
+      alert("Please select a goalkeeper before starting the game.");
+      return;
+    }
+    navigate('/game-management');
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -21,7 +31,6 @@ export default function StartingLineup(): JSX.Element {
         <h1 className="text-4xl font-bold mb-2 text-green-600">Select Starting Lineup</h1>
         <p className="text-sm text-gray-600 mb-6">Tap on a player to toggle selection.</p>
         
-        {/* Goalkeeper Section */}
         <div className="mb-6 p-4 border rounded-lg shadow-sm">
           <h2 className="text-xl font-semibold mb-2">Goalkeeper Selection</h2>
           <p className="text-sm text-gray-600">
@@ -51,11 +60,11 @@ export default function StartingLineup(): JSX.Element {
         </div>
         <div className="flex justify-end">
           <button
-            onClick={handleContinue}
+            onClick={handleStartGame}
             disabled={startingPlayers.length === 0}
             className="px-8 py-4 bg-green-500 text-white text-xl rounded-full hover:bg-green-600 transition-colors shadow-lg cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            Continue to Configuration →
+            Start Game
           </button>
         </div>
       </div>
@@ -68,7 +77,6 @@ export default function StartingLineup(): JSX.Element {
         </button>
       </div>
 
-      {/* Goalkeeper Selection Modal */}
       {isGKModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="absolute inset-0 bg-black opacity-50" onClick={closeGKModal}></div>

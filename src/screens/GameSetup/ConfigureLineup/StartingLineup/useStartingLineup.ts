@@ -1,54 +1,50 @@
-import { useState, useEffect } from 'react';
-import { useStateContext } from '../../../../state';
-import { Player } from '../../../../types/GameTypes';
+import { useState } from 'react';
+
+export interface Player {
+  id: number;
+  name: string;
+  selected?: boolean;
+}
 
 export default function useStartingLineup() {
-  const { selectedSquad } = useStateContext();
-  const [lineupPlayers, setLineupPlayers] = useState<Player[]>(selectedSquad ? [...selectedSquad.players] : []);
+  const [startingPlayers, setStartingPlayers] = useState<Player[]>([
+    { id: 1, name: 'Player One' },
+    { id: 2, name: 'Player Two' },
+    { id: 3, name: 'Player Three' }
+  ]);
   const [currentGoalkeeper, setCurrentGoalkeeper] = useState<Player | null>(null);
-  const [isGKModalOpen, setGKModalOpen] = useState(false);
-
-  useEffect(() => {
-    if (selectedSquad) {
-      // Initialize local lineup state when selected squad changes
-      setLineupPlayers([...selectedSquad.players]);
-      setCurrentGoalkeeper(null);
-    }
-  }, [selectedSquad]);
+  const [isGKModalOpen, setIsGKModalOpen] = useState(false);
 
   const toggleStartingPlayer = (player: Player) => {
-    setLineupPlayers(prevPlayers =>
+    setStartingPlayers(prevPlayers =>
       prevPlayers.map(p =>
-        p.id === player.id ? { ...p, isStartingPlayer: !p.isStartingPlayer } : p
+        p.id === player.id ? { ...p, selected: !p.selected } : p
       )
     );
   };
 
-  const handleContinue = () => {
-    console.log('Continue to configuration with players:', lineupPlayers);
+  const setGoalkeeperForPlayer = (id: number) => {
+    const player = startingPlayers.find(p => p.id === id);
+    if (player) {
+      setCurrentGoalkeeper(player);
+    }
   };
 
   const goBack = () => {
-    console.log('Going back');
-  };
-
-  const setGoalkeeperForPlayer = (playerId: number) => {
-    const player = lineupPlayers.find(p => p.id === playerId) || null;
-    setCurrentGoalkeeper(player);
+    window.history.back();
   };
 
   const openGKModal = () => {
-    setGKModalOpen(true);
+    setIsGKModalOpen(true);
   };
 
   const closeGKModal = () => {
-    setGKModalOpen(false);
+    setIsGKModalOpen(false);
   };
 
   return {
-    startingPlayers: lineupPlayers,
+    startingPlayers,
     toggleStartingPlayer,
-    handleContinue,
     goBack,
     setGoalkeeperForPlayer,
     isGKModalOpen,
