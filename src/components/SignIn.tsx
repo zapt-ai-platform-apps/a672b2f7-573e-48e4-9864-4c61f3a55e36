@@ -17,7 +17,13 @@ export default function SignIn() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-600 to-purple-700 px-4 py-8">
-      <div className="w-full max-w-md p-6 sm:p-8 rounded-2xl bg-white/80 backdrop-blur-md shadow-lg">
+      <div className="relative w-full max-w-md p-6 sm:p-8 rounded-2xl bg-white/80 backdrop-blur-md shadow-lg">
+        <button 
+          onClick={() => navigate('/')} 
+          className="absolute top-4 left-4 px-4 py-2 bg-white/80 hover:bg-white rounded-lg text-gray-800 font-medium transition-colors cursor-pointer shadow-sm"
+        >
+          ← Back
+        </button>
         <h1 className="text-3xl font-bold text-center mb-2 text-gray-800">Football Subs</h1>
         <h2 className="text-xl font-semibold text-center mb-4 text-gray-700">Sign in with ZAPT</h2>
         <a

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../../features/GameManagement/components/Header';
 import PitchVisualization from '../../features/GameManagement/components/PitchVisualization';
 import SubstitutionPanel from '../../features/GameManagement/components/SubstitutionPanel';
@@ -26,8 +27,21 @@ export default function GameManagementScreenView({
   setShowGoalModal,
   handlePlayerClick
 }: GameManagementScreenViewProps): JSX.Element {
+  const navigate = useNavigate();
+  
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
+      {!isRunning && (
+        <div className="flex justify-between items-center mb-4">
+          <button
+            onClick={() => navigate(-1)}
+            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-medium transition-colors cursor-pointer shadow-sm"
+          >
+            ← Back
+          </button>
+        </div>
+      )}
+      
       <Header
         isRunning={isRunning}
         toggleTimer={toggleTimer}
