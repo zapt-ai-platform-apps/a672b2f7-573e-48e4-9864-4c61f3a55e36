@@ -53,7 +53,7 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
     goals,
     setGoals,
     includeGKPlaytime,
-    resetGame,
+    resetGame: contextResetGame,
     selectedSquad,
     goalkeeper,
     setGoalkeeper
@@ -65,6 +65,13 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
   const [showGoalModal, setShowGoalModal] = useState<boolean>(false);
   const [showAddPlayerModal, setShowAddPlayerModal] = useState<boolean>(false);
   const [timeElapsed, setTimeElapsed] = useState<number>(0);
+
+  useEffect(() => {
+    setGameIntervals([]);
+    setTimeElapsed(0);
+    setIsRunning(false);
+    console.log('Timer state reset on component mount');
+  }, []);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -146,6 +153,14 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
 
   const lists = updatePlayerListsFunc();
 
+  const resetGameFunc = () => {
+    contextResetGame();
+    setGameIntervals([]);
+    setTimeElapsed(0);
+    setIsRunning(false);
+    console.log('Game reset: Timer state cleared');
+  };
+
   return {
     playerData,
     setPlayerData,
@@ -157,9 +172,7 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
     toggleTimer: toggleTimerFunc,
     handleEndGame: () => setShowEndGameConfirm(true),
     confirmEndGame: () => {
-      resetGame();
-      setGameIntervals([]);
-      setTimeElapsed(0);
+      resetGameFunc();
       setShowEndGameConfirm(false);
     },
     cancelEndGame: () => setShowEndGameConfirm(false),
@@ -173,7 +186,7 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
     offFieldPlayers: lists.offField,
     showAddPlayerModal,
     setShowAddPlayerModal,
-    resetGame,
+    resetGame: resetGameFunc,
     timeElapsed
   };
 }
