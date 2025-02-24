@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStateContext } from '../../../../state';
-import { useStartingLineup } from './useStartingLineup';
+import useStartingLineup from './useStartingLineup';
 import PlayerCard from './PlayerCard';
 
 export default function StartingLineup(): JSX.Element {
-  const { startingPlayers, setStartingPlayer } = useStartingLineup();
+  const { startingPlayers, toggleStartingPlayer } = useStartingLineup();
   const navigate = useNavigate();
   const [error, setError] = useState<string>('');
 
   const handleContinue = (): void => {
-    const selectedStartingPlayers = startingPlayers.filter(player => player.isStartingPlayer);
+    const selectedStartingPlayers = startingPlayers.filter(player => player.selected);
     
     if (selectedStartingPlayers.length < 1) {
       setError('Please select at least one starting player');
@@ -37,8 +37,8 @@ export default function StartingLineup(): JSX.Element {
             <PlayerCard
               key={player.id}
               player={player}
-              isSelected={player.isStartingPlayer}
-              onToggle={() => setStartingPlayer(String(player.id), !player.isStartingPlayer)}
+              isSelected={player.selected}
+              onToggle={() => toggleStartingPlayer(player.id)}
             />
           ))}
         </div>
