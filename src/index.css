@@ -2,17 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Fade In Animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Custom animations */
+@keyframes wave {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(20px); }
 }
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.animate-wave {
+  animation: wave 15s ease-in-out infinite;
+}
+
+.animate-wave-slow {
+  animation: wave 20s ease-in-out infinite;
+}
+
 .animate-fadeIn {
-  animation: fadeIn 1.5s ease-in-out forwards;
+  animation: fadeIn 1s ease-in forwards;
+  opacity: 0;
 }
