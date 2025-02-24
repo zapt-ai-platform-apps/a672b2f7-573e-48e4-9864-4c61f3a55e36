@@ -1,64 +1,36 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useStateContext } from '../../../state';
-
-interface Squad {
-  name: string;
-  players: string[];
-  [key: string]: unknown;
-}
+import { useState } from "react";
 
 function useEditSquadForm() {
-  const { selectedSquad } = useStateContext<{ selectedSquad: Squad | null }>();
-  const [squadName, setSquadName] = useState<string>(selectedSquad?.name || '');
-  const [squadPlayersList, setSquadPlayersList] = useState<string[]>(selectedSquad?.players || []);
-  const [newPlayerName, setNewPlayerName] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
-  const navigate = useNavigate();
+  const [squadName, setSquadName] = useState("");
+  const [squadPlayersList, setSquadPlayersList] = useState<string[]>([]);
+  const [newPlayerName, setNewPlayerName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (selectedSquad) {
-      setSquadName(selectedSquad.name);
-      setSquadPlayersList(selectedSquad.players || []);
-    }
-  }, [selectedSquad]);
-
-  const handleAddPlayer = (): void => {
-    if (newPlayerName.trim() !== '') {
-      setSquadPlayersList([...squadPlayersList, newPlayerName.trim()]);
-      setNewPlayerName('');
-    }
+  const handleAddPlayer = () => {
+    if (newPlayerName.trim() === "") return;
+    setSquadPlayersList([...squadPlayersList, newPlayerName.trim()]);
+    setNewPlayerName("");
   };
 
-  const handleDeletePlayer = (index: number): void => {
-    setSquadPlayersList(squadPlayersList.filter((_, idx) => idx !== index));
+  const handleDeletePlayer = (playerName: string) => {
+    setSquadPlayersList(squadPlayersList.filter((player) => player !== playerName));
   };
 
-  const handleUpdateSquad = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleUpdateSquad = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    if (!squadName.trim()) {
-      setError('Squad name cannot be empty.');
-      return;
-    }
-    if (squadPlayersList.length === 0) {
-      setError('Squad must have at least one player.');
-      return;
-    }
     setLoading(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      navigate('/squads');
-    } catch (err) {
-      setError('Failed to update squad.');
-    } finally {
-      setLoading(false);
-    }
+    setError(null);
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        setLoading(false);
+        resolve();
+      }, 1000);
+    });
   };
 
-  const handleBack = (): void => {
-    navigate(-1);
+  const handleBack = () => {
+    // Navigation or cleanup logic can be added here if needed.
   };
 
   return {
@@ -72,7 +44,7 @@ function useEditSquadForm() {
     handleAddPlayer,
     handleDeletePlayer,
     handleUpdateSquad,
-    handleBack
+    handleBack,
   };
 }
 
