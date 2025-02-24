@@ -1,35 +1,46 @@
 import React from 'react';
-import { SquadCardProps } from '../../types';
+import type { Squad } from '../../../components/StateProvider';
 
-export default function SquadCard({ squad, index, onSelectSquad, handleEditSquad }: SquadCardProps): JSX.Element {
+interface SquadCardProps {
+  squad: Squad;
+  isSelected: boolean;
+  onSelect: (squad: Squad) => void;
+  onEdit: (squad: Squad) => void;
+}
+
+export default function SquadCard({ squad, isSelected, onSelect, onEdit }: SquadCardProps): JSX.Element {
+  const playerCount = squad.players?.length || 0;
+
   return (
     <div
-      key={squad.id || index}
-      className="bg-gray-50 dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-200 dark:border-gray-700"
+      className={`p-4 rounded-xl shadow-lg transition-all duration-200 cursor-pointer ${
+        isSelected 
+          ? 'bg-gradient-to-r from-blue-600/80 to-indigo-700/80 text-white transform scale-105' 
+          : 'bg-white/10 text-white/90 backdrop-blur-sm hover:bg-white/20'
+      }`}
+      onClick={() => onSelect(squad)}
     >
-      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">{squad.name}</h3>
-        {squad.players && (
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-            {squad.players.length} player{squad.players.length !== 1 ? 's' : ''}
-          </p>
-        )}
-      </div>
-      <div className="p-4 flex justify-between items-center">
-        <button
-          type="button"
-          onClick={() => onSelectSquad(squad)}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition-colors duration-200 cursor-pointer flex items-center"
-        >
-          <span>Select</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => handleEditSquad(squad)}
-          className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-sm transition-colors duration-200 cursor-pointer flex items-center"
-        >
-          <span>Edit</span>
-        </button>
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-medium">{squad.name}</h3>
+          <p className="text-sm opacity-80">{playerCount} players</p>
+        </div>
+        <div className="flex space-x-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(squad);
+            }}
+            className="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors cursor-pointer"
+          >
+            Edit
+          </button>
+          <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+            isSelected ? 'bg-white text-blue-700' : 'border-2 border-white/50'
+          }`}>
+            {isSelected && <span>✓</span>}
+          </div>
+        </div>
       </div>
     </div>
   );

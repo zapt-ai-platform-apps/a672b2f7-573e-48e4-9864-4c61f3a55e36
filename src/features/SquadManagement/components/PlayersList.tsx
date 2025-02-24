@@ -1,31 +1,32 @@
-import React from "react";
+import React from 'react';
+import type { Player } from './PlayersManager';
 
 interface PlayersListProps {
-  squadPlayersList: string[];
-  handleDeletePlayer: (playerName: string) => void;
+  players: Player[];
+  onRemove: (id: string) => void;
 }
 
-function PlayersList({ squadPlayersList, handleDeletePlayer }: PlayersListProps) {
+export default function PlayersList({ players, onRemove }: PlayersListProps): JSX.Element {
+  if (players.length === 0) {
+    return <p className="text-white/70 italic">No players added yet.</p>;
+  }
+
   return (
-    <div className="flex flex-wrap gap-2">
-      {squadPlayersList.map((player, index) => (
-        <div 
-          key={index} 
-          className="flex items-center bg-gray-200 dark:bg-gray-600 rounded-full px-3 py-1 text-gray-800 dark:text-gray-200 transition-colors duration-200"
+    <ul className="space-y-2">
+      {players.map((player) => (
+        <li
+          key={player.id}
+          className="flex justify-between items-center p-3 bg-white/20 rounded-lg text-white"
         >
-          <span className="mr-1">{player}</span>
+          <span>{player.name}</span>
           <button
-            type="button"
-            onClick={() => handleDeletePlayer(player)}
-            className="ml-1 text-gray-500 hover:text-red-600 font-bold leading-none text-lg focus:outline-none transition-colors duration-200 cursor-pointer"
-            aria-label={`Remove ${player}`}
+            onClick={() => onRemove(player.id)}
+            className="text-red-300 hover:text-red-500 transition-colors cursor-pointer"
           >
-            ×
+            Remove
           </button>
-        </div>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
-
-export default PlayersList;

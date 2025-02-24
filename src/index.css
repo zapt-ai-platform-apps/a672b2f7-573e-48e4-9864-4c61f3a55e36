@@ -2,26 +2,81 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom animations */
 @keyframes wave {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(20px); }
+  0% {
+    transform: translateX(0) translateZ(0) scaleY(1);
+  }
+  50% {
+    transform: translateX(-25%) translateZ(0) scaleY(0.8);
+  }
+  100% {
+    transform: translateX(-50%) translateZ(0) scaleY(1);
+  }
 }
 
-@keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+@keyframes wave-slow {
+  0% {
+    transform: translateX(0) translateZ(0) scaleY(1);
+  }
+  50% {
+    transform: translateX(-15%) translateZ(0) scaleY(0.9);
+  }
+  100% {
+    transform: translateX(-30%) translateZ(0) scaleY(1);
+  }
 }
 
 .animate-wave {
-  animation: wave 15s ease-in-out infinite;
+  animation: wave 15s linear infinite;
 }
 
 .animate-wave-slow {
-  animation: wave 20s ease-in-out infinite;
+  animation: wave-slow 20s linear infinite;
 }
 
-.animate-fadeIn {
-  animation: fadeIn 1s ease-in forwards;
-  opacity: 0;
+/* Apply background to all body elements */
+body {
+  @apply bg-gradient-to-br from-purple-900 via-blue-800 to-indigo-900;
+  min-height: 100vh;
+}
+
+/* Input styles */
+input {
+  @apply box-border;
+}
+
+/* Button styles */
+button {
+  @apply cursor-pointer;
+}
+
+/* Dark mode adjustments - we still want light cards on dark backgrounds */
+.dark .bg-white {
+  @apply bg-white/10 backdrop-blur-sm text-white;
+}
+
+/* Modal styling */
+.modal-overlay {
+  @apply fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4;
+}
+
+.modal-content {
+  @apply bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-auto p-6;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-white/10;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-white/30 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-white/50;
 }

@@ -1,19 +1,29 @@
 import React from 'react';
 
 interface SquadNameInputProps {
-  squadName: string;
-  setSquadName: (name: string) => void;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  className?: string;
 }
 
-export default function SquadNameInput({ squadName, setSquadName }: SquadNameInputProps): JSX.Element {
+export default function SquadNameInput({
+  value,
+  onChange,
+  className = ''
+}: SquadNameInputProps): JSX.Element {
   return (
-    <div className="mb-4">
-      <label className="block text-sm font-medium mb-1">Squad Name</label>
+    <div>
+      <label htmlFor="squadName" className="block text-lg font-medium mb-2 text-white">
+        Squad Name
+      </label>
       <input
         type="text"
-        value={squadName}
-        onChange={(e) => setSquadName(e.target.value)}
-        className="w-full p-2 border rounded"
+        id="squadName"
+        value={value}
+        onChange={onChange}
+        placeholder="Enter squad name"
+        className={`w-full p-3 rounded-lg box-border transition-colors ${className}`}
+        required
       />
     </div>
   );

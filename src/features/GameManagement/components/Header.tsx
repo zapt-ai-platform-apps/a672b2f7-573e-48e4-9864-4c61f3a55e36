@@ -3,50 +3,63 @@ import React from 'react';
 interface HeaderProps {
   isRunning: boolean;
   toggleTimer: () => void;
-  getTimeElapsed: () => number;
+  getTimeElapsed: () => string;
   handleEndGame: () => void;
   ourScore: number;
   opponentScore: number;
 }
 
-function Header({ isRunning, toggleTimer, getTimeElapsed, handleEndGame, ourScore, opponentScore }: HeaderProps) {
-  const formatTime = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
-    const secs = (seconds % 60).toString().padStart(2, '0');
-    return `${mins}:${secs}`;
-  };
-
+export default function Header({
+  isRunning,
+  toggleTimer,
+  getTimeElapsed,
+  handleEndGame,
+  ourScore,
+  opponentScore
+}: HeaderProps): JSX.Element {
   return (
-    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-            Time: {formatTime(getTimeElapsed())}
-          </div>
-          <div className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-            Score: {ourScore} - {opponentScore}
+    <div className="mb-6 p-4 bg-white/10 backdrop-blur-sm rounded-xl shadow-lg">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="flex-1">
+          <h1 className="text-2xl font-bold text-center md:text-left bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
+            Game Management
+          </h1>
+        </div>
+        
+        <div className="flex-1 flex justify-center">
+          <div className="flex items-center space-x-4 bg-white/20 rounded-lg px-4 py-2">
+            <div className="text-white font-bold text-xl md:text-2xl">{ourScore}</div>
+            <div className="text-white opacity-80 font-medium">:</div>
+            <div className="text-white font-bold text-xl md:text-2xl">{opponentScore}</div>
           </div>
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={toggleTimer}
-            className={`px-6 py-2 rounded-lg font-medium transition-colors
-              ${isRunning 
-                ? 'bg-yellow-500 hover:bg-yellow-600 text-white' 
-                : 'bg-green-500 hover:bg-green-600 text-white'}`}
-          >
-            {isRunning ? 'Pause' : 'Start'}
-          </button>
-          <button
-            onClick={handleEndGame}
-            className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
-          >
-            End Game
-          </button>
+        
+        <div className="flex-1 flex justify-center md:justify-end space-x-4">
+          <div className="flex items-center gap-2">
+            <div className="bg-white/20 text-white rounded-lg px-3 py-1">
+              {getTimeElapsed()}
+            </div>
+            <button
+              onClick={toggleTimer}
+              className={`px-3 py-1 rounded-lg text-white font-medium cursor-pointer transition-colors ${
+                isRunning
+                  ? 'bg-amber-500 hover:bg-amber-600'
+                  : 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'
+              }`}
+            >
+              {isRunning ? 'Pause' : 'Play'}
+            </button>
+            {!isRunning && (
+              <button
+                onClick={handleEndGame}
+                className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors cursor-pointer"
+              >
+                End Game
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
-export default Header;

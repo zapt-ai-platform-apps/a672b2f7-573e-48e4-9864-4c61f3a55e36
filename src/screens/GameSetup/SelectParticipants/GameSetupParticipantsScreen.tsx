@@ -3,12 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import useMatchSquad from '../../../features/GameSetup/hooks/useMatchSquad';
 import { useStateContext } from '../../../state';
 import ParticipantItem from './ParticipantItem';
-import type { Player } from '../../../context/StateContext';
-import type { Squad } from '../../../components/StateProvider';
-
-interface ExtendedPlayer extends Player {
-  isInMatchSquad?: boolean;
-}
+import { ExtendedPlayer } from './types';
+import useGameSetupParticipantsHandlers from './useGameSetupParticipantsHandlers';
 
 export default function GameSetupParticipantsScreen(): JSX.Element {
   const { matchSquadPlayers, toggleMatchPlayer } = useMatchSquad();
@@ -17,47 +13,31 @@ export default function GameSetupParticipantsScreen(): JSX.Element {
   const [errorMessage, setErrorMessage] = useState<string>('');
   
   const selectedMatchPlayers = matchSquadPlayers.filter(
-    (player: Player) => (player as ExtendedPlayer).isInMatchSquad
+    (player) => (player as ExtendedPlayer).isInMatchSquad
   ) as ExtendedPlayer[];
-
-  const handleNext = (): void => {
-    if (selectedMatchPlayers.length === 0) {
-      setErrorMessage('Please select at least one player for the match.');
-      return;
-    }
-    
-    const playersWithIds = selectedMatchPlayers.map((player: ExtendedPlayer, index: number) => ({
-      id: player.id ? player.id : index + 1,
-      name: typeof player.name === 'object'
-        ? ((player.name as { name: string }).name || JSON.stringify(player.name))
-        : player.name,
-      isStartingPlayer: true
-    }));
-
-    setSelectedSquad((prev: Squad | null) => ({
-      id: prev?.id ?? '',
-      name: prev?.name ?? '',
-      players: playersWithIds
-    }));
-    
-    navigate('/setup/starting-lineup');
-  };
-
-  const handleBack = (): void => {
-    navigate('/squads');
-  };
+  
+  const { handleNext, handleBack } = useGameSetupParticipantsHandlers(
+    selectedMatchPlayers,
+    setSelectedSquad,
+    navigate,
+    setErrorMessage
+  );
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <div className="p-8 flex-grow">
-        <h1 className="text-4xl font-bold mb-6 text-green-600">Select Match Participants</h1>
+    <div className="min-h-screen flex flex-col p-8">
+      <div className="flex-grow">
+        <h1 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
+          Select Match Participants
+        </h1>
         {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          {matchSquadPlayers.map((player: Player) => (
+          {matchSquadPlayers.map((player) => (
             <ParticipantItem
               key={player.id}
               player={player as ExtendedPlayer}
-              isSelected={selectedMatchPlayers.some((p: ExtendedPlayer) => p.id === player.id)}
+              isSelected={selectedMatchPlayers.some(
+                (p: ExtendedPlayer) => p.id === player.id
+              )}
               onToggle={() => toggleMatchPlayer(String(player.id))}
             />
           ))}
@@ -65,18 +45,18 @@ export default function GameSetupParticipantsScreen(): JSX.Element {
         <div className="flex justify-end">
           <button
             onClick={handleNext}
-            className="px-8 py-4 bg-green-500 text-white text-xl rounded-full hover:bg-green-600 transition-colors shadow-lg cursor-pointer"
+            className="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-xl rounded-xl hover:scale-105 transition-all duration-300 shadow-lg cursor-pointer"
           >
             Continue to Setup →
           </button>
         </div>
       </div>
-      <div className="p-4">
+      <div className="mt-8">
         <button
           onClick={handleBack}
-          className="px-4 py-2 bg-gray-300 rounded cursor-pointer"
+          className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg shadow-md transition-colors cursor-pointer backdrop-blur-sm"
         >
-          Back
+          ← Back
         </button>
       </div>
     </div>

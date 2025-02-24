@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import * as Sentry from '@sentry/browser';
-import createGameSummary from '../utils/createGameSummary';
+import { createGameSummary } from '../utils/createGameSummary';
 
 interface ShareSummaryButtonProps {
   ourScore: number;
@@ -12,27 +11,44 @@ interface ShareSummaryButtonProps {
   formatTime: (time: number) => string;
 }
 
-function ShareSummaryButton({ ourScore, opponentScore, playerData, goals, includeGKPlaytime, getTotalPlayTime, formatTime }: ShareSummaryButtonProps): JSX.Element {
-  const [isSharing, setIsSharing] = useState(false);
+export default function ShareSummaryButton({
+  ourScore,
+  opponentScore,
+  playerData,
+  goals,
+  includeGKPlaytime,
+  getTotalPlayTime,
+  formatTime
+}: ShareSummaryButtonProps): JSX.Element {
+  const [isSharing, setIsSharing] = useState<boolean>(false);
+  const [isShared, setIsShared] = useState<boolean>(false);
 
-  const handleShareSummary = async () => {
-    setIsSharing(true);
+  const handleShare = async (): Promise<void> => {
     try {
-      const summaryText = createGameSummary(ourScore, opponentScore, playerData, goals, includeGKPlaytime, getTotalPlayTime, formatTime);
+      setIsSharing(true);
+
+      const summary = createGameSummary({
+        ourScore,
+        opponentScore,
+        playerData,
+        goals,
+        getTotalPlayTime,
+        formatTime,
+        includeGKPlaytime
+      });
+
       if (navigator.share) {
         await navigator.share({
-          title: 'Match Summary',
-          text: summaryText,
+          title: 'Football Subs Game Summary',
+          text: summary
         });
       } else {
-        alert('Sharing not supported on this browser.');
+        await navigator.clipboard.writeText(summary);
+        setIsShared(true);
+        setTimeout(() => setIsShared(false), 3000);
       }
-    } catch (error: any) {
-      if (error.name !== 'AbortError') {
-        console.error('Error sharing:', error);
-        Sentry.captureException(error);
-        alert('An error occurred while sharing. Please try again.');
-      }
+    } catch (error) {
+      console.error('Error sharing:', error);
     } finally {
       setIsSharing(false);
     }
@@ -40,13 +56,11 @@ function ShareSummaryButton({ ourScore, opponentScore, playerData, goals, includ
 
   return (
     <button
-      className={`px-8 py-4 bg-blue-500 text-white text-lg rounded-lg ${isSharing ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-blue-600 hover:scale-105'} transition duration-300 ease-in-out`}
-      onClick={handleShareSummary}
+      onClick={handleShare}
       disabled={isSharing}
+      className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white rounded-xl shadow-lg cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-400 disabled:opacity-50 disabled:cursor-not-allowed"
     >
-      {isSharing ? 'Sharing...' : 'Share Summary'}
+      {isSharing ? 'Sharing...' : isShared ? 'Copied to Clipboard!' : 'Share Summary'}
     </button>
   );
 }
-
-export default ShareSummaryButton;

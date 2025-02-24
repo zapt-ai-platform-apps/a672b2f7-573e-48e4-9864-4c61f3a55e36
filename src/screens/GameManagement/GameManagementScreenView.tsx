@@ -1,11 +1,11 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import Header from '../../features/GameManagement/components/Header';
 import PitchVisualization from '../../features/GameManagement/components/PitchVisualization';
 import SubstitutionPanel from '../../features/GameManagement/components/SubstitutionPanel';
 import EndGameConfirmationModal from '../../features/GameManagement/modals/EndGameConfirmationModal';
 import GoalScoredModal from '../../features/GameManagement/modals/GoalScoredModal';
 import PlayerList from '../../features/GameManagement/components/PlayerList';
+import BackButton from './BackButton';
 import type { GameManagementScreenViewProps } from './GameManagementScreenView.types';
 
 export default function GameManagementScreenView({
@@ -27,20 +27,9 @@ export default function GameManagementScreenView({
   setShowGoalModal,
   handlePlayerClick
 }: GameManagementScreenViewProps): JSX.Element {
-  const navigate = useNavigate();
-  
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
-      {!isRunning && (
-        <div className="flex justify-between items-center mb-4">
-          <button
-            onClick={() => navigate(-1)}
-            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-medium transition-colors cursor-pointer shadow-sm"
-          >
-            ← Back
-          </button>
-        </div>
-      )}
+    <div className="min-h-screen flex flex-col p-4">
+      {!isRunning && <BackButton />}
       
       <Header
         isRunning={isRunning}
@@ -51,7 +40,7 @@ export default function GameManagementScreenView({
         opponentScore={opponentScore}
       />
 
-      <div className="max-w-6xl mx-auto space-y-6">
+      <div className="max-w-6xl mx-auto space-y-6 w-full">
         <PitchVisualization players={onFieldPlayers} />
 
         <SubstitutionPanel
@@ -79,10 +68,10 @@ export default function GameManagementScreenView({
           />
         </div>
 
-        <div className="flex justify-center">
+        <div className="flex justify-center mb-8">
           <button
             onClick={() => setShowGoalModal(true)}
-            className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors cursor-pointer"
+            className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-xl font-medium transition-colors cursor-pointer shadow-lg"
           >
             Record Goal
           </button>

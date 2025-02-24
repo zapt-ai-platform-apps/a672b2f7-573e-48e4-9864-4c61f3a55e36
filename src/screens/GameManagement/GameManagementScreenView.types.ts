@@ -1,5 +1,5 @@
 export interface GameManagementScreenViewProps {
-  playerData: any;
+  playerData: any[];
   isRunning: boolean;
   ourScore: number;
   opponentScore: number;
@@ -12,8 +12,8 @@ export interface GameManagementScreenViewProps {
   recordGoal: (playerId: string) => void;
   onFieldPlayers: any[];
   offFieldPlayers: any[];
-  getTotalPlayTime: (playerId: string) => string;
+  getTotalPlayTime: (player: any) => string;
   showGoalModal: boolean;
-  setShowGoalModal: (show: boolean) => void;
+  setShowGoalModal: (value: boolean) => void;
   handlePlayerClick: (playerId: string) => void;
 }

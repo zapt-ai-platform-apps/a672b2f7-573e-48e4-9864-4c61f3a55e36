@@ -1,12 +1,13 @@
 import React from 'react';
 import SquadList from './SquadList';
+import type { Squad } from '../../../components/StateProvider';
 
 interface SquadListSectionProps {
-  squads: any[];
+  squads: Squad[] | null;
   loading: boolean;
-  handleSelectSquad: (squad: any) => void;
-  handleEditSquad: (squad: any) => void;
-  selectedSquad: any;
+  handleSelectSquad: (squad: Squad) => void;
+  handleEditSquad: (squad: Squad) => void;
+  selectedSquad: Squad | null;
   handleProceedToSetup: () => void;
   onAddNewSquad: () => void;
 }
@@ -18,38 +19,53 @@ export default function SquadListSection({
   handleEditSquad,
   selectedSquad,
   handleProceedToSetup,
-  onAddNewSquad,
+  onAddNewSquad
 }: SquadListSectionProps): JSX.Element {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
-      <div className="mb-6 md:hidden">
-        <button
-          onClick={onAddNewSquad}
-          className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center"
-        >
-          <span className="mr-2">+</span> Add New Squad
-        </button>
+    <div className="space-y-6">
+      <div className="mb-6">
+        <h3 className="text-xl font-semibold mb-2 text-white">Your Squads</h3>
+        <p className="text-white/80">Select a squad to start a game or create a new one.</p>
       </div>
-      
-      <SquadList
-        squads={squads}
-        loading={loading}
-        handleSelectSquad={handleSelectSquad}
-        handleEditSquad={handleEditSquad}
-      />
-      
-      {selectedSquad && (
-        <div className="mt-8">
-          <button
-            className="w-full px-6 py-3 bg-green-600 hover:bg-green-700 text-white text-lg font-medium rounded-lg shadow-md transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-            onClick={handleProceedToSetup}
-          >
-            <span>Proceed to Game Setup</span>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-            </svg>
-          </button>
+
+      {loading ? (
+        <div className="flex justify-center py-10">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
         </div>
+      ) : (
+        <>
+          {squads && squads.length > 0 ? (
+            <>
+              <SquadList
+                squads={squads}
+                onSelect={handleSelectSquad}
+                onEdit={handleEditSquad}
+                selectedSquad={selectedSquad}
+              />
+              
+              {selectedSquad && (
+                <div className="pt-6 border-t border-white/20 mt-6">
+                  <button
+                    onClick={handleProceedToSetup}
+                    className="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl font-medium transition-colors shadow-lg cursor-pointer"
+                  >
+                    Continue with Selected Squad
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="text-center py-10 bg-white/5 rounded-xl">
+              <p className="text-white/80 mb-4">You don't have any squads yet.</p>
+              <button
+                onClick={onAddNewSquad}
+                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-xl font-medium transition-colors shadow-md cursor-pointer"
+              >
+                Create Your First Squad
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
