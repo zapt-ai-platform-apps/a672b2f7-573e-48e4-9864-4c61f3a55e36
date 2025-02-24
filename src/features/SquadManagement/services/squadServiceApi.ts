@@ -44,3 +44,10 @@ export const updateSquad = async (id: string, squad: { name: string; players: an
   
   return response.json();
 };
+
+// Add the aggregated export that combines all functions
+export const squadServiceApi = {
+  fetchSquads,
+  createSquad,
+  updateSquad
+};
