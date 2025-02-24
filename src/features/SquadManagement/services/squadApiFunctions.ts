@@ -1,31 +1,15 @@
-import { supabase } from '../../../supabaseClient';
 import * as Sentry from '@sentry/browser';
+import { getAuthHeaders, handleResponse } from './apiClient';
 
 export const fetchSquads = async (): Promise<any[]> => {
   try {
-    const { data: { session } } = await supabase.auth.getSession();
-
-    if (!session) {
-      console.error("No active session found");
-      throw new Error("No active session found");
-    }
-
+    const headers = await getAuthHeaders();
     console.log("Fetching squads with auth token");
     const response = await fetch("/api/squads", {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${session.access_token}`
-      }
+      headers: headers
     });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`Network response was not ok: ${response.status}`, errorText);
-      throw new Error(`Network response was not ok: ${response.status}`);
-    }
-
-    const data = await response.json();
+    const data = await handleResponse(response);
     console.log("Successfully fetched squads:", data);
     return data;
   } catch (error) {
@@ -37,26 +21,13 @@ export const fetchSquads = async (): Promise<any[]> => {
 
 export const createSquad = async (squad: { name: string; players: any[] }): Promise<any> => {
   try {
-    const { data: { session } } = await supabase.auth.getSession();
-
-    if (!session) {
-      throw new Error("No active session found");
-    }
-
+    const headers = await getAuthHeaders();
     const response = await fetch("/api/squads", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${session.access_token}`
-      },
+      headers: headers,
       body: JSON.stringify(squad)
     });
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-
-    return response.json();
+    return await handleResponse(response);
   } catch (error) {
     console.error("Error creating squad:", error);
     Sentry.captureException(error);
@@ -66,26 +37,16 @@ export const createSquad = async (squad: { name: string; players: any[] }): Prom
 
 export const updateSquad = async (id: string, squad: { name: string; players: any[] }): Promise<any> => {
   try {
-    const { data: { session } } = await supabase.auth.getSession();
-
-    if (!session) {
-      throw new Error("No active session found");
-    }
-
-    const response = await fetch(`/api/squads/${id}`, {
+    const headers = await getAuthHeaders();
+    const response = await fetch("/api/squads", {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${session.access_token}`
-      },
-      body: JSON.stringify(squad)
+      headers: headers,
+      body: JSON.stringify({
+        id,
+        ...squad
+      })
     });
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-
-    return response.json();
+    return await handleResponse(response);
   } catch (error) {
     console.error("Error updating squad:", error);
     Sentry.captureException(error);

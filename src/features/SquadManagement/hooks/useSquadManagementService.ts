@@ -1,39 +1,37 @@
 import { Squad } from './useSquadManagementTypes';
-
-let squads: Squad[] = [];
+import * as squadApi from '../services/squadApiFunctions';
+import * as Sentry from '@sentry/browser';
 
 export async function fetchSquads(): Promise<Squad[]> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([...squads]);
-    }, 100);
-  });
+  try {
+    const squads = await squadApi.fetchSquads();
+    console.log('Fetched squads from API:', squads);
+    return squads;
+  } catch (error) {
+    console.error('Error fetching squads from API:', error);
+    Sentry.captureException(error);
+    return [];
+  }
 }
 
 export async function createSquad(name: string, players: string[]): Promise<void> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const newSquad: Squad = {
-        id: Date.now().toString(),
-        name,
-        players
-      };
-      squads.push(newSquad);
-      resolve();
-    }, 100);
-  });
+  try {
+    await squadApi.createSquad({ name, players });
+    console.log('Squad created successfully');
+  } catch (error) {
+    console.error('Error creating squad:', error);
+    Sentry.captureException(error);
+    throw error;
+  }
 }
 
 export async function updateSquad(id: string, name: string, players: string[]): Promise<void> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      squads = squads.map((squad) => {
-        if (squad.id === id) {
-          return { ...squad, name, players };
-        }
-        return squad;
-      });
-      resolve();
-    }, 100);
-  });
+  try {
+    await squadApi.updateSquad(id, { name, players });
+    console.log('Squad updated successfully');
+  } catch (error) {
+    console.error('Error updating squad:', error);
+    Sentry.captureException(error);
+    throw error;
+  }
 }

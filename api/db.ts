@@ -4,9 +4,4 @@ import postgres from 'postgres';
 const client = postgres(process.env.COCKROACH_DB_URL as string);
 const db = drizzle(client);
 
-/**
- * Drizzle ORM database instance.
- *
- * @type {import('drizzle-orm').Drizzle}
- */
 export default db;
