@@ -21,6 +21,7 @@ export const authAppearanceConfig = {
       transition: 'all 0.3s ease',
       border: 'none',
       fontWeight: '600',
+      color: '#FFFFFF', // Added explicit text color for better readability
     },
     anchor: {
       color: '#4F46E5',
@@ -36,10 +37,12 @@ export const authAppearanceConfig = {
     },
   },
   className: {
-    button: 'cursor-pointer hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-300',
+    button: 'cursor-pointer hover:shadow-lg hover:bg-blue-700 transition-all duration-300', // Removed scaling, added hover background
     input: 'box-border focus:ring-2 focus:ring-indigo-500 transition-all duration-200',
     container: 'rounded-xl overflow-hidden',
     label: 'mb-2 font-medium',
     anchor: 'hover:text-indigo-700 font-medium',
   },
 };
+
+export default authAppearanceConfig;
