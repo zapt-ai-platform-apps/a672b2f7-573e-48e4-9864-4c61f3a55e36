@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatTime } from '../../../shared/models/timeUtils';
+import { formatTime } from '../../../models/timeUtils';
 
 interface PlayerListProps {
   players: any[];
