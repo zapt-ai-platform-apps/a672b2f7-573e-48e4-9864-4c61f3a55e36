@@ -3,6 +3,7 @@ import { Auth } from '@supabase/auth-ui-react';
 import { supabase } from '../supabaseClient';
 import { useAuth } from './AuthProvider';
 import { useNavigate } from 'react-router-dom';
+import { authAppearanceConfig } from '../config/authAppearance';
 
 export default function SignIn() {
   const { session } = useAuth();
@@ -33,25 +34,7 @@ export default function SignIn() {
           magicLink={true}
           showLinks={true}
           view="magic_link"
-          appearance={{
-            theme: 'default',
-            variables: {
-              default: {
-                colors: {
-                  brand: '#4F46E5',
-                  brandAccent: '#6366F1',
-                },
-                borderRadii: {
-                  button: '0.5rem',
-                  input: '0.5rem',
-                }
-              }
-            },
-            className: {
-              button: 'cursor-pointer',
-              input: 'box-border'
-            }
-          }}
+          appearance={authAppearanceConfig}
         />
       </div>
     </div>

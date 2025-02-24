@@ -59,12 +59,12 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
-      <footer className="p-4 text-center">
+      <footer className="fixed bottom-0 inset-x-0 p-2 text-center text-xs bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm z-10">
         <a
           href="https://www.zapt.ai"
           target="_blank"
           rel="noopener noreferrer"
-          className="cursor-pointer"
+          className="cursor-pointer text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
         >
           Made on ZAPT
         </a>

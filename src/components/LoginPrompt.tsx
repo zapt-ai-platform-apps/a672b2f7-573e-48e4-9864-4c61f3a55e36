@@ -1,7 +1,7 @@
 import React from 'react';
 import { supabase } from '../supabaseClient';
 import { Auth } from '@supabase/auth-ui-react';
-import { ThemeSupa } from '@supabase/auth-ui-shared';
+import authAppearance from '../config/authAppearance';
 
 export default function LoginPrompt(): JSX.Element {
   return (
@@ -32,17 +32,7 @@ export default function LoginPrompt(): JSX.Element {
           magicLink={true}
           showLinks={true}
           view="magic_link"
-          appearance={{
-            theme: ThemeSupa,
-            variables: {
-              default: {
-                brand: '#FF6B6B',
-                brandAccent: '#FF4757',
-                buttonBorderRadius: '12px',
-                inputBorderRadius: '12px'
-              }
-            }
-          }}
+          appearance={authAppearance}
         />
       </div>
     </div>
