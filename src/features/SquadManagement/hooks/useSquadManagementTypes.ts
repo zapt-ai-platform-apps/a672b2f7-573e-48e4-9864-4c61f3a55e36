@@ -1,5 +1,5 @@
 export interface Squad {
-  id: number;
+  id: string;
   name: string;
-  players?: string[];
+  players: string[];
 }

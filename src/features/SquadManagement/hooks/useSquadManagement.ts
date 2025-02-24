@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import * as squadService from './useSquadManagementService';
-import { useStateContext } from '../../../state';
+import { useStateContext } from '../../../hooks/useStateContext';
 import { Squad } from './useSquadManagementTypes';
 import * as Sentry from "@sentry/browser";
 
@@ -88,6 +88,7 @@ function useSquadManagement() {
 
   function handleEditSquad(squad: Squad): void {
     setEditingSquad(squad);
+    setSelectedSquad(squad);
     setSquadName(squad.name);
     setSquadPlayersList(squad.players || []);
     setNewSquadPlayer('');
