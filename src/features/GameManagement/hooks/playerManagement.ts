@@ -1,56 +1,32 @@
-import { createGoalkeeperHandlers } from "./playerGoalkeeperHandlers";
-import { createPlayerAdjustHandlers } from "./playerAdjustHandlers";
-
-interface PlayerManagementParams {
-  props: any;
-  newPlayerName: string;
-  setNewPlayerName: (name: string) => void;
-  setShowAddPlayerModal: (show: boolean) => void;
-  setShowGKModal: (show: boolean) => void;
-  setShowGKConfirmModal: (show: boolean) => void;
-  setAdjustType: (type: any) => void;
-  setShowAdjustModal: (show: boolean) => void;
-  adjustType: any;
-  selectedPlayer: any;
-  setShowConfirmModal: (show: boolean) => void;
-  setSelectedPlayer: (player: any) => void;
+export function getTotalPlayTime(player: any, includeGKPlaytime: boolean, isRunning: boolean): number {
+  if (!player || !player.playIntervals) {
+    return 0;
+  }
+  
+  let total = 0;
+  if (Array.isArray(player.playIntervals)) {
+    for (const interval of player.playIntervals) {
+      if (interval.end) {
+        total += interval.end - interval.start;
+      } else if (isRunning) {
+        total += Date.now() - interval.start;
+      }
+    }
+  }
+  return total;
 }
 
-export function createPlayerHandlers({
-  props,
-  newPlayerName,
-  setNewPlayerName,
-  setShowAddPlayerModal,
-  setShowGKModal,
-  setShowGKConfirmModal,
-  setAdjustType,
-  setShowAdjustModal,
-  adjustType,
-  selectedPlayer,
-  setShowConfirmModal,
-  setSelectedPlayer,
-}: PlayerManagementParams) {
-  const goalkeeperHandlers = createGoalkeeperHandlers(props, setShowGKModal, setShowGKConfirmModal);
-  const adjustHandlers = createPlayerAdjustHandlers({
-    props,
-    newPlayerName,
-    setNewPlayerName,
-    setShowAddPlayerModal,
-    setAdjustType,
-    setShowAdjustModal,
-    adjustType,
-    selectedPlayer,
-    setShowConfirmModal,
-    setSelectedPlayer,
+export function handlePlayerAdjustment(playerData: any[], playerId: number | string, isAdding: boolean): any[] {
+  return playerData.map(player => {
+    if (player.id === playerId) {
+      return { ...player, isOnField: isAdding };
+    }
+    return player;
   });
+}
 
-  return {
-    assignGoalkeeper: goalkeeperHandlers.assignGoalkeeper,
-    confirmGoalkeeper: goalkeeperHandlers.confirmGoalkeeper,
-    availableGoalkeepers: goalkeeperHandlers.availableGoalkeepers,
-    addNewPlayer: adjustHandlers.addNewPlayer,
-    handleIncreasePlayers: adjustHandlers.handleIncreasePlayers,
-    handleDecreasePlayers: adjustHandlers.handleDecreasePlayers,
-    confirmAdjustment: adjustHandlers.confirmAdjustment,
-  };
+export function updatePlayerLists(playerData: any[], includeGKPlaytime: boolean, isRunning: boolean): { onField: any[]; offField: any[] } {
+  const onField = playerData.filter(player => player.isOnField);
+  const offField = playerData.filter(player => !player.isOnField);
+  return { onField, offField };
 }
