@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGameSetup } from '../../../../hooks/useGameSetup';
+import { useGameSetup } from '../../../../features/GameSetup/hooks/useGameSetup';
 import GoalkeeperSelect from './GoalkeeperSelect';
 import GKPlaytimeToggle from './GKPlaytimeToggle';
 

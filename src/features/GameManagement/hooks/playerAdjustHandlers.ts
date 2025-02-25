@@ -1,4 +1,4 @@
-import { applyPlayerAdjustment } from '../../../models/playerModel';
+import { applyPlayerAdjustment } from '../../../shared/models/playerAdjustments';
 import type { Player } from '../../../types/GameTypes';
 
 export function createHandleIncreasePlayers(

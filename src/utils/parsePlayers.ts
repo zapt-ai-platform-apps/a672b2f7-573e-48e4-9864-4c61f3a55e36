@@ -14,6 +14,10 @@ export function parsePlayers(text: string): Player[] {
     .map(name => ({
       id: Date.now() + Math.random(),
       name,
-      isStartingPlayer: false
+      isStartingPlayer: false,
+      totalPlayTime: 0,
+      isOnField: false,
+      isGoalkeeper: false,
+      position: { x: 0, y: 0 }
     }));
 }

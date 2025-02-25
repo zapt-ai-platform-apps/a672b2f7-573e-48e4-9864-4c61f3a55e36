@@ -37,8 +37,8 @@ function useEndGameManager({
   const confirmEndGame = (): void => {
     if (isRunning) {
       setIsRunning(false);
-      setGameIntervals((prev) =>
-        prev.map((interval, idx) =>
+      setGameIntervals((prev: GameInterval[]) =>
+        prev.map((interval: GameInterval, idx) =>
           idx === prev.length - 1 && !interval.endTime
             ? { ...interval, endTime: Date.now() }
             : interval
