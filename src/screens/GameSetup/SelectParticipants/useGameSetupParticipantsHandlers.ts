@@ -2,12 +2,22 @@ import { SetStateAction } from 'react';
 import { NavigateFunction } from 'react-router-dom';
 import { ExtendedPlayer } from './ParticipantItem';
 
+// Define an interface for the squad state to fix implicit any error
+interface SquadState {
+  players: Array<{
+    id: string;
+    name: string;
+    isInMatchSquad: boolean;
+  }>;
+  [key: string]: any; // For other properties that might exist
+}
+
 /**
  * Custom hook for handling participant selection navigation and validation
  */
 export default function useGameSetupParticipantsHandlers(
   selectedMatchPlayers: ExtendedPlayer[],
-  setSelectedSquad: (value: SetStateAction<any>) => void,
+  setSelectedSquad: (value: SetStateAction<SquadState>) => void,
   navigate: NavigateFunction,
   setErrorMessage: (value: SetStateAction<string>) => void
 ) {
@@ -27,7 +37,7 @@ export default function useGameSetupParticipantsHandlers(
       isInMatchSquad: true
     }));
     
-    setSelectedSquad(prevState => ({
+    setSelectedSquad((prevState: SquadState) => ({
       ...prevState,
       players: selectedPlayers
     }));

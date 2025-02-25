@@ -7,7 +7,7 @@ const authAppearanceStyle = {
     padding: '10px 15px',
     height: 'auto',
     fontWeight: '500',
-    textTransform: 'none',
+    textTransform: 'none' as const, // Added type assertion to fix type error
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
   },
   anchor: {
