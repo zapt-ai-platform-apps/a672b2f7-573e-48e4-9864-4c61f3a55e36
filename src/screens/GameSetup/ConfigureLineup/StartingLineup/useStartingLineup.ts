@@ -1,32 +1,25 @@
 import { useState, useEffect } from 'react';
 import { useStateContext } from '../../../../hooks/useStateContext';
-import { Player } from '../../../../types/GameTypes';
 
-interface StartingPlayer extends Player {
+type Player = {
+  id: string;
   selected: boolean;
-}
+  [key: string]: any;
+};
 
-export default function useStartingLineup() {
+export default function useStartingLineup(): { startingPlayers: Player[], toggleStartingPlayer: (id: string) => void } {
   const { matchSquad } = useStateContext();
-  const [startingPlayers, setStartingPlayers] = useState<StartingPlayer[]>([]);
+  const [startingPlayers, setStartingPlayers] = useState<Player[]>([]);
 
-  // Initialize players from matchSquad when the component loads
   useEffect(() => {
-    if (matchSquad && matchSquad.length > 0) {
-      // Map the players from matchSquad to include the 'selected' property
-      const playersWithSelectionState = matchSquad.map(player => ({
-        ...player,
-        selected: false
-      }));
-      setStartingPlayers(playersWithSelectionState);
+    if (matchSquad && matchSquad.length > 0 && startingPlayers.length === 0) {
+      setStartingPlayers(matchSquad.map((player: any) => ({ ...player, selected: false })));
     }
-  }, [matchSquad]);
+  }, [matchSquad, startingPlayers.length]);
 
   const toggleStartingPlayer = (id: string): void => {
-    setStartingPlayers(prevPlayers =>
-      prevPlayers.map(player =>
-        player.id === id ? { ...player, selected: !player.selected } : player
-      )
+    setStartingPlayers(prev =>
+      prev.map(player => player.id === id ? { ...player, selected: !player.selected } : player)
     );
   };
 

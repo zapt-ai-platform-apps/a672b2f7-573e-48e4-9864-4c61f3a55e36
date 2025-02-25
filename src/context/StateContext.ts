@@ -1,25 +1,39 @@
-import React from 'react';
-import { Player, Goal, Squad } from '../types/GameTypes';
+import { createContext } from 'react';
+import { Player } from '../types/GameTypes';
 
 export interface StateContextType {
-  playerData: Player[];
-  setPlayerData: React.Dispatch<React.SetStateAction<Player[]>>;
-  goalkeeper: Player | null;
-  setGoalkeeper: React.Dispatch<React.SetStateAction<Player | null>>;
-  includeGKPlaytime: boolean;
-  setIncludeGKPlaytime: React.Dispatch<React.SetStateAction<boolean>>;
-  ourScore: number;
-  setOurScore: React.Dispatch<React.SetStateAction<number>>;
-  opponentScore: number;
-  setOpponentScore: React.Dispatch<React.SetStateAction<number>>;
-  goals: Goal[];
-  setGoals: React.Dispatch<React.SetStateAction<Goal[]>>;
-  selectedSquad: Squad | null;
-  setSelectedSquad: React.Dispatch<React.SetStateAction<Squad | null>>;
+  // Squad management
+  selectedSquad: Player[];
+  setSelectedSquad: (squad: Player[]) => void;
+  
+  // Match squad for the current game
   matchSquad: Player[];
-  setMatchSquad: React.Dispatch<React.SetStateAction<Player[]>>;
-  handleStartGame: (players: Player[], gk: Player, includeGKTime: boolean) => void;
-  resetGame: () => void;
+  setMatchSquad: (players: Player[]) => void;
+  
+  // Goalkeeper settings
+  goalkeeper: Player | null;
+  setGoalkeeper: (player: Player | null) => void;
+  
+  // Game state
+  currentGameState: any; // Replace with proper type
+  setCurrentGameState: (state: any) => void;
+  
+  // Other state properties can be added as needed
 }
 
-export const StateContext = React.createContext<StateContextType>({} as StateContextType);
+// Default values to avoid null checks
+const defaultContext: StateContextType = {
+  selectedSquad: [],
+  setSelectedSquad: () => {},
+  
+  matchSquad: [],
+  setMatchSquad: () => {},
+  
+  goalkeeper: null,
+  setGoalkeeper: () => {},
+  
+  currentGameState: null,
+  setCurrentGameState: () => {},
+};
+
+export const StateContext = createContext<StateContextType>(defaultContext);

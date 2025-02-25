@@ -1,25 +1,20 @@
 import React from 'react';
 
-interface Player {
-  id: string;
-  name: string;
-  selected: boolean;
-}
-
-interface PlayerCardProps {
-  player: Player;
+type PlayerCardProps = {
+  player: { id: string; name?: string; [key: string]: any };
   isSelected: boolean;
   onToggle: () => void;
-}
+};
 
 export default function PlayerCard({ player, isSelected, onToggle }: PlayerCardProps): JSX.Element {
   return (
     <div 
       onClick={onToggle} 
-      className={`p-4 border rounded-lg cursor-pointer transition-colors ${isSelected ? 'bg-green-500 text-white' : 'bg-white text-black'}`}
+      className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+        isSelected ? 'bg-green-500' : 'bg-gray-700'
+      }`}
     >
-      <h2 className="text-xl font-semibold mb-2">{player.name}</h2>
-      <p className="text-sm">{isSelected ? 'Selected' : 'Not Selected'}</p>
+      <p className="text-white text-center">{player.name || 'Player'}</p>
     </div>
   );
 }
