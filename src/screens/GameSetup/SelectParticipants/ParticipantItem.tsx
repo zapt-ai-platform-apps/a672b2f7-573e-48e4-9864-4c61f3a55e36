@@ -10,11 +10,10 @@ interface ParticipantItemProps {
 export default function ParticipantItem({ player, isSelected, onToggle }: ParticipantItemProps): JSX.Element {
   return (
     <div
-      className={`p-4 border rounded-lg cursor-pointer ${isSelected ? 'bg-green-500' : 'bg-gray-800'}`}
+      className={`p-4 border rounded-lg cursor-pointer ${isSelected ? 'bg-green-500' : 'bg-gray-200'}`}
       onClick={onToggle}
     >
-      <p className="text-white text-lg">{player.name || player.id}</p>
-      {player.number && <p className="text-white text-sm">#{player.number}</p>}
+      <p>{player.name} {player.number && `(#${player.number})`}</p>
     </div>
   );
 }

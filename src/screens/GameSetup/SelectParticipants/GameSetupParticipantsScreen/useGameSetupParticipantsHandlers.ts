@@ -1,26 +1,23 @@
-import { useCallback } from 'react';
-import { ExtendedPlayer } from './ParticipantItem';
+import { ExtendedPlayer } from './types';
 
-function useGameSetupParticipantsHandlers(
+export default function useGameSetupParticipantsHandlers(
   selectedMatchPlayers: ExtendedPlayer[],
   setSelectedSquad: (players: ExtendedPlayer[]) => void,
   navigate: (path: string | number) => void,
-  setErrorMessage: (msg: string) => void
+  setErrorMessage: (message: string) => void
 ) {
-  const handleNext = useCallback(() => {
+  function handleNext() {
     if (selectedMatchPlayers.length === 0) {
       setErrorMessage("Please select at least one participant.");
       return;
     }
     setSelectedSquad(selectedMatchPlayers);
-    navigate("/gamesetup/config");
-  }, [selectedMatchPlayers, setSelectedSquad, navigate, setErrorMessage]);
+    navigate("/game-setup/next-screen");
+  }
 
-  const handleBack = useCallback(() => {
+  function handleBack() {
     navigate(-1);
-  }, [navigate]);
+  }
 
   return { handleNext, handleBack };
 }
-
-export default useGameSetupParticipantsHandlers;
