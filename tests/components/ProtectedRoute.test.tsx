@@ -1,8 +1,18 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import React from 'react';
 import ProtectedRoute from '../../src/components/ProtectedRoute';
-import { AuthContext } from '../../src/context/AuthContext';
+import TestProviders from '../utils/TestProviders';
+
+// Mock the Loading component
+vi.mock('../../src/components/Loading', () => ({
+  default: () => <div data-testid="loading-indicator">Loading...</div>
+}));
+
+// Mock the LoginPrompt component
+vi.mock('../../src/components/LoginPrompt', () => ({
+  default: () => <div>Please sign in to access this feature</div>
+}));
 
 describe('ProtectedRoute Component', () => {
   it('renders children when user is authenticated', () => {
@@ -13,17 +23,11 @@ describe('ProtectedRoute Component', () => {
     };
 
     render(
-      <AuthContext.Provider value={authContextValue}>
-        <MemoryRouter initialEntries={['/protected']}>
-          <Routes>
-            <Route path="/protected" element={
-              <ProtectedRoute>
-                <div data-testid="protected-content">Protected Content</div>
-              </ProtectedRoute>
-            } />
-          </Routes>
-        </MemoryRouter>
-      </AuthContext.Provider>
+      <TestProviders authContextValue={authContextValue}>
+        <ProtectedRoute>
+          <div data-testid="protected-content">Protected Content</div>
+        </ProtectedRoute>
+      </TestProviders>
     );
 
     expect(screen.getByTestId('protected-content')).toBeInTheDocument();
@@ -37,23 +41,14 @@ describe('ProtectedRoute Component', () => {
     };
 
     render(
-      <AuthContext.Provider value={authContextValue}>
-        <MemoryRouter initialEntries={['/protected']}>
-          <Routes>
-            <Route path="/protected" element={
-              <ProtectedRoute>
-                <div data-testid="protected-content">Protected Content</div>
-              </ProtectedRoute>
-            } />
-          </Routes>
-        </MemoryRouter>
-      </AuthContext.Provider>
+      <TestProviders authContextValue={authContextValue}>
+        <ProtectedRoute>
+          <div data-testid="protected-content">Protected Content</div>
+        </ProtectedRoute>
+      </TestProviders>
     );
 
-    // Should not render the protected content
     expect(screen.queryByTestId('protected-content')).not.toBeInTheDocument();
-    
-    // Should render the login prompt
     expect(screen.getByText(/Please sign in to access this feature/i)).toBeInTheDocument();
   });
 
@@ -65,23 +60,14 @@ describe('ProtectedRoute Component', () => {
     };
 
     render(
-      <AuthContext.Provider value={authContextValue}>
-        <MemoryRouter initialEntries={['/protected']}>
-          <Routes>
-            <Route path="/protected" element={
-              <ProtectedRoute>
-                <div data-testid="protected-content">Protected Content</div>
-              </ProtectedRoute>
-            } />
-          </Routes>
-        </MemoryRouter>
-      </AuthContext.Provider>
+      <TestProviders authContextValue={authContextValue}>
+        <ProtectedRoute>
+          <div data-testid="protected-content">Protected Content</div>
+        </ProtectedRoute>
+      </TestProviders>
     );
 
-    // Should not render the protected content
     expect(screen.queryByTestId('protected-content')).not.toBeInTheDocument();
-    
-    // Should render loading indicator
     expect(screen.getByTestId('loading-indicator')).toBeInTheDocument();
   });
 });

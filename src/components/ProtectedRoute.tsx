@@ -1,22 +1,24 @@
-import React, { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import React from 'react';
+import { useAuth } from '../context/AuthContext';
+import LoginPrompt from './LoginPrompt';
+import Loading from './Loading';
 
-type ProtectedRouteProps = {
-  children: JSX.Element;
-};
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+}
 
-const ProtectedRoute = ({ children }: ProtectedRouteProps): JSX.Element => {
-  const { session, loading } = useContext(AuthContext);
+function ProtectedRoute({ children }: ProtectedRouteProps): JSX.Element {
+  const { session, loading } = useAuth();
 
   if (loading) {
-    return <div data-testid="loading-indicator">Loading...</div>;
+    return <Loading data-testid="loading-indicator" />;
   }
 
   if (!session) {
-    return <div>Please sign in to access this feature</div>;
+    return <LoginPrompt />;
   }
 
-  return children;
-};
+  return <>{children}</>;
+}
 
 export default ProtectedRoute;

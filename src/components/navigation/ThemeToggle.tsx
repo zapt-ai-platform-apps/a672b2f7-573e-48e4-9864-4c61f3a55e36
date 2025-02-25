@@ -16,7 +16,7 @@ function ThemeToggle(): JSX.Element {
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-  const toggleTheme = () => {
+  const toggleTheme = (): void => {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
 

@@ -1,37 +1,15 @@
+import '../setup/mocks';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ThemeToggle from '../../src/components/navigation/ThemeToggle';
-
-// Mock localStorage
-const localStorageMock = (() => {
-  let store = {};
-  return {
-    getItem: vi.fn((key) => store[key] || null),
-    setItem: vi.fn((key, value) => {
-      store[key] = value.toString();
-    }),
-    clear: vi.fn(() => {
-      store = {};
-    }),
-  };
-})();
-
-Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock,
-});
-
-// Mock document.documentElement.classList
-document.documentElement.classList = {
-  add: vi.fn(),
-  remove: vi.fn(),
-  contains: vi.fn(),
-};
+import React from 'react';
+import { localStorageMock } from '../setup/mocks';
 
 describe('ThemeToggle Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     localStorageMock.getItem.mockReturnValue(null);
-    document.documentElement.classList.contains = vi.fn().mockReturnValue(false);
+    (document.documentElement.classList.contains as any).mockReturnValue(false);
   });
 
   it('renders the theme toggle button', () => {
@@ -40,9 +18,6 @@ describe('ThemeToggle Component', () => {
   });
 
   it('toggles from light to dark theme when clicked', () => {
-    // Mock initial state as light theme
-    document.documentElement.classList.contains.mockReturnValue(false);
-    
     render(<ThemeToggle />);
     fireEvent.click(screen.getByRole('button'));
     
@@ -51,8 +26,7 @@ describe('ThemeToggle Component', () => {
   });
 
   it('toggles from dark to light theme when clicked', () => {
-    // Mock initial state as dark theme
-    document.documentElement.classList.contains.mockReturnValue(true);
+    localStorageMock.getItem.mockReturnValue('dark');
     
     render(<ThemeToggle />);
     fireEvent.click(screen.getByRole('button'));
@@ -62,7 +36,6 @@ describe('ThemeToggle Component', () => {
   });
 
   it('initializes theme from localStorage', () => {
-    // Mock theme stored in localStorage
     localStorageMock.getItem.mockReturnValue('dark');
     
     render(<ThemeToggle />);

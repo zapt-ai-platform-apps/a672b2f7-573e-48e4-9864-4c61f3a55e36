@@ -1,44 +1,52 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import type { AuthUser } from './_apiUtils.js';
-import { squads } from '../drizzle/schema.js';
-import { eq } from 'drizzle-orm/expressions';
-import db from './db.js';
-import { parsePlayers } from '../src/utils/parsePlayers.js';
+import { authenticateUser } from './_apiUtils.js';
+import Sentry from '../lib/sentry';
+import { getDb } from '../lib/db';
+import { eq } from 'drizzle-orm';
 
-export async function handleGet(user: AuthUser, req: VercelRequest, res: VercelResponse): Promise<void> {
-  const result = await db.select().from(squads).where(eq(squads.userId, user.id));
-  const squadsData = result.map((row: Record<string, unknown>) => ({
-    ...row,
-    players: parsePlayers(row.players as string | unknown[])
-  }));
-  res.status(200).json(squadsData);
-}
-
-export async function handlePost(user: AuthUser, req: VercelRequest, res: VercelResponse): Promise<void> {
-  const { name, players } = req.body as { name?: string; players?: unknown };
-  if (!name || !players) {
-    res.status(400).json({ error: 'Name and players are required' });
-    return;
+export default async function handler(req, res) {
+  try {
+    const user = await authenticateUser(req);
+    const db = getDb();
+    const { squads } = await import('../drizzle/schema.js');
+    const { id } = req.query;
+    if (!id) {
+      return res.status(400).json({ error: 'Squad ID is required' });
+    }
+    if (req.method === 'GET') {
+      const result = await db.select()
+        .from(squads)
+        .where(eq(squads.id, parseInt(id)))
+        .where(eq(squads.userId, user.id));
+      if (!result.length) {
+        return res.status(404).json({ error: 'Squad not found' });
+      }
+      return res.status(200).json(result[0]);
+    } else if (req.method === 'PUT') {
+      const squadData = req.body;
+      const result = await db.update(squads)
+        .set(squadData)
+        .where(eq(squads.id, parseInt(id)))
+        .where(eq(squads.userId, user.id))
+        .returning();
+      if (!result.length) {
+        return res.status(404).json({ error: 'Squad not found' });
+      }
+      return res.status(200).json(result[0]);
+    } else if (req.method === 'DELETE') {
+      const result = await db.delete(squads)
+        .where(eq(squads.id, parseInt(id)))
+        .where(eq(squads.userId, user.id))
+        .returning();
+      if (!result.length) {
+        return res.status(404).json({ error: 'Squad not found' });
+      }
+      return res.status(200).json({ message: 'Squad deleted successfully' });
+    } else {
+      return res.status(405).json({ error: 'Method not allowed' });
+    }
+  } catch (error) {
+    console.error('Error in squadService endpoint:', error);
+    Sentry.captureException(error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
-  const insertResult = await db.insert(squads).values({
-    userId: user.id,
-    name,
-    players: JSON.stringify(players)
-  }).returning();
-  const insertedSquad = insertResult[0] as Record<string, unknown>;
-  res.status(200).json({ ...insertedSquad, players: parsePlayers(insertedSquad.players as string | unknown[]) });
-}
-
-export async function handlePut(user: AuthUser, req: VercelRequest, res: VercelResponse): Promise<void> {
-  const { id, name, players } = req.body as { id?: number | string; name?: string; players?: unknown };
-  if (!id || !name || !players) {
-    res.status(400).json({ error: 'ID, name and players are required for update' });
-    return;
-  }
-  const updateResult = await db.update(squads)
-    .set({ name, players: JSON.stringify(players) })
-    .where(eq(squads.id, id))
-    .returning();
-  const updatedSquad = updateResult[0] as Record<string, unknown>;
-  res.status(200).json({ ...updatedSquad, players: parsePlayers(updatedSquad.players as string | unknown[]) });
 }

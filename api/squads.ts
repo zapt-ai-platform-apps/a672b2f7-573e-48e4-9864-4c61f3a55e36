@@ -1,30 +1,61 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { authenticateUser, AuthUser } from './_apiUtils.js';
+import { initializeZapt } from '@zapt/zapt-js';
+import { authenticateUser } from './_apiUtils.js'; // Note the .js extension for Vercel
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 import * as Sentry from '@sentry/node';
-import { handleGet, handlePost, handlePut } from './squadService.js';
+import { eq } from 'drizzle-orm';
 
-/**
- * API handler for squads.
- *
- * @param req - The HTTP request object.
- * @param res - The HTTP response object.
- */
-export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
+// Initialize Sentry for backend error logging
+Sentry.init({
+  dsn: process.env.VITE_PUBLIC_SENTRY_DSN,
+  environment: process.env.VITE_PUBLIC_APP_ENV,
+  initialScope: {
+    tags: {
+      type: 'backend',
+      projectId: process.env.VITE_PUBLIC_APP_ID
+    }
+  }
+});
+
+export default async function handler(req, res) {
   try {
-    const user: AuthUser = await authenticateUser(req);
+    // Verify authentication
+    const user = await authenticateUser(req);
+    
+    // Initialize database connection
+    const client = postgres(process.env.COCKROACH_DB_URL);
+    const db = drizzle(client);
+    
+    // Import schema with .js extension for Vercel
+    const { squads } = await import('../drizzle/schema.js');
+    
+    // Handle different HTTP methods
     if (req.method === 'GET') {
-      return await handleGet(user, req, res);
+      const result = await db.select()
+        .from(squads)
+        .where(eq(squads.userId, user.id));
+      
+      return res.status(200).json(result);
     } else if (req.method === 'POST') {
-      return await handlePost(user, req, res);
-    } else if (req.method === 'PUT') {
-      return await handlePut(user, req, res);
+      const squadData = req.body;
+      
+      if (!squadData.name) {
+        return res.status(400).json({ error: 'Squad name is required' });
+      }
+      
+      const result = await db.insert(squads).values({
+        ...squadData,
+        userId: user.id,
+        created_at: new Date()
+      }).returning();
+      
+      return res.status(201).json(result[0]);
     } else {
-      res.setHeader('Allow', ['GET', 'POST', 'PUT']);
-      return res.status(405).end(`Method ${req.method} Not Allowed`);
+      return res.status(405).json({ error: 'Method not allowed' });
     }
   } catch (error) {
+    console.error('Error in squads endpoint:', error);
     Sentry.captureException(error);
-    console.error('Error in squad API:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 }
