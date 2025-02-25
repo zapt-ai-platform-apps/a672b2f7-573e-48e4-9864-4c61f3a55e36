@@ -1,26 +1,5 @@
 import React from 'react';
-
-export interface Player {
-  id: string | number;
-  name: string;
-  playTime?: number;
-  isOnField?: boolean;
-  playIntervals?: { startTime: number; endTime: number | null; isGoalkeeper?: boolean }[];
-  [key: string]: unknown;
-}
-
-export interface Squad {
-  id: string | number;
-  name: string;
-  players: Player[];
-}
-
-export interface Goal {
-  team: 'our' | 'opponent';
-  scorerName: string | null;
-  time: number;
-  timestamp: number;
-}
+import { Player, Goal, Squad } from '../types/GameTypes';
 
 export interface StateContextType {
   playerData: Player[];

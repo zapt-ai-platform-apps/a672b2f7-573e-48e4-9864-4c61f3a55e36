@@ -11,14 +11,16 @@ export interface Player {
   position: { x: number; y: number };
   isStartingPlayer?: boolean;
   isInMatchSquad?: boolean;
-  playTime?: number; // Added to fix TypeScript errors
-  lastStart?: number; // Added to fix TypeScript errors
+  playTime?: number;
+  lastStart?: number;
+  totalPlayTime?: number;
 }
 
 export interface Goal {
   team: 'our' | 'opponent';
   scorerName: string;
   timestamp: number;
+  time?: number;
 }
 
 export interface Squad {
@@ -34,4 +36,5 @@ export interface StateProviderProps {
 export interface Interval {
   startTime: number;
   endTime: number | null;
+  isGoalkeeper?: boolean;
 }

@@ -1,9 +1,9 @@
-import { authenticateUser } from './_apiUtils';
-import Sentry from './_sentry';
+import { authenticateUser } from "./_apiUtils.js";
+import Sentry from "./_sentry.js";
 import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import { squads } from '../drizzle/schema';
+import { squads } from '../drizzle/schema.js';
 
 interface ApiRequest {
   method: string;
