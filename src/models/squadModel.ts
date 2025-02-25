@@ -36,7 +36,8 @@ export function transformPlayersForDB(players: unknown[] | string): string {
  */
 export function transformSquadFromDB(row: Record<string, unknown>): Record<string, unknown> {
   try {
-    const playersData = row.players ?? '';
+    // Fix: Explicitly check if row.players is a string, otherwise use an empty string
+    const playersData = typeof row.players === 'string' ? row.players : '';
     
     // We use the updated parsePlayers function that handles both CSV and JSON formats
     return {
