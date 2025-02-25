@@ -13,8 +13,11 @@ import GameSummary from './screens/GameSummary';
 function AppRoutes() {
   return (
     <Routes>
+      {/* Public routes */}
       <Route path="/" element={<LandingScreen />} />
       <Route path="/login" element={<SignIn />} />
+      
+      {/* Protected routes */}
       <Route
         path="/squads"
         element={
@@ -63,6 +66,8 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      
+      {/* Fallback route */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

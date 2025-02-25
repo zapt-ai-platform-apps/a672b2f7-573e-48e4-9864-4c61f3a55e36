@@ -1,30 +1,25 @@
 import React from 'react';
+import FeatureCard from './FeatureCard';
+import { featuresData } from '../../data/featuresData';
 
 export default function FeaturesSection(): JSX.Element {
   return (
-    <section className="py-20 bg-white rounded-lg shadow-md mx-4 my-8">
-      <div className="max-w-4xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">Features</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-4 border rounded-lg shadow-sm">
-            <h3 className="text-xl font-semibold text-gray-700">Feature One</h3>
-            <p className="text-gray-600 mt-2">
-              Experience the best performance with our cutting-edge feature.
-            </p>
-          </div>
-          <div className="p-4 border rounded-lg shadow-sm">
-            <h3 className="text-xl font-semibold text-gray-700">Feature Two</h3>
-            <p className="text-gray-600 mt-2">
-              Enhance your workflow with seamless integration and great usability.
-            </p>
-          </div>
-          <div className="p-4 border rounded-lg shadow-sm">
-            <h3 className="text-xl font-semibold text-gray-700">Feature Three</h3>
-            <p className="text-gray-600 mt-2">
-              Get the flexibility you need with customizable settings.
-            </p>
-          </div>
-        </div>
+    <section className="w-full max-w-7xl mx-auto px-4 py-16 mb-8 animate-fadeIn" style={{ animationDelay: '1s' }}>
+      <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-indigo-200">
+        Powerful Features for Coaches
+      </h2>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {featuresData.map((feature) => (
+          <FeatureCard key={feature.id} feature={feature} />
+        ))}
+      </div>
+      
+      <div className="text-center mt-16">
+        <p className="text-blue-100 text-lg max-w-2xl mx-auto">
+          Designed for football coaches at any level, from grassroots to professional, 
+          Football Subs helps you focus on coaching while we handle the substitution logistics.
+        </p>
       </div>
     </section>
   );

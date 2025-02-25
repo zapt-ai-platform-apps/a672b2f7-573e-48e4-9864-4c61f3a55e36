@@ -1,34 +1,50 @@
+import { SetStateAction } from 'react';
 import { NavigateFunction } from 'react-router-dom';
-import { Dispatch, SetStateAction } from 'react';
-import { Squad } from '../../../types/GameTypes';
+import { ExtendedPlayer } from './ParticipantItem';
 
+/**
+ * Custom hook for handling participant selection navigation and validation
+ */
 export default function useGameSetupParticipantsHandlers(
-  selectedMatchPlayers: any[],
-  setSelectedSquad: Dispatch<SetStateAction<Squad | null>>,
+  selectedMatchPlayers: ExtendedPlayer[],
+  setSelectedSquad: (value: SetStateAction<any>) => void,
   navigate: NavigateFunction,
-  setErrorMessage: (msg: string) => void
+  setErrorMessage: (value: SetStateAction<string>) => void
 ) {
-  function handleNext() {
-    if (selectedMatchPlayers.length === 0) {
-      setErrorMessage('Please select at least one participant.');
+  /**
+   * Navigate to the next step if there are enough players selected
+   */
+  const handleNext = () => {
+    if (selectedMatchPlayers.length < 1) {
+      setErrorMessage('Please select at least one player to continue.');
       return;
     }
-    setErrorMessage('');
-    // Create a squad object instead of directly passing players array
-    setSelectedSquad({ 
-      id: 'temp-id', 
-      name: 'Match Squad', 
-      players: selectedMatchPlayers 
-    });
-    navigate('/game-setup/config');
-  }
+    
+    // Store selected players in state
+    const selectedPlayers = selectedMatchPlayers.map(player => ({
+      id: player.id,
+      name: player.name,
+      isInMatchSquad: true
+    }));
+    
+    setSelectedSquad(prevState => ({
+      ...prevState,
+      players: selectedPlayers
+    }));
+    
+    // Navigate to next step (starting lineup)
+    navigate('/setup/starting-lineup');
+  };
 
-  function handleBack() {
-    navigate(-1);
-  }
+  /**
+   * Navigate back to the squad selection page
+   */
+  const handleBack = () => {
+    navigate('/squads');
+  };
 
   return {
     handleNext,
-    handleBack,
+    handleBack
   };
 }

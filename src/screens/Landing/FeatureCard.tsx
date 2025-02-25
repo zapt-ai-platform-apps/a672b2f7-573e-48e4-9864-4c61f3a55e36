@@ -1,24 +1,27 @@
 import React from 'react';
+import { Feature } from '../../data/featuresData';
 
 interface FeatureCardProps {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
+  feature: Feature;
 }
 
-const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, icon }) => {
+export default function FeatureCard({ feature }: FeatureCardProps): JSX.Element {
   return (
     <div 
-      className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-lg"
-      data-testid="feature-card"
+      key={feature.id}
+      className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 transform transition-all duration-300 hover:scale-105 hover:bg-white/15 group"
     >
-      <div className="text-primary-600 dark:text-primary-400 mb-4 text-3xl">
-        {icon}
+      <div className="flex flex-col items-center text-center">
+        <div className="mb-4 p-3 rounded-full bg-white/10 group-hover:bg-indigo-100 group-hover:text-indigo-600 transition-colors duration-300">
+          {feature.icon}
+        </div>
+        <h3 className="text-xl font-semibold mb-3 text-white group-hover:text-indigo-200 transition-colors">
+          {feature.title}
+        </h3>
+        <p className="text-blue-100 group-hover:text-white transition-colors">
+          {feature.description}
+        </p>
       </div>
-      <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-white">{title}</h3>
-      <p className="text-gray-600 dark:text-gray-300">{description}</p>
     </div>
   );
-};
-
-export default FeatureCard;
+}

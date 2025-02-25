@@ -2,70 +2,135 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  .bg-radial-gradient {
-    background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.02) 0%, rgba(0, 0, 0, 0.2) 100%);
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
   }
-  
-  @keyframes float {
-    0% {
-      transform: translateY(0px);
-      opacity: 0.1;
-    }
-    50% {
-      transform: translateY(-60px);
-      opacity: 0.3;
-    }
-    100% {
-      transform: translateY(-120px);
-      opacity: 0;
-    }
+  50% {
+    transform: translateY(-20px);
   }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+}
+
+@keyframes wave {
+  0% {
+    transform: translateX(0) translateZ(0) scaleY(1);
   }
-  
-  @keyframes wave {
-    0% {
-      transform: translateX(0);
-    }
-    50% {
-      transform: translateX(-25%);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
+  50% {
+    transform: translateX(-25%) translateZ(0) scaleY(0.8);
   }
-  
-  @keyframes wave-slow {
-    0% {
-      transform: translateX(0);
-    }
-    50% {
-      transform: translateX(-15%);
-    }
-    100% {
-      transform: translateX(-30%);
-    }
+  100% {
+    transform: translateX(-50%) translateZ(0) scaleY(1);
   }
-  
-  .animate-fadeIn {
-    animation: fadeIn 1s ease-out forwards;
+}
+
+@keyframes wave-slow {
+  0% {
+    transform: translateX(0) translateZ(0) scaleY(1);
   }
-  
-  .animate-wave {
-    animation: wave 15s linear infinite;
+  50% {
+    transform: translateX(-15%) translateZ(0) scaleY(0.9);
   }
-  
-  .animate-wave-slow {
-    animation: wave-slow 25s linear infinite;
+  100% {
+    transform: translateX(-30%) translateZ(0) scaleY(1);
   }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes text-shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes shine {
+  100% {
+    right: -50%;
+    left: 120%;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-wave {
+  animation: wave 25s -3s linear infinite;
+}
+
+.animate-wave-slow {
+  animation: wave-slow 35s -4s linear infinite;
+}
+
+.animate-text-shimmer {
+  background-size: 200% auto;
+  animation: text-shimmer 4s linear infinite;
+}
+
+.animate-shine {
+  animation: shine 1.5s linear infinite;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+}
+
+/* Custom transition for smooth effects */
+.ease-in-out-custom {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Ensure full height on all wrappers */
+html, body, #root {
+  height: 100%;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+/* Background gradient utilities */
+.bg-gradient-radial {
+  background-image: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0) 70%);
+}
+
+.bg-radial-gradient {
+  background: radial-gradient(circle at top center, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
 }
