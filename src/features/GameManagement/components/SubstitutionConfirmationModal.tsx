@@ -15,32 +15,24 @@ function SubstitutionConfirmationModal({
   cancelSubstitution
 }: SubstitutionConfirmationModalProps): JSX.Element {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
-        <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-          Confirm Substitution
-        </h3>
-        <p className="mb-4 text-gray-700 dark:text-gray-300">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white dark:bg-gray-700 p-6 rounded shadow-lg">
+        <h2 className="text-2xl font-bold mb-4">Confirm Substitution</h2>
+        <p>
           Are you sure you want to substitute{' '}
-          <span className="font-semibold text-red-600 dark:text-red-400">
-            {selectedSubOffPlayer?.name}
-          </span>{' '}
-          for{' '}
-          <span className="font-semibold text-green-600 dark:text-green-400">
-            {selectedSubOnPlayer?.name}
-          </span>
-          ?
+          {selectedSubOffPlayer ? selectedSubOffPlayer.name : 'Unknown Player'} with{' '}
+          {selectedSubOnPlayer ? selectedSubOnPlayer.name : 'Unknown Player'}?
         </p>
-        <div className="flex justify-end space-x-3">
+        <div className="mt-4 flex justify-end space-x-4">
           <button
-            className="px-4 py-2 rounded bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-600 cursor-pointer"
             onClick={cancelSubstitution}
+            className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded"
           >
             Cancel
           </button>
           <button
-            className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
             onClick={confirmSubstitution}
+            className="px-4 py-2 bg-blue-500 text-white rounded"
           >
             Confirm
           </button>

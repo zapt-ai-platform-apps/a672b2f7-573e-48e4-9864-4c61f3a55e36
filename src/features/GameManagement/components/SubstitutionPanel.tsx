@@ -15,6 +15,8 @@ interface SubstitutionPanelProps {
   confirmSubstitution: () => void;
   cancelSubstitution: () => void;
   showSubstitutionConfirmModal: boolean;
+  playerData?: Player[];
+  isRunning?: boolean;
 }
 
 function SubstitutionPanel({

@@ -1,9 +1,9 @@
 import { recordLogin } from '../supabaseClient';
-import { EnvironmentType } from '../types/environment';
+import { environmentType } from '../types/environment';
 
 let hasRecordedLogin = false;
 
-export async function recordUserLogin(email: string, environment: EnvironmentType, logMessage: string): Promise<void> {
+export async function recordUserLogin(email: string, environment: environmentType, logMessage: string): Promise<void> {
   if (!hasRecordedLogin) {
     await recordLogin(email, environment);
     hasRecordedLogin = true;

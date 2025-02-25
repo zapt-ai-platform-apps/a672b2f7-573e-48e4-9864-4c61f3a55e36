@@ -12,6 +12,10 @@ type Player = {
 interface PlayerPlaytimesProps {
   activePlayers: Player[];
   benchPlayers: Player[];
+  playerData?: Player[]; // Added missing prop
+  includeGKPlaytime?: boolean; // Added missing prop
+  getTotalPlayTime?: (player: Player) => number; // Added missing prop
+  formatTime?: (seconds: number) => string; // Added missing prop
 }
 
 const PlayerPlaytimes: React.FC<PlayerPlaytimesProps> = ({ activePlayers, benchPlayers }) => {

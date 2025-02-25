@@ -1,8 +1,10 @@
 import { NavigateFunction } from 'react-router-dom';
+import { Dispatch, SetStateAction } from 'react';
+import { Squad } from '../../../types/GameTypes';
 
 export default function useGameSetupParticipantsHandlers(
   selectedMatchPlayers: any[],
-  setSelectedSquad: (players: any[]) => void,
+  setSelectedSquad: Dispatch<SetStateAction<Squad | null>>,
   navigate: NavigateFunction,
   setErrorMessage: (msg: string) => void
 ) {
@@ -12,7 +14,12 @@ export default function useGameSetupParticipantsHandlers(
       return;
     }
     setErrorMessage('');
-    setSelectedSquad(selectedMatchPlayers);
+    // Create a squad object instead of directly passing players array
+    setSelectedSquad({ 
+      id: 'temp-id', 
+      name: 'Match Squad', 
+      players: selectedMatchPlayers 
+    });
     navigate('/game-setup/config');
   }
 
