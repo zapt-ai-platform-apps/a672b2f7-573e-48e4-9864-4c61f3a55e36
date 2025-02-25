@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Auth } from '@supabase/auth-ui-react';
 import { supabase } from '../supabaseClient';
-import { useAuth } from './AuthProvider';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { authAppearanceConfig } from '../config/authAppearance';
 
