@@ -3,10 +3,10 @@ import type { Player } from '../../../types/GameTypes';
 
 interface GoalkeeperProps {
   playerData: Player[];
-  goalkeeper: string;
+  goalkeeper: Player | null;
   isRunning: boolean;
   setPlayerData: (players: Player[]) => void;
-  setGoalkeeper: (name: string) => void;
+  setGoalkeeper: (player: Player | null) => void;
   updatePlayerLists: () => void;
   onFieldPlayers: Player[];
 }
@@ -20,17 +20,17 @@ export function createGoalkeeperHandlers(
     setShowGKModal(true);
   };
 
-  const confirmGoalkeeper = (playerName: string): void => {
-    const updatedPlayers = changeGoalkeeper(props.playerData, playerName, props.goalkeeper, props.isRunning);
+  const confirmGoalkeeper = (player: Player): void => {
+    const updatedPlayers = changeGoalkeeper(props.playerData, player, props.goalkeeper, props.isRunning);
     props.setPlayerData(updatedPlayers);
-    props.setGoalkeeper(playerName);
+    props.setGoalkeeper(player);
     setShowGKConfirmModal(false);
     setShowGKModal(false);
     props.updatePlayerLists();
   };
 
   const availableGoalkeepers = (): Player[] => {
-    return props.onFieldPlayers.filter((player) => player.name !== props.goalkeeper);
+    return props.onFieldPlayers.filter((player) => player !== props.goalkeeper);
   };
 
   return {

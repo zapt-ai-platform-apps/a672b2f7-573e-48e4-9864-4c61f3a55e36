@@ -1,4 +1,4 @@
-import { applyPlayerAdjustment } from '../../../shared/models/playerAdjustments';
+import { handlePlayerAdjustment } from '../../../shared/models/playerAdjustments';
 import type { Player } from '../../../types/GameTypes';
 
 export function createHandleIncreasePlayers(
@@ -43,11 +43,11 @@ export function createConfirmAdjustment({
 }: ConfirmAdjustmentParams): () => void {
   return (): void => {
     if (selectedPlayer) {
-      const updatedPlayers = applyPlayerAdjustment(
+      // Updated to use handlePlayerAdjustment with the correct parameter structure
+      const updatedPlayers = handlePlayerAdjustment(
         props.playerData,
-        adjustType,
-        selectedPlayer,
-        props.isRunning
+        selectedPlayer.id,
+        adjustType === "increase"
       );
       props.setPlayerData(updatedPlayers);
       props.updatePlayerLists();

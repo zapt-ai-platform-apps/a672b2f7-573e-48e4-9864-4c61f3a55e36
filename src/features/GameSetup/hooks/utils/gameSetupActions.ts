@@ -1,4 +1,4 @@
-import { Player } from '../../../types/GameTypes';
+import { Player } from '../../../../types/GameTypes';
 
 function createPlayer(name: string): Player {
   return {

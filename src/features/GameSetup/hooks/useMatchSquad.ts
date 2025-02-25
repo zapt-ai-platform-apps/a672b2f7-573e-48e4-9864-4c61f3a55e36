@@ -25,3 +25,4 @@ function useMatchSquad() {
 }
 
 export default useMatchSquad;
+export type { Player };

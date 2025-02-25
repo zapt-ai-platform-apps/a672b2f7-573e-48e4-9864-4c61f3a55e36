@@ -28,8 +28,8 @@ function PitchVisualization({ players }: PitchVisualizationProps): JSX.Element {
     };
   }, [init]);
 
-  // Updated to only pass the native event to handlePointerDown
-  const handlePointerDownWrapper = (e: React.PointerEvent<HTMLDivElement>, playerId?: string) => {
+  // Updated to use a more generic type for pointer events
+  const handlePointerDownWrapper = (e: React.PointerEvent<Element>, playerId?: string) => {
     handlePointerDown(e.nativeEvent);
   };
 
