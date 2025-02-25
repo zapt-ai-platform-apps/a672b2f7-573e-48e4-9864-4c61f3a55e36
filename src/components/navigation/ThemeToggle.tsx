@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { HiMoon, HiSun } from 'react-icons/hi2';
+import { HiMoon, HiSun } from 'react-icons/hi';
 
 function ThemeToggle(): JSX.Element {
   const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');

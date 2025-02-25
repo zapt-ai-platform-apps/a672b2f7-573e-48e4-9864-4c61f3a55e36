@@ -22,7 +22,7 @@ export function createPlayer({
     isOnField: false,
     isGoalkeeper: false,
     totalPlayTime: 0,
-    position: { x: null, y: null },
+    position: { x: 0, y: 0 },
     isInMatchSquad: isInMatchSquad ?? false,
     isInStartingLineup: isInStartingLineup ?? false,
   };

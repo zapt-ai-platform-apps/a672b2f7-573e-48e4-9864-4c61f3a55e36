@@ -1,7 +1,7 @@
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 
 export const authAppearanceConfig = {
-  theme: 'default',
+  theme: ThemeSupa,
   style: {
     button: {
       background: '#FF6B6B',
