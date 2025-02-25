@@ -4,7 +4,11 @@ export function addPlayerToList(players: Player[], name: string): Player[] {
   const newPlayer: Player = {
     id: String(Date.now()),
     name,
-    isStartingPlayer: false
+    isStartingPlayer: false,
+    totalPlayTime: 0,
+    isOnField: false,
+    isGoalkeeper: false,
+    position: { x: 0, y: 0 }
   };
   return [...players, newPlayer];
 }

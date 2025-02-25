@@ -8,7 +8,11 @@ function parsePlayers(text: string): Player[] {
       const player: Player = {
         id: String(Date.now() + index),
         name: trimmed,
-        isStartingPlayer: false
+        isStartingPlayer: false,
+        totalPlayTime: 0,
+        isOnField: false,
+        isGoalkeeper: false,
+        position: { x: 0, y: 0 }
       };
       acc.push(player);
     }

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useStateContext } from '../../../hooks/useStateContext';
-import initializePlayers from '../utils/initializePlayers';
-import { toggleMatchPlayerHelper, toggleStartingPlayerHelper } from '../utils/togglePlayers';
+import initializePlayers from './utils/initializePlayers';
+import { toggleMatchPlayerHelper, toggleStartingPlayerHelper } from './utils/togglePlayers';
 import ensurePlayerProperties from '../utils/ensurePlayerProperties';
 import type { Player } from '../../../types/GameTypes';
 

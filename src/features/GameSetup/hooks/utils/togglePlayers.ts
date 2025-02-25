@@ -1,24 +1,25 @@
-function toggleMatchPlayerHelper(players: any[], playerId: string): any[] {
+import { Player } from '../../../../types/GameTypes';
+
+export function toggleMatchPlayerHelper(players: Player[], playerId: string): Player[] {
   return players.map(player => {
     if (player.id === playerId) {
-      const newInMatch = !player.isInMatchSquad;
-      return { ...player, isInMatchSquad: newInMatch, isStartingPlayer: newInMatch ? player.isStartingPlayer : false };
+      return {
+        ...player,
+        isInMatch: !player.isInMatch
+      };
     }
     return player;
   });
 }
 
-function toggleStartingPlayerHelper(players: any[], playerId: string): any[] {
+export function toggleStartingPlayerHelper(players: Player[], playerId: string): Player[] {
   return players.map(player => {
     if (player.id === playerId) {
-      const newStartingStatus = !player.isStartingPlayer;
-      if (newStartingStatus && !player.isInMatchSquad) {
-        return { ...player, isStartingPlayer: true, isInMatchSquad: true };
-      }
-      return { ...player, isStartingPlayer: newStartingStatus };
+      return {
+        ...player,
+        isStartingPlayer: !player.isStartingPlayer
+      };
     }
     return player;
   });
 }
-
-export { toggleMatchPlayerHelper, toggleStartingPlayerHelper };

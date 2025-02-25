@@ -13,7 +13,6 @@ export function recordGoal(
   goals: Goal[]
 ): RecordGoalResult {
   const newGoal: Goal = {
-    id: String(Date.now()),
     team,
     scorerName,
     timestamp: timeElapsed

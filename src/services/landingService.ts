@@ -17,7 +17,7 @@ export async function runGetStarted(
       const user = session.user;
       if (user.email && !sessionStorage.getItem('recordLoginCalled')) {
         try {
-          await recordLogin(user.email, import.meta.env.VITE_PUBLIC_APP_ENV);
+          await recordLogin(user.email, import.meta.env.VITE_PUBLIC_APP_ENV as string);
           sessionStorage.setItem('recordLoginCalled', 'true');
         } catch (loginError) {
           console.error('Failed to record login:', loginError);

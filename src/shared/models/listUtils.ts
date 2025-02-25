@@ -1,4 +1,4 @@
-import type { Player } from '../../context/StateContext';
+import type { Player } from '../../types/GameTypes';
 
 /**
  * Processes the player list by partitioning players into on-field and off-field groups.
