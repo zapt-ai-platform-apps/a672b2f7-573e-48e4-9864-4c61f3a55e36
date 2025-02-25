@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useStateContext } from '../../../hooks/useStateContext';
 import { Player } from '../../../types/GameTypes';
 import { addPlayerToList, removePlayerFromList, togglePlayerInList } from '../utils/gameSetupActions';
-import { parsePlayers } from '../../../utils/parsePlayers';
+import parsePlayers from '../utils/parsePlayers';
 
 export interface UseGameSetupReturn {
   errorMessage: string;

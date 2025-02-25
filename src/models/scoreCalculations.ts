@@ -1,44 +1,67 @@
-import { getTimeElapsed } from './timerModel';
-import { Goal } from './scoreTypes';
+import type { Goal } from "../types/GameTypes";
 
-export function recordGoal(
-  team: 'our' | 'opponent',
-  scorerName: string,
-  currentOurScore: number,
-  currentOpponentScore: number,
-  goals: Goal[],
-  gameIntervals: number[],
-  isRunning: boolean
-): { newOurScore: number; newOpponentScore: number; newGoals: Goal[] } {
-  const timeElapsed = getTimeElapsed(gameIntervals, isRunning);
-  const newGoal: Goal = { team, scorerName: team === 'our' ? scorerName : null, time: timeElapsed, timestamp: Date.now() };
-  if (team === 'our') {
-    return { newOurScore: currentOurScore + 1, newOpponentScore: currentOpponentScore, newGoals: [...goals, newGoal] };
-  } else if (team === 'opponent') {
-    return { newOurScore: currentOurScore, newOpponentScore: currentOpponentScore + 1, newGoals: [...goals, newGoal] };
-  }
-  return { newOurScore: currentOurScore, newOpponentScore: currentOpponentScore, newGoals: goals };
-}
-
+/**
+ * Removes the last goal from the goals array and updates scores accordingly
+ * @param goals The current list of goals
+ * @param ourScore Current team score
+ * @param opponentScore Current opponent score
+ * @returns Object containing updated scores and goals array
+ */
 export function removeLastGoal(
-  currentGoals: Goal[],
-  currentOurScore: number,
-  currentOpponentScore: number
-): { newOurScore: number; newOpponentScore: number; newGoals: Goal[] } {
-  if (currentGoals.length === 0) {
-    throw new Error('No goals to remove.');
+  goals: Goal[],
+  ourScore: number,
+  opponentScore: number
+) {
+  if (goals.length === 0) {
+    throw new Error("No goals to remove");
   }
-  const lastGoal = currentGoals[currentGoals.length - 1];
-  let newOurScore = currentOurScore;
-  let newOpponentScore = currentOpponentScore;
-  if (lastGoal.team === 'our') {
-    newOurScore = Math.max(0, currentOurScore - 1);
-  } else if (lastGoal.team === 'opponent') {
-    newOpponentScore = Math.max(0, currentOpponentScore - 1);
+  
+  const lastGoal = goals[goals.length - 1];
+  const newGoals = [...goals.slice(0, -1)];
+  
+  let newOurScore = ourScore;
+  let newOpponentScore = opponentScore;
+  
+  if (lastGoal.isOpponentGoal) {
+    newOpponentScore = Math.max(0, opponentScore - 1);
+  } else {
+    newOurScore = Math.max(0, ourScore - 1);
   }
+  
   return {
     newOurScore,
     newOpponentScore,
-    newGoals: currentGoals.slice(0, -1)
+    newGoals
+  };
+}
+
+/**
+ * Adds a new goal to the goals array and updates scores
+ * @param goals Current list of goals
+ * @param newGoal Goal to add
+ * @param ourScore Current team score
+ * @param opponentScore Current opponent score
+ * @returns Object containing updated scores and goals array
+ */
+export function addGoal(
+  goals: Goal[],
+  newGoal: Goal,
+  ourScore: number,
+  opponentScore: number
+) {
+  const newGoals = [...goals, newGoal];
+  let newOurScore = ourScore;
+  let newOpponentScore = opponentScore;
+  
+  if (newGoal.isOpponentGoal) {
+    newOpponentScore += 1;
+  } else {
+    newOurScore += 1;
+  }
+  
+  return {
+    newOurScore,
+    newOpponentScore,
+    newGoals
   };
 }

@@ -1,9 +1,14 @@
-import { ThemeVariables } from '@supabase/auth-ui-shared';
+import { Appearance } from '@supabase/auth-ui-react';
 
-const authAppearance: ThemeVariables = {
-  colors: {
-    brand: '#FF6B6B',
-    brandAccent: '#FF4757',
+const authAppearance: Appearance = {
+  theme: 'default',
+  variables: {
+    default: {
+      colors: {
+        brand: '#FF6B6B',
+        brandAccent: '#FF4757',
+      },
+    },
   },
 };
 

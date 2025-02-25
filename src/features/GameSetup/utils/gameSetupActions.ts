@@ -1,14 +1,12 @@
 import { Player } from '../../../types/GameTypes';
 
 export function addPlayerToList(players: Player[], name: string): Player[] {
-  return [
-    ...players,
-    {
-      id: Date.now(),
-      name,
-      isStartingPlayer: false
-    }
-  ];
+  const newPlayer: Player = {
+    id: Date.now() + Math.random(),
+    name,
+    isStartingPlayer: false
+  };
+  return [...players, newPlayer];
 }
 
 export function removePlayerFromList(players: Player[], playerId: number | string): Player[] {
@@ -16,10 +14,7 @@ export function removePlayerFromList(players: Player[], playerId: number | strin
 }
 
 export function togglePlayerInList(players: Player[], playerId: number | string): Player[] {
-  return players.map(player => {
-    if (player.id === playerId) {
-      return { ...player, isStartingPlayer: !player.isStartingPlayer };
-    }
-    return player;
-  });
+  return players.map(player =>
+    player.id === playerId ? { ...player, isStartingPlayer: !player.isStartingPlayer } : player
+  );
 }

@@ -1,6 +1,30 @@
-import { removeLastGoal } from "../../../shared/models/scoreCalculations";
+import { Goal } from "../../../types/GameTypes";
 import * as Sentry from "@sentry/browser";
-import type { Goal } from "../../../types/GameTypes";
+
+// Create replacement for removeLastGoal function since the import path is problematic
+function removeLastGoal(goals: Goal[], ourScore: number, opponentScore: number) {
+  if (goals.length === 0) {
+    throw new Error("No goals to remove");
+  }
+  
+  const lastGoal = goals[goals.length - 1];
+  const newGoals = [...goals.slice(0, -1)];
+  
+  let newOurScore = ourScore;
+  let newOpponentScore = opponentScore;
+  
+  if (lastGoal.isOpponentGoal) {
+    newOpponentScore = Math.max(0, opponentScore - 1);
+  } else {
+    newOurScore = Math.max(0, ourScore - 1);
+  }
+  
+  return {
+    newOurScore,
+    newOpponentScore,
+    newGoals
+  };
+}
 
 interface GoalHandlersProps {
   props: {
