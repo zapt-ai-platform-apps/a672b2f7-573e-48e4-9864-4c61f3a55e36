@@ -81,7 +81,7 @@ function EditSquadForm({ onCancel }: EditSquadFormProps): JSX.Element {
           <PlayersManager
             squadPlayersList={squadPlayersList}
             newPlayerName={newPlayerName}
-            setNewPlayerName={setNewPlayerName}
+            onNewPlayerNameChange={setNewPlayerName}
             handleAddPlayer={handleAddPlayer}
             handleDeletePlayer={handleDeletePlayer}
           />

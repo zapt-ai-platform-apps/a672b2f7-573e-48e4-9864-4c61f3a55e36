@@ -1,103 +1,64 @@
-import React, { useState } from 'react';
-import PlayerInput from './PlayerInput';
-import PlayersList from './PlayersList';
+import React, { ChangeEvent } from "react";
 
-export interface Player {
+interface SquadPlayer {
   id: string;
   name: string;
-  isOnField?: boolean;
-  isGoalkeeper?: boolean;
-  isStartingPlayer?: boolean;
-  position?: {
-    x: number | null;
-    y: number | null;
-  };
-  totalPlayTime?: number;
+  [key: string]: any;
 }
 
 interface PlayersManagerProps {
-  squadPlayersList?: string[];
-  newPlayerName?: string;
-  onAddPlayer?: () => void;
-  onDeletePlayer?: (player: string) => void;
-  onNewPlayerNameChange?: (value: string) => void;
-  players?: Player[];
-  onPlayersChange?: (players: Player[]) => void;
+  squadPlayersList: SquadPlayer[];
+  newPlayerName: string;
+  onNewPlayerNameChange: (name: string) => void;
+  handleAddPlayer: () => void;
+  handleDeletePlayer: (id: string) => void;
 }
 
-export default function PlayersManager({
+function PlayersManager({
   squadPlayersList,
-  newPlayerName = '',
-  onAddPlayer,
-  onDeletePlayer,
+  newPlayerName,
   onNewPlayerNameChange,
-  players,
-  onPlayersChange
+  handleAddPlayer,
+  handleDeletePlayer,
 }: PlayersManagerProps): JSX.Element {
-  const [inputValue, setInputValue] = useState('');
-
-  const isUsingStringList = squadPlayersList !== undefined;
-
-  const handleAddPlayer = () => {
-    if (!onPlayersChange || !players) return;
-    const trimmedName = inputValue.trim();
-    if (trimmedName === '') return;
-    const newPlayer: Player = {
-      id: Date.now().toString(),
-      name: trimmedName,
-      isOnField: false,
-      isGoalkeeper: false,
-      isStartingPlayer: false,
-      position: { x: null, y: null },
-      totalPlayTime: 0
-    };
-    onPlayersChange([...players, newPlayer]);
-    setInputValue('');
-  };
-
-  const handleDeletePlayer = (playerId: string) => {
-    if (!onPlayersChange || !players) return;
-    onPlayersChange(players.filter(p => p.id !== playerId));
-  };
-
   return (
-    <div className="space-y-4">
-      <h3 className="text-xl font-semibold text-white">Players</h3>
-      {isUsingStringList ? (
-        <>
-          <PlayerInput
+    <div>
+      <div className="mb-6">
+        <label className="block text-gray-700 dark:text-gray-200 text-sm font-medium mb-2">
+          Add New Player
+        </label>
+        <div className="flex space-x-2">
+          <input
+            type="text"
             value={newPlayerName}
-            onChange={(e) => onNewPlayerNameChange?.(e.target.value)}
-            onAdd={onAddPlayer}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => onNewPlayerNameChange(e.target.value)}
+            className="shadow-sm appearance-none border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
             placeholder="Enter player name"
           />
-          {squadPlayersList && squadPlayersList.length > 0 && (
-            <PlayersList squadPlayersList={squadPlayersList} onDeletePlayer={onDeletePlayer} />
-          )}
-        </>
-      ) : (
-        <>
-          <div className="flex space-x-2">
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              className="flex-1 p-2 bg-white/20 text-white placeholder-white/50 border-0 rounded-lg focus:ring-2 focus:ring-blue-400 box-border"
-              placeholder="Enter player name"
-            />
+          <button
+            onClick={handleAddPlayer}
+            type="button"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+      <div>
+        {squadPlayersList.map((player) => (
+          <div key={player.id} className="flex justify-between items-center p-2 border-b border-gray-200 dark:border-gray-600">
+            <span className="text-gray-800 dark:text-white">{player.name}</span>
             <button
-              type="button"
-              onClick={handleAddPlayer}
-              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors cursor-pointer"
+              onClick={() => handleDeletePlayer(player.id)}
+              className="text-red-500 hover:text-red-700"
             >
-              Add
+              Delete
             </button>
           </div>
-          {players && players.length > 0 && (
-            <PlayersList players={players} onDeletePlayer={handleDeletePlayer} />
-          )}
-        </>
-      )}
+        ))}
+      </div>
     </div>
   );
 }
+
+export default PlayersManager;

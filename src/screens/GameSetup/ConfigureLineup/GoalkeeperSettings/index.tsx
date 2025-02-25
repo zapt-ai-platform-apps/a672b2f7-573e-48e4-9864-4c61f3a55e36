@@ -3,16 +3,16 @@ import GoalkeeperSelect from './GoalkeeperSelect';
 import GKPlaytimeToggle from './GKPlaytimeToggle';
 
 interface GoalkeeperSettingsProps {
-  selectedGK: string | null;
-  setSelectedGK: (gk: string | null) => void;
+  goalkeeper: string | null;
+  setGoalkeeper: (gk: string | null) => void;
   includeGKPlaytime: boolean;
   setIncludeGKPlaytime: (include: boolean) => void;
   squadPlayers: string[];
 }
 
 function GoalkeeperSettings({
-  selectedGK,
-  setSelectedGK,
+  goalkeeper,
+  setGoalkeeper,
   includeGKPlaytime,
   setIncludeGKPlaytime,
   squadPlayers
@@ -21,13 +21,13 @@ function GoalkeeperSettings({
     <div className="space-y-4">
       <div className="mb-4">
         <GoalkeeperSelect
-          selectedGK={selectedGK}
-          setSelectedGK={setSelectedGK}
+          goalkeeper={goalkeeper}
+          setGoalkeeper={setGoalkeeper}
           squadPlayers={squadPlayers}
         />
-        {selectedGK && (
+        {goalkeeper && (
           <p className="mt-2 text-sm text-green-600 font-medium">
-            Selected Goalkeeper: {selectedGK}
+            Selected Goalkeeper: {goalkeeper}
           </p>
         )}
       </div>

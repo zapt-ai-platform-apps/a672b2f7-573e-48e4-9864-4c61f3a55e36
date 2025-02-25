@@ -1,57 +1,43 @@
-import { useState, useEffect } from "react";
-import { useStateContext } from "../../../hooks/useStateContext";
-import { SquadPlayer, normalizePlayers } from "../utils/playerUtils";
+import { useState } from "react";
 
-function useEditSquadForm() {
-  const { selectedSquad } = useStateContext();
+interface SquadPlayer {
+  id: string;
+  name: string;
+  [key: string]: any;
+}
 
-  const [squadName, setSquadName] = useState(selectedSquad?.name || "");
-  const [squadPlayersList, setSquadPlayersList] = useState<string[]>(() => {
-    if (!selectedSquad?.players) return [];
-    // Extract only player names from the normalized data
-    return normalizePlayers(selectedSquad.players).map(player => player.name);
-  });
-
+export default function useEditSquadForm() {
+  const [squadName, setSquadName] = useState("");
+  const [squadPlayersList, setSquadPlayersList] = useState<SquadPlayer[]>([]);
   const [newPlayerName, setNewPlayerName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (selectedSquad) {
-      setSquadName(selectedSquad.name || "");
-      // Extract only player names from the normalized data
-      const playerNames = normalizePlayers(selectedSquad.players).map(player => player.name);
-      setSquadPlayersList(playerNames);
-    }
-  }, [selectedSquad]);
-
   const handleAddPlayer = () => {
     if (newPlayerName.trim() === "") return;
-    
-    // Add the player name directly to the string array
-    setSquadPlayersList([...squadPlayersList, newPlayerName.trim()]);
+    const newPlayer = { id: Date.now().toString(), name: newPlayerName.trim() };
+    setSquadPlayersList((prev) => [...prev, newPlayer]);
     setNewPlayerName("");
   };
 
-  const handleDeletePlayer = (playerToDelete: string) => {
-    setSquadPlayersList(squadPlayersList.filter((playerName) => playerName !== playerToDelete));
+  const handleDeletePlayer = (id: string) => {
+    setSquadPlayersList((prev) => prev.filter((player) => player.id !== id));
   };
 
-  const handleUpdateSquad = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleUpdateSquad = async (e: React.FormEvent): Promise<void> => {
     setLoading(true);
     setError(null);
-
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        setLoading(false);
-        resolve();
-      }, 1000);
-    });
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    } catch (err) {
+      setError("Failed to update squad");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleBack = () => {
-    // Navigation or cleanup logic can be added here if needed.
+    // Implement back navigation logic if needed
   };
 
   return {
@@ -68,5 +54,3 @@ function useEditSquadForm() {
     handleBack,
   };
 }
-
-export default useEditSquadForm;

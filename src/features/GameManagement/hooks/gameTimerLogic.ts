@@ -3,35 +3,33 @@ export interface GameInterval {
   end?: number;
 }
 
-export function computeTimeElapsed(intervals: GameInterval[], isRunning: boolean): number {
-  let total = 0;
+export function getValidIntervals(gameIntervals: GameInterval[]): GameInterval[] {
+  return gameIntervals.filter(interval => interval.start !== undefined);
+}
+
+export function computeTimeElapsed(validIntervals: GameInterval[], isRunning: boolean): number {
   const now = Date.now();
-  intervals.forEach(interval => {
-    if (typeof interval.start === 'number') {
-      const endTime = interval.end ? interval.end : (isRunning ? now : interval.start);
-      total += endTime - interval.start;
-    }
+  let total = 0;
+  validIntervals.forEach(interval => {
+    const end = interval.end ? interval.end : (isRunning ? now : interval.start);
+    total += (end - interval.start);
   });
   return total;
 }
 
 export function toggleTimerLogic(isRunning: boolean, gameIntervals: GameInterval[]): { newIntervals: GameInterval[]; newIsRunning: boolean } {
   const now = Date.now();
-  if (!isRunning) {
-    return { newIntervals: [...gameIntervals, { start: now }], newIsRunning: true };
+  if (isRunning) {
+    if (gameIntervals.length > 0 && !gameIntervals[gameIntervals.length - 1].end) {
+      const updatedIntervals = [...gameIntervals];
+      updatedIntervals[updatedIntervals.length - 1] = {
+        ...updatedIntervals[updatedIntervals.length - 1],
+        end: now
+      };
+      return { newIntervals: updatedIntervals, newIsRunning: false };
+    }
+    return { newIntervals: gameIntervals, newIsRunning: false };
   } else {
-    if (gameIntervals.length === 0) {
-      return { newIntervals: [], newIsRunning: false };
-    }
-    const newIntervals = [...gameIntervals];
-    const lastInterval = newIntervals[newIntervals.length - 1];
-    if (!lastInterval.end) {
-      lastInterval.end = now;
-    }
-    return { newIntervals, newIsRunning: false };
+    return { newIntervals: [...gameIntervals, { start: now }], newIsRunning: true };
   }
-}
-
-export function getValidIntervals(intervals: GameInterval[]): GameInterval[] {
-  return intervals.filter(interval => typeof interval.start === 'number');
 }

@@ -1,124 +1,75 @@
 import { useState, useEffect } from 'react';
-import * as squadService from './useSquadManagementService';
 import { useStateContext } from '../../../hooks/useStateContext';
 import { Squad } from './useSquadManagementTypes';
 import * as Sentry from "@sentry/browser";
-import { Player } from '../../../types/GameTypes';
-import { processSquads, processSquad, createPlayerObjects } from './squadManagementHelper';
+import {
+  addSquadPlayer,
+  deleteSquadPlayer,
+  createSquad as createSquadHandler,
+  updateSquad as updateSquadHandler,
+  selectSquad,
+  editSquad,
+  cancelEditing,
+  loadSquads
+} from '../../utils/squadManagementHandlers';
 
 function useSquadManagement() {
   const { setSelectedSquad } = useStateContext();
-  const [squadName, setSquadName] = useState<string>('');
-  const [newSquadPlayer, setNewSquadPlayer] = useState<string>('');
+  const [squadName, setSquadName] = useState('');
+  const [newSquadPlayer, setNewSquadPlayer] = useState('');
   const [squadPlayersList, setSquadPlayersList] = useState<string[]>([]);
   const [squads, setSquads] = useState<Squad[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
   const [editingSquad, setEditingSquad] = useState<Squad | null>(null);
 
   useEffect(() => {
-    async function loadSquads() {
-      setLoading(true);
-      try {
-        const fetchedSquads = await squadService.fetchSquads();
-        console.log('Fetched squads:', fetchedSquads);
-        const processedSquads = processSquads(fetchedSquads);
-        setSquads(processedSquads);
-      } catch (error) {
-        console.error('Error loading squads:', error);
-        Sentry.captureException(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadSquads();
+    loadSquads(setLoading, setSquads);
   }, []);
 
   function handleAddSquadPlayer(): void {
-    const trimmedPlayer = newSquadPlayer.trim();
-    if (trimmedPlayer !== '') {
-      setSquadPlayersList([...squadPlayersList, trimmedPlayer]);
-      setNewSquadPlayer('');
-    }
+    addSquadPlayer(newSquadPlayer, squadPlayersList, setSquadPlayersList, setNewSquadPlayer);
   }
 
   function handleDeleteSquadPlayer(player: string): void {
-    setSquadPlayersList(squadPlayersList.filter((p) => p !== player));
+    deleteSquadPlayer(player, squadPlayersList, setSquadPlayersList);
   }
 
   async function handleCreateSquad(): Promise<void> {
-    if (squadName.trim() === '') return;
-    setLoading(true);
-    try {
-      const playerObjects = createPlayerObjects(squadPlayersList);
-      await squadService.createSquad(squadName, JSON.stringify(playerObjects));
-      const fetchedSquads = await squadService.fetchSquads();
-      const processedSquads = processSquads(fetchedSquads);
-      setSquads(processedSquads);
-      setSquadName('');
-      setSquadPlayersList([]);
-      setNewSquadPlayer('');
-    } catch (error) {
-      console.error('Error in handleCreateSquad:', error);
-      Sentry.captureException(error);
-    } finally {
-      setLoading(false);
-    }
+    await createSquadHandler(
+      squadName,
+      squadPlayersList,
+      setLoading,
+      setSquads,
+      setSquadName,
+      setSquadPlayersList,
+      setNewSquadPlayer
+    );
   }
 
   async function handleUpdateSquad(): Promise<void> {
-    if (!editingSquad || squadName.trim() === '') return;
-    setLoading(true);
-    try {
-      const playerObjects = createPlayerObjects(squadPlayersList);
-      await squadService.updateSquad(editingSquad.id, squadName, JSON.stringify(playerObjects));
-      const fetchedSquads = await squadService.fetchSquads();
-      const processedSquads = processSquads(fetchedSquads);
-      setSquads(processedSquads);
-      setEditingSquad(null);
-      setSquadName('');
-      setSquadPlayersList([]);
-      setNewSquadPlayer('');
-    } catch (error) {
-      console.error('Error in handleUpdateSquad:', error);
-      Sentry.captureException(error);
-    } finally {
-      setLoading(false);
-    }
+    await updateSquadHandler(
+      editingSquad,
+      squadName,
+      squadPlayersList,
+      setLoading,
+      setSquads,
+      setEditingSquad,
+      setSquadName,
+      setSquadPlayersList,
+      setNewSquadPlayer
+    );
   }
 
   function handleSelectSquad(squad: Squad): void {
-    setSquadName(squad.name);
-    const playerNames = Array.isArray(squad.players)
-      ? squad.players.map((player: Player | string) => {
-          if (typeof player === 'string') return player;
-          return player.name;
-        })
-      : [];
-    setSquadPlayersList(playerNames);
-    setNewSquadPlayer('');
-    setSelectedSquad(squad);
+    selectSquad(squad, setSquadName, setSquadPlayersList, setNewSquadPlayer, setSelectedSquad);
   }
 
   function handleEditSquad(squad: Squad): void {
-    setEditingSquad(squad);
-    const processedSquad = processSquad(squad);
-    setSelectedSquad(processedSquad);
-    setSquadName(squad.name);
-    const playerNames = Array.isArray(processedSquad.players)
-      ? processedSquad.players.map((player: Player | string) => {
-          if (typeof player === 'string') return player;
-          return player.name;
-        })
-      : [];
-    setSquadPlayersList(playerNames);
-    setNewSquadPlayer('');
+    editSquad(squad, setEditingSquad, setSelectedSquad, setSquadName, setSquadPlayersList, setNewSquadPlayer);
   }
 
   function cancelEdit(): void {
-    setEditingSquad(null);
-    setSquadName('');
-    setSquadPlayersList([]);
-    setNewSquadPlayer('');
+    cancelEditing(setEditingSquad, setSquadName, setSquadPlayersList, setNewSquadPlayer);
   }
 
   return {

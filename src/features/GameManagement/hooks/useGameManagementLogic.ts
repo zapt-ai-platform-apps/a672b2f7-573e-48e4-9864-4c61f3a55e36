@@ -102,7 +102,8 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
 
   const getTimeElapsedFunc = (): string => {
     const validIntervals = getValidIntervals(gameIntervals);
-    return formatTime(computeTimeElapsed(validIntervals, isRunning));
+    const elapsed = computeTimeElapsed(validIntervals, isRunning);
+    return formatTime(elapsed);
   };
 
   const toggleTimerFunc = (): void => {
