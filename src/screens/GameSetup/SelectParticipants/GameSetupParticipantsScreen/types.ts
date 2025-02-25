@@ -1,5 +1,4 @@
-export type ExtendedPlayer = {
+export interface ExtendedPlayer {
   id: string;
   isInMatchSquad: boolean;
-  name?: string;
-};
+}

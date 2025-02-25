@@ -11,13 +11,9 @@ export default function ParticipantItem({ player, isSelected, onToggle }: Partic
   return (
     <div
       onClick={onToggle}
-      className={`p-4 rounded-lg cursor-pointer shadow-md transition-transform transform hover:scale-105 ${
-        isSelected ? 'bg-green-500' : 'bg-gray-700'
-      }`}
+      className={`p-4 border cursor-pointer ${isSelected ? 'bg-blue-200' : 'bg-gray-100'}`}
     >
-      <h2 className="text-xl font-semibold text-white">{player.name || 'Unnamed Player'}</h2>
-      <p className="text-white">ID: {player.id}</p>
-      <p className="text-white">{isSelected ? 'Selected' : 'Not Selected'}</p>
+      <p>{player.id}</p>
     </div>
   );
 }
