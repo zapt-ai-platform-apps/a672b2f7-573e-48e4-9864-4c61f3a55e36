@@ -16,9 +16,16 @@ export default function useMatchSquad() {
   useEffect(() => {
     console.log('selectedSquad in useMatchSquad:', selectedSquad);
     if (selectedSquad) {
-      // If selectedSquad is a Squad, use its players, otherwise use selectedSquad directly
-      const squadPlayers = isSquad(selectedSquad) ? selectedSquad.players : selectedSquad;
-      const initialPlayers = initializeMatchSquadPlayers(squadPlayers, matchSquad as ExtendedPlayer[]);
+      // If selectedSquad is a Squad, use it directly, otherwise create a temporary Squad object
+      const squad: Squad = isSquad(selectedSquad) 
+        ? selectedSquad 
+        : {
+            id: 'temp-squad-id',
+            name: 'Temporary Squad',
+            players: selectedSquad as Player[]
+          };
+          
+      const initialPlayers = initializeMatchSquadPlayers(squad, matchSquad as ExtendedPlayer[]);
       setMatchSquadPlayers(initialPlayers);
     }
   }, [selectedSquad, matchSquad]);

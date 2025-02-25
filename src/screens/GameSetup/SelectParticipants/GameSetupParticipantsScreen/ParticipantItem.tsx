@@ -1,5 +1,5 @@
-import React from 'react';
-import { ExtendedPlayer } from '../../../../features/GameSetup/types/ExtendedPlayer';
+import React from "react";
+import { ExtendedPlayer } from "../../../../features/GameSetup/types/ExtendedPlayer";
 
 interface ParticipantItemProps {
   player: ExtendedPlayer;
@@ -11,9 +11,12 @@ export default function ParticipantItem({ player, isSelected, onToggle }: Partic
   return (
     <div
       onClick={onToggle}
-      className={`p-4 border rounded cursor-pointer ${isSelected ? 'bg-green-200' : 'bg-white'}`}
+      className={`cursor-pointer p-4 border rounded ${isSelected ? "bg-blue-200" : "bg-gray-100"}`}
     >
-      <h2 className="text-xl font-semibold">{player.name || 'Unnamed Player'}</h2>
+      <p className="font-semibold">ID: {player.id}</p>
+      {"name" in player && player.name && (
+        <p className="text-sm">Name: {player.name}</p>
+      )}
     </div>
   );
 }
