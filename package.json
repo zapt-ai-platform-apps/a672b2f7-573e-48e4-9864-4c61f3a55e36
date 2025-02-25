@@ -1,4 +1,8 @@
 {
+  "name": "football-subs",
+  "version": "1.0.0",
+  "description": "An app to manage kids football team substitutions",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
