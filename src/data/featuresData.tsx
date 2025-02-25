@@ -9,6 +9,9 @@ import {
   IntuitiveInterfaceIcon,
 } from './featuresIcons';
 
+// Re-export the Feature type
+export type { Feature } from './Feature';
+
 export const featuresData: Feature[] = [
   {
     id: 1,

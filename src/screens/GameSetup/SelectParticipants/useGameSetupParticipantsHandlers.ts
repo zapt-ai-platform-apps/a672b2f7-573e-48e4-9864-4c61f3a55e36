@@ -1,23 +1,16 @@
-import { SetStateAction } from 'react';
+import { SetStateAction, Dispatch } from 'react';
 import { NavigateFunction } from 'react-router-dom';
 import { ExtendedPlayer } from './ParticipantItem';
 
-// Define an interface for the squad state to fix implicit any error
-interface SquadState {
-  players: Array<{
-    id: string;
-    name: string;
-    isInMatchSquad: boolean;
-  }>;
-  [key: string]: any; // For other properties that might exist
-}
+// Import the Squad type from the correct location
+import { Squad } from '../../../shared/models/player';
 
 /**
  * Custom hook for handling participant selection navigation and validation
  */
 export default function useGameSetupParticipantsHandlers(
   selectedMatchPlayers: ExtendedPlayer[],
-  setSelectedSquad: (value: SetStateAction<SquadState>) => void,
+  setSelectedSquad: Dispatch<SetStateAction<Squad | null>>,
   navigate: NavigateFunction,
   setErrorMessage: (value: SetStateAction<string>) => void
 ) {
@@ -30,15 +23,18 @@ export default function useGameSetupParticipantsHandlers(
       return;
     }
     
-    // Store selected players in state
+    // Store selected players in state, constructing a proper Squad object
     const selectedPlayers = selectedMatchPlayers.map(player => ({
       id: player.id,
       name: player.name,
       isInMatchSquad: true
     }));
     
-    setSelectedSquad((prevState: SquadState) => ({
-      ...prevState,
+    setSelectedSquad((prevState) => ({
+      // Ensure we have the required Squad properties
+      id: prevState?.id || `temp-${Date.now()}`,
+      name: prevState?.name || 'Match Squad',
+      // Include the selected players
       players: selectedPlayers
     }));
     
