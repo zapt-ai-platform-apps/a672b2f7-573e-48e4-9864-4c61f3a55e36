@@ -26,17 +26,16 @@ export function recordGoal(
   ourScore: number,
   opponentScore: number,
   goals: Goal[],
-  gameIntervals: GameInterval[],
-  isRunning: boolean
+  gameIntervals: GameInterval[]
 ): GoalRecordResult {
-  const timeElapsed = getTimeElapsed(gameIntervals, isRunning);
-  // Ensure we're passing an array of goals, not a string
-  const result = addGoal(team, scorerName, ourScore, opponentScore, goals, timeElapsed);
+  const timeElapsed = getTimeElapsed(gameIntervals, false);
+  // Pass only the parameters that match the function signature in scoreOperations
+  const result = addGoal(team, scorerName, timeElapsed, goals);
   
   return {
     updatedGoals: result.newGoals,
-    updatedOurScore: result.newOurScore,
-    updatedOpponentScore: result.newOpponentScore
+    updatedOurScore: team === 'our' ? ourScore + 1 : ourScore,
+    updatedOpponentScore: team === 'opponent' ? opponentScore + 1 : opponentScore
   };
 }
 

@@ -1,37 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useStateContext } from '../../../hooks/useStateContext';
-import initializePlayers from './utils/initializePlayers';
-import { toggleMatchPlayerHelper, toggleStartingPlayerHelper } from './utils/togglePlayers';
+import initializePlayers from '../utils/initializePlayers';
+import { toggleMatchPlayerHelper, toggleStartingPlayerHelper } from '../utils/togglePlayers';
+import ensurePlayerProperties from '../utils/ensurePlayerProperties';
 import type { Player } from '../../../types/GameTypes';
-
-// Ensure that the returned Player objects have all required properties
-function ensurePlayerProperties(player: Partial<Player>): Player {
-  return {
-    id: String(player.id || ''),
-    name: player.name || '',
-    totalPlayTime: player.totalPlayTime || 0,
-    isOnField: player.isOnField || false,
-    isGoalkeeper: player.isGoalkeeper || false,
-    position: player.position || { x: null, y: null },
-    playIntervals: player.playIntervals || [],
-    isStartingPlayer: player.isStartingPlayer || false,
-    isInMatchSquad: player.isInMatchSquad || false,
-    isInStartingLineup: player.isInStartingLineup || false
-  };
-}
 
 function useMatchSquad() {
   const { selectedSquad } = useStateContext();
-
   const [matchSquadPlayers, setMatchSquadPlayers] = useState<Player[]>([]);
 
   useEffect(() => {
-    // Check if selectedSquad exists before initializing players
     if (selectedSquad) {
       const initializedPlayers = initializePlayers(selectedSquad);
-      setMatchSquadPlayers(initializedPlayers.map(ensurePlayerProperties));
+      setMatchSquadPlayers(initializedPlayers.map(player => ensurePlayerProperties(player)));
     } else {
-      // If no squad is selected, set to empty array
       setMatchSquadPlayers([]);
     }
   }, [selectedSquad]);
@@ -39,14 +21,14 @@ function useMatchSquad() {
   function toggleMatchPlayer(playerId: string): void {
     setMatchSquadPlayers((players: Player[]) => {
       const updatedPlayers = toggleMatchPlayerHelper(players, playerId);
-      return updatedPlayers.map(ensurePlayerProperties);
+      return updatedPlayers.map(player => ensurePlayerProperties(player));
     });
   }
 
   function toggleStartingPlayer(playerId: string): void {
     setMatchSquadPlayers((players: Player[]) => {
       const updatedPlayers = toggleStartingPlayerHelper(players, playerId);
-      return updatedPlayers.map(ensurePlayerProperties);
+      return updatedPlayers.map(player => ensurePlayerProperties(player));
     });
   }
 

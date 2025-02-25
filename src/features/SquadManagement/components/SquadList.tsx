@@ -1,6 +1,6 @@
 import React from 'react';
 import SquadCard from './SquadCard';
-import type { Squad } from '../../../components/StateProvider';
+import type { Squad } from '../../../types/GameTypes';
 
 interface SquadListProps {
   squads: Squad[];

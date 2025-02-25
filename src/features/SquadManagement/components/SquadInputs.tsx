@@ -1,56 +1,45 @@
 import React from 'react';
 
-interface SquadInputsProps {
-  localName: string;
-  setLocalName: (name: string) => void;
+interface SquadNameInputProps {
+  squadName: string;
   setSquadName: (name: string) => void;
+}
+
+export function SquadNameInput({ squadName, setSquadName }: SquadNameInputProps): JSX.Element {
+  return (
+    <input
+      type="text"
+      placeholder="Squad Name"
+      value={squadName}
+      onChange={(e) => setSquadName(e.target.value)}
+      className="w-full p-2 border rounded-md"
+    />
+  );
+}
+
+interface PlayerInputProps {
   newSquadPlayer: string;
-  setNewSquadPlayer: (name: string) => void;
+  setNewSquadPlayer: (player: string) => void;
   handleAddSquadPlayer: () => void;
 }
 
-export default function SquadInputs({
-  localName,
-  setLocalName,
-  setSquadName,
-  newSquadPlayer,
-  setNewSquadPlayer,
-  handleAddSquadPlayer,
-}: SquadInputsProps): JSX.Element {
+export function PlayerInput({ newSquadPlayer, setNewSquadPlayer, handleAddSquadPlayer }: PlayerInputProps): JSX.Element {
   return (
-    <>
-      <div>
-        <label className="block text-lg mb-2">Squad Name:</label>
-        <input
-          type="text"
-          value={localName}
-          onChange={(e) => {
-            setLocalName(e.target.value);
-            setSquadName(e.target.value);
-          }}
-          className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded box-border text-lg"
-          placeholder="Enter squad name"
-        />
-      </div>
-      <div>
-        <label className="block text-lg mb-2">Add New Player:</label>
-        <div className="flex space-x-4">
-          <input
-            type="text"
-            value={newSquadPlayer}
-            onChange={(e) => setNewSquadPlayer(e.target.value)}
-            className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded box-border text-lg"
-            placeholder="Player Name"
-          />
-          <button
-            type="button"
-            onClick={handleAddSquadPlayer}
-            className="px-6 py-4 bg-green-500 text-white text-lg rounded-md cursor-pointer hover:bg-green-600 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400"
-          >
-            Add
-          </button>
-        </div>
-      </div>
-    </>
+    <div className="flex">
+      <input
+        type="text"
+        placeholder="Add Player"
+        value={newSquadPlayer}
+        onChange={(e) => setNewSquadPlayer(e.target.value)}
+        className="flex-grow p-2 border rounded-l-md"
+      />
+      <button
+        type="button"
+        onClick={handleAddSquadPlayer}
+        className="px-4 py-2 bg-blue-500 text-white rounded-r-md"
+      >
+        Add
+      </button>
+    </div>
   );
 }

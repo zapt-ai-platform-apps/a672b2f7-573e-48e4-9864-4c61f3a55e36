@@ -1,6 +1,6 @@
 import React from 'react';
 import SquadList from './SquadList';
-import type { Squad } from '../../../components/StateProvider';
+import type { Squad } from '../../../types/GameTypes';
 
 interface SquadListSectionProps {
   squads: Squad[] | null;

@@ -6,7 +6,7 @@ function parsePlayers(text: string): Player[] {
     const trimmed = line.trim();
     if (trimmed) {
       const player: Player = {
-        id: Date.now() + index,
+        id: String(Date.now() + index),
         name: trimmed,
         isStartingPlayer: false
       };

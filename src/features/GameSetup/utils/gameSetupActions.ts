@@ -2,7 +2,7 @@ import { Player } from '../../../types/GameTypes';
 
 export function addPlayerToList(players: Player[], name: string): Player[] {
   const newPlayer: Player = {
-    id: Date.now(),
+    id: String(Date.now()),
     name,
     isStartingPlayer: false
   };

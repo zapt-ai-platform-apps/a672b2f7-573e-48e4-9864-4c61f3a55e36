@@ -1,67 +1,89 @@
 import React from 'react';
-import SquadNameInput from './SquadNameInput';
-import PlayersManager from './PlayersManager';
-import type { Player } from './PlayersManager';
+import { SquadNameInput, PlayerInput } from './SquadInputs';
+import SquadPlayersList from './SquadPlayersList';
 
 interface SquadFormProps {
   squadName: string;
-  players: Player[];
-  onSquadNameChange: (name: string) => void;
-  onPlayersChange: (players: Player[]) => void;
-  onSubmit: () => void;
-  onCancel: () => void;
-  isSubmitting: boolean;
-  submitButtonText: string;
-  title: string;
+  setSquadName: (name: string) => void;
+  newSquadPlayer: string;
+  setNewSquadPlayer: (player: string) => void;
+  squadPlayersList: any[];
+  handleAddSquadPlayer: () => void;
+  handleDeleteSquadPlayer: (player: any) => void;
+  handleCreateSquad?: () => void;
+  onUpdateSquad?: () => void;
+  editMode?: boolean;
+  loading: boolean;
 }
 
 export default function SquadForm({
   squadName,
-  players,
-  onSquadNameChange,
-  onPlayersChange,
-  onSubmit,
-  onCancel,
-  isSubmitting,
-  submitButtonText,
-  title
+  setSquadName,
+  newSquadPlayer,
+  setNewSquadPlayer,
+  squadPlayersList,
+  handleAddSquadPlayer,
+  handleDeleteSquadPlayer,
+  handleCreateSquad,
+  onUpdateSquad,
+  editMode = false,
+  loading
 }: SquadFormProps): JSX.Element {
-  const handleSubmit = (e: React.FormEvent): void => {
-    e.preventDefault();
-    onSubmit();
-  };
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <h2 className="text-2xl font-bold mb-6 text-white">{title}</h2>
-      
-      <SquadNameInput
-        value={squadName}
-        onChange={(e) => onSquadNameChange(e.target.value)}
-        className="bg-white/20 text-white placeholder-white/50 border-0 focus:ring-2 focus:ring-blue-400"
+    <div className="space-y-6">
+      <SquadNameInput 
+        squadName={squadName} 
+        setSquadName={setSquadName} 
       />
       
-      <PlayersManager
-        players={players}
-        onPlayersChange={onPlayersChange}
+      <PlayerInput 
+        newSquadPlayer={newSquadPlayer} 
+        setNewSquadPlayer={setNewSquadPlayer} 
+        handleAddSquadPlayer={handleAddSquadPlayer} 
       />
       
-      <div className="flex justify-between">
+      <SquadPlayersList 
+        squadPlayersList={squadPlayersList} 
+        handleDeleteSquadPlayer={handleDeleteSquadPlayer} 
+      />
+      
+      {editMode ? (
         <button
-          type="button"
-          onClick={onCancel}
-          className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg shadow-md transition-colors cursor-pointer"
+          className="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white text-lg rounded-md cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={onUpdateSquad}
+          disabled={loading || !squadName || squadPlayersList.length === 0}
         >
-          Cancel
+          {loading ? (
+            <span className="flex items-center justify-center">
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Updating Squad...
+            </span>
+          ) : (
+            'Update Squad'
+          )}
         </button>
+      ) : (
         <button
-          type="submit"
-          disabled={isSubmitting}
-          className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-lg shadow-md transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white text-lg rounded-md cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={handleCreateSquad}
+          disabled={loading || !squadName || squadPlayersList.length === 0}
         >
-          {isSubmitting ? 'Saving...' : submitButtonText}
+          {loading ? (
+            <span className="flex items-center justify-center">
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Creating Squad...
+            </span>
+          ) : (
+            'Create Squad'
+          )}
         </button>
-      </div>
-    </form>
+      )}
+    </div>
   );
 }

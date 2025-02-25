@@ -49,7 +49,7 @@ function PitchVisualization({ players }: PitchVisualizationProps): JSX.Element {
       </h2>
       <Pitch 
         pitchRef={pitchRef} 
-        playerData={players} 
+        playerData={playersWithValidPositions} 
         handlePointerDown={handlePointerDownWrapper}
         players={playersWithValidPositions} 
       />
