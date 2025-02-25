@@ -5,6 +5,5 @@ export function getPlayersWithDefaults(players: Player[]): Player[] {
     ...player,
     isOnField: player.isOnField !== undefined ? player.isOnField : false,
     playTime: player.playTime !== undefined ? player.playTime : 0,
-    gkPlayTime: player.gkPlayTime !== undefined ? player.gkPlayTime : 0,
   }));
 }
