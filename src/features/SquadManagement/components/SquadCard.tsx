@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Squad } from '../../../components/StateProvider';
+import type { Squad } from '../../../types/GameTypes'; // Updated import to correct location
 
 interface SquadCardProps {
   squad: Squad;

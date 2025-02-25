@@ -26,9 +26,14 @@ function useMatchSquad() {
   const [matchSquadPlayers, setMatchSquadPlayers] = useState<Player[]>([]);
 
   useEffect(() => {
-    // Ensure all players have the required properties
-    const initializedPlayers = initializePlayers(selectedSquad);
-    setMatchSquadPlayers(initializedPlayers.map(ensurePlayerProperties));
+    // Check if selectedSquad exists before initializing players
+    if (selectedSquad) {
+      const initializedPlayers = initializePlayers(selectedSquad);
+      setMatchSquadPlayers(initializedPlayers.map(ensurePlayerProperties));
+    } else {
+      // If no squad is selected, set to empty array
+      setMatchSquadPlayers([]);
+    }
   }, [selectedSquad]);
 
   function toggleMatchPlayer(playerId: string): void {

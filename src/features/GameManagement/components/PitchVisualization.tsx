@@ -33,6 +33,15 @@ function PitchVisualization({ players }: PitchVisualizationProps): JSX.Element {
     handlePointerDown(e.nativeEvent);
   };
 
+  // Ensure players have numeric position values before passing to Pitch
+  const playersWithValidPositions = players.map(player => ({
+    ...player,
+    position: {
+      x: player.position.x !== null ? player.position.x : 0,
+      y: player.position.y !== null ? player.position.y : 0
+    }
+  }));
+
   return (
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-4 text-green-600 dark:text-green-400">
@@ -42,7 +51,7 @@ function PitchVisualization({ players }: PitchVisualizationProps): JSX.Element {
         pitchRef={pitchRef} 
         playerData={players} 
         handlePointerDown={handlePointerDownWrapper}
-        players={players} 
+        players={playersWithValidPositions} 
       />
       <p className="mt-4 text-gray-700 dark:text-gray-300">
         Drag and drop players to set their positions.

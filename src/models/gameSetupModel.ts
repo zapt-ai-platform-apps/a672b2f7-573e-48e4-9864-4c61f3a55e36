@@ -30,7 +30,8 @@ export function getStartingPlayers(selectedSquad: Squad, matchSquad?: unknown): 
     } else if (typeof selectedSquad.players === 'object') {
       playersArray = selectedSquad.players ? [selectedSquad.players as GamePlayer] : [];
     } else if (typeof selectedSquad.players === 'string') {
-      playersArray = parsePlayers(selectedSquad.players) as GamePlayer[];
+      // Type conversion fixed: first cast to unknown, then to GamePlayer[]
+      playersArray = parsePlayers(selectedSquad.players) as unknown as GamePlayer[];
     } else {
       return [];
     }
@@ -46,7 +47,7 @@ export function getStartingPlayers(selectedSquad: Squad, matchSquad?: unknown): 
         name: String(nameValue || ''), 
         isStartingPlayer: player.isStartingPlayer !== undefined ? player.isStartingPlayer : false 
       };
-    }) as GamePlayer[]; // Explicitly cast the return type to GamePlayer[]
+    }) as unknown as GamePlayer[]; // Fixed type conversion with double casting
   } catch (error) {
     console.error('Error processing starting players:', error);
     Sentry.captureException(error);
