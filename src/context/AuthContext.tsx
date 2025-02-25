@@ -1,13 +1,5 @@
 import { createContext, useContext } from 'react';
-
-export type User = {
-  id: string;
-  email: string;
-};
-
-export type Session = {
-  user: User;
-};
+import { Session } from '@supabase/supabase-js';
 
 export type AuthContextType = {
   session: Session | null;

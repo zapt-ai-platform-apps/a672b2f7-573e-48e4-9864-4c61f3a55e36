@@ -1,34 +1,33 @@
+import { Player } from '../../types/GameTypes';
+
 export function formatTime(seconds: number): string {
-  const safeSeconds = seconds < 0 ? 0 : seconds;
-  const mins = Math.floor(safeSeconds / 60);
-  const secs = safeSeconds % 60;
-  const paddedMins = String(mins).padStart(2, '0');
-  const paddedSecs = String(secs).padStart(2, '0');
-  return `${paddedMins}:${paddedSecs}`;
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
 }
 
-type Player = {
-  id: string;
-  name: string;
-  position: string;
-  status: string;
-  minutesPlayed: number;
-  entryTimes: number[];
-  exitTimes: number[];
-};
+export function calculateElapsedTime(
+  startTime: number,
+  endTime: number | null = null
+): number {
+  const end = endTime || Date.now();
+  return Math.floor((end - startTime) / 1000);
+}
 
-export function calculateMinutesPlayed(player: Player, gameTime: number, isTimerRunning: boolean): number {
-  if (!isTimerRunning) {
-    return player.minutesPlayed;
-  }
-  let totalSeconds = 0;
-  const { entryTimes, exitTimes } = player;
-  const pairedRounds = Math.min(entryTimes.length, exitTimes.length);
-  for (let i = 0; i < pairedRounds; i++) {
-    totalSeconds += exitTimes[i] - entryTimes[i];
-  }
-  if (entryTimes.length > exitTimes.length) {
-    totalSeconds += gameTime - entryTimes[entryTimes.length - 1];
-  }
-  return Math.floor(totalSeconds / 60);
+export function calculateTotalPlayTime(
+  intervals: { startTime: number; endTime: number | null }[]
+): number {
+  if (!intervals || intervals.length === 0) return 0;
+  
+  return intervals.reduce((total, interval) => {
+    const elapsed = calculateElapsedTime(interval.startTime, interval.endTime);
+    return total + elapsed;
+  }, 0);
+}
+
+export function calculateMinPlayTime(players: Player[]): number {
+  if (!players || players.length === 0) return 0;
+  
+  const playTimes = players.map(player => player.totalPlayTime || 0);
+  return Math.min(...playTimes);
 }

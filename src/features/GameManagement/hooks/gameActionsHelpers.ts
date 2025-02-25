@@ -1,4 +1,4 @@
-import { recordGoal as recordGoalModel } from '../../../shared/models/scoreModel';
+import { recordGoal as recordGoalModel } from '../../../shared/models/scoreOperations';
 import { handlePlayerAdjustment as handlePlayerAdjustmentModel } from '../../../shared/models/playerAdjustments';
 import { processPlayerLists } from '../../../shared/models/listUtils';
 import type { Goal, Player } from '../../../types/GameTypes';
