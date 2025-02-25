@@ -6,7 +6,7 @@ export function getTotalPlayTime(
   isRunning: boolean
 ): number {
   const baseTime = (player.playTime as number) || 0;
-  if (!includeGKPlaytime && player.role === 'goalkeeper') {
+  if (!includeGKPlaytime && player.isGoalkeeper) {
     return baseTime;
   }
   return baseTime + (isRunning ? 1 : 0);

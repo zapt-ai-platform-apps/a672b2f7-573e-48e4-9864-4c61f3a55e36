@@ -12,3 +12,5 @@ export function StateProvider({ children }: StateProviderProps): JSX.Element {
     </StateContext.Provider>
   );
 }
+
+export default StateProvider;
