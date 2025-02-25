@@ -2,8 +2,8 @@ import { SetStateAction, Dispatch } from 'react';
 import { NavigateFunction } from 'react-router-dom';
 import { ExtendedPlayer } from './ParticipantItem';
 
-// Import the Squad type from the correct location
-import { Squad } from '../../../types/GameTypes';
+// Import the Squad and Player types from the correct location
+import { Squad, Player } from '../../../types/GameTypes';
 
 /**
  * Custom hook for handling participant selection navigation and validation
@@ -27,7 +27,17 @@ export default function useGameSetupParticipantsHandlers(
     const selectedPlayers = selectedMatchPlayers.map(player => ({
       id: player.id,
       name: player.name,
-      isInMatchSquad: true
+      isInMatchSquad: true,
+      // Add the missing properties required by the Player interface
+      totalPlayTime: 0,
+      isOnField: false,
+      isGoalkeeper: false,
+      position: { x: 0, y: 0 },
+      // Optional properties that might be needed later
+      playTime: 0,
+      lastStart: 0,
+      playIntervals: [],
+      status: 'bench'
     }));
     
     setSelectedSquad((prevState: Squad | null) => ({
@@ -35,7 +45,7 @@ export default function useGameSetupParticipantsHandlers(
       id: prevState?.id || `temp-${Date.now()}`,
       name: prevState?.name || 'Match Squad',
       // Include the selected players
-      players: selectedPlayers
+      players: selectedPlayers as Player[]
     }));
     
     // Navigate to next step (starting lineup)
