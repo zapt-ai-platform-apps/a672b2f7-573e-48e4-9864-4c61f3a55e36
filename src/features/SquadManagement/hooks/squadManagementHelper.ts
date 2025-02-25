@@ -1,4 +1,4 @@
-import { parsePlayers } from '../../../utils/parsePlayers';
+import parsePlayers from '../../../utils/parsePlayers';
 
 export function processSquads(fetchedSquads: any[]): any[] {
   return fetchedSquads.map(squad => ({

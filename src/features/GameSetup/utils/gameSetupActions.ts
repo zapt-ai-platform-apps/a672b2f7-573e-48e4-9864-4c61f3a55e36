@@ -3,7 +3,15 @@ import { Player } from '../../../types/GameTypes';
 export function addPlayerToList(players: Player[], name: string): Player[] {
   return [
     ...players,
-    { id: Date.now(), name, isStartingPlayer: true }
+    { 
+      id: String(Date.now()), 
+      name, 
+      isStartingPlayer: true,
+      totalPlayTime: 0,
+      isOnField: false,
+      isGoalkeeper: false,
+      position: { x: 0, y: 0 }
+    }
   ];
 }
 

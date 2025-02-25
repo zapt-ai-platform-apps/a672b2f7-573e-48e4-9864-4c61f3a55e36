@@ -6,7 +6,15 @@ export default function parsePlayers(text: string): Player[] {
     .map((line, index) => {
       const trimmed = line.trim();
       if (trimmed) {
-        return { id: index, name: trimmed, isStartingPlayer: false };
+        return { 
+          id: String(index), 
+          name: trimmed, 
+          isStartingPlayer: false,
+          totalPlayTime: 0,
+          isOnField: false,
+          isGoalkeeper: false,
+          position: { x: 0, y: 0 }
+        };
       }
       return null;
     })
