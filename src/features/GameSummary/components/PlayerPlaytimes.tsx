@@ -1,37 +1,48 @@
 import React from 'react';
 
-interface Player {
-  name: string;
-  // Additional player properties can be defined here
-}
+type Player = {
+  id: string;
+  name?: string;
+  playerName?: string;
+  position: string;
+  status: string;
+  minutesPlayed: number;
+};
 
 interface PlayerPlaytimesProps {
-  playerData: Player[];
-  includeGKPlaytime: boolean;
-  getTotalPlayTime: (player: Player) => number;
-  formatTime: (time: number) => string;
+  activePlayers: Player[];
+  benchPlayers: Player[];
 }
 
-function PlayerPlaytimes({ playerData, includeGKPlaytime, getTotalPlayTime, formatTime }: PlayerPlaytimesProps): JSX.Element {
-  const dataArray = Array.isArray(playerData) ? playerData : [];
-  const sortedPlayerData = dataArray.sort((a, b) => getTotalPlayTime(b) - getTotalPlayTime(a));
+const PlayerPlaytimes: React.FC<PlayerPlaytimesProps> = ({ activePlayers, benchPlayers }) => {
+  // Combine and sort all players by minutes played (descending)
+  const allPlayers = [...activePlayers, ...benchPlayers].sort(
+    (a, b) => b.minutesPlayed - a.minutesPlayed
+  );
 
   return (
-    <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-4 text-green-600 dark:text-green-400">Player Playtimes</h2>
-      <ul>
-        {sortedPlayerData.map((player, index) => (
-          <li key={index} className="flex justify-between items-center mb-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
-            <div className="font-medium text-lg text-gray-800 dark:text-white">{player.name}</div>
-            <div className="text-gray-800 dark:text-white">{formatTime(getTotalPlayTime(player))}</div>
-          </li>
+    <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+      <h3 className="text-xl font-semibold mb-3 text-gray-800 dark:text-white">
+        Player Play Times
+      </h3>
+      <div className="space-y-2">
+        {allPlayers.map((player) => (
+          <div
+            key={player.id}
+            data-testid="player-playtime"
+            className="flex justify-between items-center py-1 border-b border-gray-200 dark:border-gray-700 last:border-0"
+          >
+            <span className="text-gray-700 dark:text-gray-300">
+              {player.name || player.playerName}
+            </span>
+            <span className="text-gray-600 dark:text-gray-400 font-medium">
+              {player.minutesPlayed} min
+            </span>
+          </div>
         ))}
-      </ul>
-      {!includeGKPlaytime && (
-        <p className="mt-4 text-gray-700 dark:text-gray-300">Note: Playtime for goalkeepers is not included.</p>
-      )}
+      </div>
     </div>
   );
-}
+};
 
 export default PlayerPlaytimes;

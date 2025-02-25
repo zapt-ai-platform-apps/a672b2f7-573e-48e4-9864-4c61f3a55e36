@@ -1,42 +1,53 @@
-import { Player } from './playerModel';
+interface Player {
+  id: string;
+  name: string;
+  position: string;
+  status: string;
+  minutesPlayed: number;
+  entryTimes: number[];
+  exitTimes: number[];
+}
 
 export function performSubstitution(
-  playerData: Player[],
-  selectedSubOffPlayer: Player,
-  selectedSubOnPlayer: Player,
-  isRunning: boolean
-): Player[] {
-  return playerData.map(player => {
-    if (player.id === selectedSubOffPlayer.id) {
-      return {
-        ...selectedSubOffPlayer,
-        isOnField: false,
-        playIntervals:
-          isRunning &&
-          selectedSubOffPlayer.playIntervals &&
-          selectedSubOffPlayer.playIntervals.length > 0 &&
-          !selectedSubOffPlayer.playIntervals[selectedSubOffPlayer.playIntervals.length - 1].endTime
-            ? [
-                ...selectedSubOffPlayer.playIntervals.slice(0, -1),
-                {
-                  ...selectedSubOffPlayer.playIntervals[selectedSubOffPlayer.playIntervals.length - 1],
-                  endTime: Date.now()
-                }
-              ]
-            : selectedSubOffPlayer.playIntervals
-      };
-    } else if (player.id === selectedSubOnPlayer.id) {
-      return {
-        ...selectedSubOnPlayer,
-        isOnField: true,
-        playIntervals: isRunning
-          ? [
-              ...(selectedSubOnPlayer.playIntervals || []),
-              { startTime: Date.now(), endTime: null }
-            ]
-          : selectedSubOnPlayer.playIntervals
-      };
+  activePlayers: Player[],
+  benchPlayers: Player[],
+  playerOutId: string,
+  playerInId: string,
+  gameTime: number
+): { updatedActivePlayers: Player[]; updatedBenchPlayers: Player[] } {
+  const activeIndex = activePlayers.findIndex(p => p.id === playerOutId);
+  const benchIndex = benchPlayers.findIndex(p => p.id === playerInId);
+  if (activeIndex === -1 || benchIndex === -1) {
+    throw new Error('Player not found');
+  }
+
+  const playerOut = activePlayers[activeIndex];
+  const playerIn = benchPlayers[benchIndex];
+
+  const updatedPlayerIn = {
+    ...playerIn,
+    position: playerIn.position === 'unassigned' ? playerOut.position : playerIn.position,
+    entryTimes: [...playerIn.entryTimes, gameTime]
+  };
+
+  const updatedPlayerOut = {
+    ...playerOut,
+    exitTimes: [...playerOut.exitTimes, gameTime]
+  };
+
+  const updatedActivePlayers = activePlayers.map((player, index) => {
+    if (index === activeIndex) {
+      return updatedPlayerIn;
     }
     return player;
   });
+
+  const updatedBenchPlayers = benchPlayers.map((player, index) => {
+    if (index === benchIndex) {
+      return updatedPlayerOut;
+    }
+    return player;
+  });
+
+  return { updatedActivePlayers, updatedBenchPlayers };
 }
