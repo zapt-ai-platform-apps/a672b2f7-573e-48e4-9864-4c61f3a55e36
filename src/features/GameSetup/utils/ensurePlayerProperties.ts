@@ -1,38 +1,23 @@
-import type { Player } from '../../../types/GameTypes';
+import { Player, Position } from '../../../types/GameTypes';
 
-function ensurePlayerProperties(player: Partial<Player> | string): Player {
-  if (typeof player === 'string') {
-    return {
-      id: String(Date.now() + Math.random()),
-      name: player,
-      totalPlayTime: 0,
-      isOnField: false,
-      isGoalkeeper: false,
-      position: { x: 0, y: 0 },
-      playIntervals: [],
-      isStartingPlayer: false,
-      isInMatchSquad: false,
-      isInStartingLineup: false
-    };
-  }
-
-  return {
-    id: String(player.id || ''),
-    name: player.name || '',
+/**
+ * Ensures all player objects have the required properties
+ * This is used when loading players from different sources that might
+ * have different property structures
+ */
+export function ensurePlayerProperties(players: Player[]): Player[] {
+  return players.map(player => ({
+    ...player,
     totalPlayTime: player.totalPlayTime || 0,
-    isOnField: player.isOnField || false,
-    isGoalkeeper: player.isGoalkeeper || false,
-    position: typeof player.position === 'object' && player.position !== null
-      ? {
-          x: typeof player.position.x === 'number' ? player.position.x : 0,
-          y: typeof player.position.y === 'number' ? player.position.y : 0
-        }
-      : { x: 0, y: 0 },
-    playIntervals: player.playIntervals || [],
-    isStartingPlayer: player.isStartingPlayer || false,
-    isInMatchSquad: player.isInMatchSquad || false,
-    isInStartingLineup: player.isInStartingLineup || false
-  };
+    isOnField: typeof player.isOnField === 'boolean' ? player.isOnField : false,
+    isGoalkeeper: typeof player.isGoalkeeper === 'boolean' ? player.isGoalkeeper : false,
+    isStartingPlayer: typeof player.isStartingPlayer === 'boolean' ? player.isStartingPlayer : false,
+    isInStartingLineup: typeof player.isInStartingLineup === 'boolean' ? player.isInStartingLineup : false,
+    isInMatchSquad: typeof player.isInMatchSquad === 'boolean' ? player.isInMatchSquad : false,
+    position: typeof player.position === 'string' 
+      ? { x: 0, y: 0 } as Position 
+      : (player.position || { x: 0, y: 0 }) as Position,
+    playTime: player.playTime || 0,
+    playIntervals: player.playIntervals || []
+  }));
 }
-
-export default ensurePlayerProperties;

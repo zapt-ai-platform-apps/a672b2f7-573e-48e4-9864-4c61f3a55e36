@@ -1,4 +1,4 @@
-import { Player } from '../types/GameTypes';
+import { Player, Position } from '../types/GameTypes';
 
 /**
  * Parses a text string containing player names (one per line)
@@ -12,12 +12,18 @@ export function parsePlayers(text: string): Player[] {
     .map(name => name.trim())
     .filter(name => name)
     .map(name => ({
-      id: String(Date.now() + Math.random()), // Convert to string
+      id: String(Date.now() + Math.random()),
       name,
       isStartingPlayer: false,
       totalPlayTime: 0,
+      playTime: 0,
       isOnField: false,
       isGoalkeeper: false,
-      position: { x: 0, y: 0 }
+      position: { x: 0, y: 0 } as Position,
+      // Ensure all required properties are initialized
+      lastStart: undefined,
+      isInMatchSquad: false,
+      isInStartingLineup: false,
+      playIntervals: []
     }));
 }

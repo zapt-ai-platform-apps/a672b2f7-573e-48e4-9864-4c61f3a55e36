@@ -8,23 +8,23 @@ export interface Player {
   name: string;
   number?: string;
   totalPlayTime: number;
-  playTime?: number; // Added to fix timeOperations references
-  lastStart?: number; // Added to fix gamePlayerOperations references
+  playTime?: number;
+  lastStart?: number;
   isOnField: boolean;
   isGoalkeeper: boolean;
   isInMatchSquad?: boolean;
   isStartingPlayer?: boolean;
-  isInStartingLineup?: boolean; // Added missing property
-  // Allow position to be either a Position object or a string
-  position: Position | string;
+  isInStartingLineup?: boolean;
+  // Update position type to be consistent
+  position: Position;
   // Add missing properties needed by Game Summary
   status?: string;
   minutesPlayed?: number;
   playIntervals?: Array<{ 
     start: number; 
     end?: number;
-    startTime?: number; // Added to support goalkeeperModel
-    endTime?: number | null; // Added to support goalkeeperModel
+    startTime?: number;
+    endTime?: number | null;
     isGoalkeeper?: boolean;
   }>;
 }

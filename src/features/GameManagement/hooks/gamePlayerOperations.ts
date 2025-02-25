@@ -1,4 +1,4 @@
-import { Player } from '../../../types/GameTypes';
+import { Player, Position } from '../../../types/GameTypes';
 
 export function getTotalPlayTime(player: Player | undefined, includeGKPlaytime: boolean, isRunning: boolean): number {
   if (!player) {
@@ -40,9 +40,13 @@ export function handlePlayerAdjustment(players: Player[], playerId: string | num
         name: `Player ${playerId}`, 
         playTime: 0,
         totalPlayTime: 0,
-        position: { x: 0, y: 0 },
+        position: { x: 0, y: 0 } as Position,
         isOnField: true, 
-        isGoalkeeper: false 
+        isGoalkeeper: false,
+        isInMatchSquad: false,
+        isStartingPlayer: false,
+        isInStartingLineup: false,
+        playIntervals: []
       };
       return [...players, newPlayer];
     }
