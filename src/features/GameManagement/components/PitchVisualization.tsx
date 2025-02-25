@@ -37,8 +37,8 @@ function PitchVisualization({ players }: PitchVisualizationProps): JSX.Element {
   const playersWithValidPositions = players.map(player => ({
     ...player,
     position: {
-      x: player.position.x !== null ? player.position.x : 0,
-      y: player.position.y !== null ? player.position.y : 0
+      x: typeof player.position.x === 'number' ? player.position.x : 0,
+      y: typeof player.position.y === 'number' ? player.position.y : 0
     }
   }));
 

@@ -3,6 +3,8 @@ import * as squadService from './useSquadManagementService';
 import { useStateContext } from '../../../hooks/useStateContext';
 import { Squad } from './useSquadManagementTypes';
 import * as Sentry from "@sentry/browser";
+import { Player } from '../../../types/GameTypes';
+import { processSquads, processSquad, createPlayerObjects } from './squadManagementHelper';
 
 function useSquadManagement() {
   const { setSelectedSquad } = useStateContext();
@@ -19,7 +21,8 @@ function useSquadManagement() {
       try {
         const fetchedSquads = await squadService.fetchSquads();
         console.log('Fetched squads:', fetchedSquads);
-        setSquads(fetchedSquads);
+        const processedSquads = processSquads(fetchedSquads);
+        setSquads(processedSquads);
       } catch (error) {
         console.error('Error loading squads:', error);
         Sentry.captureException(error);
@@ -46,9 +49,11 @@ function useSquadManagement() {
     if (squadName.trim() === '') return;
     setLoading(true);
     try {
-      await squadService.createSquad(squadName, squadPlayersList);
+      const playerObjects = createPlayerObjects(squadPlayersList);
+      await squadService.createSquad(squadName, JSON.stringify(playerObjects));
       const fetchedSquads = await squadService.fetchSquads();
-      setSquads(fetchedSquads);
+      const processedSquads = processSquads(fetchedSquads);
+      setSquads(processedSquads);
       setSquadName('');
       setSquadPlayersList([]);
       setNewSquadPlayer('');
@@ -64,9 +69,11 @@ function useSquadManagement() {
     if (!editingSquad || squadName.trim() === '') return;
     setLoading(true);
     try {
-      await squadService.updateSquad(editingSquad.id, squadName, squadPlayersList);
+      const playerObjects = createPlayerObjects(squadPlayersList);
+      await squadService.updateSquad(editingSquad.id, squadName, JSON.stringify(playerObjects));
       const fetchedSquads = await squadService.fetchSquads();
-      setSquads(fetchedSquads);
+      const processedSquads = processSquads(fetchedSquads);
+      setSquads(processedSquads);
       setEditingSquad(null);
       setSquadName('');
       setSquadPlayersList([]);
@@ -81,16 +88,29 @@ function useSquadManagement() {
 
   function handleSelectSquad(squad: Squad): void {
     setSquadName(squad.name);
-    setSquadPlayersList(squad.players || []);
+    const playerNames = Array.isArray(squad.players)
+      ? squad.players.map((player: Player | string) => {
+          if (typeof player === 'string') return player;
+          return player.name;
+        })
+      : [];
+    setSquadPlayersList(playerNames);
     setNewSquadPlayer('');
     setSelectedSquad(squad);
   }
 
   function handleEditSquad(squad: Squad): void {
     setEditingSquad(squad);
-    setSelectedSquad(squad);
+    const processedSquad = processSquad(squad);
+    setSelectedSquad(processedSquad);
     setSquadName(squad.name);
-    setSquadPlayersList(squad.players || []);
+    const playerNames = Array.isArray(processedSquad.players)
+      ? processedSquad.players.map((player: Player | string) => {
+          if (typeof player === 'string') return player;
+          return player.name;
+        })
+      : [];
+    setSquadPlayersList(playerNames);
     setNewSquadPlayer('');
   }
 

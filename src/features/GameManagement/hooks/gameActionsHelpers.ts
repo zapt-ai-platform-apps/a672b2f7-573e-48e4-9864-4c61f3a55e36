@@ -30,8 +30,8 @@ export function recordGoal(
   isRunning: boolean
 ): GoalRecordResult {
   const timeElapsed = getTimeElapsed(gameIntervals, isRunning);
-  // Fixed: Removed the extra parameters (goals, timeElapsed) from addGoal call
-  const result = addGoal(team, scorerName, ourScore, opponentScore);
+  // Ensure we're passing an array of goals, not a string
+  const result = addGoal(team, scorerName, ourScore, opponentScore, goals, timeElapsed);
   
   return {
     updatedGoals: result.newGoals,

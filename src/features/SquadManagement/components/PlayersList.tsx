@@ -1,37 +1,60 @@
 import React from 'react';
 
-interface Player {
+interface ObjectPlayer {
   id: string;
   name: string;
-  [key: string]: any;
 }
 
 interface PlayersListProps {
-  players: Player[];
-  onRemove: (id: string) => void;
+  players?: ObjectPlayer[];
+  squadPlayersList?: string[];
+  onDeletePlayer?: (identifier: string) => void;
 }
 
-export default function PlayersList({ players, onRemove }: PlayersListProps): JSX.Element {
-  if (players.length === 0) {
-    return <p className="text-white/70 italic">No players added yet.</p>;
+export default function PlayersList({ players, squadPlayersList, onDeletePlayer }: PlayersListProps): JSX.Element | null {
+  if (squadPlayersList && squadPlayersList.length > 0) {
+    return (
+      <div className="mt-2">
+        <ul className="space-y-2">
+          {squadPlayersList.map((player) => (
+            <li
+              key={player}
+              className="flex justify-between items-center p-2 bg-white/10 rounded-lg"
+            >
+              <span className="text-white">{player}</span>
+              <button
+                type="button"
+                onClick={() => onDeletePlayer && onDeletePlayer(player)}
+                className="text-red-400 hover:text-red-300 transition-colors cursor-pointer"
+              >
+                Remove
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
   }
-
-  return (
-    <ul className="space-y-2">
-      {players.map((player) => (
-        <li
-          key={player.id}
-          className="flex justify-between items-center p-3 bg-white/20 rounded-lg text-white"
-        >
-          <span>{player.name}</span>
-          <button
-            onClick={() => onRemove(player.id)}
-            className="text-red-300 hover:text-red-500 transition-colors cursor-pointer"
+  if (players && players.length > 0) {
+    return (
+      <ul className="space-y-2 mt-2">
+        {players.map((player) => (
+          <li
+            key={player.id}
+            className="flex justify-between items-center p-2 bg-white/10 rounded-lg"
           >
-            Remove
-          </button>
-        </li>
-      ))}
-    </ul>
-  );
+            <span className="text-white">{player.name}</span>
+            <button
+              type="button"
+              onClick={() => onDeletePlayer && onDeletePlayer(player.id)}
+              className="text-red-400 hover:text-red-300 transition-colors cursor-pointer"
+            >
+              Remove
+            </button>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+  return null;
 }

@@ -1,60 +1,33 @@
-import { recordGoal, handlePlayerAdjustment, updatePlayerLists } from './gameActionsHelpers';
-import type { Goal, Player } from '../../../types/GameTypes';
-import type { GameInterval } from './gameActionsHelpers';
+import { computeTimeElapsed, GameInterval } from './gameTimerLogic';
 
-export interface RecordGoalLogicResult {
-  newGoals: Goal[];
-  newOurScore: number;
-  newOpponentScore: number;
-}
-
-/**
- * Logic for recording a goal during the game
- */
 export function recordGoalLogic(
   team: 'our' | 'opponent',
   scorerName: string,
   ourScore: number,
   opponentScore: number,
-  goals: Goal[],
-  gameIntervals: GameInterval[],
+  goals: any[],
+  validIntervals: GameInterval[],
   isRunning: boolean
-): RecordGoalLogicResult {
-  const result = recordGoal(
-    team,
-    scorerName,
-    ourScore,
-    opponentScore,
-    goals,
-    gameIntervals,
-    isRunning
-  );
-
-  return {
-    newGoals: result.updatedGoals,
-    newOurScore: result.updatedOurScore,
-    newOpponentScore: result.updatedOpponentScore
-  };
+): { newOurScore: number; newOpponentScore: number; newGoals: any[] } {
+  const currentTime = computeTimeElapsed(validIntervals, isRunning);
+  const goal = { team, scorerName, time: currentTime };
+  const newGoals = [...goals, goal];
+  const newOurScore = team === 'our' ? ourScore + 1 : ourScore;
+  const newOpponentScore = team === 'opponent' ? opponentScore + 1 : opponentScore;
+  return { newOurScore, newOpponentScore, newGoals };
 }
 
-/**
- * Logic for handling player adjustments (adding/removing from field)
- */
-export function handlePlayerAdjustmentLogic(
-  players: Player[],
-  playerId: string | number,
-  isAdding: boolean
-): Player[] {
-  return handlePlayerAdjustment(players, playerId, isAdding);
+export function handlePlayerAdjustmentLogic(players: any[], playerId: string | number, isAdding: boolean): any[] {
+  return players.map(player => {
+    if (player.id === playerId) {
+      return { ...player, isOnField: isAdding };
+    }
+    return player;
+  });
 }
 
-/**
- * Logic for updating player lists (on-field vs. off-field)
- */
-export function updatePlayerListsLogic(
-  playerData: Player[],
-  includeGKPlaytime: boolean,
-  isRunning: boolean
-): { onField: Player[]; offField: Player[] } {
-  return updatePlayerLists(playerData, includeGKPlaytime, isRunning);
+export function updatePlayerListsLogic(players: any[], includeGKPlaytime: boolean, isRunning: boolean): { onField: any[]; offField: any[] } {
+  const onField = players.filter(player => player.isOnField);
+  const offField = players.filter(player => !player.isOnField);
+  return { onField, offField };
 }

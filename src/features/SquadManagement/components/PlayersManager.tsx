@@ -1,63 +1,103 @@
-import React, { ChangeEvent } from "react";
+import React, { useState } from 'react';
+import PlayerInput from './PlayerInput';
+import PlayersList from './PlayersList';
 
-interface Player {
+export interface Player {
   id: string;
   name: string;
-  [key: string]: any;
+  isOnField?: boolean;
+  isGoalkeeper?: boolean;
+  isStartingPlayer?: boolean;
+  position?: {
+    x: number | null;
+    y: number | null;
+  };
+  totalPlayTime?: number;
 }
 
 interface PlayersManagerProps {
-  squadPlayersList: Player[];
-  newPlayerName: string;
-  setNewPlayerName: (value: string) => void;
-  handleAddPlayer: () => void;
-  handleDeletePlayer: (playerId: string) => void;
+  squadPlayersList?: string[];
+  newPlayerName?: string;
+  onAddPlayer?: () => void;
+  onDeletePlayer?: (player: string) => void;
+  onNewPlayerNameChange?: (value: string) => void;
+  players?: Player[];
+  onPlayersChange?: (players: Player[]) => void;
 }
 
-const PlayersManager = ({
+export default function PlayersManager({
   squadPlayersList,
-  newPlayerName,
-  setNewPlayerName,
-  handleAddPlayer,
-  handleDeletePlayer,
-}: PlayersManagerProps): JSX.Element => {
+  newPlayerName = '',
+  onAddPlayer,
+  onDeletePlayer,
+  onNewPlayerNameChange,
+  players,
+  onPlayersChange
+}: PlayersManagerProps): JSX.Element {
+  const [inputValue, setInputValue] = useState('');
+
+  const isUsingStringList = squadPlayersList !== undefined;
+
+  const handleAddPlayer = () => {
+    if (!onPlayersChange || !players) return;
+    const trimmedName = inputValue.trim();
+    if (trimmedName === '') return;
+    const newPlayer: Player = {
+      id: Date.now().toString(),
+      name: trimmedName,
+      isOnField: false,
+      isGoalkeeper: false,
+      isStartingPlayer: false,
+      position: { x: null, y: null },
+      totalPlayTime: 0
+    };
+    onPlayersChange([...players, newPlayer]);
+    setInputValue('');
+  };
+
+  const handleDeletePlayer = (playerId: string) => {
+    if (!onPlayersChange || !players) return;
+    onPlayersChange(players.filter(p => p.id !== playerId));
+  };
+
   return (
-    <div className="mb-6">
-      <label className="block text-gray-700 dark:text-gray-200 text-sm font-medium mb-2">
-        Players
-      </label>
-      <div className="flex space-x-2 mb-4">
-        <input
-          type="text"
-          value={newPlayerName}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setNewPlayerName(e.target.value)}
-          className="shadow-sm appearance-none border border-gray-300 dark:border-gray-600 rounded-lg w-full py-3 px-4 text-gray-700 dark:text-gray-200 dark:bg-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="Enter player name"
-        />
-        <button
-          type="button"
-          onClick={handleAddPlayer}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
-        >
-          Add Player
-        </button>
-      </div>
-      <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-        {squadPlayersList.map((player) => (
-          <li key={player.id} className="flex justify-between items-center py-2">
-            <span className="text-gray-800 dark:text-gray-200">{player.name}</span>
+    <div className="space-y-4">
+      <h3 className="text-xl font-semibold text-white">Players</h3>
+      {isUsingStringList ? (
+        <>
+          <PlayerInput
+            value={newPlayerName}
+            onChange={(e) => onNewPlayerNameChange?.(e.target.value)}
+            onAdd={onAddPlayer}
+            placeholder="Enter player name"
+          />
+          {squadPlayersList && squadPlayersList.length > 0 && (
+            <PlayersList squadPlayersList={squadPlayersList} onDeletePlayer={onDeletePlayer} />
+          )}
+        </>
+      ) : (
+        <>
+          <div className="flex space-x-2">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              className="flex-1 p-2 bg-white/20 text-white placeholder-white/50 border-0 rounded-lg focus:ring-2 focus:ring-blue-400 box-border"
+              placeholder="Enter player name"
+            />
             <button
               type="button"
-              onClick={() => handleDeletePlayer(player.id)}
-              className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200"
+              onClick={handleAddPlayer}
+              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors cursor-pointer"
             >
-              Delete
+              Add
             </button>
-          </li>
-        ))}
-      </ul>
+          </div>
+          {players && players.length > 0 && (
+            <PlayersList players={players} onDeletePlayer={handleDeletePlayer} />
+          )}
+        </>
+      )}
     </div>
   );
-};
-
-export default PlayersManager;
+}

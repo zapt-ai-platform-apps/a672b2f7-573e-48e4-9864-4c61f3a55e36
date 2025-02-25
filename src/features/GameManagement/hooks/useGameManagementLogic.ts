@@ -3,9 +3,8 @@ import * as Sentry from '@sentry/browser';
 import { useStateContext } from '../../../hooks/useStateContext';
 import { Player } from '../../../types/GameTypes';
 import { getTotalPlayTime, formatTime } from '../../../models/timeUtils';
-import { computeTimeElapsed, toggleTimerLogic } from './gameTimerLogic';
+import { computeTimeElapsed, toggleTimerLogic, getValidIntervals, GameInterval } from './gameTimerLogic';
 import { recordGoalLogic, handlePlayerAdjustmentLogic, updatePlayerListsLogic } from './gameScoreAndPlayerLogic';
-import { getValidIntervals, GameInterval } from './utils/gameManagementUtils';
 
 export interface UseGameManagementLogicReturn {
   playerData: Player[];
@@ -78,9 +77,12 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
   }, [isRunning, gameIntervals]);
 
   useEffect(() => {
-    if (playerData.length === 0 && selectedSquad?.players?.length) {
+    if (playerData.length === 0 && selectedSquad?.players) {
       try {
-        const initializedPlayers = selectedSquad.players.map((p: Player) => ({
+        const parsedPlayers = typeof selectedSquad.players === 'string' 
+          ? JSON.parse(selectedSquad.players) 
+          : selectedSquad.players;
+        const initializedPlayers = parsedPlayers.map((p: Player) => ({
           ...p,
           playIntervals: [],
           isOnField: p.isStartingPlayer ?? false
