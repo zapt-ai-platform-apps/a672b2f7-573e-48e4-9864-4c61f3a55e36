@@ -14,7 +14,7 @@ interface GoalScoredModalProps {
   showGoalModal: boolean;
   setShowGoalModal: (value: boolean) => void;
   players: Player[];
-  recordGoal: (team: string, scorerName: string) => void;
+  recordGoal: (team: 'our' | 'opponent', scorerName: string) => void;
 }
 
 /**
@@ -24,18 +24,20 @@ interface GoalScoredModalProps {
  * @returns Rendered modal component or null if not visible.
  */
 function GoalScoredModal({ showGoalModal, setShowGoalModal, players = [], recordGoal }: GoalScoredModalProps) {
-  const [team, setTeam] = useState<string>('');
+  const [team, setTeam] = useState<'our' | 'opponent' | ''>('');
   const [scorerName, setScorerName] = useState<string>('');
   const [confirmOpponentGoal, setConfirmOpponentGoal] = useState<boolean>(false);
 
   const handleConfirm = () => {
-    recordGoal(team, scorerName);
-    const teamMessage = team === 'our' ? `Goal scored by ${scorerName}!` : 'Opponent scored a goal.';
-    toast.success(teamMessage);
-    setTeam('');
-    setScorerName('');
-    setConfirmOpponentGoal(false);
-    setShowGoalModal(false);
+    if (team) {
+      recordGoal(team, scorerName);
+      const teamMessage = team === 'our' ? `Goal scored by ${scorerName}!` : 'Opponent scored a goal.';
+      toast.success(teamMessage);
+      setTeam('');
+      setScorerName('');
+      setConfirmOpponentGoal(false);
+      setShowGoalModal(false);
+    }
   };
 
   const handleCancel = () => {

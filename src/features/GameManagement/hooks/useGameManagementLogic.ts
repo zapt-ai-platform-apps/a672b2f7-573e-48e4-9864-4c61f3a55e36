@@ -78,7 +78,7 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
   useEffect(() => {
     if (playerData.length === 0 && selectedSquad?.players?.length) {
       try {
-        const initializedPlayers = selectedSquad.players.map(p => ({
+        const initializedPlayers = selectedSquad.players.map((p: Player) => ({
           ...p,
           playIntervals: [],
           isOnField: p.isStartingPlayer ?? false

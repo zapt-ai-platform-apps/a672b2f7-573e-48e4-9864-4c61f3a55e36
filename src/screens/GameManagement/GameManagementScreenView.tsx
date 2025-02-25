@@ -4,7 +4,7 @@ import PitchVisualization from '../../features/GameManagement/components/PitchVi
 import SubstitutionPanel from '../../features/GameManagement/components/SubstitutionPanel';
 import EndGameConfirmationModal from '../../features/GameManagement/modals/EndGameConfirmationModal';
 import GoalScoredModal from '../../features/GameManagement/modals/GoalScoredModal';
-import PlayerList from '../../features/GameManagement/components/PlayerList';
+import PlayersSection from './components/PlayersSection';
 import BackButton from './BackButton';
 import type { GameManagementScreenViewProps } from './GameManagementScreenView.types';
 
@@ -51,22 +51,12 @@ export default function GameManagementScreenView({
           getTotalPlayTime={getTotalPlayTime}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          <PlayerList
-            players={onFieldPlayers}
-            title="On Field Players"
-            message="Players currently on the field"
-            getTotalPlayTime={getTotalPlayTime}
-            onPlayerClick={handlePlayerClick}
-          />
-          <PlayerList
-            players={offFieldPlayers}
-            title="Bench Players"
-            message="Players currently on the bench"
-            getTotalPlayTime={getTotalPlayTime}
-            onPlayerClick={handlePlayerClick}
-          />
-        </div>
+        <PlayersSection
+          onFieldPlayers={onFieldPlayers}
+          offFieldPlayers={offFieldPlayers}
+          getTotalPlayTime={getTotalPlayTime}
+          handlePlayerClick={handlePlayerClick}
+        />
 
         <div className="flex justify-center mb-8">
           <button

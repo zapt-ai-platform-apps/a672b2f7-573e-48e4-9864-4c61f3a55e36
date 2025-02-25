@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useStateContext } from '../../../state';
 import initializePlayers from './utils/initializePlayers';
 import { toggleMatchPlayerHelper, toggleStartingPlayerHelper } from './utils/togglePlayers';
-import type { Player } from '../../../context/StateContext';
+import type { Player } from '../../../types/GameTypes';
 
 function useMatchSquad() {
   const { selectedSquad } = useStateContext();
@@ -25,4 +25,3 @@ function useMatchSquad() {
 }
 
 export default useMatchSquad;
-export type { Player };

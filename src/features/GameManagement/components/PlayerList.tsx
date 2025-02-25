@@ -5,12 +5,12 @@ interface PlayerListProps {
   players: Player[];
   title: string;
   emptyMessage: string;
-  selectedPlayer: Player | null;
   onPlayerClick: (player: Player) => void;
-  timeFormatter: (seconds: number) => string;
   getTotalPlayTime: (player: Player) => number;
-  selectedItemClass: string;
-  defaultItemClass: string;
+  selectedPlayer?: Player | null;
+  timeFormatter?: (seconds: number) => string;
+  selectedItemClass?: string;
+  defaultItemClass?: string;
   showGoalkeeper?: boolean;
 }
 
@@ -18,12 +18,12 @@ function PlayerList({
   players,
   title,
   emptyMessage,
-  selectedPlayer,
   onPlayerClick,
-  timeFormatter,
   getTotalPlayTime,
-  selectedItemClass,
-  defaultItemClass,
+  selectedPlayer = null,
+  timeFormatter = (seconds: number) => `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`,
+  selectedItemClass = "bg-blue-100 dark:bg-blue-900",
+  defaultItemClass = "bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600",
   showGoalkeeper = false
 }: PlayerListProps): JSX.Element {
   return (

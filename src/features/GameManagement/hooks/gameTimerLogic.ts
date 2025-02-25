@@ -1,28 +1,28 @@
 export interface GameInterval {
   start: number;
-  end: number | null;
+  end?: number;
 }
 
-export function computeTimeElapsed(intervals: GameInterval[], isRunning: boolean): number {
-  const now = Date.now();
+export function computeTimeElapsed(gameIntervals: GameInterval[], isRunning: boolean): number {
   let total = 0;
-  for (const interval of intervals) {
-    const endTime = interval.end !== null ? interval.end : now;
-    total += endTime - interval.start;
+  const now = Date.now();
+  for (const interval of gameIntervals) {
+    const end = interval.end ? interval.end : (isRunning ? now : interval.start);
+    total += end - interval.start;
   }
   return Math.floor(total / 1000);
 }
 
-export function toggleTimerLogic(isRunning: boolean, intervals: GameInterval[]): { newIntervals: GameInterval[]; newIsRunning: boolean } {
+export function toggleTimerLogic(isRunning: boolean, gameIntervals: GameInterval[]): { newIntervals: GameInterval[], newIsRunning: boolean } {
   const now = Date.now();
-  let newIntervals = [...intervals];
   if (isRunning) {
-    if (newIntervals.length > 0 && newIntervals[newIntervals.length - 1].end === null) {
+    let newIntervals = [...gameIntervals];
+    if (newIntervals.length > 0 && !newIntervals[newIntervals.length - 1].end) {
       newIntervals[newIntervals.length - 1] = { ...newIntervals[newIntervals.length - 1], end: now };
     }
     return { newIntervals, newIsRunning: false };
   } else {
-    newIntervals.push({ start: now, end: null });
+    let newIntervals = [...gameIntervals, { start: now }];
     return { newIntervals, newIsRunning: true };
   }
 }

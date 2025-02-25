@@ -1,6 +1,7 @@
-import { recordGoal as recordGoalModel } from '../../../shared/models/scoreOperations';
+import { addGoal } from '../../../shared/models/scoreOperations';
 import { handlePlayerAdjustment as handlePlayerAdjustmentModel } from '../../../shared/models/playerAdjustments';
 import { processPlayerLists } from '../../../shared/models/listUtils';
+import { getTimeElapsed } from './gameTimerOperations';
 import type { Goal, Player } from '../../../types/GameTypes';
 
 export interface GameInterval {
@@ -28,7 +29,14 @@ export function recordGoal(
   gameIntervals: GameInterval[],
   isRunning: boolean
 ): GoalRecordResult {
-  return recordGoalModel(team, scorerName, ourScore, opponentScore, goals, gameIntervals, isRunning);
+  const timeElapsed = getTimeElapsed(gameIntervals, isRunning);
+  const result = addGoal(team, scorerName, ourScore, opponentScore, goals, timeElapsed);
+  
+  return {
+    updatedGoals: result.newGoals,
+    updatedOurScore: result.newOurScore,
+    updatedOpponentScore: result.newOpponentScore
+  };
 }
 
 export function handlePlayerAdjustment(

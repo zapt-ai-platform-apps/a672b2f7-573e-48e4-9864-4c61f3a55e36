@@ -1,37 +1,29 @@
-export interface Interval {
-  startTime: number;
-  endTime: number | null;
-}
+import { GameInterval } from './gameActionsHelpers';
 
-export function getTimeElapsed(gameIntervals: Interval[], isRunning: boolean): number {
-  let total = 0;
-  const now = Date.now();
-  
-  for (const interval of gameIntervals) {
-    const end = interval.endTime || (isRunning ? now : interval.startTime);
-    total += end - interval.startTime;
-  }
-  
-  return Math.floor(total / 1000);
-}
+/**
+ * Calculates total elapsed time across all game intervals
+ */
+export function getTimeElapsed(gameIntervals: GameInterval[], isRunning: boolean): number {
+  if (gameIntervals.length === 0) return 0;
 
-export function toggleTimer(
-  isRunning: boolean,
-  gameIntervals: Interval[]
-): { newIntervals: Interval[]; newIsRunning: boolean } {
+  let totalTime = 0;
   const now = Date.now();
-  const newIntervals = [...gameIntervals];
-  
-  if (!isRunning) {
-    // Starting the timer - add new interval with null endTime
-    newIntervals.push({ startTime: now, endTime: null });
-  } else {
-    // Pausing the timer - update last interval's endTime
-    const lastInterval = newIntervals[newIntervals.length - 1];
-    if (lastInterval && !lastInterval.endTime) {
-      lastInterval.endTime = now;
+
+  // Add up all completed intervals
+  for (let i = 0; i < gameIntervals.length - 1; i++) {
+    const interval = gameIntervals[i];
+    if (interval.startTime && interval.endTime) {
+      totalTime += interval.endTime - interval.startTime;
     }
   }
-  
-  return { newIntervals, newIsRunning: !isRunning };
+
+  // Add time from current interval if game is running
+  const currentInterval = gameIntervals[gameIntervals.length - 1];
+  if (isRunning && currentInterval && currentInterval.startTime) {
+    totalTime += now - currentInterval.startTime;
+  } else if (currentInterval && currentInterval.startTime && currentInterval.endTime) {
+    totalTime += currentInterval.endTime - currentInterval.startTime;
+  }
+
+  return Math.floor(totalTime / 1000); // Convert to seconds
 }
