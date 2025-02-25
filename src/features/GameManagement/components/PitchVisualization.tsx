@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import type { Player } from '../../../types/GameTypes';
 import Pitch from './Pitch';
 import useDragAndDrop from '../hooks/useDragAndDrop';
-import assignInitialPositions from '../utils/assignInitialPositions';
+import { assignInitialPositions } from '../utils/assignInitialPositions';
 
 interface PitchVisualizationProps {
   players: Player[];

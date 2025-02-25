@@ -52,3 +52,14 @@ export function getGameDuration(players: Player[]): number {
 export function sortGoalsByTime(goals: Goal[]): Goal[] {
   return [...goals].sort((a, b) => a.time - b.time);
 }
+
+// Added function to create a total play time calculator based on whether to include goalkeeper playtime
+export function createGetTotalPlayTime(includeGKPlaytime: boolean) {
+  return (player: Player): number => {
+    // If the player is a goalkeeper and we're not including goalkeeper playtime
+    if (player.isGoalkeeper && !includeGKPlaytime) {
+      return 0;
+    }
+    return calculatePlayTime(player);
+  };
+}

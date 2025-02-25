@@ -1,23 +1,32 @@
 import { Player, Position } from '../../../types/GameTypes';
 
 /**
- * Ensures all player objects have the required properties
- * This is used when loading players from different sources that might
- * have different property structures
+ * Ensures all required properties are present on a player object
+ * and that they have the correct types
  */
-export function ensurePlayerProperties(players: Player[]): Player[] {
-  return players.map(player => ({
-    ...player,
+export function ensurePlayerProperties(player: Partial<Player>): Player {
+  // Ensure position is an object with x and y values
+  const position: Position = typeof player.position === 'object' && player.position !== null
+    ? {
+        x: typeof player.position.x === 'number' ? player.position.x : null,
+        y: typeof player.position.y === 'number' ? player.position.y : null
+      }
+    : { x: null, y: null };
+
+  return {
+    id: player.id || '',
+    name: player.name || '',
+    number: player.number || '',
     totalPlayTime: player.totalPlayTime || 0,
-    isOnField: typeof player.isOnField === 'boolean' ? player.isOnField : false,
-    isGoalkeeper: typeof player.isGoalkeeper === 'boolean' ? player.isGoalkeeper : false,
-    isStartingPlayer: typeof player.isStartingPlayer === 'boolean' ? player.isStartingPlayer : false,
-    isInStartingLineup: typeof player.isInStartingLineup === 'boolean' ? player.isInStartingLineup : false,
-    isInMatchSquad: typeof player.isInMatchSquad === 'boolean' ? player.isInMatchSquad : false,
-    position: typeof player.position === 'string' 
-      ? { x: 0, y: 0 } as Position 
-      : (player.position || { x: 0, y: 0 }) as Position,
     playTime: player.playTime || 0,
+    lastStart: player.lastStart || 0,
+    isOnField: player.isOnField || false,
+    isGoalkeeper: player.isGoalkeeper || false,
+    isInMatchSquad: player.isInMatchSquad || false,
+    isStartingPlayer: player.isStartingPlayer || false,
+    isInStartingLineup: player.isInStartingLineup || false,
+    position,
+    status: player.status || '',
     playIntervals: player.playIntervals || []
-  }));
+  };
 }
