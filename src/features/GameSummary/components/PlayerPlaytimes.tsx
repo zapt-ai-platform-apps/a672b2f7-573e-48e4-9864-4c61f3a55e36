@@ -29,7 +29,7 @@ const PlayerPlaytimes: React.FC<PlayerPlaytimesProps> = ({ activePlayers, benchP
             className="flex justify-between items-center py-1 border-b border-gray-200 dark:border-gray-700 last:border-0"
           >
             <span className="text-gray-700 dark:text-gray-300">
-              {player.name || player.playerName}
+              {player.name}
             </span>
             <span className="text-gray-600 dark:text-gray-400 font-medium">
               {player.minutesPlayed} min

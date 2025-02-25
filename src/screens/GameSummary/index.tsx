@@ -16,6 +16,9 @@ export default function GameSummaryScreen(): JSX.Element {
   const getTotalPlayTime = createGetTotalPlayTime(includeGKPlaytime);
 
   const playersWithDefaults = getPlayersWithDefaults(playerData);
+  
+  const activePlayers = playersWithDefaults.filter(player => player.isOnField);
+  const benchPlayers = playersWithDefaults.filter(player => !player.isOnField);
 
   const navigate = useNavigate();
 
@@ -36,6 +39,8 @@ export default function GameSummaryScreen(): JSX.Element {
         </div>
         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg mb-6">
           <PlayerPlaytimes
+            activePlayers={activePlayers}
+            benchPlayers={benchPlayers}
             playerData={playersWithDefaults}
             includeGKPlaytime={includeGKPlaytime}
             getTotalPlayTime={getTotalPlayTime}
