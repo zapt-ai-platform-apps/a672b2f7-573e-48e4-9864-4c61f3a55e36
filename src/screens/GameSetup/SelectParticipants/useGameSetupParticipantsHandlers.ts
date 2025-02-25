@@ -1,5 +1,5 @@
-import { ExtendedPlayer } from './types';
 import { NavigateFunction } from 'react-router-dom';
+import { ExtendedPlayer } from '../../../features/GameSetup/types/ExtendedPlayer';
 
 export default function useGameSetupParticipantsHandlers(
   selectedMatchPlayers: ExtendedPlayer[],
@@ -7,18 +7,18 @@ export default function useGameSetupParticipantsHandlers(
   navigate: NavigateFunction,
   setErrorMessage: (message: string) => void
 ) {
-  const handleNext = () => {
+  function handleNext() {
     if (selectedMatchPlayers.length === 0) {
-      setErrorMessage('No players selected.');
+      setErrorMessage("Please select at least one participant.");
       return;
     }
     setSelectedSquad(selectedMatchPlayers);
-    navigate('/game-setup/roles');
-  };
+    navigate("/setup/participants");
+  }
 
-  const handleBack = () => {
+  function handleBack() {
     navigate(-1);
-  };
+  }
 
   return { handleNext, handleBack };
 }

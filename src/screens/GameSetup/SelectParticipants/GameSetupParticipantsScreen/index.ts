@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useMatchSquad from '../../../../features/GameSetup/hooks/useMatchSquad';
-import { useStateContext } from '../../../../hooks/useStateContext';
+import useMatchSquad from '../../../features/GameSetup/hooks/useMatchSquad';
+import { useStateContext } from '../../../hooks/useStateContext';
 import ParticipantItem from './ParticipantItem';
-import { ExtendedPlayer } from '../../../../features/GameSetup/types/ExtendedPlayer';
+import { ExtendedPlayer } from '../../../features/GameSetup/types/ExtendedPlayer';
 import useGameSetupParticipantsHandlers from './useGameSetupParticipantsHandlers';
 
 export default function GameSetupParticipantsScreen(): JSX.Element {
@@ -42,9 +42,7 @@ export default function GameSetupParticipantsScreen(): JSX.Element {
               <ParticipantItem
                 key={player.id}
                 player={player}
-                isSelected={selectedMatchPlayers.some(
-                  (p) => p.id === player.id
-                )}
+                isSelected={selectedMatchPlayers.some((p) => p.id === player.id)}
                 onToggle={() => toggleMatchPlayer(player.id)}
               />
             ))

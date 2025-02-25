@@ -1,5 +1,9 @@
-import { Player } from '../../../types/GameTypes';
-
-export interface ExtendedPlayer extends Player {
-  isInMatchSquad?: boolean;
+export interface ExtendedPlayer {
+  id: string;
+  name: string;
+  isInMatchSquad: boolean;
+  totalPlayTime: number;
+  isOnField: boolean;
+  isGoalkeeper: boolean;
+  position: string | null;
 }

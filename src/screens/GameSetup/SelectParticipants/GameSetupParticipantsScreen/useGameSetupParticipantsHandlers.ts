@@ -1,9 +1,10 @@
-import { ExtendedPlayer } from './types';
+import { NavigateFunction } from 'react-router-dom';
+import { ExtendedPlayer } from '../../../../features/GameSetup/types/ExtendedPlayer';
 
 export default function useGameSetupParticipantsHandlers(
   selectedMatchPlayers: ExtendedPlayer[],
   setSelectedSquad: (players: ExtendedPlayer[]) => void,
-  navigate: (path: string | number) => void,
+  navigate: NavigateFunction,
   setErrorMessage: (message: string) => void
 ) {
   function handleNext() {
@@ -12,7 +13,7 @@ export default function useGameSetupParticipantsHandlers(
       return;
     }
     setSelectedSquad(selectedMatchPlayers);
-    navigate("/game-setup/next-screen");
+    navigate("/setup/participants");
   }
 
   function handleBack() {

@@ -1,5 +1,3 @@
-import { Player } from '../../../types/GameTypes';
+import { ExtendedPlayer } from '../../../features/GameSetup/types/ExtendedPlayer';
 
-export interface ExtendedPlayer extends Player {
-  isInMatchSquad?: boolean;
-}
+export type { ExtendedPlayer };

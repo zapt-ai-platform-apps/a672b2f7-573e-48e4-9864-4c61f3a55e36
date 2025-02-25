@@ -1,35 +1,24 @@
-import { Player, Position } from '../../../types/GameTypes';
+import { ExtendedPlayer } from '../types/ExtendedPlayer';
 
 /**
- * Ensures all required properties of a Player object are present
- * @param player - The player object to check and enhance
- * @param index - Index used for generating a default ID if needed
+ * Ensures that all required player properties are present.
+ * If any are missing, default values will be applied.
+ * 
+ * @param player The player object to ensure properties for
  * @returns A player object with all required properties
  */
-export function ensurePlayerProperties(player: any, index: number): Player {
-  const defaultPosition: Position = { x: 0, y: 0 };
-  
-  // If player is just a string, create a full player object
-  if (typeof player === 'string') {
-    return {
-      id: String(index),
-      name: player,
-      totalPlayTime: 0,
-      isOnField: false,
-      isGoalkeeper: false,
-      position: defaultPosition
-    };
+export function ensurePlayerProperties(player: any): ExtendedPlayer {
+  if (!player) {
+    throw new Error('Cannot ensure properties for undefined player');
   }
-  
-  // If player is an object, ensure all required properties exist
+
   return {
-    id: player.id || String(index),
-    name: player.name || `Player ${index + 1}`,
+    id: player.id || '',
+    name: player.name || '',
+    isInMatchSquad: player.isInMatchSquad || false,
     totalPlayTime: player.totalPlayTime || 0,
     isOnField: player.isOnField || false,
     isGoalkeeper: player.isGoalkeeper || false,
-    position: player.position || defaultPosition,
-    // Preserve any additional properties the player object might have
-    ...player
+    position: player.position || null,
   };
 }
