@@ -29,6 +29,7 @@ export interface StateContextType {
   setGoals: React.Dispatch<React.SetStateAction<Goal[]>>;
   includeGKPlaytime: boolean;
   resetGame: () => void;
+  handleStartGame: (players: Player[], goalkeeper: Player, includeGKPlaytime: boolean) => void;
 }
 
 // Default values to avoid null checks
@@ -55,6 +56,7 @@ const defaultContext: StateContextType = {
   setGoals: () => {},
   includeGKPlaytime: false,
   resetGame: () => {},
+  handleStartGame: () => {},
 };
 
 export const StateContext = createContext<StateContextType>(defaultContext);

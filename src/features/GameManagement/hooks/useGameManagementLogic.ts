@@ -77,12 +77,17 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
   }, [isRunning, gameIntervals]);
 
   useEffect(() => {
-    if (playerData.length === 0 && selectedSquad?.players) {
+    if (playerData.length === 0 && selectedSquad) {
       try {
-        const parsedPlayers = typeof selectedSquad.players === 'string' 
-          ? JSON.parse(selectedSquad.players) 
-          : selectedSquad.players;
-        const initializedPlayers = parsedPlayers.map((p: Player) => ({
+        let squadPlayers: Player[] = [];
+        if (Array.isArray(selectedSquad)) {
+          squadPlayers = selectedSquad;
+        } else if (selectedSquad.players) {
+          squadPlayers = typeof selectedSquad.players === 'string' 
+            ? JSON.parse(selectedSquad.players) 
+            : selectedSquad.players;
+        }
+        const initializedPlayers = squadPlayers.map((p: Player) => ({
           ...p,
           playIntervals: [],
           isOnField: p.isStartingPlayer ?? false

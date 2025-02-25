@@ -1,16 +1,10 @@
 import { Player } from '../../../types/GameTypes';
 
 export function addPlayerToList(players: Player[], name: string): Player[] {
-  const newPlayer: Player = {
-    id: String(Date.now()),
-    name,
-    isStartingPlayer: false,
-    totalPlayTime: 0,
-    isOnField: false,
-    isGoalkeeper: false,
-    position: { x: 0, y: 0 }
-  };
-  return [...players, newPlayer];
+  return [
+    ...players,
+    { id: Date.now(), name, isStartingPlayer: true }
+  ];
 }
 
 export function removePlayerFromList(players: Player[], playerId: number | string): Player[] {

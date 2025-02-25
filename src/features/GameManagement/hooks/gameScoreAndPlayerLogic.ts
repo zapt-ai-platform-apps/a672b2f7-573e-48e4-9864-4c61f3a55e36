@@ -1,20 +1,16 @@
-interface Goal {
-  team: 'our' | 'opponent';
-  scorerName: string;
-  time: number;
-}
+import { Player } from '../../../types/GameTypes';
+import { GameInterval } from './gameTimerLogic';
 
 export function recordGoalLogic(
   team: 'our' | 'opponent',
   scorerName: string,
   ourScore: number,
   opponentScore: number,
-  goals: Goal[] | undefined,
-  validIntervals: any,
+  goals: any[],
+  validIntervals: GameInterval[],
   isRunning: boolean
-): { newOurScore: number; newOpponentScore: number; newGoals: Goal[] } {
-  const newGoal = { team, scorerName, time: Date.now() };
-  const newGoals = Array.isArray(goals) ? [...goals, newGoal] : [newGoal];
+) {
+  const newGoals = [...goals, { team, scorerName, time: Date.now() }];
   let newOurScore = ourScore;
   let newOpponentScore = opponentScore;
   if (team === 'our') {
@@ -25,17 +21,22 @@ export function recordGoalLogic(
   return { newOurScore, newOpponentScore, newGoals };
 }
 
-export function handlePlayerAdjustmentLogic(playerData: any[], playerId: string | number, isAdding: boolean): any[] {
-  return playerData.map(player => {
-    if (player.id === playerId) {
-      return { ...player, isOnField: isAdding };
-    }
-    return player;
-  });
+export function handlePlayerAdjustmentLogic(
+  players: Player[],
+  playerId: string | number,
+  isAdding: boolean
+): Player[] {
+  return players.map(player =>
+    player.id === playerId ? { ...player, isOnField: isAdding } : player
+  );
 }
 
-export function updatePlayerListsLogic(playerData: any[], includeGKPlaytime: boolean, isRunning: boolean): { onField: any[]; offField: any[] } {
-  const onField = playerData.filter(player => player.isOnField);
-  const offField = playerData.filter(player => !player.isOnField);
+export function updatePlayerListsLogic(
+  players: Player[],
+  includeGKPlaytime: boolean,
+  isRunning: boolean
+): { onField: Player[]; offField: Player[] } {
+  const onField = players.filter(player => player.isOnField);
+  const offField = players.filter(player => !player.isOnField);
   return { onField, offField };
 }

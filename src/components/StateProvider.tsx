@@ -1,33 +1,31 @@
-import React, { useState, ReactNode } from 'react';
+import React from 'react';
 import { StateContext } from '../context/StateContext';
-import { Player } from '../types/GameTypes';
+import { useSquadManagement } from '../hooks/useSquadManagement';
+import { useGameManagement } from '../hooks/useGameManagement';
 
 interface StateProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export default function StateProvider({ children }: StateProviderProps): JSX.Element {
-  // Squad management
-  const [selectedSquad, setSelectedSquad] = useState<Player[]>([]);
-  
-  // Match squad for the current game
-  const [matchSquad, setMatchSquad] = useState<Player[]>([]);
-  
-  // Goalkeeper settings
-  const [goalkeeper, setGoalkeeper] = useState<Player | null>(null);
-  
-  // Game state
-  const [currentGameState, setCurrentGameState] = useState<any>(null);
-
-  // Update matchSquad whenever selectedSquad changes
-  React.useEffect(() => {
-    console.log('selectedSquad updated in StateProvider:', selectedSquad);
-    // Only update matchSquad if we're setting a new squad (not clearing it)
-    if (selectedSquad && selectedSquad.length > 0) {
-      setMatchSquad(selectedSquad);
-      console.log('matchSquad updated in StateProvider:', selectedSquad);
-    }
-  }, [selectedSquad]);
+  const { selectedSquad, setSelectedSquad, matchSquad, setMatchSquad } = useSquadManagement();
+  const {
+    goalkeeper,
+    setGoalkeeper,
+    currentGameState,
+    setCurrentGameState,
+    playerData,
+    setPlayerData,
+    ourScore,
+    setOurScore,
+    opponentScore,
+    setOpponentScore,
+    goals,
+    setGoals,
+    includeGKPlaytime,
+    resetGame,
+    handleStartGame,
+  } = useGameManagement();
 
   return (
     <StateContext.Provider
@@ -40,6 +38,17 @@ export default function StateProvider({ children }: StateProviderProps): JSX.Ele
         setGoalkeeper,
         currentGameState,
         setCurrentGameState,
+        playerData,
+        setPlayerData,
+        ourScore,
+        setOurScore,
+        opponentScore,
+        setOpponentScore,
+        goals,
+        setGoals,
+        includeGKPlaytime,
+        resetGame,
+        handleStartGame,
       }}
     >
       {children}

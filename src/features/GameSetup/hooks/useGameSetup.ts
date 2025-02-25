@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useStateContext } from '../../../hooks/useStateContext';
 import { Player } from '../../../types/GameTypes';
 import { addPlayerToList, removePlayerFromList, togglePlayerInList } from '../utils/gameSetupActions';
-import parsePlayers from '../utils/parsePlayers';
+import parsePlayers from '../../../utils/parsePlayers';
 
 export interface UseGameSetupReturn {
   errorMessage: string;
@@ -50,7 +50,18 @@ export default function useGameSetup(): UseGameSetupReturn {
 
   useEffect(() => {
     if (!initializedRef.current) {
-      const playersArr = matchSquad || [];
+      let playersArr: Player[] = [];
+      
+      if (matchSquad && matchSquad.length > 0) {
+        playersArr = matchSquad;
+      } else if (selectedSquad) {
+        if (Array.isArray(selectedSquad)) {
+          playersArr = selectedSquad;
+        } else if (selectedSquad.players) {
+          playersArr = Array.isArray(selectedSquad.players) ? selectedSquad.players : [];
+        }
+      }
+      
       if (playersArr.length > 0) {
         setStartingPlayers(playersArr);
         const firstStarter = playersArr.find((player: Player) => player.isStartingPlayer);
@@ -82,7 +93,12 @@ export default function useGameSetup(): UseGameSetupReturn {
       setErrorMessage('Please select a goalkeeper');
       return;
     }
-    return contextHandleStartGame(startingPlayers, goalkeeper, includeGKPlaytime);
+    if (contextHandleStartGame) {
+      contextHandleStartGame(startingPlayers, goalkeeper, includeGKPlaytime);
+    } else {
+      console.error('handleStartGame function not available in context');
+      setErrorMessage('Unable to start game. System error.');
+    }
   };
 
   const handleTeamNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
