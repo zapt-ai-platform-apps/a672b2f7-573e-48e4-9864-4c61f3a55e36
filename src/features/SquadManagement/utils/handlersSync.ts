@@ -1,5 +1,6 @@
 import * as Sentry from "@sentry/browser";
 import { processSquad } from "../hooks/squadManagementHelper";
+import { parsePlayers } from "./playerParsing";
 
 export function addSquadPlayer(
   newSquadPlayer: string,
@@ -31,15 +32,7 @@ export function selectSquad(
 ): void {
   setSquadName(squad.name);
   let players = squad.players;
-  if (typeof players === "string") {
-    try {
-      players = JSON.parse(players);
-    } catch (error) {
-      console.error("Error parsing squad.players:", error);
-      Sentry.captureException(error);
-      players = [];
-    }
-  }
+  players = parsePlayers(players, "squad.players");
   const playerNames = Array.isArray(players)
     ? players.map((player: any) =>
         typeof player === "string" ? player : player.name
@@ -63,15 +56,7 @@ export function editSquad(
   setSelectedSquad(processedSquad);
   setSquadName(squad.name);
   let players = processedSquad.players;
-  if (typeof players === "string") {
-    try {
-      players = JSON.parse(players);
-    } catch (error) {
-      console.error("Error parsing processedSquad.players:", error);
-      Sentry.captureException(error);
-      players = [];
-    }
-  }
+  players = parsePlayers(players, "processedSquad.players");
   const playerNames = Array.isArray(players)
     ? players.map((player: any) =>
         typeof player === "string" ? player : player.name
