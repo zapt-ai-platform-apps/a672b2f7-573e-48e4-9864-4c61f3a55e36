@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useMatchSquad from '../../../../features/GameSetup/hooks/useMatchSquad';
-import { useStateContext } from '../../../../hooks/useStateContext';
-import ParticipantItem from './ParticipantItem';
-import { ExtendedPlayer } from '../../../../features/GameSetup/types/ExtendedPlayer';
+import useMatchSquad from '../../../features/GameSetup/hooks/useMatchSquad';
+import { useStateContext } from '../../../hooks/useStateContext';
+import { ExtendedPlayer } from '../../../features/GameSetup/types/ExtendedPlayer';
 import useGameSetupParticipantsHandlers from './useGameSetupParticipantsHandlers';
+import { ParticipantsGrid } from './ParticipantsGrid';
 
 export default function GameSetupParticipantsScreen(): JSX.Element {
   const { matchSquadPlayers, toggleMatchPlayer } = useMatchSquad();
@@ -13,13 +13,13 @@ export default function GameSetupParticipantsScreen(): JSX.Element {
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const validPlayers = matchSquadPlayers.filter(
-    (player: ExtendedPlayer) => player && typeof player.id === 'string'
+    (player) => player && typeof player.id === 'string'
   ) as ExtendedPlayer[];
 
   console.log('Valid players for selection:', validPlayers);
 
   const selectedMatchPlayers = validPlayers.filter(
-    (player: ExtendedPlayer) => player.isInMatchSquad
+    (player) => player.isInMatchSquad
   );
 
   const { handleNext, handleBack } = useGameSetupParticipantsHandlers(
@@ -36,37 +36,26 @@ export default function GameSetupParticipantsScreen(): JSX.Element {
           Select Match Participants
         </h1>
         {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          {validPlayers.length > 0 ? (
-            validPlayers.map((player) => (
-              <ParticipantItem
-                key={player.id}
-                player={player}
-                isSelected={selectedMatchPlayers.some((p) => p.id === player.id)}
-                onToggle={() => toggleMatchPlayer(player.id)}
-              />
-            ))
-          ) : (
-            <p className="text-white text-lg col-span-3">
-              No players available. Please go back and select a squad with players.
-            </p>
-          )}
-        </div>
+        <ParticipantsGrid
+          validPlayers={validPlayers}
+          selectedMatchPlayers={selectedMatchPlayers}
+          toggleMatchPlayer={toggleMatchPlayer}
+        />
         <div className="flex justify-end">
           <button
-            onClick={() => handleNext()}
+            onClick={handleNext}
             className="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-xl rounded-xl hover:scale-105 transition-all duration-300 shadow-lg cursor-pointer"
           >
-            Continue to Setup {'\u2192'}
+            Continue to Setup →
           </button>
         </div>
       </div>
       <div className="mt-8">
         <button
-          onClick={() => handleBack()}
+          onClick={handleBack}
           className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg shadow-md transition-colors cursor-pointer backdrop-blur-sm"
         >
-          {'\u2190'} Back
+          ← Back
         </button>
       </div>
     </div>

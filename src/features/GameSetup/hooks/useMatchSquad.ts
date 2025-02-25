@@ -2,7 +2,12 @@ import { useState, useEffect } from 'react';
 import { useStateContext } from '../../../hooks/useStateContext';
 import { ExtendedPlayer } from '../types/ExtendedPlayer';
 import { initializeMatchSquadPlayers } from '../utils/matchSquadUtils';
-import { Player } from '../../../types/GameTypes';
+import { Player, Squad } from '../../../types/GameTypes';
+
+// Type guard to check if an object is a Squad
+const isSquad = (obj: any): obj is Squad => {
+  return obj && typeof obj === 'object' && 'id' in obj && 'name' in obj && 'players' in obj;
+};
 
 export default function useMatchSquad() {
   const { selectedSquad, matchSquad, setMatchSquad } = useStateContext();
@@ -11,7 +16,9 @@ export default function useMatchSquad() {
   useEffect(() => {
     console.log('selectedSquad in useMatchSquad:', selectedSquad);
     if (selectedSquad) {
-      const initialPlayers = initializeMatchSquadPlayers(selectedSquad, matchSquad as ExtendedPlayer[]);
+      // If selectedSquad is a Squad, use its players, otherwise use selectedSquad directly
+      const squadPlayers = isSquad(selectedSquad) ? selectedSquad.players : selectedSquad;
+      const initialPlayers = initializeMatchSquadPlayers(squadPlayers, matchSquad as ExtendedPlayer[]);
       setMatchSquadPlayers(initialPlayers);
     }
   }, [selectedSquad, matchSquad]);

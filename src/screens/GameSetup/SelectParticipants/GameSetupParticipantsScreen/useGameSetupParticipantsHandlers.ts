@@ -1,23 +1,31 @@
+import { useCallback } from 'react';
 import { ExtendedPlayer } from '../../../../features/GameSetup/types/ExtendedPlayer';
 
+interface HandlersParams {
+  selectedMatchPlayers: ExtendedPlayer[];
+  setSelectedSquad: (players: ExtendedPlayer[]) => void;
+  navigate: (path: string | number) => void;
+  setErrorMessage: (message: string) => void;
+}
+
 export default function useGameSetupParticipantsHandlers(
-  selectedPlayers: ExtendedPlayer[],
+  selectedMatchPlayers: ExtendedPlayer[],
   setSelectedSquad: (players: ExtendedPlayer[]) => void,
   navigate: (path: string | number) => void,
   setErrorMessage: (message: string) => void
 ) {
-  const handleNext = () => {
-    if (selectedPlayers.length === 0) {
-      setErrorMessage('No players selected!');
+  const handleNext = useCallback(() => {
+    if (selectedMatchPlayers.length === 0) {
+      setErrorMessage('Please select at least one participant.');
       return;
     }
-    setSelectedSquad(selectedPlayers);
-    navigate('/nextStep');
-  };
+    setSelectedSquad(selectedMatchPlayers);
+    navigate('/game-setup/configure');
+  }, [selectedMatchPlayers, setSelectedSquad, navigate, setErrorMessage]);
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     navigate(-1);
-  };
+  }, [navigate]);
 
   return { handleNext, handleBack };
 }
