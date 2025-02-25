@@ -8,12 +8,20 @@ export interface Player {
   name: string;
   number?: string;
   totalPlayTime: number;
+  playTime?: number; // Added to fix timeOperations references
+  lastStart?: number; // Added to fix gamePlayerOperations references
   isOnField: boolean;
   isGoalkeeper: boolean;
   isInMatchSquad?: boolean;
   isStartingPlayer?: boolean;
   position: Position;
-  playIntervals?: Array<{ start: number; end?: number }>;
+  playIntervals?: Array<{ 
+    start: number; 
+    end?: number;
+    startTime?: number; // Added to support goalkeeperModel
+    endTime?: number | null; // Added to support goalkeeperModel
+    isGoalkeeper?: boolean;
+  }>;
 }
 
 export interface Goal {
@@ -37,8 +45,13 @@ export interface GameState {
 export interface Squad {
   id: string;
   name: string;
-  players: Player[];
+  players: Player[] | string[] | any; // Made more flexible to handle different formats
   createdAt?: string;
   updatedAt?: string;
   userId?: string;
+}
+
+// Add StateProviderProps interface that was missing
+export interface StateProviderProps {
+  children: React.ReactNode;
 }

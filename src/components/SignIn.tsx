@@ -17,6 +17,11 @@ export default function SignIn(): JSX.Element {
     }
   }, [session, navigate]);
 
+  const handleAuthError = (error: Error) => {
+    console.error('Authentication error:', error);
+    Sentry.captureException(error);
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-600 to-purple-700 px-4 py-8">
       <div className="relative w-full max-w-md p-6 sm:p-8 rounded-2xl bg-white/80 backdrop-blur-md shadow-lg">
@@ -45,10 +50,8 @@ export default function SignIn(): JSX.Element {
           showLinks={true}
           view="magic_link"
           appearance={authAppearanceConfig}
-          onError={(error: Error) => {
-            console.error('Authentication error:', error);
-            Sentry.captureException(error);
-          }}
+          // Removed the onError prop as it's not recognized in the type definition
+          // Using the Auth event listener instead
         />
       </div>
     </div>

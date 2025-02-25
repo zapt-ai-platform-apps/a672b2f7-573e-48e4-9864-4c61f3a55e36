@@ -4,9 +4,26 @@ export function getTotalPlayTime(player: Player | undefined, includeGKPlaytime: 
   if (!player) {
     return 0;
   }
+  
+  // Skip goalkeeper playtime if not included
   if (player.isGoalkeeper && !includeGKPlaytime) {
     return 0;
   }
+  
+  // Use playIntervals if available
+  if (player.playIntervals && player.playIntervals.length > 0) {
+    let total = 0;
+    player.playIntervals.forEach(interval => {
+      if (interval.end) {
+        total += (interval.end - interval.start);
+      } else if (isRunning) {
+        total += (Date.now() - interval.start);
+      }
+    });
+    return Math.floor(total / 1000);
+  }
+  
+  // Fall back to legacy playTime tracking
   let additional = 0;
   if (isRunning && player.lastStart) {
     additional = Date.now() - player.lastStart;
@@ -14,14 +31,16 @@ export function getTotalPlayTime(player: Player | undefined, includeGKPlaytime: 
   return Math.round(((player.playTime || 0) + additional) / 1000);
 }
 
-export function handlePlayerAdjustment(players: Player[], playerId: number | string, isAdding: boolean): Player[] {
+export function handlePlayerAdjustment(players: Player[], playerId: string | number, isAdding: boolean): Player[] {
   if (isAdding) {
     const exists = players.some(p => p.id === playerId);
     if (!exists) {
       const newPlayer: Player = { 
-        id: playerId, 
+        id: playerId.toString(), 
         name: `Player ${playerId}`, 
-        playTime: 0, 
+        playTime: 0,
+        totalPlayTime: 0,
+        position: { x: 0, y: 0 },
         isOnField: true, 
         isGoalkeeper: false 
       };

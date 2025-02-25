@@ -28,9 +28,13 @@ export function changeGoalkeeper(
 
     // Handle new goalkeeper
     if (player.id === newGoalkeeper.id) {
-      const newInterval = isRunning 
-        ? { startTime: now, endTime: null, isGoalkeeper: true }
-        : { startTime: now, endTime: now, isGoalkeeper: true };
+      const newInterval = {
+        start: now,
+        end: isRunning ? undefined : now,
+        startTime: now,
+        endTime: isRunning ? null : now,
+        isGoalkeeper: true
+      };
       
       return {
         ...player,

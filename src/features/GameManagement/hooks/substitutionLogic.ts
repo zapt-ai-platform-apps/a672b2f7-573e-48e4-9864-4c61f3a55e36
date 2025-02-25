@@ -26,12 +26,25 @@ export function useSubstitutionLogic({ playerData, setPlayerData, isRunning }: S
 
   const confirmSubstitution = (): void => {
     if (!selectedSubOffPlayer || !selectedSubOnPlayer) return;
-    const updatedPlayers = performSubstitution(playerData, selectedSubOffPlayer, selectedSubOnPlayer, isRunning);
-    setPlayerData(updatedPlayers);
-    toast.success('Substitution successful!');
-    setShowSubstitutionConfirmModal(false);
-    setSelectedSubOffPlayer(null);
-    setSelectedSubOnPlayer(null);
+    
+    try {
+      // Ensure we're passing the correct types to performSubstitution
+      const updatedPlayers = performSubstitution(
+        playerData, 
+        selectedSubOffPlayer, 
+        selectedSubOnPlayer, 
+        isRunning
+      );
+      
+      setPlayerData(updatedPlayers);
+      toast.success('Substitution successful!');
+      setShowSubstitutionConfirmModal(false);
+      setSelectedSubOffPlayer(null);
+      setSelectedSubOnPlayer(null);
+    } catch (error) {
+      console.error('Error during substitution:', error);
+      toast.error('Failed to perform substitution');
+    }
   };
 
   const cancelSubstitution = (): void => {
