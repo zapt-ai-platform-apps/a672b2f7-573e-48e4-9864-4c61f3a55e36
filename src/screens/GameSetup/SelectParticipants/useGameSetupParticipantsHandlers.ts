@@ -1,4 +1,4 @@
-import { ExtendedPlayer } from './ParticipantItem';
+import { ExtendedPlayer } from './types';
 import { NavigateFunction } from 'react-router-dom';
 
 export default function useGameSetupParticipantsHandlers(

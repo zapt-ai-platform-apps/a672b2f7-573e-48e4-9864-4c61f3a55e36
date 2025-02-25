@@ -10,17 +10,17 @@ export default function GameSetupParticipantsScreen(): JSX.Element {
   const { setSelectedSquad } = useStateContext();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string>('');
-  
+
   const validPlayers = matchSquadPlayers.filter(
     player => player && typeof player.id === 'string'
   ) as ExtendedPlayer[];
-  
+
   console.log('Valid players for selection:', validPlayers);
-  
+
   const selectedMatchPlayers = validPlayers.filter(
     (player) => player.isInMatchSquad
   );
-  
+
   const { handleNext, handleBack } = useGameSetupParticipantsHandlers(
     selectedMatchPlayers,
     setSelectedSquad,
