@@ -1,4 +1,4 @@
-import { removeLastGoal } from "../../../shared/models/scoreModel";
+import { removeLastGoal } from "../../../shared/models/scoreCalculations";
 import * as Sentry from "@sentry/browser";
 import type { Goal } from "../../../types/GameTypes";
 
