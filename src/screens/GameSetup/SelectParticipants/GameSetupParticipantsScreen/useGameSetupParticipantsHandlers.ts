@@ -1,4 +1,4 @@
-import { ExtendedPlayer } from './types';
+import { ExtendedPlayer } from '../../../../features/GameSetup/types/ExtendedPlayer';
 
 export default function useGameSetupParticipantsHandlers(
   selectedPlayers: ExtendedPlayer[],
