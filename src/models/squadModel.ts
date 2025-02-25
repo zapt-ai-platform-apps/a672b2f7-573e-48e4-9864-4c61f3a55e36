@@ -1,4 +1,4 @@
-import { parsePlayers } from '../utils/parsePlayers';
+import parsePlayers from '../utils/parsePlayers';
 import * as Sentry from "@sentry/browser";
 
 export interface SquadData {
