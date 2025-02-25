@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, FormEvent } from "react";
 import useEditSquadForm from "./hooks/useEditSquadForm";
 import PlayersManager from "./components/PlayersManager";
 
@@ -6,7 +6,13 @@ interface EditSquadFormProps {
   onCancel: () => void;
 }
 
-function EditSquadForm({ onCancel }: EditSquadFormProps) {
+interface SquadPlayer {
+  id: string;
+  name: string;
+  [key: string]: any;
+}
+
+function EditSquadForm({ onCancel }: EditSquadFormProps): JSX.Element {
   const {
     squadName,
     setSquadName,
@@ -21,12 +27,12 @@ function EditSquadForm({ onCancel }: EditSquadFormProps) {
     handleBack,
   } = useEditSquadForm();
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     handleBack();
     onCancel();
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = (e: FormEvent): void => {
     e.preventDefault();
     handleUpdateSquad(e).then(() => {
       onCancel();

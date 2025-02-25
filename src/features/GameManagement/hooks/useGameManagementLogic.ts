@@ -1,20 +1,10 @@
 import { useState, useEffect } from 'react';
 import * as Sentry from '@sentry/browser';
-import { useStateContext } from '../../../state';
+import { useStateContext } from '../../../hooks/useStateContext';
 import { Player } from '../../../types/GameTypes';
-import {
-  getTotalPlayTime,
-  getTimeElapsed,
-  toggleTimer,
-  recordGoal,
-  handlePlayerAdjustment,
-  updatePlayerLists
-} from './gameManagementOperations';
-
-interface PlayerLists {
-  onField: Player[];
-  offField: Player[];
-}
+import { getTotalPlayTime } from '../../../models/timeUtils';
+import { computeTimeElapsed, toggleTimerLogic, GameInterval } from './gameTimerLogic';
+import { recordGoalLogic, handlePlayerAdjustmentLogic, updatePlayerListsLogic } from './gameScoreAndPlayerLogic';
 
 export interface UseGameManagementLogicReturn {
   playerData: Player[];
@@ -32,8 +22,8 @@ export interface UseGameManagementLogicReturn {
   showGoalModal: boolean;
   setShowGoalModal: React.Dispatch<React.SetStateAction<boolean>>;
   recordGoal: (team: 'our' | 'opponent', scorerName: string) => void;
-  handlePlayerAdjustment: (playerId: number | string, isAdding: boolean) => void;
-  updatePlayerLists: () => PlayerLists;
+  handlePlayerAdjustment: (playerId: string | number, isAdding: boolean) => void;
+  updatePlayerLists: () => { onField: Player[]; offField: Player[] };
   onFieldPlayers: Player[];
   offFieldPlayers: Player[];
   showAddPlayerModal: boolean;
@@ -60,7 +50,7 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
   } = useStateContext();
 
   const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [gameIntervals, setGameIntervals] = useState<any[]>([]);
+  const [gameIntervals, setGameIntervals] = useState<GameInterval[]>([]);
   const [showEndGameConfirm, setShowEndGameConfirm] = useState<boolean>(false);
   const [showGoalModal, setShowGoalModal] = useState<boolean>(false);
   const [showAddPlayerModal, setShowAddPlayerModal] = useState<boolean>(false);
@@ -77,10 +67,8 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
     let interval: NodeJS.Timeout | null = null;
     if (isRunning) {
       interval = setInterval(() => {
-        setTimeElapsed(getTimeElapsed(gameIntervals, isRunning));
+        setTimeElapsed(computeTimeElapsed(gameIntervals, isRunning));
       }, 1000);
-    } else if (interval) {
-      clearInterval(interval);
     }
     return () => {
       if (interval) clearInterval(interval);
@@ -93,7 +81,7 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
         const initializedPlayers = selectedSquad.players.map(p => ({
           ...p,
           playIntervals: [],
-          isOnField: p.isStartingPlayer
+          isOnField: p.isStartingPlayer ?? false
         }));
         setPlayerData(initializedPlayers);
         console.log('Initialized players from squad:', initializedPlayers);
@@ -105,19 +93,19 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
   }, [selectedSquad, setPlayerData, playerData.length]);
 
   const getTotalPlayTimeFunc = (player: Player): number => {
-    return getTotalPlayTime(player, includeGKPlaytime, isRunning);
+    return getTotalPlayTime(player, includeGKPlaytime ?? false, isRunning);
   };
 
   const getTimeElapsedFunc = (): number => {
-    return getTimeElapsed(gameIntervals, isRunning);
+    return computeTimeElapsed(gameIntervals, isRunning);
   };
 
   const toggleTimerFunc = (): void => {
     try {
-      const { newIntervals, newIsRunning } = toggleTimer(isRunning, gameIntervals);
-      setGameIntervals(newIntervals);
-      setIsRunning(newIsRunning);
-      console.log('Timer toggled:', newIsRunning ? 'Started' : 'Paused', newIntervals);
+      const result = toggleTimerLogic(isRunning, gameIntervals);
+      setGameIntervals(result.newIntervals);
+      setIsRunning(result.newIsRunning);
+      console.log('Timer toggled:', result.newIsRunning ? 'Started' : 'Paused', result.newIntervals);
     } catch (error) {
       Sentry.captureException(error);
       console.error('Timer toggle error:', error);
@@ -126,7 +114,7 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
 
   const recordGoalFunc = (team: 'our' | 'opponent', scorerName: string): void => {
     try {
-      const result = recordGoal(team, scorerName, ourScore, opponentScore, goals, gameIntervals, isRunning);
+      const result = recordGoalLogic(team, scorerName, ourScore, opponentScore, goals, gameIntervals, isRunning);
       setOurScore(result.newOurScore);
       setOpponentScore(result.newOpponentScore);
       setGoals(result.newGoals);
@@ -137,9 +125,9 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
     }
   };
 
-  const handlePlayerAdjustmentFunc = (playerId: number | string, isAdding: boolean): void => {
+  const handlePlayerAdjustmentFunc = (playerId: string | number, isAdding: boolean): void => {
     try {
-      setPlayerData(prev => handlePlayerAdjustment(prev, playerId, isAdding));
+      setPlayerData(prev => handlePlayerAdjustmentLogic(prev, playerId, isAdding));
       console.log('Player adjusted:', playerId, isAdding ? 'added' : 'removed');
     } catch (error) {
       Sentry.captureException(error);
@@ -148,7 +136,7 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
   };
 
   const updatePlayerListsFunc = (): { onField: Player[]; offField: Player[] } => {
-    return updatePlayerLists(playerData, includeGKPlaytime, isRunning);
+    return updatePlayerListsLogic(playerData, includeGKPlaytime ?? false, isRunning);
   };
 
   const lists = updatePlayerListsFunc();

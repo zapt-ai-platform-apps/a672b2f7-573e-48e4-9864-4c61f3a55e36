@@ -1,81 +1,63 @@
-import React, { useState } from 'react';
-import PlayerInput from './PlayerInput';
-import PlayersList from './PlayersList';
+import React, { ChangeEvent } from "react";
 
-export type Player = {
+interface Player {
   id: string;
   name: string;
-};
+  [key: string]: any;
+}
 
 interface PlayersManagerProps {
-  players: Player[];
-  onPlayersChange: (players: Player[]) => void;
+  squadPlayersList: Player[];
+  newPlayerName: string;
+  setNewPlayerName: (value: string) => void;
+  handleAddPlayer: () => void;
+  handleDeletePlayer: (playerId: string) => void;
 }
 
-export default function PlayersManager({ players, onPlayersChange }: PlayersManagerProps): JSX.Element {
-  const [newPlayerName, setNewPlayerName] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
-
-  const handleAddPlayer = (): void => {
-    if (!newPlayerName.trim()) {
-      setError('Player name cannot be empty');
-      return;
-    }
-
-    if (players.some(player => player.name.toLowerCase() === newPlayerName.toLowerCase())) {
-      setError('A player with this name already exists');
-      return;
-    }
-
-    const newPlayer: Player = {
-      id: Date.now().toString(),
-      name: newPlayerName
-    };
-
-    onPlayersChange([...players, newPlayer]);
-    setNewPlayerName('');
-    setError(null);
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>): void => {
-    if (e.key === 'Enter') {
-      handleAddPlayer();
-    }
-  };
-
-  const handleRemovePlayer = (id: string): void => {
-    onPlayersChange(players.filter(player => player.id !== id));
-  };
-
+const PlayersManager = ({
+  squadPlayersList,
+  newPlayerName,
+  setNewPlayerName,
+  handleAddPlayer,
+  handleDeletePlayer,
+}: PlayersManagerProps): JSX.Element => {
   return (
-    <div className="space-y-6">
-      <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl">
-        <h3 className="text-lg font-medium mb-3 text-white">Add Players</h3>
-        <div className="flex space-x-2">
-          <PlayerInput
-            value={newPlayerName}
-            onChange={(e) => {
-              setNewPlayerName(e.target.value);
-              if (error) setError(null);
-            }}
-            onKeyPress={handleKeyPress}
-            placeholder="Enter player name"
-            className="flex-grow box-border bg-white/20 text-white placeholder-white/50 border-0 focus:ring-2 focus:ring-blue-400"
-          />
-          <button
-            onClick={handleAddPlayer}
-            className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-lg transition-colors cursor-pointer shadow-sm"
-          >
-            Add
-          </button>
-        </div>
-        {error && <p className="mt-2 text-red-400 text-sm">{error}</p>}
+    <div className="mb-6">
+      <label className="block text-gray-700 dark:text-gray-200 text-sm font-medium mb-2">
+        Players
+      </label>
+      <div className="flex space-x-2 mb-4">
+        <input
+          type="text"
+          value={newPlayerName}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setNewPlayerName(e.target.value)}
+          className="shadow-sm appearance-none border border-gray-300 dark:border-gray-600 rounded-lg w-full py-3 px-4 text-gray-700 dark:text-gray-200 dark:bg-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="Enter player name"
+        />
+        <button
+          type="button"
+          onClick={handleAddPlayer}
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
+        >
+          Add Player
+        </button>
       </div>
-
-      <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl">
-        <h3 className="text-lg font-medium mb-3 text-white">Player List</h3>
-        <PlayersList players={players} onRemove={handleRemovePlayer} />
-      </div>
+      <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+        {squadPlayersList.map((player) => (
+          <li key={player.id} className="flex justify-between items-center py-2">
+            <span className="text-gray-800 dark:text-gray-200">{player.name}</span>
+            <button
+              type="button"
+              onClick={() => handleDeletePlayer(player.id)}
+              className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200"
+            >
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
-}
+};
+
+export default PlayersManager;

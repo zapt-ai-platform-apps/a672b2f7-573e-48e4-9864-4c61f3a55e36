@@ -1,10 +1,15 @@
 import React from 'react';
 import Player from './Player';
 
+interface Position {
+  x: number;
+  y: number;
+}
+
 interface PlayerType {
   id: string;
   name: string;
-  position: string;
+  position: Position | string;
   [key: string]: any;
 }
 

@@ -1,7 +1,16 @@
-import { Appearance } from '@supabase/auth-ui-react';
+import { ThemeSupa } from '@supabase/auth-ui-shared';
 
-const authAppearance: Appearance = {
+export const authAppearanceConfig = {
   theme: 'default',
+  style: {
+    button: {
+      background: '#FF6B6B',
+      color: 'white',
+    },
+    anchor: {
+      color: '#FF4757',
+    },
+  },
   variables: {
     default: {
       colors: {
@@ -12,4 +21,4 @@ const authAppearance: Appearance = {
   },
 };
 
-export default authAppearance;
+export default authAppearanceConfig;
