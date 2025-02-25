@@ -3,7 +3,7 @@ import { NavigateFunction } from 'react-router-dom';
 import { ExtendedPlayer } from './ParticipantItem';
 
 // Import the Squad type from the correct location
-import { Squad } from '../../../shared/models/player';
+import { Squad } from '../../../types/GameTypes';
 
 /**
  * Custom hook for handling participant selection navigation and validation
@@ -30,7 +30,7 @@ export default function useGameSetupParticipantsHandlers(
       isInMatchSquad: true
     }));
     
-    setSelectedSquad((prevState) => ({
+    setSelectedSquad((prevState: Squad | null) => ({
       // Ensure we have the required Squad properties
       id: prevState?.id || `temp-${Date.now()}`,
       name: prevState?.name || 'Match Squad',
