@@ -1,4 +1,4 @@
-import { addGoal } from '../../../shared/models/scoreOperations';
+import { recordGoal as addGoal } from '../../../shared/models/scoreOperations';
 import { handlePlayerAdjustment as handlePlayerAdjustmentModel } from '../../../shared/models/playerAdjustments';
 import { processPlayerLists } from '../../../shared/models/listUtils';
 import { getTimeElapsed } from './gameTimerOperations';

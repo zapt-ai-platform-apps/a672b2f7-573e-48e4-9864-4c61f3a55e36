@@ -1,6 +1,6 @@
 export interface Position {
-  x: number;
-  y: number;
+  x: number | null;
+  y: number | null;
 }
 
 export interface Player {
@@ -46,7 +46,7 @@ export interface GameState {
 export interface Squad {
   id: string;
   name: string;
-  players: Player[] | string[] | any; // Made more flexible to handle different formats
+  players: Player[];
   createdAt?: string;
   updatedAt?: string;
   userId?: string;

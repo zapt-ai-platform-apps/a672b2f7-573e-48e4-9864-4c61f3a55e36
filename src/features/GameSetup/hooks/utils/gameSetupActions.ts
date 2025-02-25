@@ -2,7 +2,7 @@ import { Player } from '../../../../types/GameTypes';
 
 function createPlayer(name: string): Player {
   return {
-    id: Date.now() + Math.random(),
+    id: String(Date.now() + Math.random()), // Convert to string to match expected type
     name: name.trim(),
     playIntervals: [],
     isOnField: true,
@@ -20,12 +20,12 @@ export function addPlayerToList(players: Player[], name: string): Player[] {
 }
 
 export function removePlayerFromList(players: Player[], playerId: number | string): Player[] {
-  return players.filter(player => player.id !== playerId);
+  return players.filter(player => String(player.id) !== String(playerId));
 }
 
 export function togglePlayerInList(players: Player[], playerId: number | string): Player[] {
   return players.map(player => {
-    if (player.id === playerId) {
+    if (String(player.id) === String(playerId)) {
       return { ...player, isStartingPlayer: !player.isStartingPlayer };
     }
     return player;

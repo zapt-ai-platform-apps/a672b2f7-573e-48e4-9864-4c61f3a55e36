@@ -3,8 +3,9 @@ import * as Sentry from '@sentry/browser';
 import { useStateContext } from '../../../hooks/useStateContext';
 import { Player } from '../../../types/GameTypes';
 import { getTotalPlayTime, formatTime } from '../../../models/timeUtils';
-import { computeTimeElapsed, toggleTimerLogic, GameInterval } from './gameTimerLogic';
+import { computeTimeElapsed, toggleTimerLogic } from './gameTimerLogic';
 import { recordGoalLogic, handlePlayerAdjustmentLogic, updatePlayerListsLogic } from './gameScoreAndPlayerLogic';
+import { getValidIntervals, GameInterval } from './utils/gameManagementUtils';
 
 export interface UseGameManagementLogicReturn {
   playerData: Player[];
@@ -67,7 +68,8 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
     let interval: NodeJS.Timeout | null = null;
     if (isRunning) {
       interval = setInterval(() => {
-        setTimeElapsed(computeTimeElapsed(gameIntervals, isRunning));
+        const validIntervals = getValidIntervals(gameIntervals);
+        setTimeElapsed(computeTimeElapsed(validIntervals, isRunning));
       }, 1000);
     }
     return () => {
@@ -97,7 +99,8 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
   };
 
   const getTimeElapsedFunc = (): string => {
-    return formatTime(computeTimeElapsed(gameIntervals, isRunning));
+    const validIntervals = getValidIntervals(gameIntervals);
+    return formatTime(computeTimeElapsed(validIntervals, isRunning));
   };
 
   const toggleTimerFunc = (): void => {
@@ -114,7 +117,8 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
 
   const recordGoalFunc = (team: 'our' | 'opponent', scorerName: string): void => {
     try {
-      const result = recordGoalLogic(team, scorerName, ourScore, opponentScore, goals, gameIntervals, isRunning);
+      const validIntervals = getValidIntervals(gameIntervals);
+      const result = recordGoalLogic(team, scorerName, ourScore, opponentScore, goals, validIntervals, isRunning);
       setOurScore(result.newOurScore);
       setOpponentScore(result.newOpponentScore);
       setGoals(result.newGoals);

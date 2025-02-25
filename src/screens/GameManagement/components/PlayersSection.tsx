@@ -1,12 +1,13 @@
 import React from 'react';
-import PlayerList from '../../features/GameManagement/components/PlayerList';
+import PlayerList from '../../../features/GameManagement/components/PlayerList'; // Corrected import path
 import { timeFormatter } from '../utils/timeFormatter';
+import { Player } from '../../../types/GameTypes';
 
 export interface PlayersSectionProps {
-  onFieldPlayers: any;
-  offFieldPlayers: any;
-  getTotalPlayTime: (player: any) => number;
-  handlePlayerClick: (player: any) => void;
+  onFieldPlayers: Player[];
+  offFieldPlayers: Player[];
+  getTotalPlayTime: (player: Player) => number;
+  handlePlayerClick: (player: Player) => void;
 }
 
 export function PlayersSection({
