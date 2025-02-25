@@ -1,13 +1,6 @@
 import { useCallback } from 'react';
 import { ExtendedPlayer } from '../../../../features/GameSetup/types/ExtendedPlayer';
 
-interface HandlersParams {
-  selectedMatchPlayers: ExtendedPlayer[];
-  setSelectedSquad: (players: ExtendedPlayer[]) => void;
-  navigate: (path: string | number) => void;
-  setErrorMessage: (message: string) => void;
-}
-
 export default function useGameSetupParticipantsHandlers(
   selectedMatchPlayers: ExtendedPlayer[],
   setSelectedSquad: (players: ExtendedPlayer[]) => void,
