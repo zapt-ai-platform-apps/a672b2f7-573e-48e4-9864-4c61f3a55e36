@@ -14,7 +14,7 @@ export function createPlayer({
   name: string;
   isInMatchSquad?: boolean;
   isInStartingLineup?: boolean;
-}): Player & { isInMatchSquad?: boolean; isInStartingLineup?: boolean } {
+}): Player {
   return {
     id: Date.now() + Math.random(),
     name,

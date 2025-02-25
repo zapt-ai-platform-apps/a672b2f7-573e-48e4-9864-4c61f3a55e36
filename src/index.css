@@ -2,81 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
-@keyframes wave {
-  0% {
-    transform: translateX(0) translateZ(0) scaleY(1);
+@layer utilities {
+  .bg-radial-gradient {
+    background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.02) 0%, rgba(0, 0, 0, 0.2) 100%);
   }
-  50% {
-    transform: translateX(-25%) translateZ(0) scaleY(0.8);
+  
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+      opacity: 0.1;
+    }
+    50% {
+      transform: translateY(-60px);
+      opacity: 0.3;
+    }
+    100% {
+      transform: translateY(-120px);
+      opacity: 0;
+    }
   }
-  100% {
-    transform: translateX(-50%) translateZ(0) scaleY(1);
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-}
-
-@keyframes wave-slow {
-  0% {
-    transform: translateX(0) translateZ(0) scaleY(1);
+  
+  @keyframes wave {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(-25%);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
   }
-  50% {
-    transform: translateX(-15%) translateZ(0) scaleY(0.9);
+  
+  @keyframes wave-slow {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(-15%);
+    }
+    100% {
+      transform: translateX(-30%);
+    }
   }
-  100% {
-    transform: translateX(-30%) translateZ(0) scaleY(1);
+  
+  .animate-fadeIn {
+    animation: fadeIn 1s ease-out forwards;
   }
-}
-
-.animate-wave {
-  animation: wave 15s linear infinite;
-}
-
-.animate-wave-slow {
-  animation: wave-slow 20s linear infinite;
-}
-
-/* Apply background to all body elements */
-body {
-  @apply bg-gradient-to-br from-purple-900 via-blue-800 to-indigo-900;
-  min-height: 100vh;
-}
-
-/* Input styles */
-input {
-  @apply box-border;
-}
-
-/* Button styles */
-button {
-  @apply cursor-pointer;
-}
-
-/* Dark mode adjustments - we still want light cards on dark backgrounds */
-.dark .bg-white {
-  @apply bg-white/10 backdrop-blur-sm text-white;
-}
-
-/* Modal styling */
-.modal-overlay {
-  @apply fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4;
-}
-
-.modal-content {
-  @apply bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-auto p-6;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-white/10;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-white/30 rounded-full;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-white/50;
+  
+  .animate-wave {
+    animation: wave 15s linear infinite;
+  }
+  
+  .animate-wave-slow {
+    animation: wave-slow 25s linear infinite;
+  }
 }

@@ -1,41 +1,36 @@
 import { vi } from 'vitest';
-import React from 'react';
 
-vi.mock('react-icons/hi', () => ({
-  HiMoon: () => <div data-testid="moon-icon">Moon Icon</div>,
-  HiSun: () => <div data-testid="sun-icon">Sun Icon</div>
+// Mock the supabaseClient
+vi.mock('../../src/supabaseClient', () => ({
+  supabase: {
+    auth: {
+      getSession: vi.fn().mockResolvedValue({ data: { session: null } }),
+      onAuthStateChange: vi.fn().mockReturnValue({ 
+        data: { subscription: { unsubscribe: vi.fn() } } 
+      }),
+      signOut: vi.fn().mockResolvedValue({})
+    }
+  },
+  recordLogin: vi.fn().mockResolvedValue({}),
+  createEvent: vi.fn().mockResolvedValue({})
 }));
 
-export const localStorageMock = (() => {
-  let store: Record<string, string> = {};
-  return {
-    getItem: vi.fn((key: string) => store[key] || null),
-    setItem: vi.fn((key: string, value: string) => {
-      store[key] = value.toString();
-    }),
-    clear: vi.fn(() => {
-      store = {};
-    })
-  };
-})();
+// Mock Sentry
+vi.mock('@sentry/browser', () => ({
+  captureException: vi.fn(),
+  init: vi.fn()
+}));
 
-Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock
+// Mock React Router's useNavigate
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useNavigate: () => vi.fn()
+  };
 });
 
-window.matchMedia = vi.fn().mockImplementation((query) => ({
-  matches: false,
-  media: query,
-  onchange: null,
-  addListener: vi.fn(),
-  removeListener: vi.fn(),
-  addEventListener: vi.fn(),
-  removeEventListener: vi.fn(),
-  dispatchEvent: vi.fn()
-}));
-
-document.documentElement.classList = {
-  add: vi.fn(),
-  remove: vi.fn(),
-  contains: vi.fn()
-} as unknown as DOMTokenList;
+// Reset all mocks between tests
+afterEach(() => {
+  vi.resetAllMocks();
+});

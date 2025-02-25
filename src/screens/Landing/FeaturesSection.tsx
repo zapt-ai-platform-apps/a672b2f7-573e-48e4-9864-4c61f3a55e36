@@ -1,42 +1,31 @@
 import React from 'react';
 
-/**
- * FeaturesSection component displays key app features in stylish card format.
- */
-function FeaturesSection(): JSX.Element {
+export default function FeaturesSection(): JSX.Element {
   return (
-    <section className="features-section mt-20 w-full max-w-5xl mx-auto px-4 animate-fadeIn" style={{ animationDelay: '1.5s' }}>
-      <h2 className="text-4xl font-bold text-white mb-10 text-center">
-        Discover the Power of Football Subs
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-        <div className="feature-card bg-white bg-opacity-90 p-8 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl">
-          <h3 className="text-2xl font-semibold mb-4 text-gray-800">
-            Real-Time Substitutions
-          </h3>
-          <p className="text-gray-700">
-            Effortlessly manage on-field player changes with live, intuitive controls.
-          </p>
-        </div>
-        <div className="feature-card bg-white bg-opacity-90 p-8 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl">
-          <h3 className="text-2xl font-semibold mb-4 text-gray-800">
-            Game Analytics
-          </h3>
-          <p className="text-gray-700">
-            Monitor scores, playtimes, and game events with advanced real-time analytics.
-          </p>
-        </div>
-        <div className="feature-card bg-white bg-opacity-90 p-8 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl">
-          <h3 className="text-2xl font-semibold mb-4 text-gray-800">
-            Intuitive Interface
-          </h3>
-          <p className="text-gray-700">
-            Experience a seamless, modern design optimized for all devices, ensuring effortless navigation.
-          </p>
+    <section className="py-20 bg-white rounded-lg shadow-md mx-4 my-8">
+      <div className="max-w-4xl mx-auto px-4">
+        <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">Features</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="p-4 border rounded-lg shadow-sm">
+            <h3 className="text-xl font-semibold text-gray-700">Feature One</h3>
+            <p className="text-gray-600 mt-2">
+              Experience the best performance with our cutting-edge feature.
+            </p>
+          </div>
+          <div className="p-4 border rounded-lg shadow-sm">
+            <h3 className="text-xl font-semibold text-gray-700">Feature Two</h3>
+            <p className="text-gray-600 mt-2">
+              Enhance your workflow with seamless integration and great usability.
+            </p>
+          </div>
+          <div className="p-4 border rounded-lg shadow-sm">
+            <h3 className="text-xl font-semibold text-gray-700">Feature Three</h3>
+            <p className="text-gray-600 mt-2">
+              Get the flexibility you need with customizable settings.
+            </p>
+          </div>
         </div>
       </div>
     </section>
   );
 }
-
-export default FeaturesSection;
