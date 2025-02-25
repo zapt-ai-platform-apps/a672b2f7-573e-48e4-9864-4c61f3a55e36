@@ -1,13 +1,14 @@
 import React from 'react';
 import GoalkeeperSelect from './GoalkeeperSelect';
 import GKPlaytimeToggle from './GKPlaytimeToggle';
+import { Player } from '../../../../types/GameTypes';
 
 interface GoalkeeperSettingsProps {
-  goalkeeper: string | null;
-  setGoalkeeper: (gk: string | null) => void;
+  goalkeeper: Player | null; // Changed from string | null to Player | null
+  setGoalkeeper: (gk: Player | null) => void; // Changed to accept Player | null
   includeGKPlaytime: boolean;
   setIncludeGKPlaytime: (include: boolean) => void;
-  squadPlayers: string[];
+  squadPlayers: Player[]; // Changed from string[] to Player[]
 }
 
 function GoalkeeperSettings({
@@ -27,7 +28,7 @@ function GoalkeeperSettings({
         />
         {goalkeeper && (
           <p className="mt-2 text-sm text-green-600 font-medium">
-            Selected Goalkeeper: {goalkeeper}
+            Selected Goalkeeper: {goalkeeper.name}
           </p>
         )}
       </div>

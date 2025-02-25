@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Session } from '@supabase/supabase-js';
-import { supabase, recordLogin } from '../supabaseClient';
+import { supabase } from '../supabaseClient';
 import * as Sentry from "@sentry/browser";
-
-let hasRecordedLogin = false;
+import { recordUserLogin, resetRecordedLogin } from '../lib/authRecording';
+import { EnvironmentType } from '../types/environment';
 
 export function useAuthSession() {
   const [session, setSession] = useState<Session | null>(null);
@@ -20,11 +20,13 @@ export function useAuthSession() {
           throw error;
         }
         setSession(data.session);
-        if (data.session?.user?.email && !hasRecordedLogin) {
+        if (data.session?.user?.email) {
           try {
-            await recordLogin(data.session.user.email, import.meta.env.VITE_PUBLIC_APP_ENV as string);
-            hasRecordedLogin = true;
-            console.log('Login recorded successfully');
+            await recordUserLogin(
+              data.session.user.email,
+              import.meta.env.VITE_PUBLIC_APP_ENV as EnvironmentType,
+              'Login recorded successfully'
+            );
           } catch (recordError) {
             console.error('Failed to record login:', recordError);
             Sentry.captureException(recordError);
@@ -43,18 +45,20 @@ export function useAuthSession() {
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
       setSession(session);
       setLoading(false);
-      if (event === 'SIGNED_IN' && session?.user?.email && !hasRecordedLogin) {
+      if (event === 'SIGNED_IN' && session?.user?.email) {
         try {
-          await recordLogin(session.user.email, import.meta.env.VITE_PUBLIC_APP_ENV as string);
-          hasRecordedLogin = true;
-          console.log('Login recorded on auth state change');
+          await recordUserLogin(
+            session.user.email,
+            import.meta.env.VITE_PUBLIC_APP_ENV as EnvironmentType,
+            'Login recorded on auth state change'
+          );
         } catch (recordError) {
           console.error('Failed to record login:', recordError);
           Sentry.captureException(recordError);
         }
       }
       if (event === 'SIGNED_OUT') {
-        hasRecordedLogin = false;
+        resetRecordedLogin();
       }
     });
 

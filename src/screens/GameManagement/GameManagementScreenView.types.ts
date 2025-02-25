@@ -5,7 +5,7 @@ export interface GameManagementScreenViewProps {
   isRunning: boolean;
   ourScore: number;
   opponentScore: number;
-  getTimeElapsed: () => number;
+  getTimeElapsed: () => string; // Changed from number to string for formatted time display
   toggleTimer: () => void;
   handleEndGame: () => void;
   showEndGameConfirm: boolean;
@@ -14,7 +14,7 @@ export interface GameManagementScreenViewProps {
   recordGoal: (team: 'our' | 'opponent', scorerName: string) => void;
   onFieldPlayers: Player[];
   offFieldPlayers: Player[];
-  getTotalPlayTime: (playerId: string) => number;
+  getTotalPlayTime: (player: Player) => number; // Changed from playerId: string to player: Player
   showGoalModal: boolean;
   setShowGoalModal: (show: boolean) => void;
   handlePlayerClick: (player: Player) => void;
