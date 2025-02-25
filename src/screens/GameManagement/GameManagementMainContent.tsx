@@ -40,6 +40,7 @@ export default function GameManagementMainContent({
         handleSubOffPlayerClick={() => {}}
         handleSubOnPlayerClick={() => {}}
         confirmSubstitution={() => {}}
+        cancelSubstitution={() => {}}
         showSubstitutionConfirmModal={false}
       />
       <PlayersSection

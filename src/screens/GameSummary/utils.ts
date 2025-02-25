@@ -1,8 +1,11 @@
-export function createGetTotalPlayTime(includeGKPlaytime: boolean) {
-  return function(player: { totalPlayTime: number; isGoalkeeper: boolean }): number {
-    if (!includeGKPlaytime && player.isGoalkeeper) {
-      return 0;
+import { Player } from '../../types/GameTypes';
+
+export function createGetTotalPlayTime(includeGKPlaytime: boolean): (player: Player) => number {
+  return function getTotalPlayTime(player: Player): number {
+    let total = (player.playTime as number) || 0;
+    if (includeGKPlaytime && player.gkPlayTime) {
+      total += player.gkPlayTime;
     }
-    return player.totalPlayTime;
+    return total;
   };
 }
