@@ -10,8 +10,11 @@ async function recordUserLogin(email: string, getLoginRecorded: () => boolean, r
   recordingInProgress.current = true;
   
   try {
-    // Cast the environment to the expected type
-    await recordLogin(email, import.meta.env.VITE_PUBLIC_APP_ENV as unknown as environmentType);
+    // Get the environment value
+    const environment = import.meta.env.VITE_PUBLIC_APP_ENV as unknown as environmentType;
+    // Convert 'staging' to 'production' for recordLogin
+    const effectiveEnv = (environment === 'staging') ? 'production' : environment;
+    await recordLogin(email, effectiveEnv);
     setLoginRecorded(true);
   } catch (error) {
     console.error('Failed to record login:', error);

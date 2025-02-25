@@ -15,7 +15,11 @@ export interface Player {
   isInMatchSquad?: boolean;
   isStartingPlayer?: boolean;
   isInStartingLineup?: boolean; // Added missing property
-  position: Position;
+  // Allow position to be either a Position object or a string
+  position: Position | string;
+  // Add missing properties needed by Game Summary
+  status?: string;
+  minutesPlayed?: number;
   playIntervals?: Array<{ 
     start: number; 
     end?: number;

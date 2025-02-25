@@ -7,11 +7,22 @@ import FinalScore from '../../features/GameSummary/components/FinalScore';
 import ShareSummaryButton from '../../features/GameSummary/components/ShareSummaryButton';
 import { formatTime } from '../../shared/models/timeUtils';
 import { createGetTotalPlayTime } from './utils';
+import { Player } from '../../types/GameTypes';
 
 export default function GameSummaryScreen(): JSX.Element {
   const { playerData, goals, ourScore, opponentScore, includeGKPlaytime, resetGame } = useStateContext();
 
   const getTotalPlayTime = createGetTotalPlayTime(includeGKPlaytime);
+
+  const playersWithDefaults = playerData.map((player: Player) => ({
+    ...player,
+    totalPlayTime: player.totalPlayTime || 0,
+    isOnField: typeof player.isOnField === 'boolean' ? player.isOnField : false,
+    isGoalkeeper: typeof player.isGoalkeeper === 'boolean' ? player.isGoalkeeper : false,
+    status: player.status || 'active',
+    minutesPlayed: player.minutesPlayed || Math.floor(player.totalPlayTime / 60000),
+    position: player.position || { x: null, y: null }
+  }));
 
   const navigate = useNavigate();
 
@@ -32,7 +43,7 @@ export default function GameSummaryScreen(): JSX.Element {
         </div>
         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg mb-6">
           <PlayerPlaytimes
-            playerData={playerData}
+            playerData={playersWithDefaults}
             includeGKPlaytime={includeGKPlaytime}
             getTotalPlayTime={getTotalPlayTime}
             formatTime={formatTime}
@@ -48,7 +59,7 @@ export default function GameSummaryScreen(): JSX.Element {
           <ShareSummaryButton
             ourScore={ourScore}
             opponentScore={opponentScore}
-            playerData={playerData}
+            playerData={playersWithDefaults}
             goals={goals}
             includeGKPlaytime={includeGKPlaytime}
             getTotalPlayTime={getTotalPlayTime}
