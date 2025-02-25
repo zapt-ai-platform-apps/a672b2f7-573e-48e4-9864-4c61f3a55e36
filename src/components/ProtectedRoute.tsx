@@ -1,30 +1,22 @@
-import React from 'react';
-import { useAuth } from './AuthProvider';
-import { Navigate, useLocation } from 'react-router-dom';
-import { useStateContext } from '../state';
+import React, { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
-interface ProtectedRouteProps {
+type ProtectedRouteProps = {
   children: JSX.Element;
-}
+};
 
-function ProtectedRoute({ children }: ProtectedRouteProps): JSX.Element {
-  const { session } = useAuth();
-  const { selectedSquad } = useStateContext();
-  const location = useLocation();
+const ProtectedRoute = ({ children }: ProtectedRouteProps): JSX.Element => {
+  const { session, loading } = useContext(AuthContext);
 
-  if (!session) {
-    return <Navigate to="/login" replace />;
+  if (loading) {
+    return <div data-testid="loading-indicator">Loading...</div>;
   }
 
-  if (
-    !location.pathname.startsWith('/squads') &&
-    !location.pathname.startsWith('/setup') &&
-    !selectedSquad
-  ) {
-    return <Navigate to="/squads" replace />;
+  if (!session) {
+    return <div>Please sign in to access this feature</div>;
   }
 
   return children;
-}
+};
 
 export default ProtectedRoute;

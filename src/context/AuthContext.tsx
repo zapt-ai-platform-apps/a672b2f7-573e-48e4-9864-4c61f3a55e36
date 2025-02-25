@@ -1,23 +1,22 @@
-import React, { createContext, useContext } from 'react';
+import { createContext } from 'react';
 
-export interface Session {
-  user: {
-    id: string;
-    email?: string;
-  };
-}
+type User = {
+  id: string;
+  email: string;
+};
 
-interface AuthContextType {
+type Session = {
+  user: User;
+};
+
+type AuthContextType = {
   session: Session | null;
-  setSession: React.Dispatch<React.SetStateAction<Session | null>>;
-}
+  loading: boolean;
+  signOut: () => void;
+};
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export function useAuth(): AuthContextType {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-}
+export const AuthContext = createContext<AuthContextType>({
+  session: null,
+  loading: false,
+  signOut: () => {}
+});

@@ -1,71 +1,35 @@
-interface Interval {
-  startTime: number;
-  endTime: number | null;
+function formatTime(time: number): string {
+  if (time < 0) return '00:00';
+  const minutes = Math.floor(time / 60);
+  const seconds = time % 60;
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
-/**
- * Calculates the total play time of a player.
- * @param player - The player object.
- * @param includeGKPlaytime - Whether to include goalkeeper playtime.
- * @param isRunning - Indicates if the game is running.
- * @returns Total play time in seconds.
- */
-export function calculateTotalPlayTime(
-  player: { playIntervals?: Interval[]; position?: string },
-  includeGKPlaytime: boolean,
-  isRunning: boolean
+function calculateMinutesPlayed(
+  player: {
+    id: string;
+    name: string;
+    position: string;
+    status: string;
+    minutesPlayed: number;
+    entryTimes: number[];
+    exitTimes: number[];
+  },
+  gameTime: number,
+  isTimerRunning: boolean
 ): number {
   let total = 0;
-  if (player.playIntervals && Array.isArray(player.playIntervals)) {
-    for (const interval of player.playIntervals) {
-      if (interval.endTime) {
-        total += interval.endTime - interval.startTime;
-      } else if (isRunning) {
-        total += Date.now() - interval.startTime;
-      }
-    }
+  const completedPeriods = Math.min(player.entryTimes.length, player.exitTimes.length);
+  for (let i = 0; i < completedPeriods; i++) {
+    const diff = player.exitTimes[i] - player.entryTimes[i];
+    total += diff > 0 ? diff : 0;
   }
-  if (player.position === 'Goalkeeper' && !includeGKPlaytime) {
-    return 0;
+  if (isTimerRunning && player.entryTimes.length > player.exitTimes.length) {
+    const lastEntry = player.entryTimes[player.entryTimes.length - 1];
+    const diff = gameTime - lastEntry;
+    total += diff > 0 ? diff : 0;
   }
-  return Math.floor(total / 1000);
+  return total;
 }
 
-/**
- * Formats time in seconds to a MM:SS string.
- * @param timeInSeconds - Time in seconds.
- * @returns Formatted time as MM:SS.
- */
-export function formatTime(timeInSeconds: number): string {
-  const minutes = Math.floor(timeInSeconds / 60);
-  const seconds = ('0' + (timeInSeconds % 60)).slice(-2);
-  return `${minutes}:${seconds}`;
-}
-
-/**
- * Calculates the elapsed time during the game.
- * @param gameIntervals - Array of game intervals.
- * @param isRunning - Indicates if the game is running.
- * @returns Elapsed time in seconds.
- */
-export function calculateElapsedTime(gameIntervals: Interval[], isRunning: boolean): number {
-  let total = 0;
-  gameIntervals.forEach(interval => {
-    if (interval.endTime) {
-      total += interval.endTime - interval.startTime;
-    } else if (isRunning) {
-      total += Date.now() - interval.startTime;
-    }
-  });
-  return Math.floor(total / 1000);
-}
-
-/**
- * Calculates the minimum play time among players.
- * @param players - Array of players with totalPlayTime property.
- * @returns Minimum play time in seconds.
- */
-export function calculateMinPlayTime(players: { totalPlayTime?: number }[]): number {
-  if (!players || players.length === 0) return 0;
-  return Math.min(...players.map(p => p.totalPlayTime || 0));
-}
+export { formatTime, calculateMinutesPlayed };
