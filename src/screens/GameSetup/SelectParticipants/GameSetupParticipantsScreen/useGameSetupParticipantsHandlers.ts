@@ -1,24 +1,23 @@
-import { ExtendedPlayer } from '../../../../features/GameSetup/types/ExtendedPlayer';
+import { ExtendedPlayer } from './types';
 
 export default function useGameSetupParticipantsHandlers(
   selectedPlayers: ExtendedPlayer[],
   setSelectedSquad: (players: ExtendedPlayer[]) => void,
-  navigate: (path: string) => void,
+  navigate: (path: string | number) => void,
   setErrorMessage: (message: string) => void
 ) {
-  function handleNext() {
+  const handleNext = () => {
     if (selectedPlayers.length === 0) {
-      setErrorMessage('Please select at least one player.');
+      setErrorMessage('No players selected!');
       return;
     }
-    setErrorMessage('');
     setSelectedSquad(selectedPlayers);
-    navigate('/game-setup/next-step');
-  }
+    navigate('/nextStep');
+  };
 
-  function handleBack() {
-    navigate('/game-setup/previous-step');
-  }
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   return { handleNext, handleBack };
 }

@@ -1,16 +1,35 @@
+import { Squad } from '../../../types/GameTypes';
 import { ExtendedPlayer } from '../types/ExtendedPlayer';
-import { ensurePlayerProperties } from './ensurePlayerProperties';
 
 /**
- * Initializes the match squad players with required properties.
- * 
- * @param players The players to initialize
- * @returns The initialized players with all required properties
+ * Initialize match squad players based on selected squad and existing match squad
+ * @param selectedSquad The selected squad containing players
+ * @param existingMatchSquad Optional existing match squad players
+ * @returns Array of ExtendedPlayer with proper initialization
  */
-export function initializeMatchSquadPlayers(players: any[]): ExtendedPlayer[] {
-  if (!players || !Array.isArray(players)) {
+export const initializeMatchSquadPlayers = (
+  selectedSquad: Squad,
+  existingMatchSquad?: ExtendedPlayer[]
+): ExtendedPlayer[] => {
+  if (!selectedSquad || !selectedSquad.players || !Array.isArray(selectedSquad.players)) {
+    console.warn('Invalid selected squad data', selectedSquad);
     return [];
   }
-  
-  return players.map(player => ensurePlayerProperties(player));
-}
+
+  return selectedSquad.players.map(player => {
+    // Check if player exists in the current match squad
+    const existingPlayer = existingMatchSquad?.find(p => p.id === player.id);
+    
+    return {
+      id: player.id,
+      name: player.name,
+      number: player.number,
+      isInMatchSquad: existingPlayer ? existingPlayer.isInMatchSquad : false,
+      totalPlayTime: player.totalPlayTime || 0,
+      isOnField: player.isOnField || false,
+      isGoalkeeper: player.isGoalkeeper || false,
+      position: player.position || { x: 0, y: 0 },
+      playIntervals: player.playIntervals || []
+    };
+  });
+};

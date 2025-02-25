@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExtendedPlayer } from '../../../../features/GameSetup/types/ExtendedPlayer';
+import { ExtendedPlayer } from './types';
 
 type ParticipantItemProps = {
   player: ExtendedPlayer;
@@ -10,10 +10,13 @@ type ParticipantItemProps = {
 export default function ParticipantItem({ player, isSelected, onToggle }: ParticipantItemProps): JSX.Element {
   return (
     <div
-      className={`p-4 border rounded-lg cursor-pointer ${isSelected ? 'bg-green-300' : 'bg-gray-200'}`}
       onClick={onToggle}
+      className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+        isSelected ? 'bg-green-500' : 'bg-gray-700'
+      }`}
     >
-      <h2 className="text-xl font-semibold">{player.name}</h2>
+      <h2 className="text-xl text-white">{player.name}</h2>
+      <p className="text-sm text-gray-200">{isSelected ? 'Selected' : 'Not Selected'}</p>
     </div>
   );
 }
