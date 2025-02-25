@@ -6,9 +6,10 @@ function useEditSquadForm() {
   const { selectedSquad } = useStateContext();
 
   const [squadName, setSquadName] = useState(selectedSquad?.name || "");
-  const [squadPlayersList, setSquadPlayersList] = useState<SquadPlayer[]>(() => {
+  const [squadPlayersList, setSquadPlayersList] = useState<string[]>(() => {
     if (!selectedSquad?.players) return [];
-    return normalizePlayers(selectedSquad.players);
+    // Extract only player names from the normalized data
+    return normalizePlayers(selectedSquad.players).map(player => player.name);
   });
 
   const [newPlayerName, setNewPlayerName] = useState("");
@@ -18,25 +19,22 @@ function useEditSquadForm() {
   useEffect(() => {
     if (selectedSquad) {
       setSquadName(selectedSquad.name || "");
-      const players = normalizePlayers(selectedSquad.players);
-      setSquadPlayersList(players);
+      // Extract only player names from the normalized data
+      const playerNames = normalizePlayers(selectedSquad.players).map(player => player.name);
+      setSquadPlayersList(playerNames);
     }
   }, [selectedSquad]);
 
   const handleAddPlayer = () => {
     if (newPlayerName.trim() === "") return;
-
-    const newPlayer: SquadPlayer = {
-      id: Date.now().toString(),
-      name: newPlayerName.trim(),
-    };
-
-    setSquadPlayersList([...squadPlayersList, newPlayer]);
+    
+    // Add the player name directly to the string array
+    setSquadPlayersList([...squadPlayersList, newPlayerName.trim()]);
     setNewPlayerName("");
   };
 
-  const handleDeletePlayer = (playerId: string) => {
-    setSquadPlayersList(squadPlayersList.filter((player) => player.id !== playerId));
+  const handleDeletePlayer = (playerToDelete: string) => {
+    setSquadPlayersList(squadPlayersList.filter((playerName) => playerName !== playerToDelete));
   };
 
   const handleUpdateSquad = async (e: React.FormEvent) => {

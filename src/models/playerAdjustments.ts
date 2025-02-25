@@ -1,4 +1,5 @@
 import { Player } from '../types/GameTypes';
+import { addInterval, closeLastInterval, finalizeIntervals } from '../utils/intervalHelpers';
 
 export function handlePlayerAdjustment(
   playerData: Player[],
@@ -25,35 +26,23 @@ export function applyPlayerAdjustment(
 ): Player[] {
   return playerData.map(player => {
     if (player.id === selectedPlayer.id) {
-      // Ensure playIntervals always exists
       const existingIntervals = player.playIntervals || [];
-      
       if (adjustmentType === "increase") {
-        const updatedIntervals = isRunning && player.isOnField
-          ? [...existingIntervals, { 
-              startTime: Date.now(), 
-              endTime: null, 
-              isGoalkeeper: player.isGoalkeeper 
-            }]
-          : existingIntervals;
+        const updatedIntervals = addInterval(existingIntervals, player, isRunning);
+        const finalIntervals = finalizeIntervals(updatedIntervals);
         return { 
           ...player, 
           isOnField: true, 
-          playIntervals: updatedIntervals,
+          playIntervals: finalIntervals,
           position: player.position || { x: 0, y: 0 }
         };
       } else if (adjustmentType === "decrease") {
-        let updatedIntervals = existingIntervals;
-        if (isRunning && updatedIntervals.length > 0 && updatedIntervals[updatedIntervals.length - 1].endTime === null) {
-          updatedIntervals = [
-            ...updatedIntervals.slice(0, updatedIntervals.length - 1),
-            { ...updatedIntervals[updatedIntervals.length - 1], endTime: Date.now() }
-          ];
-        }
+        const updatedIntervals = closeLastInterval(existingIntervals, isRunning);
+        const finalIntervals = finalizeIntervals(updatedIntervals);
         return { 
           ...player, 
           isOnField: false, 
-          playIntervals: updatedIntervals,
+          playIntervals: finalIntervals,
           position: player.position || { x: 0, y: 0 }
         };
       }

@@ -5,7 +5,7 @@ export function toggleMatchPlayerHelper(players: Player[], playerId: string): Pl
     if (player.id === playerId) {
       return {
         ...player,
-        isInMatch: !player.isInMatch
+        isInMatchSquad: !player.isInMatchSquad
       };
     }
     return player;
