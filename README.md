@@ -12,8 +12,6 @@ Football Subs is an application designed to help football coaches and team manag
 6. [Player Positions](docs/journeys/player-positions/step-by-step-instructions.md) - Understand how to assign and manage player positions
 7. [Visualizing Players on the Pitch](docs/journeys/visualizing-players-on-the-pitch.md) - See your team formation in real-time
 8. [Reviewing Game Summary and Sharing](docs/journeys/reviewing-game-summary-and-sharing.md) - Analyze game data and share results
-9. [Switching Between Light and Dark Mode](docs/journeys/switching-between-light-and-dark-mode.md) - Customize your app appearance
-10. [Running Tests](docs/journeys/running-tests.md) - How to run and extend the test suite
 
 ## Development
 
@@ -23,17 +21,6 @@ Football Subs is an application designed to help football coaches and team manag
 npm install
 npm run dev
 ```
-
-### Testing
-
-Football Subs includes a comprehensive test suite to validate functionality:
-
-```bash
-npm run test       # Run tests
-npm run test:watch # Run tests in watch mode
-```
-
-The tests are organized in the `tests` directory, mirroring the structure of the source code.
 
 ### Building for Production
 
