@@ -20,9 +20,9 @@ export function useAuthSession() {
           throw error;
         }
         setSession(data.session);
-        if (data.session?.user && !hasRecordedLogin) {
+        if (data.session?.user?.email && !hasRecordedLogin) {
           try {
-            await recordLogin(data.session.user.email!, import.meta.env.VITE_PUBLIC_APP_ENV);
+            await recordLogin(data.session.user.email, import.meta.env.VITE_PUBLIC_APP_ENV);
             hasRecordedLogin = true;
             console.log('Login recorded successfully');
           } catch (recordError) {
@@ -43,9 +43,9 @@ export function useAuthSession() {
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
       setSession(session);
       setLoading(false);
-      if (event === 'SIGNED_IN' && session?.user && !hasRecordedLogin) {
+      if (event === 'SIGNED_IN' && session?.user?.email && !hasRecordedLogin) {
         try {
-          await recordLogin(session.user.email!, import.meta.env.VITE_PUBLIC_APP_ENV);
+          await recordLogin(session.user.email, import.meta.env.VITE_PUBLIC_APP_ENV);
           hasRecordedLogin = true;
           console.log('Login recorded on auth state change');
         } catch (recordError) {

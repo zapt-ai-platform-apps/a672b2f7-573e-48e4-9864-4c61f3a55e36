@@ -1,9 +1,9 @@
-import { initializeZapt } from '@zapt/zapt-js';
-import { authenticateUser } from './_apiUtils.js'; // Note the .js extension for Vercel
+import { authenticateUser } from './_apiUtils';
+import Sentry from './_sentry';
+import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import * as Sentry from '@sentry/node';
-import { eq } from 'drizzle-orm';
+import { squads } from '../drizzle/schema';
 
 interface ApiRequest {
   method: string;
@@ -17,29 +17,14 @@ interface ApiResponse {
   json: (body: any) => void;
 }
 
-// Initialize Sentry for backend error logging
-Sentry.init({
-  dsn: process.env.VITE_PUBLIC_SENTRY_DSN,
-  environment: process.env.VITE_PUBLIC_APP_ENV,
-  initialScope: {
-    tags: {
-      type: 'backend',
-      projectId: process.env.VITE_PUBLIC_APP_ID
-    }
-  }
-});
-
 export default async function handler(req: ApiRequest, res: ApiResponse) {
   try {
     // Verify authentication
     const user = await authenticateUser(req);
     
     // Initialize database connection
-    const client = postgres(process.env.COCKROACH_DB_URL);
+    const client = postgres(process.env.COCKROACH_DB_URL as string);
     const db = drizzle(client);
-    
-    // Import schema with .js extension for Vercel
-    const { squads } = await import('../drizzle/schema.js');
     
     // Handle different HTTP methods
     if (req.method === 'GET') {
@@ -58,7 +43,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
       const result = await db.insert(squads).values({
         ...squadData,
         userId: user.id,
-        created_at: new Date()
+        createdAt: new Date()
       }).returning();
       
       return res.status(201).json(result[0]);

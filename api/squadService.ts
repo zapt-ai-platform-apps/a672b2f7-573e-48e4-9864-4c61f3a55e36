@@ -1,7 +1,9 @@
-import { authenticateUser } from './_apiUtils.js';
-import Sentry from '../lib/sentry';
-import { getDb } from '../lib/db';
-import { eq } from 'drizzle-orm';
+import { authenticateUser } from './_apiUtils';
+import Sentry from './_sentry';
+import { eq, and } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
+import { squads } from '../drizzle/schema';
 
 interface ApiRequest {
   query: Record<string, string | string[]>;
@@ -18,18 +20,24 @@ interface ApiResponse {
 export default async function handler(req: ApiRequest, res: ApiResponse) {
   try {
     const user = await authenticateUser(req);
-    const db = getDb();
-    const { squads } = await import('../drizzle/schema.js');
+    const client = postgres(process.env.COCKROACH_DB_URL as string);
+    const db = drizzle(client);
+    
     const { id } = req.query;
     if (!id) {
       return res.status(400).json({ error: 'Squad ID is required' });
     }
     
+    const squadId = parseInt(Array.isArray(id) ? id[0] : id);
+    
     if (req.method === 'GET') {
       const result = await db.select()
         .from(squads)
-        .where(eq(squads.id, parseInt(id as string)))
-        .where(eq(squads.userId, user.id));
+        .where(and(
+          eq(squads.id, squadId),
+          eq(squads.userId, user.id)
+        ));
+      
       if (!result.length) {
         return res.status(404).json({ error: 'Squad not found' });
       }
@@ -38,18 +46,24 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
       const squadData = req.body;
       const result = await db.update(squads)
         .set(squadData)
-        .where(eq(squads.id, parseInt(id as string)))
-        .where(eq(squads.userId, user.id))
+        .where(and(
+          eq(squads.id, squadId),
+          eq(squads.userId, user.id)
+        ))
         .returning();
+      
       if (!result.length) {
         return res.status(404).json({ error: 'Squad not found' });
       }
       return res.status(200).json(result[0]);
     } else if (req.method === 'DELETE') {
       const result = await db.delete(squads)
-        .where(eq(squads.id, parseInt(id as string)))
-        .where(eq(squads.userId, user.id))
+        .where(and(
+          eq(squads.id, squadId),
+          eq(squads.userId, user.id)
+        ))
         .returning();
+      
       if (!result.length) {
         return res.status(404).json({ error: 'Squad not found' });
       }
