@@ -1,57 +1,39 @@
-import { useCallback, useState } from 'react';
-import { useStateContext } from '../../../state';
-import type { Player } from '../../../types/GameTypes';
+import { useCallback } from 'react';
+import { pointerDown, pointerMove, pointerUp, DragState } from '../../utils/dragHandlers';
 
-export default function useDragAndDrop() {
-  const { playerData, setPlayerData } = useStateContext();
-  const [draggingPlayer, setDraggingPlayer] = useState<Player | null>(null);
+function useDragAndDrop() {
+  const dragState: DragState = {
+    dragging: false,
+    target: null,
+    offsetX: 0,
+    offsetY: 0
+  };
 
-  const handlePointerDown = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>, player: Player) => {
-      e.preventDefault();
-      setDraggingPlayer(player);
-    },
-    []
-  );
-
-  const handlePointerMove = useCallback(
-    (e: PointerEvent) => {
-      if (!draggingPlayer) return;
-
-      const target = e.currentTarget as HTMLElement;
-      const pitchRect = target.getBoundingClientRect();
-      const x = e.clientX - pitchRect.left;
-      const y = e.clientY - pitchRect.top;
-
-      setPlayerData((prev: Player[]) =>
-        prev.map((p) =>
-          p.id === draggingPlayer.id ? { ...p, position: { x, y } } : p
-        )
-      );
-    },
-    [draggingPlayer, setPlayerData]
-  );
-
-  const handlePointerUp = useCallback(() => {
-    setDraggingPlayer(null);
+  const handlePointerDown = useCallback((e: PointerEvent): void => {
+    pointerDown(e, dragState);
   }, []);
 
-  const init = useCallback(
-    (pitchElement: HTMLElement | null) => {
-      if (!pitchElement) return;
+  const handlePointerMove = useCallback((e: PointerEvent): void => {
+    pointerMove(e, dragState);
+  }, []);
 
-      pitchElement.addEventListener('pointermove', handlePointerMove);
-      pitchElement.addEventListener('pointerup', handlePointerUp);
-      pitchElement.addEventListener('pointerleave', handlePointerUp);
+  const handlePointerUp = useCallback((e: PointerEvent): void => {
+    pointerUp(e, dragState);
+  }, []);
 
-      return () => {
-        pitchElement.removeEventListener('pointermove', handlePointerMove);
-        pitchElement.removeEventListener('pointerup', handlePointerUp);
-        pitchElement.removeEventListener('pointerleave', handlePointerUp);
-      };
-    },
-    [handlePointerMove, handlePointerUp]
-  );
+  const init = useCallback((pitchElement: HTMLElement) => {
+    pitchElement.addEventListener('pointermove', handlePointerMove);
+    pitchElement.addEventListener('pointerup', handlePointerUp);
+    return () => {
+      pitchElement.removeEventListener('pointermove', handlePointerMove);
+      pitchElement.removeEventListener('pointerup', handlePointerUp);
+    };
+  }, [handlePointerMove, handlePointerUp]);
 
-  return { handlePointerDown, init };
+  return {
+    handlePointerDown,
+    init
+  };
 }
+
+export default useDragAndDrop;

@@ -1,14 +1,9 @@
+import { Player } from '../../../types/GameTypes';
+
 interface PlayInterval {
   startTime: number;
   endTime: number | null;
   isGoalkeeper?: boolean;
-}
-
-interface PlayerData {
-  id: string | number;
-  isOnField: boolean;
-  playIntervals: PlayInterval[];
-  [key: string]: any;
 }
 
 interface GameInterval {
@@ -21,8 +16,8 @@ interface EndGameManagerParams {
   setIsRunning: (value: boolean) => void;
   gameIntervals: GameInterval[];
   setGameIntervals: (intervals: GameInterval[]) => void;
-  playerData: PlayerData[];
-  setPlayerData: (players: PlayerData[]) => void;
+  playerData: Player[];
+  setPlayerData: (players: Player[]) => void;
   setShowEndGameConfirm: (show: boolean) => void;
 }
 
@@ -52,10 +47,10 @@ function useEndGameManager({
 
       setPlayerData(
         playerData.map((player) => {
-          if (player.isOnField) {
-            if (player.playIntervals.length > 0 && !player.playIntervals[player.playIntervals.length - 1].endTime) {
+          if (player.isOnField && player.playIntervals) {
+            if (player.playIntervals.length > 0 && !player.playIntervals[player.playIntervals.length - 1].end) {
               const updatedIntervals = [...player.playIntervals];
-              updatedIntervals[updatedIntervals.length - 1].endTime = Date.now();
+              updatedIntervals[updatedIntervals.length - 1].end = Date.now();
               return {
                 ...player,
                 playIntervals: updatedIntervals

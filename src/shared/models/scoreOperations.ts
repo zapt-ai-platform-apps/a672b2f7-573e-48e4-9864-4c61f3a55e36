@@ -1,4 +1,6 @@
 import { recordGoal, removeLastGoal } from './scoreCalculations';
-import { Goal } from './scoreTypes';
+// Use export type for type re-exports to avoid issues with isolatedModules
+import type { Goal } from '../../types/GameTypes';
 
-export { recordGoal, removeLastGoal, Goal };
+export { recordGoal, removeLastGoal };
+export type { Goal };

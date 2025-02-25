@@ -28,6 +28,11 @@ function PitchVisualization({ players }: PitchVisualizationProps): JSX.Element {
     };
   }, [init]);
 
+  // Use type assertion to match the expected PointerEvent<Element> type
+  const handlePointerDownWrapper = (e: React.PointerEvent<HTMLDivElement>) => {
+    handlePointerDown(e as unknown as PointerEvent);
+  };
+
   return (
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-4 text-green-600 dark:text-green-400">
@@ -36,7 +41,7 @@ function PitchVisualization({ players }: PitchVisualizationProps): JSX.Element {
       <Pitch 
         pitchRef={pitchRef} 
         playerData={players} 
-        handlePointerDown={handlePointerDown} 
+        handlePointerDown={handlePointerDownWrapper} 
       />
       <p className="mt-4 text-gray-700 dark:text-gray-300">
         Drag and drop players to set their positions.
