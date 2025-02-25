@@ -1,10 +1,10 @@
 import { createContext } from 'react';
-import { Player } from '../types/GameTypes';
+import { Player, Goal, Squad } from '../types/GameTypes';
 
 export interface StateContextType {
   // Squad management
-  selectedSquad: Player[];
-  setSelectedSquad: (squad: Player[]) => void;
+  selectedSquad: Player[] | Squad;
+  setSelectedSquad: (squad: Player[] | Squad) => void;
   
   // Match squad for the current game
   matchSquad: Player[];
@@ -18,7 +18,17 @@ export interface StateContextType {
   currentGameState: any; // Replace with proper type
   setCurrentGameState: (state: any) => void;
   
-  // Other state properties can be added as needed
+  // Game management properties
+  playerData: Player[];
+  setPlayerData: React.Dispatch<React.SetStateAction<Player[]>>;
+  ourScore: number;
+  setOurScore: React.Dispatch<React.SetStateAction<number>>;
+  opponentScore: number;
+  setOpponentScore: React.Dispatch<React.SetStateAction<number>>;
+  goals: Goal[];
+  setGoals: React.Dispatch<React.SetStateAction<Goal[]>>;
+  includeGKPlaytime: boolean;
+  resetGame: () => void;
 }
 
 // Default values to avoid null checks
@@ -34,6 +44,17 @@ const defaultContext: StateContextType = {
   
   currentGameState: null,
   setCurrentGameState: () => {},
+  
+  playerData: [],
+  setPlayerData: () => {},
+  ourScore: 0,
+  setOurScore: () => {},
+  opponentScore: 0,
+  setOpponentScore: () => {},
+  goals: [],
+  setGoals: () => {},
+  includeGKPlaytime: false,
+  resetGame: () => {},
 };
 
 export const StateContext = createContext<StateContextType>(defaultContext);

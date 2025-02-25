@@ -1,10 +1,7 @@
 import React from 'react';
+import { Player } from '../../../types/GameTypes';
 
-export type ExtendedPlayer = {
-  id: string;
-  name: string;
-  isInMatchSquad: boolean;
-};
+export type ExtendedPlayer = Player;
 
 type ParticipantItemProps = {
   player: ExtendedPlayer;
