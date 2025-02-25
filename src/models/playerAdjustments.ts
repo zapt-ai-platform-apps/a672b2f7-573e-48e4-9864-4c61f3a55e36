@@ -25,22 +25,25 @@ export function applyPlayerAdjustment(
 ): Player[] {
   return playerData.map(player => {
     if (player.id === selectedPlayer.id) {
+      // Ensure playIntervals always exists
+      const existingIntervals = player.playIntervals || [];
+      
       if (adjustmentType === "increase") {
         const updatedIntervals = isRunning && player.isOnField
-          ? [...(player.playIntervals || []), { 
+          ? [...existingIntervals, { 
               startTime: Date.now(), 
               endTime: null, 
               isGoalkeeper: player.isGoalkeeper 
             }]
-          : (player.playIntervals || []);
+          : existingIntervals;
         return { 
           ...player, 
           isOnField: true, 
           playIntervals: updatedIntervals,
-          position: player.position || 'field'
+          position: player.position || { x: 0, y: 0 }
         };
       } else if (adjustmentType === "decrease") {
-        let updatedIntervals = player.playIntervals || [];
+        let updatedIntervals = existingIntervals;
         if (isRunning && updatedIntervals.length > 0 && updatedIntervals[updatedIntervals.length - 1].endTime === null) {
           updatedIntervals = [
             ...updatedIntervals.slice(0, updatedIntervals.length - 1),
@@ -51,7 +54,7 @@ export function applyPlayerAdjustment(
           ...player, 
           isOnField: false, 
           playIntervals: updatedIntervals,
-          position: player.position || 'bench'
+          position: player.position || { x: 0, y: 0 }
         };
       }
     }

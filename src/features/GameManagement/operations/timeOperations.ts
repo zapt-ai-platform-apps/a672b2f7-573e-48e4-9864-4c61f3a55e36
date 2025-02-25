@@ -7,10 +7,14 @@ export function getTotalPlayTime(player: Player | undefined, includeGKPlaytime: 
   const intervals = Array.isArray(player.playIntervals) ? player.playIntervals : [];
   
   for (const interval of intervals) {
-    if (interval.endTime !== null) {
-      total += interval.endTime - interval.startTime;
+    // Handle both naming conventions for start/end times
+    const startTime = interval.startTime || interval.start || 0;
+    const endTime = interval.endTime !== undefined ? interval.endTime : interval.end;
+    
+    if (endTime !== null && endTime !== undefined) {
+      total += endTime - startTime;
     } else if (isRunning) {
-      total += Date.now() - interval.startTime;
+      total += Date.now() - startTime;
     }
   }
   return total;
@@ -20,12 +24,18 @@ export function getTimeElapsed(
   intervals: { startTime: number; endTime: number | null }[],
   isRunning: boolean
 ): number {
+  if (!intervals || !Array.isArray(intervals)) return 0;
+  
   let total = 0;
   for (const interval of intervals) {
-    if (interval.endTime !== null) {
-      total += interval.endTime - interval.startTime;
+    if (!interval) continue;
+    
+    const startTime = interval.startTime || 0;
+    
+    if (interval.endTime !== null && interval.endTime !== undefined) {
+      total += interval.endTime - startTime;
     } else if (isRunning) {
-      total += Date.now() - interval.startTime;
+      total += Date.now() - startTime;
     }
   }
   return total;
@@ -35,6 +45,8 @@ export function toggleTimer(
   isRunning: boolean,
   intervals: { startTime: number; endTime: number | null }[]
 ): { newIntervals: { startTime: number; endTime: number | null }[]; newIsRunning: boolean } {
+  if (!intervals) intervals = [];
+  
   if (isRunning) {
     const newIntervals = [...intervals];
     if (newIntervals.length > 0 && newIntervals[newIntervals.length - 1].endTime === null) {

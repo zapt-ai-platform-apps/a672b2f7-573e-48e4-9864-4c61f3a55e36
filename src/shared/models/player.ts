@@ -16,7 +16,7 @@ export function createPlayer({
   isInStartingLineup?: boolean;
 }): Player {
   return {
-    id: Date.now() + Math.random(),
+    id: String(Date.now() + Math.random()), // Convert to string
     name,
     playIntervals: [],
     isOnField: false,

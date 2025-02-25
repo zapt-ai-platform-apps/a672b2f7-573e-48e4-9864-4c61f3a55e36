@@ -1,8 +1,8 @@
 /**
  * Game model consolidates game related functions.
  */
-import { getTimeElapsed, toggleTimer } from './timerModel';
-import { recordGoal } from './scoreModel';
-import { handlePlayerAdjustment, updatePlayerLists, performSubstitution } from './playerModel';
+import { getTimeElapsed, toggleTimer } from '../../models/timerModel';
+import { recordGoal } from './scoreOperations';
+import { handlePlayerAdjustment, updatePlayerLists, performSubstitution } from './playerUtils';
 
 export { getTimeElapsed, toggleTimer, recordGoal, handlePlayerAdjustment, updatePlayerLists, performSubstitution };

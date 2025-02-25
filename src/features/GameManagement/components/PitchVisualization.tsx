@@ -28,9 +28,9 @@ function PitchVisualization({ players }: PitchVisualizationProps): JSX.Element {
     };
   }, [init]);
 
-  // Pass the nativeEvent instead of casting the React event
-  const handlePointerDownWrapper = (e: React.PointerEvent<HTMLDivElement>) => {
-    handlePointerDown(e.nativeEvent);
+  // Updated to accept playerId parameter
+  const handlePointerDownWrapper = (e: React.PointerEvent<HTMLDivElement>, playerId?: string) => {
+    handlePointerDown(e.nativeEvent, playerId);
   };
 
   return (

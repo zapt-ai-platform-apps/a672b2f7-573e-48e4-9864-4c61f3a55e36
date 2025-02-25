@@ -1,61 +1,27 @@
-import { useState, useEffect } from 'react';
-import { useStateContext } from '../../../../hooks/useStateContext';
-import { Player } from '../../../../context/StateContext';
+import { useState } from 'react';
 
-interface StartingPlayer extends Player {
+interface Player {
+  id: string;
+  name: string;
   selected: boolean;
 }
 
+const initialPlayers: Player[] = [
+  { id: '1', name: 'Player One', selected: false },
+  { id: '2', name: 'Player Two', selected: false },
+  { id: '3', name: 'Player Three', selected: false }
+];
+
 export default function useStartingLineup() {
-  const { selectedSquad } = useStateContext();
-  const [startingPlayers, setStartingPlayers] = useState<StartingPlayer[]>([]);
-  const [isGKModalOpen, setGKModalOpen] = useState(false);
-  const [currentGoalkeeper, setCurrentGoalkeeper] = useState<Player | null>(null);
-  const [confirmedGoalkeeper, setConfirmedGoalkeeper] = useState<Player | null>(null);
+  const [startingPlayers, setStartingPlayers] = useState<Player[]>(initialPlayers);
 
-  useEffect(() => {
-    if (selectedSquad?.players) {
-      const initialPlayers = selectedSquad.players.map(player => ({
-        ...player,
-        selected: false
-      }));
-      setStartingPlayers(initialPlayers);
-    }
-  }, [selectedSquad]);
-
-  const toggleStartingPlayer = (id: string | number) => {
-    setStartingPlayers(prev =>
-      prev.map(player =>
+  const toggleStartingPlayer = (id: string): void => {
+    setStartingPlayers(prevPlayers =>
+      prevPlayers.map(player =>
         player.id === id ? { ...player, selected: !player.selected } : player
       )
     );
   };
 
-  const goBack = () => {
-    window.history.back();
-  };
-
-  const setGoalkeeperForPlayer = (id: string | number) => {
-    const player = startingPlayers.find(p => p.id === id);
-    if (player) {
-      setCurrentGoalkeeper(player);
-      setConfirmedGoalkeeper(player);
-    }
-  };
-
-  const openGKModal = () => setGKModalOpen(true);
-  const closeGKModal = () => setGKModalOpen(false);
-
-  return {
-    startingPlayers,
-    toggleStartingPlayer,
-    goBack,
-    setGoalkeeperForPlayer,
-    isGKModalOpen,
-    openGKModal,
-    closeGKModal,
-    currentGoalkeeper,
-    confirmedGoalkeeper,
-    setConfirmedGoalkeeper
-  };
+  return { startingPlayers, toggleStartingPlayer };
 }

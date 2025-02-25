@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useStateContext } from '../../../../state';
 import useStartingLineup from './useStartingLineup';
 import PlayerCard from './PlayerCard';
 
 export default function StartingLineup(): JSX.Element {
   const { startingPlayers, toggleStartingPlayer } = useStartingLineup();
   const navigate = useNavigate();
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState('');
 
   const handleContinue = (): void => {
-    const selectedStartingPlayers = startingPlayers.filter(player => player.selected);
+    const validPlayers = startingPlayers.filter(player => player && typeof player.id === 'string');
+    const selectedStartingPlayers = validPlayers.filter(player => player.selected);
     
     if (selectedStartingPlayers.length < 1) {
       setError('Please select at least one starting player');
@@ -29,11 +29,9 @@ export default function StartingLineup(): JSX.Element {
       <div className="flex-grow">
         <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">Select Starting Lineup</h1>
         <p className="text-lg text-white/90 mb-6">Choose which players will start the game</p>
-        
         {error && <p className="text-red-500 mb-4">{error}</p>}
-        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          {startingPlayers.map(player => (
+          {startingPlayers.filter(player => player && typeof player.id === 'string').map(player => (
             <PlayerCard
               key={player.id}
               player={player}
@@ -42,7 +40,6 @@ export default function StartingLineup(): JSX.Element {
             />
           ))}
         </div>
-
         <div className="flex justify-between mt-8">
           <button
             onClick={handleBack}

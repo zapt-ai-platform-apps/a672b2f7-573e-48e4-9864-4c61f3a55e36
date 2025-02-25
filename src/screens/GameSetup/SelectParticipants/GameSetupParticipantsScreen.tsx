@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useMatchSquad from '../../../features/GameSetup/hooks/useMatchSquad';
 import { useStateContext } from '../../../state';
 import ParticipantItem from './ParticipantItem';
-import { ExtendedPlayer } from './types';
+import { ExtendedPlayer } from './useGameSetupParticipantsHandlers';
 import useGameSetupParticipantsHandlers from './useGameSetupParticipantsHandlers';
 
 export default function GameSetupParticipantsScreen(): JSX.Element {
@@ -12,9 +12,13 @@ export default function GameSetupParticipantsScreen(): JSX.Element {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string>('');
   
-  const selectedMatchPlayers = matchSquadPlayers.filter(
-    (player) => (player as ExtendedPlayer).isInMatchSquad
+  const validPlayers = matchSquadPlayers.filter(
+    player => player && typeof player.id === 'string'
   ) as ExtendedPlayer[];
+  
+  const selectedMatchPlayers = validPlayers.filter(
+    (player) => player.isInMatchSquad
+  );
   
   const { handleNext, handleBack } = useGameSetupParticipantsHandlers(
     selectedMatchPlayers,
@@ -31,14 +35,14 @@ export default function GameSetupParticipantsScreen(): JSX.Element {
         </h1>
         {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          {matchSquadPlayers.map((player) => (
+          {validPlayers.map((player) => (
             <ParticipantItem
               key={player.id}
-              player={player as ExtendedPlayer}
+              player={player}
               isSelected={selectedMatchPlayers.some(
-                (p: ExtendedPlayer) => p.id === player.id
+                (p) => p.id === player.id
               )}
-              onToggle={() => toggleMatchPlayer(String(player.id))}
+              onToggle={() => toggleMatchPlayer(player.id)}
             />
           ))}
         </div>
