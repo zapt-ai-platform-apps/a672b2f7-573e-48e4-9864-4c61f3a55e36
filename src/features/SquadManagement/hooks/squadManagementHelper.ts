@@ -1,9 +1,11 @@
+import { parsePlayers } from '../../../utils/parsePlayers';
+
 export function processSquads(fetchedSquads: any[]): any[] {
   return fetchedSquads.map(squad => ({
     ...squad,
     players:
       typeof squad.players === 'string'
-        ? JSON.parse(squad.players)
+        ? parsePlayers(squad.players)
         : squad.players
   }));
 }
@@ -13,7 +15,7 @@ export function processSquad(squad: any): any {
     ...squad,
     players:
       typeof squad.players === 'string'
-        ? JSON.parse(squad.players)
+        ? parsePlayers(squad.players)
         : squad.players
   };
 }
