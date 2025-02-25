@@ -127,7 +127,7 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
 
   const handlePlayerAdjustmentFunc = (playerId: string | number, isAdding: boolean): void => {
     try {
-      setPlayerData(prev => handlePlayerAdjustmentLogic(prev, playerId, isAdding));
+      setPlayerData((prev: Player[]) => handlePlayerAdjustmentLogic(prev, playerId, isAdding));
       console.log('Player adjusted:', playerId, isAdding ? 'added' : 'removed');
     } catch (error) {
       Sentry.captureException(error);

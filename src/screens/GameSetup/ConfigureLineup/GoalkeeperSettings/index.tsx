@@ -1,5 +1,4 @@
 import React from 'react';
-import { useGameSetup } from '../../../../features/GameSetup/hooks/useGameSetup';
 import GoalkeeperSelect from './GoalkeeperSelect';
 import GKPlaytimeToggle from './GKPlaytimeToggle';
 
@@ -18,8 +17,6 @@ function GoalkeeperSettings({
   setIncludeGKPlaytime,
   squadPlayers
 }: GoalkeeperSettingsProps) {
-  const { t } = useGameSetup();
-
   return (
     <div className="space-y-4">
       <div className="mb-4">

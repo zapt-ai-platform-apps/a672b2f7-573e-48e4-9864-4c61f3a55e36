@@ -4,18 +4,18 @@ export function recordGoalLogic(
   ourScore: number,
   opponentScore: number,
   goals: any[],
-  gameIntervals: { start: number; end?: number }[],
+  intervals: any[],
   isRunning: boolean
 ): { newOurScore: number; newOpponentScore: number; newGoals: any[] } {
+  const now = Date.now();
   let newOurScore = ourScore;
   let newOpponentScore = opponentScore;
   if (team === 'our') {
-    newOurScore += 1;
+    newOurScore++;
   } else {
-    newOpponentScore += 1;
+    newOpponentScore++;
   }
-  // For demonstration, the goal time is set to 0. Replace with actual time computed if needed.
-  const newGoal = { team, scorerName, time: 0 };
+  const newGoal = { team, scorerName, timestamp: now };
   const newGoals = [...goals, newGoal];
   return { newOurScore, newOpponentScore, newGoals };
 }

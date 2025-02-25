@@ -78,6 +78,10 @@ export default function useGameSetup(): UseGameSetupReturn {
   };
 
   const handleStartGame = () => {
+    if (goalkeeper === null) {
+      setErrorMessage('Please select a goalkeeper');
+      return;
+    }
     return contextHandleStartGame(startingPlayers, goalkeeper, includeGKPlaytime);
   };
 
