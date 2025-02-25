@@ -1,15 +1,8 @@
 import { Player, Position } from '../../../types/GameTypes';
 
-/**
- * Ensures all required properties of a Player object are present
- * @param player - The player object to check and enhance
- * @param index - Index used for generating a default ID if needed
- * @returns A player object with all required properties
- */
 export function ensurePlayerProperties(player: any, index: number): Player {
   const defaultPosition: Position = { x: 0, y: 0 };
   
-  // If player is just a string, create a full player object
   if (typeof player === 'string') {
     return {
       id: String(index),
@@ -21,7 +14,6 @@ export function ensurePlayerProperties(player: any, index: number): Player {
     };
   }
   
-  // If player is an object, ensure all required properties exist
   return {
     id: player.id || String(index),
     name: player.name || `Player ${index + 1}`,
@@ -29,7 +21,6 @@ export function ensurePlayerProperties(player: any, index: number): Player {
     isOnField: player.isOnField || false,
     isGoalkeeper: player.isGoalkeeper || false,
     position: player.position || defaultPosition,
-    // Preserve any additional properties the player object might have
     ...player
   };
 }
