@@ -1,4 +1,5 @@
 import { parsePlayers } from '../utils/parsePlayers';
+import * as Sentry from "@sentry/browser";
 
 export interface SquadData {
   name?: string;
@@ -25,7 +26,7 @@ export function transformPlayersForDB(players: unknown[] | string): string {
   if (Array.isArray(players)) {
     return JSON.stringify(players);
   }
-  return players;
+  return typeof players === 'string' ? players : '';
 }
 
 /**
@@ -34,8 +35,22 @@ export function transformPlayersForDB(players: unknown[] | string): string {
  * @returns Transformed squad object with parsed players.
  */
 export function transformSquadFromDB(row: Record<string, unknown>): Record<string, unknown> {
-  return {
-    ...row,
-    players: parsePlayers(row.players as string)
-  };
+  try {
+    const playersData = row.players ?? '';
+    
+    // We use the updated parsePlayers function that handles both CSV and JSON formats
+    return {
+      ...row,
+      players: parsePlayers(playersData)
+    };
+  } catch (error) {
+    console.error("Error transforming squad from DB:", error);
+    Sentry.captureException(error);
+    
+    // Return row with empty players array in case of error
+    return {
+      ...row,
+      players: []
+    };
+  }
 }
