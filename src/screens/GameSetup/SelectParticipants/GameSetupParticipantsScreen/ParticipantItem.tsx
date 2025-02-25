@@ -1,5 +1,10 @@
 import React from 'react';
-import { ExtendedPlayer } from './types';
+
+export interface ExtendedPlayer {
+  id: string;
+  name: string;
+  isInMatchSquad: boolean;
+}
 
 interface ParticipantItemProps {
   player: ExtendedPlayer;
@@ -9,11 +14,11 @@ interface ParticipantItemProps {
 
 export default function ParticipantItem({ player, isSelected, onToggle }: ParticipantItemProps): JSX.Element {
   return (
-    <div
+    <div 
+      className={`p-4 border rounded-lg cursor-pointer ${isSelected ? 'bg-green-200' : 'bg-gray-200'}`}
       onClick={onToggle}
-      className={`p-4 border cursor-pointer ${isSelected ? 'bg-blue-200' : 'bg-gray-100'}`}
     >
-      <p>{player.id}</p>
+      <p className="text-lg">{player.name}</p>
     </div>
   );
 }
