@@ -1,10 +1,8 @@
-import { Player } from '../../types/GameTypes';
-
-export const createGetTotalPlayTime = (includeGKPlaytime: boolean) => {
-  return (player: Player): number => {
+export function createGetTotalPlayTime(includeGKPlaytime: boolean) {
+  return function(player: { totalPlayTime: number; isGoalkeeper: boolean }): number {
     if (!includeGKPlaytime && player.isGoalkeeper) {
-      return Math.floor(player.totalPlayTime * 0.9);
+      return 0;
     }
     return player.totalPlayTime;
   };
-};
+}

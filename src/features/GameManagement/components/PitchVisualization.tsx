@@ -36,10 +36,12 @@ function PitchVisualization({ players }: PitchVisualizationProps): JSX.Element {
   // Ensure players have numeric position values before passing to Pitch
   const playersWithValidPositions = players.map(player => ({
     ...player,
-    position: {
-      x: typeof player.position.x === 'number' ? player.position.x : 0,
-      y: typeof player.position.y === 'number' ? player.position.y : 0
-    }
+    position: typeof player.position === 'object' && player.position !== null
+      ? {
+          x: typeof player.position.x === 'number' ? player.position.x : 0,
+          y: typeof player.position.y === 'number' ? player.position.y : 0
+        }
+      : { x: 0, y: 0 }
   }));
 
   return (

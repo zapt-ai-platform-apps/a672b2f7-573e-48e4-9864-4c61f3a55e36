@@ -1,13 +1,9 @@
 import React from 'react';
 import Header from '../../features/GameManagement/components/Header';
-import PitchVisualization from '../../features/GameManagement/components/PitchVisualization';
-import SubstitutionPanel from '../../features/GameManagement/components/SubstitutionPanel';
 import EndGameConfirmationModal from '../../features/GameManagement/modals/EndGameConfirmationModal';
 import GoalScoredModal from '../../features/GameManagement/modals/GoalScoredModal';
-import PlayersSection from './components/PlayersSection';
 import BackButton from './BackButton';
-import { timeFormatter } from './utils/timeFormatter';
-import RecordGoalButton from './components/RecordGoalButton';
+import GameManagementMainContent from './GameManagementMainContent';
 import type { GameManagementScreenViewProps } from './GameManagementScreenView.types';
 
 export default function GameManagementScreenView({
@@ -40,32 +36,15 @@ export default function GameManagementScreenView({
         ourScore={ourScore}
         opponentScore={opponentScore}
       />
-      <div className="max-w-6xl mx-auto space-y-6 w-full">
-        <PitchVisualization players={onFieldPlayers} />
-        <SubstitutionPanel
-          playerData={playerData}
-          isRunning={isRunning}
-          onFieldPlayers={onFieldPlayers}
-          offFieldPlayers={offFieldPlayers}
-          getTotalPlayTime={getTotalPlayTime}
-          timeFormatter={timeFormatter}
-          selectedSubOffPlayer={null}
-          selectedSubOnPlayer={null}
-          handleSubOffClick={() => {}}
-          handleSubOnClick={() => {}}
-          handleConfirmSubstitution={() => {}}
-          showSubstitutionConfirmModal={false}
-        />
-        <PlayersSection
-          onFieldPlayers={onFieldPlayers}
-          offFieldPlayers={offFieldPlayers}
-          getTotalPlayTime={getTotalPlayTime}
-          handlePlayerClick={handlePlayerClick}
-        />
-        <div className="flex justify-center mb-8">
-          <RecordGoalButton setShowGoalModal={setShowGoalModal} />
-        </div>
-      </div>
+      <GameManagementMainContent
+        playerData={playerData}
+        isRunning={isRunning}
+        onFieldPlayers={onFieldPlayers}
+        offFieldPlayers={offFieldPlayers}
+        getTotalPlayTime={getTotalPlayTime}
+        handlePlayerClick={handlePlayerClick}
+        setShowGoalModal={setShowGoalModal}
+      />
       <EndGameConfirmationModal
         showEndGameConfirm={showEndGameConfirm}
         confirmEndGame={confirmEndGame}

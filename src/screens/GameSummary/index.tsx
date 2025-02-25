@@ -7,6 +7,7 @@ import FinalScore from '../../features/GameSummary/components/FinalScore';
 import ShareSummaryButton from '../../features/GameSummary/components/ShareSummaryButton';
 import { formatTime } from '../../shared/models/timeUtils';
 import { createGetTotalPlayTime } from './utils';
+import { getPlayersWithDefaults } from './helpers';
 import { Player } from '../../types/GameTypes';
 
 export default function GameSummaryScreen(): JSX.Element {
@@ -14,15 +15,7 @@ export default function GameSummaryScreen(): JSX.Element {
 
   const getTotalPlayTime = createGetTotalPlayTime(includeGKPlaytime);
 
-  const playersWithDefaults = playerData.map((player: Player) => ({
-    ...player,
-    totalPlayTime: player.totalPlayTime || 0,
-    isOnField: typeof player.isOnField === 'boolean' ? player.isOnField : false,
-    isGoalkeeper: typeof player.isGoalkeeper === 'boolean' ? player.isGoalkeeper : false,
-    status: player.status || 'active',
-    minutesPlayed: player.minutesPlayed || Math.floor(player.totalPlayTime / 60000),
-    position: player.position || { x: null, y: null }
-  }));
+  const playersWithDefaults = getPlayersWithDefaults(playerData);
 
   const navigate = useNavigate();
 

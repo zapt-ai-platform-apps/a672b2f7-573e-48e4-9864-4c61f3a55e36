@@ -22,10 +22,12 @@ function ensurePlayerProperties(player: Partial<Player> | string): Player {
     totalPlayTime: player.totalPlayTime || 0,
     isOnField: player.isOnField || false,
     isGoalkeeper: player.isGoalkeeper || false,
-    position: {
-      x: typeof player.position?.x === 'number' ? player.position.x : 0,
-      y: typeof player.position?.y === 'number' ? player.position.y : 0
-    },
+    position: typeof player.position === 'object' && player.position !== null
+      ? {
+          x: typeof player.position.x === 'number' ? player.position.x : 0,
+          y: typeof player.position.y === 'number' ? player.position.y : 0
+        }
+      : { x: 0, y: 0 },
     playIntervals: player.playIntervals || [],
     isStartingPlayer: player.isStartingPlayer || false,
     isInMatchSquad: player.isInMatchSquad || false,
