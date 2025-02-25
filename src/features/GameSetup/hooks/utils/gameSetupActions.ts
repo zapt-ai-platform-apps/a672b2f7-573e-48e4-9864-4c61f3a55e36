@@ -8,7 +8,7 @@ function createPlayer(name: string): Player {
     isOnField: true,
     isGoalkeeper: false,
     totalPlayTime: 0,
-    position: { x: null, y: null },
+    position: { x: 0, y: 0 }, // Changed from null to 0 to match Position type
     isStartingPlayer: true
   };
 }

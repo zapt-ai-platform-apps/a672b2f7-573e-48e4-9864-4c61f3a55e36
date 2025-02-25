@@ -8,10 +8,10 @@ export function ensurePlayerProperties(player: Partial<Player>): Player {
   // Ensure position is an object with x and y values
   const position: Position = typeof player.position === 'object' && player.position !== null
     ? {
-        x: typeof player.position.x === 'number' ? player.position.x : null,
-        y: typeof player.position.y === 'number' ? player.position.y : null
+        x: typeof player.position.x === 'number' ? player.position.x : 0, // Changed from null to 0
+        y: typeof player.position.y === 'number' ? player.position.y : 0  // Changed from null to 0
       }
-    : { x: null, y: null };
+    : { x: 0, y: 0 }; // Changed from null, null to 0, 0
 
   return {
     id: player.id || '',
