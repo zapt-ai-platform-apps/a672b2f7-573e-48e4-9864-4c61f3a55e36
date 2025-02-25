@@ -6,9 +6,9 @@ export interface Player {
     endTime: number | null;
     isGoalkeeper?: boolean;
   }>;
-  isOnField: boolean;
-  isGoalkeeper: boolean;
-  position: { x: number; y: number };
+  isOnField?: boolean;
+  isGoalkeeper?: boolean;
+  position?: { x: number; y: number };
   isStartingPlayer?: boolean;
   isInMatchSquad?: boolean;
   playTime?: number;

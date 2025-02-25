@@ -14,7 +14,7 @@ export function processSession(session: any, setUser: (user: any) => void): void
     setUser(user);
     const recordedKey = `recordedLogin_${user.id}`;
     if (!sessionStorage.getItem(recordedKey) && user.email) {
-      recordLogin(user.email, import.meta.env.VITE_PUBLIC_APP_ENV)
+      recordLogin(user.email, import.meta.env.VITE_PUBLIC_APP_ENV as string)
         .catch((error: any) => {
           console.error('Failed to record login:', error);
           Sentry.captureException(error);

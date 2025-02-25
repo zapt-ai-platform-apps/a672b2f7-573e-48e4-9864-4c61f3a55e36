@@ -64,7 +64,14 @@ export function handlePlayerAdjustment(
   if (isAdding) {
     const exists = players.find((p) => p.id === playerId);
     if (!exists) {
-      return [...players, { id: playerId, name: "Player " + playerId, playTime: 0 }];
+      return [...players, { 
+        id: playerId, 
+        name: "Player " + playerId, 
+        playTime: 0,
+        isOnField: false,
+        isGoalkeeper: false,
+        position: { x: 0, y: 0 }
+      }];
     }
     return players;
   } else {
