@@ -1,5 +1,5 @@
-import { calculateTotalPlayTime, calculateElapsedTime } from '../../../models/timeUtils';
-import { Player } from '../../../models/playerModel';
+import { calculateTotalPlayTime, calculateElapsedTime } from '../../../shared/models/timeUtils';
+import type { Player } from '../../../types/GameTypes';
 
 interface Interval {
   start: number;

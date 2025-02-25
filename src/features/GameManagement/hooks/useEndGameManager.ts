@@ -1,14 +1,13 @@
 import { Player } from '../../../types/GameTypes';
 
 interface PlayInterval {
-  startTime: number;
-  endTime: number | null;
-  isGoalkeeper?: boolean;
+  start: number;
+  end: number | null;
 }
 
 interface GameInterval {
-  startTime: number;
-  endTime: number | null;
+  start: number;
+  end: number | null;
 }
 
 interface EndGameManagerParams {
@@ -39,8 +38,8 @@ function useEndGameManager({
       setIsRunning(false);
       setGameIntervals((prev: GameInterval[]) =>
         prev.map((interval: GameInterval, idx) =>
-          idx === prev.length - 1 && !interval.endTime
-            ? { ...interval, endTime: Date.now() }
+          idx === prev.length - 1 && !interval.end
+            ? { ...interval, end: Date.now() }
             : interval
         )
       );

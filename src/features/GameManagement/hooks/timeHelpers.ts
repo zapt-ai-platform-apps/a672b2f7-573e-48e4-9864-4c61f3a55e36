@@ -1,7 +1,8 @@
-import { calculateTotalPlayTime } from '../../../shared/models/playerUtils';
+import { calculateTotalPlayTime } from '../../../shared/models/timeUtils';
 import { getTimeElapsed as getTimerElapsed, toggleTimer as toggleTimerModel } from '../../../shared/models/timeUtils';
+import type { Player } from '../../../types/GameTypes';
 
-export function getTotalPlayTime(player: any, includeGKPlaytime: boolean, isRunning: boolean): number {
+export function getTotalPlayTime(player: Player, includeGKPlaytime: boolean, isRunning: boolean): number {
   return calculateTotalPlayTime(player, includeGKPlaytime, isRunning);
 }
 

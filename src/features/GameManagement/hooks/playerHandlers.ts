@@ -1,4 +1,4 @@
-import { processPlayerLists } from '../../../shared/models/playerUtils';
+import { processPlayerLists } from '../../../shared/models/listUtils';
 import type { Player } from '../../../types/GameTypes';
 import { handlePlayerAdjustment as adjustPlayer } from '../../../shared/models/playerAdjustments';
 

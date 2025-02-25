@@ -30,7 +30,7 @@ export default function GameManagementScreenView({
   return (
     <div className="min-h-screen flex flex-col p-4">
       {!isRunning && <BackButton />}
-      
+
       <Header
         isRunning={isRunning}
         toggleTimer={toggleTimer}
@@ -57,14 +57,14 @@ export default function GameManagementScreenView({
             title="On Field Players"
             message="Players currently on the field"
             getTotalPlayTime={getTotalPlayTime}
-            handlePlayerClick={handlePlayerClick}
+            onPlayerClick={handlePlayerClick}
           />
           <PlayerList
             players={offFieldPlayers}
             title="Bench Players"
             message="Players currently on the bench"
             getTotalPlayTime={getTotalPlayTime}
-            handlePlayerClick={handlePlayerClick}
+            onPlayerClick={handlePlayerClick}
           />
         </div>
 

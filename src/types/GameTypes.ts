@@ -14,6 +14,7 @@ export interface Player {
   isGoalkeeper: boolean;
   isInMatchSquad?: boolean;
   isStartingPlayer?: boolean;
+  isInStartingLineup?: boolean; // Added missing property
   position: Position;
   playIntervals?: Array<{ 
     start: number; 

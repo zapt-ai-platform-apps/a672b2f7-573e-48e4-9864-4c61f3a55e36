@@ -9,11 +9,11 @@ export interface GameManagementScreenViewProps {
   showEndGameConfirm: boolean;
   confirmEndGame: () => void;
   cancelEndGame: () => void;
-  recordGoal: (playerId: string) => void;
+  recordGoal: (player: any) => void;
   onFieldPlayers: any[];
   offFieldPlayers: any[];
   getTotalPlayTime: (player: any) => string;
   showGoalModal: boolean;
   setShowGoalModal: (value: boolean) => void;
-  handlePlayerClick: (playerId: string) => void;
+  handlePlayerClick: (player: any) => void;
 }

@@ -1,4 +1,4 @@
-import { parsePlayers } from '../../utils/parsePlayers';
+import { parsePlayers } from '../utils/parsePlayers';
 
 export interface SquadData {
   name?: string;

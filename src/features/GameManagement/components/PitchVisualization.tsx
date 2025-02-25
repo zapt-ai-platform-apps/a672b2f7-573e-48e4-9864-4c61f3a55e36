@@ -41,7 +41,8 @@ function PitchVisualization({ players }: PitchVisualizationProps): JSX.Element {
       <Pitch 
         pitchRef={pitchRef} 
         playerData={players} 
-        handlePointerDown={handlePointerDownWrapper} 
+        handlePointerDown={handlePointerDownWrapper}
+        players={players} 
       />
       <p className="mt-4 text-gray-700 dark:text-gray-300">
         Drag and drop players to set their positions.
