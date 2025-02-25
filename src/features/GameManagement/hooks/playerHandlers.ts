@@ -2,6 +2,11 @@ import { processPlayerLists } from '../../../shared/models/playerUtils';
 import type { Player } from '../../../types/GameTypes';
 import { handlePlayerAdjustment as adjustPlayer } from '../../../shared/models/playerAdjustments';
 
+interface Position {
+  x: number;
+  y: number;
+}
+
 export function updatePlayerLists(
   playerData: Player[],
   includeGKPlaytime: boolean,
@@ -21,7 +26,14 @@ export function assignGoalkeeper(
   setGoalkeeper: (id: string | undefined) => void
 ): void {
   if (!goalkeeper && playerData.length > 0) {
-    const firstGK = playerData.find((p) => p.position === 'Goalkeeper');
+    // Find a goalkeeper with a position object
+    const firstGK = playerData.find((p) => {
+      if (typeof p.position === 'object' && p.position !== null) {
+        return p.isGoalkeeper;
+      }
+      return false;
+    });
+    
     setGoalkeeper(firstGK?.id || playerData[0]?.id);
   }
 }

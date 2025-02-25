@@ -1,47 +1,60 @@
 import React from 'react';
-import { formatTime } from '../../../models/timeUtils';
+import type { Player } from '../../../types/GameTypes';
 
 interface PlayerListProps {
-  players: any[];
+  players: Player[];
   title: string;
-  message: string;
-  getTotalPlayTime: (player: any) => number;
-  handlePlayerClick: (player: any) => void;
+  emptyMessage: string;
+  selectedPlayer: Player | null;
+  onPlayerClick: (player: Player) => void;
+  timeFormatter: (seconds: number) => string;
+  getTotalPlayTime: (player: Player) => number;
+  selectedItemClass: string;
+  defaultItemClass: string;
+  showGoalkeeper?: boolean;
 }
 
-export default function PlayerList({
+function PlayerList({
   players,
   title,
-  message,
+  emptyMessage,
+  selectedPlayer,
+  onPlayerClick,
+  timeFormatter,
   getTotalPlayTime,
-  handlePlayerClick
+  selectedItemClass,
+  defaultItemClass,
+  showGoalkeeper = false
 }: PlayerListProps): JSX.Element {
-  if (!players || players.length === 0) {
-    return (
-      <div className="p-4 bg-white/10 backdrop-blur-sm rounded-xl shadow-lg text-white">
-        <h3 className="text-lg font-medium mb-2">{title}</h3>
-        <p className="text-sm opacity-80">{message}</p>
-        <p className="mt-4 text-sm italic">No players available</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="p-4 bg-white/10 backdrop-blur-sm rounded-xl shadow-lg text-white">
-      <h3 className="text-lg font-medium mb-2">{title}</h3>
-      <p className="text-sm opacity-80 mb-4">{message}</p>
-      <ul className="space-y-2">
-        {players.map((player) => (
-          <li
-            key={player.id}
-            className="flex justify-between items-center p-3 bg-white/20 rounded-lg cursor-pointer hover:bg-white/30 transition-colors"
-            onClick={() => handlePlayerClick(player)}
-          >
-            <span>{player.name}</span>
-            <span className="text-sm opacity-80">{formatTime(getTotalPlayTime(player))}</span>
-          </li>
-        ))}
-      </ul>
+    <div>
+      <h3 className="text-xl font-semibold mb-3">
+        {title}
+      </h3>
+      <div className="space-y-2 max-h-64 overflow-y-auto p-1">
+        {players.length === 0 ? (
+          <p className="text-gray-500 dark:text-gray-400 italic">{emptyMessage}</p>
+        ) : (
+          players.map((player) => (
+            <div
+              key={player.id}
+              className={`p-3 rounded-lg cursor-pointer transition flex justify-between items-center ${
+                selectedPlayer?.id === player.id ? selectedItemClass : defaultItemClass
+              }`}
+              onClick={() => onPlayerClick(player)}
+            >
+              <span className="font-medium text-gray-800 dark:text-gray-200">
+                {player.name} {showGoalkeeper && player.isGoalkeeper ? '(GK)' : ''}
+              </span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                {timeFormatter(getTotalPlayTime(player))}
+              </span>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }
+
+export default PlayerList;

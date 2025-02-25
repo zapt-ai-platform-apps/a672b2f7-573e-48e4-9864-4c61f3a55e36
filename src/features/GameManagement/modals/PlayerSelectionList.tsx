@@ -9,21 +9,20 @@ interface PlayerSelectionListProps {
 function PlayerSelectionList({ availablePlayers, onSelect, onSwitch }: PlayerSelectionListProps) {
   return (
     <div className="mb-4">
-      <ul className="mb-4">
-        {availablePlayers.map((player) => (
-          <li key={player} className="py-2 border-b">
-            <button
-              onClick={() => onSelect(player)}
-              className="text-blue-600 hover:underline"
-            >
-              {player}
-            </button>
+      <ul className="list-disc pl-5">
+        {availablePlayers.map((player, index) => (
+          <li
+            key={index}
+            className="cursor-pointer hover:text-brand-500"
+            onClick={() => onSelect(player)}
+          >
+            {player}
           </li>
         ))}
       </ul>
       <button
+        className="mt-2 text-sm text-blue-500 hover:underline"
         onClick={onSwitch}
-        className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
       >
         Switch to manual entry
       </button>

@@ -1,46 +1,70 @@
 import React from 'react';
+import type { Player } from '../../../types/GameTypes';
+import PlayerList from './PlayerList';
+import SubstitutionConfirmationModal from './SubstitutionConfirmationModal';
 
 interface SubstitutionPanelProps {
-  playerData: any[];
-  setPlayerData?: React.Dispatch<React.SetStateAction<any[]>>;
-  isRunning: boolean;
-  includeGKPlaytime?: boolean;
-  updatePlayerLists?: (playerData: any[]) => void;
-  onFieldPlayers?: any[];
-  offFieldPlayers?: any[];
-  getTotalPlayTime: () => string;
+  onFieldPlayers: Player[];
+  offFieldPlayers: Player[];
+  timeFormatter: (seconds: number) => string;
+  getTotalPlayTime: (player: Player) => number;
+  selectedSubOffPlayer: Player | null;
+  selectedSubOnPlayer: Player | null;
+  handleSubOffPlayerClick: (player: Player) => void;
+  handleSubOnPlayerClick: (player: Player) => void;
+  confirmSubstitution: () => void;
+  cancelSubstitution: () => void;
+  showSubstitutionConfirmModal: boolean;
 }
 
 function SubstitutionPanel({
-  playerData,
-  setPlayerData,
-  isRunning,
-  includeGKPlaytime,
-  updatePlayerLists,
   onFieldPlayers,
   offFieldPlayers,
-  getTotalPlayTime
-}: SubstitutionPanelProps) {
+  timeFormatter,
+  getTotalPlayTime,
+  selectedSubOffPlayer,
+  selectedSubOnPlayer,
+  handleSubOffPlayerClick,
+  handleSubOnPlayerClick,
+  confirmSubstitution,
+  cancelSubstitution,
+  showSubstitutionConfirmModal
+}: SubstitutionPanelProps): JSX.Element {
   return (
-    <div className="mt-6 p-4 border rounded">
-      <h2 className="text-2xl font-bold mb-4">Substitution Panel</h2>
-      <p className="text-sm text-gray-600 mb-4">
-        This panel displays real-time playtime statistics and enables substitution management. 
-        Track current player statuses, view accumulated playtimes, and initiate substitutions. 
-        Use the 'Update Players' button to refresh on-field/off-field statuses and apply any changes.
-      </p>
-      <div>
-        <span className="block mb-2">Playtime: {getTotalPlayTime()}</span>
-        {updatePlayerLists && (
-          <button 
-            className="mr-2 px-4 py-2 bg-green-600 text-white rounded cursor-pointer disabled:opacity-50"
-            onClick={() => updatePlayerLists(playerData)}
-            disabled={!isRunning}
-          >
-            Update Players
-          </button>
-        )}
-      </div>
+    <div className="grid md:grid-cols-2 gap-4 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow">
+      <PlayerList
+        players={onFieldPlayers}
+        title="Players On Field"
+        emptyMessage="No players on field"
+        selectedPlayer={selectedSubOffPlayer}
+        onPlayerClick={handleSubOffPlayerClick}
+        timeFormatter={timeFormatter}
+        getTotalPlayTime={getTotalPlayTime}
+        selectedItemClass="bg-red-200 dark:bg-red-900"
+        defaultItemClass="bg-white dark:bg-gray-700 hover:bg-red-100 dark:hover:bg-red-800"
+        showGoalkeeper={true}
+      />
+
+      <PlayerList
+        players={offFieldPlayers}
+        title="Substitutes"
+        emptyMessage="No substitutes available"
+        selectedPlayer={selectedSubOnPlayer}
+        onPlayerClick={handleSubOnPlayerClick}
+        timeFormatter={timeFormatter}
+        getTotalPlayTime={getTotalPlayTime}
+        selectedItemClass="bg-green-200 dark:bg-green-900"
+        defaultItemClass="bg-white dark:bg-gray-700 hover:bg-green-100 dark:hover:bg-green-800"
+      />
+
+      {showSubstitutionConfirmModal && (
+        <SubstitutionConfirmationModal
+          selectedSubOffPlayer={selectedSubOffPlayer}
+          selectedSubOnPlayer={selectedSubOnPlayer}
+          confirmSubstitution={confirmSubstitution}
+          cancelSubstitution={cancelSubstitution}
+        />
+      )}
     </div>
   );
 }

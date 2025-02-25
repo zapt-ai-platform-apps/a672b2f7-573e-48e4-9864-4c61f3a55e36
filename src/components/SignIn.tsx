@@ -45,7 +45,7 @@ export default function SignIn(): JSX.Element {
           showLinks={true}
           view="magic_link"
           appearance={authAppearanceConfig}
-          onError={(error) => {
+          onError={(error: Error) => {
             console.error('Authentication error:', error);
             Sentry.captureException(error);
           }}

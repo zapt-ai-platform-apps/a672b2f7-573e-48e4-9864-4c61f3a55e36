@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { performSubstitution } from '../../../shared/models/playerSubstitutions';
+import { performSubstitution } from '../../../models/performSubstitution';
 import type { Player } from '../../../types/GameTypes';
 
 interface SubstitutionLogicParams {

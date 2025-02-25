@@ -15,7 +15,7 @@ export function recordGoal(
   ourScore: number,
   opponentScore: number,
   goals: any[],
-  gameIntervals: number[],
+  gameIntervals: any[],
   isRunning: boolean
 ): { newOurScore: number; newOpponentScore: number; newGoals: any[] } {
   let newOurScore = ourScore;
@@ -32,7 +32,14 @@ export function recordGoal(
 
 export function handlePlayerAdjustment(players: Player[], playerId: number | string, isAdding: boolean): Player[] {
   if (isAdding) {
-    const newPlayer: Player = { id: playerId, name: 'Player ' + playerId, totalPlayTime: 0, isOnField: true, isGoalkeeper: false, position: { x: null, y: null } };
+    const newPlayer: Player = { 
+      id: playerId.toString(), 
+      name: 'Player ' + playerId, 
+      totalPlayTime: 0, 
+      isOnField: true, 
+      isGoalkeeper: false, 
+      position: { x: 0, y: 0 }  // Initialize with numeric values
+    };
     return [...players, newPlayer];
   } else {
     return players.filter(player => player.id !== playerId);

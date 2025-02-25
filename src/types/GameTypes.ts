@@ -1,40 +1,44 @@
+export interface Position {
+  x: number;
+  y: number;
+}
+
 export interface Player {
-  id: string | number;
+  id: string;
   name: string;
-  playIntervals?: Array<{
-    startTime: number;
-    endTime: number | null;
-    isGoalkeeper?: boolean;
-  }>;
-  isOnField?: boolean;
-  isGoalkeeper?: boolean;
-  position?: { x: number; y: number };
-  isStartingPlayer?: boolean;
+  number?: string;
+  totalPlayTime: number;
+  isOnField: boolean;
+  isGoalkeeper: boolean;
   isInMatchSquad?: boolean;
-  playTime?: number;
-  lastStart?: number;
-  totalPlayTime?: number;
+  isStartingPlayer?: boolean;
+  position: Position;
+  playIntervals?: Array<{ start: number; end?: number }>;
 }
 
 export interface Goal {
   team: 'our' | 'opponent';
   scorerName: string;
-  timestamp: number;
-  time?: number;
+  time: number;
+  isOpponentGoal?: boolean;
+}
+
+export interface GameState {
+  playerData: Player[];
+  ourScore: number;
+  opponentScore: number;
+  goals: Goal[];
+  includeGKPlaytime: boolean;
+  showAddSubPanel: boolean;
+  goalkeeper?: string;
+  selectedSquad?: Squad;
 }
 
 export interface Squad {
-  id?: number | string;
+  id: string;
   name: string;
   players: Player[];
-}
-
-export interface StateProviderProps {
-  children: React.ReactNode;
-}
-
-export interface Interval {
-  startTime: number;
-  endTime: number | null;
-  isGoalkeeper?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  userId?: string;
 }

@@ -1,5 +1,4 @@
 import React from 'react';
-import type { Player } from "../../../types/GameTypes";
 
 interface Position {
   x: number;
@@ -7,32 +6,40 @@ interface Position {
 }
 
 interface PlayerProps {
-  player: Player;
-  handlePointerDown: (e: React.PointerEvent<HTMLDivElement>, player: Player) => void;
+  player: {
+    id: string;
+    name: string;
+    isGoalkeeper?: boolean;
+    [key: string]: any;
+  };
+  position: Position;
+  onPointerDown?: (e: React.PointerEvent) => void;
 }
 
-function Player({ player, handlePointerDown }: PlayerProps) {
-  const positionStyle = player.position ? {
-    left: `${player.position.x}%`,
-    top: `${player.position.y}%`
-  } : {};
+function Player({ player, position, onPointerDown }: PlayerProps): JSX.Element {
+  // Default position if not provided
+  const pos = position || { x: 50, y: 50 };
+  
+  // Calculate position as percentage of parent container
+  const style = {
+    left: `${pos.x}%`,
+    top: `${pos.y}%`,
+  };
 
   return (
     <div
-      className={`absolute w-10 h-10 flex items-center justify-center rounded-full cursor-pointer
-        ${player.isGoalkeeper 
-          ? 'bg-red-500 border-2 border-yellow-300' 
-          : 'bg-blue-500'} text-white font-medium shadow-lg`}
-      style={positionStyle}
-      onPointerDown={(e) => handlePointerDown(e, player)}
-      data-testid="player-element"
+      className={`absolute transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full select-none touch-none ${
+        player.isGoalkeeper
+          ? 'bg-yellow-500 text-black'
+          : 'bg-blue-600 text-white'
+      } shadow-md border-2 border-white cursor-move ${onPointerDown ? 'hover:scale-110' : ''} transition-transform`}
+      style={style}
+      onPointerDown={onPointerDown}
+      data-player-id={player.id}
     >
-      {player.isGoalkeeper ? 'GK' : player.name.charAt(0)}
-      {player.isGoalkeeper && (
-        <div className="absolute -top-2 -right-2 bg-yellow-300 text-black text-xs px-1 rounded-full">
-          GK
-        </div>
-      )}
+      <div className="text-xs font-semibold truncate max-w-[90%] text-center pointer-events-none">
+        {player.name.split(' ')[0]}
+      </div>
     </div>
   );
 }

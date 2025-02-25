@@ -1,6 +1,5 @@
 import type { GameInterval } from "./gameActionsHelpers";
-import { getTotalPlayTime, getTimeElapsed, updatePlayerLists as updateLists } from './gameManagementLogicHelpers';
-import { toggleTimer as modelToggleTimer } from './gameManagementLogicHelpers';
+import { getTotalPlayTime, getTimeElapsed, updatePlayerLists as updateLists, toggleTimer as modelToggleTimer } from './gameManagementLogicHelpers';
 
 export function handleEndGame(setShowEndGameConfirm: (value: boolean) => void): void {
   setShowEndGameConfirm(true);

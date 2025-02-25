@@ -1,4 +1,4 @@
-import { changeGoalkeeper } from '../../../shared/models/goalkeeperModel';
+import { changeGoalkeeper } from '../../../models/goalkeeperModel';
 import type { Player } from '../../../types/GameTypes';
 
 interface GoalkeeperProps {

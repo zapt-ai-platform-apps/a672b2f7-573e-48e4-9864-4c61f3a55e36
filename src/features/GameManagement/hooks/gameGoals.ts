@@ -1,8 +1,16 @@
 import { Goal } from "../../../types/GameTypes";
 import * as Sentry from "@sentry/browser";
 
+interface GoalWithOpponent extends Goal {
+  isOpponentGoal?: boolean;
+}
+
 // Create replacement for removeLastGoal function since the import path is problematic
-function removeLastGoal(goals: Goal[], ourScore: number, opponentScore: number) {
+function removeLastGoal(
+  goals: GoalWithOpponent[], 
+  ourScore: number, 
+  opponentScore: number
+) {
   if (goals.length === 0) {
     throw new Error("No goals to remove");
   }
@@ -28,12 +36,12 @@ function removeLastGoal(goals: Goal[], ourScore: number, opponentScore: number) 
 
 interface GoalHandlersProps {
   props: {
-    goals: Goal[];
+    goals: GoalWithOpponent[];
     ourScore: number;
     opponentScore: number;
     setOurScore: (score: number) => void;
     setOpponentScore: (score: number) => void;
-    setGoals: (goals: Goal[]) => void;
+    setGoals: (goals: GoalWithOpponent[]) => void;
   };
   setShowRemoveGoalConfirm: (value: boolean) => void;
 }
