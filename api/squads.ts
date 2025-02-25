@@ -5,6 +5,18 @@ import postgres from 'postgres';
 import * as Sentry from '@sentry/node';
 import { eq } from 'drizzle-orm';
 
+interface ApiRequest {
+  method: string;
+  query: Record<string, string | string[]>;
+  body: any;
+  headers: Record<string, string>;
+}
+
+interface ApiResponse {
+  status: (statusCode: number) => ApiResponse;
+  json: (body: any) => void;
+}
+
 // Initialize Sentry for backend error logging
 Sentry.init({
   dsn: process.env.VITE_PUBLIC_SENTRY_DSN,
@@ -17,7 +29,7 @@ Sentry.init({
   }
 });
 
-export default async function handler(req, res) {
+export default async function handler(req: ApiRequest, res: ApiResponse) {
   try {
     // Verify authentication
     const user = await authenticateUser(req);

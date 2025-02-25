@@ -11,6 +11,8 @@ export interface Player {
   position: { x: number; y: number };
   isStartingPlayer?: boolean;
   isInMatchSquad?: boolean;
+  playTime?: number; // Added to fix TypeScript errors
+  lastStart?: number; // Added to fix TypeScript errors
 }
 
 export interface Goal {

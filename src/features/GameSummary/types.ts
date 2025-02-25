@@ -27,8 +27,7 @@ export interface GameSummaryProps {
   gameLocation?: string;
   ourScore?: number;
   opponentScore?: number;
-  teamScore?: number;
-  opponentScore?: number;
+  // Removed duplicate teamScore and opponentScore properties
   goals?: Goal[];
   goalsList?: Goal[];
   playerData?: Player[];

@@ -3,7 +3,19 @@ import Sentry from '../lib/sentry';
 import { getDb } from '../lib/db';
 import { eq } from 'drizzle-orm';
 
-export default async function handler(req, res) {
+interface ApiRequest {
+  query: Record<string, string | string[]>;
+  method: string;
+  body: any;
+  headers: Record<string, string>;
+}
+
+interface ApiResponse {
+  status: (statusCode: number) => ApiResponse;
+  json: (body: any) => void;
+}
+
+export default async function handler(req: ApiRequest, res: ApiResponse) {
   try {
     const user = await authenticateUser(req);
     const db = getDb();
@@ -12,10 +24,11 @@ export default async function handler(req, res) {
     if (!id) {
       return res.status(400).json({ error: 'Squad ID is required' });
     }
+    
     if (req.method === 'GET') {
       const result = await db.select()
         .from(squads)
-        .where(eq(squads.id, parseInt(id)))
+        .where(eq(squads.id, parseInt(id as string)))
         .where(eq(squads.userId, user.id));
       if (!result.length) {
         return res.status(404).json({ error: 'Squad not found' });
@@ -25,7 +38,7 @@ export default async function handler(req, res) {
       const squadData = req.body;
       const result = await db.update(squads)
         .set(squadData)
-        .where(eq(squads.id, parseInt(id)))
+        .where(eq(squads.id, parseInt(id as string)))
         .where(eq(squads.userId, user.id))
         .returning();
       if (!result.length) {
@@ -34,7 +47,7 @@ export default async function handler(req, res) {
       return res.status(200).json(result[0]);
     } else if (req.method === 'DELETE') {
       const result = await db.delete(squads)
-        .where(eq(squads.id, parseInt(id)))
+        .where(eq(squads.id, parseInt(id as string)))
         .where(eq(squads.userId, user.id))
         .returning();
       if (!result.length) {
