@@ -28,9 +28,9 @@ function PitchVisualization({ players }: PitchVisualizationProps): JSX.Element {
     };
   }, [init]);
 
-  // Use type assertion to match the expected PointerEvent<Element> type
+  // Pass the nativeEvent instead of casting the React event
   const handlePointerDownWrapper = (e: React.PointerEvent<HTMLDivElement>) => {
-    handlePointerDown(e as unknown as PointerEvent);
+    handlePointerDown(e.nativeEvent);
   };
 
   return (

@@ -46,7 +46,7 @@ export function getStartingPlayers(selectedSquad: Squad, matchSquad?: unknown): 
         name: String(nameValue || ''), 
         isStartingPlayer: player.isStartingPlayer !== undefined ? player.isStartingPlayer : false 
       };
-    });
+    }) as GamePlayer[]; // Explicitly cast the return type to GamePlayer[]
   } catch (error) {
     console.error('Error processing starting players:', error);
     Sentry.captureException(error);

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { pointerDown, pointerMove, pointerUp, DragState } from '../../utils/dragHandlers';
+import { pointerDown, pointerMove, pointerUp, DragState } from '../utils/dragHandlers';
 
 function useDragAndDrop() {
   const dragState: DragState = {

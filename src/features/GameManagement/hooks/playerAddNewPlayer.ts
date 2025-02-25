@@ -1,6 +1,6 @@
 import { createPlayer } from '../../../shared/models/player';
 import { calculateMinPlayTime } from '../../../shared/models/playerUtils';
-import type { Player } from '../../../shared/models/player';
+import type { Player } from '../../../types/GameTypes';
 
 interface PlayInterval {
   start: number;

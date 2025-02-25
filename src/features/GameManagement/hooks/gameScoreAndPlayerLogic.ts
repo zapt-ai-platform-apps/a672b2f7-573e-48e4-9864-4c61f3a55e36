@@ -1,4 +1,4 @@
-import { GameInterval } from './gameTimerLogic';
+import { computeTimeElapsed, GameInterval } from './gameTimerLogic';
 import { Player } from '../../../types/GameTypes';
 
 export function recordGoalLogic(
@@ -13,16 +13,13 @@ export function recordGoalLogic(
   let newOurScore = ourScore;
   let newOpponentScore = opponentScore;
   if (team === 'our') {
-    newOurScore += 1;
+    newOurScore++;
   } else {
-    newOpponentScore += 1;
+    newOpponentScore++;
   }
-  const goalRecord = {
-    team,
-    scorerName,
-    time: Date.now()
-  };
-  const newGoals = [...goals, goalRecord];
+  const goalTime = computeTimeElapsed(gameIntervals, isRunning);
+  const newGoal = { team, scorer: scorerName, time: goalTime };
+  const newGoals = [...goals, newGoal];
   return { newOurScore, newOpponentScore, newGoals };
 }
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import * as Sentry from '@sentry/browser';
 import { useStateContext } from '../../../hooks/useStateContext';
 import { Player } from '../../../types/GameTypes';
-import { getTotalPlayTime } from '../../../models/timeUtils';
+import { getTotalPlayTime, formatTime } from '../../../models/timeUtils';
 import { computeTimeElapsed, toggleTimerLogic, GameInterval } from './gameTimerLogic';
 import { recordGoalLogic, handlePlayerAdjustmentLogic, updatePlayerListsLogic } from './gameScoreAndPlayerLogic';
 
@@ -13,7 +13,7 @@ export interface UseGameManagementLogicReturn {
   ourScore: number;
   opponentScore: number;
   getTotalPlayTime: (player: Player) => number;
-  getTimeElapsed: () => number;
+  getTimeElapsed: () => string;
   toggleTimer: () => void;
   handleEndGame: () => void;
   confirmEndGame: () => void;
@@ -96,8 +96,8 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
     return getTotalPlayTime(player, includeGKPlaytime ?? false, isRunning);
   };
 
-  const getTimeElapsedFunc = (): number => {
-    return computeTimeElapsed(gameIntervals, isRunning);
+  const getTimeElapsedFunc = (): string => {
+    return formatTime(computeTimeElapsed(gameIntervals, isRunning));
   };
 
   const toggleTimerFunc = (): void => {

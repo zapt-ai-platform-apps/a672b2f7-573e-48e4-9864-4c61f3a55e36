@@ -1,31 +1,25 @@
 export interface GameInterval {
   start: number;
-  end?: number;
+  end?: number | null;
 }
 
 export function computeTimeElapsed(gameIntervals: GameInterval[], isRunning: boolean): number {
   let total = 0;
-  for (let i = 0; i < gameIntervals.length; i++) {
-    const interval = gameIntervals[i];
-    if (interval.end) {
-      total += interval.end - interval.start;
-    } else if (isRunning && i === gameIntervals.length - 1) {
-      total += Date.now() - interval.start;
-    }
+  for (const interval of gameIntervals) {
+    total += (interval.end ?? Date.now()) - interval.start;
   }
-  return total;
+  return Math.floor(total / 1000);
 }
 
 export function toggleTimerLogic(isRunning: boolean, gameIntervals: GameInterval[]): { newIntervals: GameInterval[]; newIsRunning: boolean } {
   const newIntervals = [...gameIntervals];
-  if (isRunning) {
+  if (!isRunning) {
+    newIntervals.push({ start: Date.now(), end: null });
+    return { newIntervals, newIsRunning: true };
+  } else {
     if (newIntervals.length > 0) {
-      const lastInterval = { ...newIntervals[newIntervals.length - 1], end: Date.now() };
-      newIntervals[newIntervals.length - 1] = lastInterval;
+      newIntervals[newIntervals.length - 1] = { ...newIntervals[newIntervals.length - 1], end: Date.now() };
     }
     return { newIntervals, newIsRunning: false };
-  } else {
-    newIntervals.push({ start: Date.now() });
-    return { newIntervals, newIsRunning: true };
   }
 }
