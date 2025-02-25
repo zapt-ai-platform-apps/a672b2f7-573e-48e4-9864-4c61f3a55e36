@@ -1,5 +1,10 @@
 import React from 'react';
-import type { Player } from './PlayersManager';
+
+interface Player {
+  id: string;
+  name: string;
+  [key: string]: any;
+}
 
 interface PlayersListProps {
   players: Player[];

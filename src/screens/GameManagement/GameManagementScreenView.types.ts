@@ -1,19 +1,21 @@
+import { Player } from '../../types/GameTypes';
+
 export interface GameManagementScreenViewProps {
-  playerData: any[];
+  playerData: Player[];
   isRunning: boolean;
   ourScore: number;
   opponentScore: number;
-  getTimeElapsed: () => string;
+  getTimeElapsed: () => string; // Returns formatted time string
   toggleTimer: () => void;
   handleEndGame: () => void;
   showEndGameConfirm: boolean;
   confirmEndGame: () => void;
   cancelEndGame: () => void;
-  recordGoal: (player: any) => void;
-  onFieldPlayers: any[];
-  offFieldPlayers: any[];
-  getTotalPlayTime: (player: any) => string;
+  recordGoal: (team: 'our' | 'opponent', scorerName: string) => void;
+  onFieldPlayers: Player[];
+  offFieldPlayers: Player[];
+  getTotalPlayTime: (player: Player) => number;
   showGoalModal: boolean;
-  setShowGoalModal: (value: boolean) => void;
-  handlePlayerClick: (player: any) => void;
+  setShowGoalModal: (show: boolean) => void;
+  handlePlayerClick: (player: Player) => void;
 }

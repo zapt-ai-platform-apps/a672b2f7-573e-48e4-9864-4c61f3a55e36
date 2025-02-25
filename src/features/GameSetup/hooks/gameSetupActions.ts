@@ -8,13 +8,13 @@ export function addPlayerAction(
 ): boolean {
   if (playerName.trim() !== '') {
     const newPlayer: Player = {
-      id: Date.now(),
+      id: String(Date.now()), // Convert to string
       name: playerName.trim(),
       playIntervals: [],
       isOnField: false,
       isGoalkeeper: false,
       totalPlayTime: 0,
-      position: { x: null, y: null },
+      position: { x: 0, y: 0 }, // Use 0 instead of null
       isStartingPlayer: false
     };
     const updatedPlayers = [...players, newPlayer];

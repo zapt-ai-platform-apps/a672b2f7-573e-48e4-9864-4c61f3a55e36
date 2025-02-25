@@ -12,7 +12,7 @@ export function parsePlayers(text: string): Player[] {
     .map(name => name.trim())
     .filter(name => name)
     .map(name => ({
-      id: Date.now() + Math.random(),
+      id: String(Date.now() + Math.random()), // Convert to string
       name,
       isStartingPlayer: false,
       totalPlayTime: 0,

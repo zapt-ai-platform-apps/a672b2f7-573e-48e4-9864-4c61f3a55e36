@@ -1,7 +1,11 @@
-import type { Player } from '../../../context/StateContext';
+import { Player } from '../../../types/GameTypes';
 
 export interface ExtendedPlayer extends Player {
   isInMatchSquad?: boolean;
-  id: string; // Explicitly define id as string
-  selected?: boolean;
+}
+
+export interface Squad {
+  id: string;
+  name: string;
+  players: ExtendedPlayer[];
 }

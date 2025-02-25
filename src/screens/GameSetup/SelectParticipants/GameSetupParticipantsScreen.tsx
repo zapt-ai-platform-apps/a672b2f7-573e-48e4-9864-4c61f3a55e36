@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useMatchSquad from '../../../features/GameSetup/hooks/useMatchSquad';
-import { useStateContext } from '../../../state';
-import ParticipantItem from './ParticipantItem';
-import { ExtendedPlayer } from './useGameSetupParticipantsHandlers';
+import { useStateContext } from '../../../hooks/useStateContext';
+import ParticipantItem, { ExtendedPlayer } from './ParticipantItem';
 import useGameSetupParticipantsHandlers from './useGameSetupParticipantsHandlers';
 
 export default function GameSetupParticipantsScreen(): JSX.Element {
