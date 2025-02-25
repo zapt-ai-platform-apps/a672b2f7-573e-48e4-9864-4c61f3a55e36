@@ -4,10 +4,16 @@ import TeamSelection from './TeamSelection';
 import ScorerSelection from './ScorerSelection';
 import OpponentGoalConfirmation from './OpponentGoalConfirmation';
 
+interface Player {
+  id: string;
+  name: string;
+  [key: string]: any;
+}
+
 interface GoalScoredModalProps {
   showGoalModal: boolean;
   setShowGoalModal: (value: boolean) => void;
-  players: any[];
+  players: Player[];
   recordGoal: (team: string, scorerName: string) => void;
 }
 
@@ -17,7 +23,7 @@ interface GoalScoredModalProps {
  * @param props - Component properties.
  * @returns Rendered modal component or null if not visible.
  */
-function GoalScoredModal({ showGoalModal, setShowGoalModal, players, recordGoal }: GoalScoredModalProps) {
+function GoalScoredModal({ showGoalModal, setShowGoalModal, players = [], recordGoal }: GoalScoredModalProps) {
   const [team, setTeam] = useState<string>('');
   const [scorerName, setScorerName] = useState<string>('');
   const [confirmOpponentGoal, setConfirmOpponentGoal] = useState<boolean>(false);

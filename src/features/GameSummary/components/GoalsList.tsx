@@ -42,7 +42,7 @@ function GoalsList({ goals = [] }: GoalsListProps): JSX.Element {
           ))}
         </ul>
       ) : (
-        <p>No goals scored by our team.</p>
+        <p>Goals: None</p>
       )}
     </div>
   );

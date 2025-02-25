@@ -4,6 +4,7 @@ import { supabase } from '../supabaseClient';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { authAppearanceConfig } from '../config/authAppearance';
+import * as Sentry from '@sentry/browser';
 
 export default function SignIn() {
   const { session } = useAuth();
@@ -21,6 +22,7 @@ export default function SignIn() {
         <button 
           onClick={() => navigate('/')} 
           className="absolute top-4 left-4 px-4 py-2 bg-white/80 hover:bg-white rounded-lg text-gray-800 font-medium transition-colors cursor-pointer shadow-sm"
+          aria-label="Back to home"
         >
           ← Back
         </button>
@@ -31,6 +33,7 @@ export default function SignIn() {
           target="_blank"
           rel="noopener noreferrer"
           className="block mb-6 text-blue-600 hover:text-blue-800 underline text-center transition-colors duration-200 cursor-pointer"
+          aria-label="Visit ZAPT website"
         >
           Visit ZAPT
         </a>
@@ -41,6 +44,10 @@ export default function SignIn() {
           showLinks={true}
           view="magic_link"
           appearance={authAppearanceConfig}
+          onError={(error) => {
+            console.error('Authentication error:', error);
+            Sentry.captureException(error);
+          }}
         />
       </div>
     </div>

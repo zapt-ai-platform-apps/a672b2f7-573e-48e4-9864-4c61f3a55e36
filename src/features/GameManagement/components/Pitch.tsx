@@ -1,7 +1,22 @@
 import React from 'react';
 import Player from './Player';
 
-export default function Pitch({ players, hideLabel = false }: { players: any[]; hideLabel?: boolean }): JSX.Element {
+interface PlayerType {
+  id: string;
+  name: string;
+  position: string;
+  [key: string]: any;
+}
+
+interface PitchProps {
+  players: PlayerType[];
+  hideLabel?: boolean;
+}
+
+/**
+ * Pitch component that displays a soccer field with players positioned on it
+ */
+export default function Pitch({ players = [], hideLabel = false }: PitchProps): JSX.Element {
   return (
     <div className="relative w-full aspect-[2/1.4] bg-gradient-to-b from-green-600 to-green-700 rounded-xl overflow-hidden shadow-lg border-4 border-white/20">
       {/* Field markings */}

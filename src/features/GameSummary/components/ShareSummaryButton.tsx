@@ -1,11 +1,24 @@
 import React, { useState } from 'react';
 import { createGameSummary } from '../utils/createGameSummary';
 
+interface Player {
+  id: string;
+  name: string;
+  position: string;
+  [key: string]: any;
+}
+
+interface Goal {
+  team: string;
+  scorerName: string;
+  [key: string]: any;
+}
+
 interface ShareSummaryButtonProps {
   ourScore: number;
   opponentScore: number;
-  playerData: any[];
-  goals: any[];
+  playerData: Player[];
+  goals: Goal[];
   includeGKPlaytime: boolean;
   getTotalPlayTime: (player: any) => number;
   formatTime: (time: number) => string;
@@ -14,8 +27,8 @@ interface ShareSummaryButtonProps {
 export default function ShareSummaryButton({
   ourScore,
   opponentScore,
-  playerData,
-  goals,
+  playerData = [],
+  goals = [],
   includeGKPlaytime,
   getTotalPlayTime,
   formatTime
@@ -27,10 +40,13 @@ export default function ShareSummaryButton({
     try {
       setIsSharing(true);
 
+      // Ensure playerData is an array
+      const safePlayerData = Array.isArray(playerData) ? playerData : [];
+
       const summary = createGameSummary({
         ourScore,
         opponentScore,
-        playerData,
+        playerData: safePlayerData,
         goals,
         getTotalPlayTime,
         formatTime,

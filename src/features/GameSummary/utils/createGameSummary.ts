@@ -1,49 +1,23 @@
 import { formatTime } from '../../../models/timeUtils';
+import { Player, Goal, GameSummaryProps } from '../types';
 
-export function createGameSummary(gameState: {
-  teamName: string;
-  opponentName: string;
-  matchDate: string;
-  gameLocation: string;
-  teamScore: number;
-  opponentScore: number;
-  goalsList: {
-    id: string;
-    playerId: string;
-    playerName: string;
-    time: number;
-    isOpponentGoal: boolean;
-  }[];
-  activePlayersList: {
-    id: string;
-    name: string;
-    position: string;
-    status: string;
-    minutesPlayed: number;
-    entryTimes: number[];
-    exitTimes: number[];
-  }[];
-  benchPlayersList: {
-    id: string;
-    name: string;
-    position: string;
-    status: string;
-    minutesPlayed: number;
-    entryTimes: number[];
-    exitTimes: number[];
-  }[];
-}) {
+export function createGameSummary(gameState: GameSummaryProps): string {
   const {
-    teamName,
-    opponentName,
-    matchDate,
-    gameLocation,
-    teamScore,
-    opponentScore,
-    goalsList,
-    activePlayersList,
-    benchPlayersList
+    teamName = 'Our Team',
+    opponentName = 'Opponent',
+    matchDate = new Date().toISOString(),
+    gameLocation = '',
+    ourScore = gameState.teamScore || 0,
+    opponentScore = gameState.opponentScore || 0,
+    goals = gameState.goalsList || [],
+    playerData = [],
+    activePlayersList = [],
+    benchPlayersList = [],
+    getTotalPlayTime,
+    formatTime: customFormatTime
   } = gameState;
+
+  const timeFormatter = customFormatTime || formatTime;
 
   let summary = '';
   summary += `Match Summary: ${teamName} vs. ${opponentName}\n`;
@@ -55,23 +29,48 @@ export function createGameSummary(gameState: {
     summary += `Location: ${gameLocation}\n`;
   }
 
-  summary += `Final Score: ${teamScore} - ${opponentScore}\n\n`;
+  summary += `Final Score: ${ourScore} - ${opponentScore}\n\n`;
   summary += 'Goals:\n';
 
-  if (!goalsList || goalsList.length === 0) {
+  const safeGoals = Array.isArray(goals) ? goals : [];
+  
+  if (safeGoals.length === 0) {
     summary += 'None\n';
   } else {
-    for (const goal of goalsList) {
-      const playerName = goal.isOpponentGoal ? 'Opponent' : goal.playerName;
-      summary += `${playerName} (${formatTime(goal.time)})\n`;
+    for (const goal of safeGoals) {
+      const isOpponentGoal = goal.isOpponentGoal || goal.team === 'opponent';
+      const playerName = isOpponentGoal 
+        ? 'Opponent' 
+        : goal.playerName || goal.scorerName || 'Unknown player';
+      
+      const time = goal.time || 0;
+      summary += `${playerName} (${timeFormatter(time)})\n`;
     }
   }
 
   summary += '\n';
   summary += 'Player Play Times:\n';
-  const players = [...activePlayersList, ...benchPlayersList];
-  for (const player of players) {
-    summary += `${player.name}: ${player.minutesPlayed} min\n`;
+  
+  let allPlayers: Player[] = [];
+  
+  if (Array.isArray(playerData) && playerData.length > 0) {
+    allPlayers = playerData;
+  } else {
+    const activePlayers = Array.isArray(activePlayersList) ? activePlayersList : [];
+    const benchPlayers = Array.isArray(benchPlayersList) ? benchPlayersList : [];
+    allPlayers = [...activePlayers, ...benchPlayers];
+  }
+  
+  if (allPlayers.length === 0) {
+    summary += 'No player data available\n';
+  } else {
+    for (const player of allPlayers) {
+      const playTime = getTotalPlayTime 
+        ? getTotalPlayTime(player) 
+        : (player.minutesPlayed || 0);
+        
+      summary += `${player.name}: ${playTime} min\n`;
+    }
   }
 
   return summary;
