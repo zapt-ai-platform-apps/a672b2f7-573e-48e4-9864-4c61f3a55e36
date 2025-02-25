@@ -2,16 +2,16 @@ import { useState, useEffect } from 'react';
 import { useStateContext } from '../../../hooks/useStateContext';
 import { Squad } from './useSquadManagementTypes';
 import * as Sentry from "@sentry/browser";
+import { loadSquads } from '../utils/squadManagementHandlers';
 import {
-  addSquadPlayer,
-  deleteSquadPlayer,
-  createSquad as createSquadHandler,
-  updateSquad as updateSquadHandler,
-  selectSquad,
-  editSquad,
-  cancelEditing,
-  loadSquads
-} from '../../utils/squadManagementHandlers';
+  handleAddSquadPlayer as handleAddSquadPlayerImpl,
+  handleDeleteSquadPlayer as handleDeleteSquadPlayerImpl,
+  handleCreateSquad as handleCreateSquadImpl,
+  handleUpdateSquad as handleUpdateSquadImpl,
+  handleSelectSquad as handleSelectSquadImpl,
+  handleEditSquad as handleEditSquadImpl,
+  cancelEdit as cancelEditImpl
+} from './squadManagementEventHandlers';
 
 function useSquadManagement() {
   const { setSelectedSquad } = useStateContext();
@@ -27,15 +27,15 @@ function useSquadManagement() {
   }, []);
 
   function handleAddSquadPlayer(): void {
-    addSquadPlayer(newSquadPlayer, squadPlayersList, setSquadPlayersList, setNewSquadPlayer);
+    handleAddSquadPlayerImpl(newSquadPlayer, squadPlayersList, setSquadPlayersList, setNewSquadPlayer);
   }
 
   function handleDeleteSquadPlayer(player: string): void {
-    deleteSquadPlayer(player, squadPlayersList, setSquadPlayersList);
+    handleDeleteSquadPlayerImpl(player, squadPlayersList, setSquadPlayersList);
   }
 
   async function handleCreateSquad(): Promise<void> {
-    await createSquadHandler(
+    await handleCreateSquadImpl(
       squadName,
       squadPlayersList,
       setLoading,
@@ -47,7 +47,7 @@ function useSquadManagement() {
   }
 
   async function handleUpdateSquad(): Promise<void> {
-    await updateSquadHandler(
+    await handleUpdateSquadImpl(
       editingSquad,
       squadName,
       squadPlayersList,
@@ -61,15 +61,15 @@ function useSquadManagement() {
   }
 
   function handleSelectSquad(squad: Squad): void {
-    selectSquad(squad, setSquadName, setSquadPlayersList, setNewSquadPlayer, setSelectedSquad);
+    handleSelectSquadImpl(squad, setSquadName, setSquadPlayersList, setNewSquadPlayer, setSelectedSquad);
   }
 
   function handleEditSquad(squad: Squad): void {
-    editSquad(squad, setEditingSquad, setSelectedSquad, setSquadName, setSquadPlayersList, setNewSquadPlayer);
+    handleEditSquadImpl(squad, setEditingSquad, setSelectedSquad, setSquadName, setSquadPlayersList, setNewSquadPlayer);
   }
 
   function cancelEdit(): void {
-    cancelEditing(setEditingSquad, setSquadName, setSquadPlayersList, setNewSquadPlayer);
+    cancelEditImpl(setEditingSquad, setSquadName, setSquadPlayersList, setNewSquadPlayer);
   }
 
   return {

@@ -8,3 +8,12 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+interface Window {
+  progressierAppRuntimeSettings: {
+    uid: string;
+    icon512: string;
+    name: string;
+    shortName: string;
+  };
+}

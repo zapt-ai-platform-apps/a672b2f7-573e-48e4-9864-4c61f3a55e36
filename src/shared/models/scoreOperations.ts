@@ -15,7 +15,7 @@ export function recordGoal(
   const newGoal: Goal = {
     team,
     scorerName,
-    timestamp: timeElapsed
+    time: timeElapsed
   };
 
   const newGoals = [...goals, newGoal];

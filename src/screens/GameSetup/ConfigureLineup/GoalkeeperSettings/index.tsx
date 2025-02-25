@@ -33,7 +33,7 @@ function GoalkeeperSettings({
       </div>
       <GKPlaytimeToggle
         includeGKPlaytime={includeGKPlaytime}
-        setIncludeGKPlaytime={setIncludeGKPlaytime}
+        onToggle={(e) => setIncludeGKPlaytime(e.target.checked)}
       />
     </div>
   );
