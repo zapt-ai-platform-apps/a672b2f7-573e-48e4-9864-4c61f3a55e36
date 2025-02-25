@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useMatchSquad from '../../../features/GameSetup/hooks/useMatchSquad';
 import { useStateContext } from '../../../hooks/useStateContext';
-import ParticipantItem from './ParticipantItem';
-import useGameSetupParticipantsHandlers, { ExtendedPlayer } from './useGameSetupParticipantsHandlers';
+import ParticipantItem, { ExtendedPlayer } from './ParticipantItem';
+import useGameSetupParticipantsHandlers from './useGameSetupParticipantsHandlers';
 
 export default function GameSetupParticipantsScreen(): JSX.Element {
   const { matchSquadPlayers, toggleMatchPlayer } = useMatchSquad();

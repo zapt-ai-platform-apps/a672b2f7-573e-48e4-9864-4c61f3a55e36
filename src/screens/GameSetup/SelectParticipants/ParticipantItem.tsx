@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExtendedPlayer } from './useGameSetupParticipantsHandlers';
+import { ExtendedPlayer } from './types';
 
 interface ParticipantItemProps {
   player: ExtendedPlayer;
