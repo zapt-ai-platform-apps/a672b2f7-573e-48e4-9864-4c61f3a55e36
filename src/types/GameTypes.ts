@@ -1,6 +1,6 @@
 export interface Position {
-  x: number | null;
-  y: number | null;
+  x: number;
+  y: number;
 }
 
 export interface Player {
@@ -15,7 +15,7 @@ export interface Player {
   isInMatchSquad?: boolean;
   isStartingPlayer?: boolean;
   isInStartingLineup?: boolean;
-  // Update position type to be consistent
+  // Position is now a consistent object type
   position: Position;
   // Add missing properties needed by Game Summary
   status?: string;

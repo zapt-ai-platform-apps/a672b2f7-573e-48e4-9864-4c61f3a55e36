@@ -6,8 +6,26 @@ export interface Position {
 export interface PlayerType {
   id: string;
   name: string;
+  number?: string;
+  totalPlayTime: number;
+  playTime?: number;
+  lastStart?: number;
+  isOnField: boolean;
+  isGoalkeeper: boolean;
+  isInMatchSquad?: boolean;
+  isStartingPlayer?: boolean;
+  isInStartingLineup?: boolean;
   position: Position;
-  [key: string]: any;
+  // Add missing properties needed by Game Summary
+  status?: string;
+  minutesPlayed?: number;
+  playIntervals?: Array<{ 
+    start: number; 
+    end?: number;
+    startTime?: number;
+    endTime?: number | null;
+    isGoalkeeper?: boolean;
+  }>;
 }
 
 export interface PitchProps {

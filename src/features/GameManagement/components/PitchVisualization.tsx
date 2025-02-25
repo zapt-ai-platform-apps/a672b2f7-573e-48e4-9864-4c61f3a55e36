@@ -12,10 +12,20 @@ function PitchVisualization({ players }: PitchVisualizationProps): JSX.Element {
   const pitchRef = useRef<HTMLDivElement>(null);
   const { handlePointerDown, init } = useDragAndDrop();
 
+  // Process players to ensure valid position objects
+  const playersWithValidPositions = players.map(player => ({
+    ...player,
+    position: typeof player.position === 'object' && player.position !== null
+      ? {
+          x: typeof player.position.x === 'number' ? player.position.x : 0,
+          y: typeof player.position.y === 'number' ? player.position.y : 0
+        }
+      : { x: 0, y: 0 }
+  }));
+
   useEffect(() => {
-    if (pitchRef.current) {
-      assignInitialPositions(pitchRef.current);
-    }
+    // Call assignInitialPositions with the player array, not the DOM element
+    assignInitialPositions(playersWithValidPositions);
   }, [players]);
 
   useEffect(() => {
@@ -32,17 +42,6 @@ function PitchVisualization({ players }: PitchVisualizationProps): JSX.Element {
   const handlePointerDownWrapper = (e: React.PointerEvent<Element>, playerId?: string) => {
     handlePointerDown(e.nativeEvent);
   };
-
-  // Ensure players have numeric position values before passing to Pitch
-  const playersWithValidPositions = players.map(player => ({
-    ...player,
-    position: typeof player.position === 'object' && player.position !== null
-      ? {
-          x: typeof player.position.x === 'number' ? player.position.x : 0,
-          y: typeof player.position.y === 'number' ? player.position.y : 0
-        }
-      : { x: 0, y: 0 }
-  }));
 
   return (
     <div className="mb-8">
