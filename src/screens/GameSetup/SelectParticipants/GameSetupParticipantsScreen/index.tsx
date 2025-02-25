@@ -42,9 +42,7 @@ export default function GameSetupParticipantsScreen(): JSX.Element {
               <ParticipantItem
                 key={player.id}
                 player={player}
-                isSelected={selectedMatchPlayers.some(
-                  (p) => p.id === player.id
-                )}
+                isSelected={selectedMatchPlayers.some((p) => p.id === player.id)}
                 onToggle={() => toggleMatchPlayer(player.id)}
               />
             ))
@@ -59,7 +57,7 @@ export default function GameSetupParticipantsScreen(): JSX.Element {
             onClick={handleNext}
             className="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-xl rounded-xl hover:scale-105 transition-all duration-300 shadow-lg cursor-pointer"
           >
-            Continue to Setup →
+            Continue to Setup {'\u2192'}
           </button>
         </div>
       </div>
@@ -68,7 +66,7 @@ export default function GameSetupParticipantsScreen(): JSX.Element {
           onClick={handleBack}
           className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg shadow-md transition-colors cursor-pointer backdrop-blur-sm"
         >
-          ← Back
+          {'\u2190'} Back
         </button>
       </div>
     </div>
