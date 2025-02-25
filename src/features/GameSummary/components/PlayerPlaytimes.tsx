@@ -1,27 +1,19 @@
 import React from 'react';
-
-type Player = {
-  id: string;
-  name?: string;
-  playerName?: string;
-  position: string;
-  status: string;
-  minutesPlayed: number;
-};
+import { Player } from '../../../types/GameTypes';
 
 interface PlayerPlaytimesProps {
   activePlayers: Player[];
   benchPlayers: Player[];
-  playerData?: Player[]; // Added missing prop
-  includeGKPlaytime?: boolean; // Added missing prop
-  getTotalPlayTime?: (player: Player) => number; // Added missing prop
-  formatTime?: (seconds: number) => string; // Added missing prop
+  playerData?: Player[];
+  includeGKPlaytime?: boolean;
+  getTotalPlayTime?: (player: Player) => number;
+  formatTime?: (seconds: number) => string;
 }
 
 const PlayerPlaytimes: React.FC<PlayerPlaytimesProps> = ({ activePlayers, benchPlayers }) => {
   // Combine and sort all players by minutes played (descending)
   const allPlayers = [...activePlayers, ...benchPlayers].sort(
-    (a, b) => b.minutesPlayed - a.minutesPlayed
+    (a, b) => (b.minutesPlayed || 0) - (a.minutesPlayed || 0)
   );
 
   return (

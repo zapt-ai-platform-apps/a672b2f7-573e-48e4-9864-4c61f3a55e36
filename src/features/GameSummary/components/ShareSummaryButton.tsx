@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 import { createGameSummary } from '../utils/createGameSummary';
-
-interface Player {
-  id: string;
-  name: string;
-  position: string;
-  [key: string]: any;
-}
+import { Player } from '../../../types/GameTypes';
 
 interface Goal {
   team: string;
@@ -20,7 +14,7 @@ interface ShareSummaryButtonProps {
   playerData: Player[];
   goals: Goal[];
   includeGKPlaytime: boolean;
-  getTotalPlayTime: (player: any) => number;
+  getTotalPlayTime: (player: Player) => number;
   formatTime: (time: number) => string;
 }
 

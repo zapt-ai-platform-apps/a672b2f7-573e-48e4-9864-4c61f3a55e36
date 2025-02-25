@@ -1,13 +1,7 @@
-export interface Player {
-  id: string;
-  name: string;
-  position?: string;
-  status?: string;
-  minutesPlayed?: number;
-  entryTimes?: number[];
-  exitTimes?: number[];
-  [key: string]: any;
-}
+import { Player as GlobalPlayer } from '../../types/GameTypes';
+
+// Export the global Player type for use in this feature
+export type Player = GlobalPlayer;
 
 export interface Goal {
   id?: string;
@@ -27,7 +21,6 @@ export interface GameSummaryProps {
   gameLocation?: string;
   ourScore?: number;
   opponentScore?: number;
-  // Removed duplicate teamScore and opponentScore properties
   goals?: Goal[];
   goalsList?: Goal[];
   playerData?: Player[];
