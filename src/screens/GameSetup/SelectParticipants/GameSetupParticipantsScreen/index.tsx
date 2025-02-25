@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useMatchSquad from '../../../../features/GameSetup/hooks/useMatchSquad';
 import { useStateContext } from '../../../../hooks/useStateContext';
-import ParticipantList from './ParticipantList';
-import { ExtendedPlayer } from '../types';
-import useGameSetupParticipantsHandlers from '../useGameSetupParticipantsHandlers';
+import ParticipantItem, { ExtendedPlayer } from './ParticipantItem';
+import useGameSetupParticipantsHandlers from './useGameSetupParticipantsHandlers';
 
 export default function GameSetupParticipantsScreen(): JSX.Element {
   const { matchSquadPlayers, toggleMatchPlayer } = useMatchSquad();
@@ -13,13 +12,13 @@ export default function GameSetupParticipantsScreen(): JSX.Element {
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const validPlayers = matchSquadPlayers.filter(
-    (player: ExtendedPlayer) => player && typeof player.id === 'string'
+    player => player && typeof player.id === 'string'
   ) as ExtendedPlayer[];
 
   console.log('Valid players for selection:', validPlayers);
 
   const selectedMatchPlayers = validPlayers.filter(
-    (player: ExtendedPlayer) => player.isInMatchSquad
+    (player) => player.isInMatchSquad
   );
 
   const { handleNext, handleBack } = useGameSetupParticipantsHandlers(
@@ -36,11 +35,24 @@ export default function GameSetupParticipantsScreen(): JSX.Element {
           Select Match Participants
         </h1>
         {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
-        <ParticipantList
-          validPlayers={validPlayers}
-          selectedMatchPlayers={selectedMatchPlayers}
-          toggleMatchPlayer={toggleMatchPlayer}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          {validPlayers.length > 0 ? (
+            validPlayers.map((player) => (
+              <ParticipantItem
+                key={player.id}
+                player={player}
+                isSelected={selectedMatchPlayers.some(
+                  (p) => p.id === player.id
+                )}
+                onToggle={() => toggleMatchPlayer(player.id)}
+              />
+            ))
+          ) : (
+            <p className="text-white text-lg col-span-3">
+              No players available. Please go back and select a squad with players.
+            </p>
+          )}
+        </div>
         <div className="flex justify-end">
           <button
             onClick={handleNext}
