@@ -45,6 +45,18 @@ describe("useEditSquadForm", () => {
     expect(result.current.squadPlayersList[0].name).toBe("Player 1");
   });
 
+  test("enriches players with default properties", () => {
+    const { result } = renderHook(() => useEditSquadForm());
+    
+    // Verify that each player has the required default properties
+    result.current.squadPlayersList.forEach(player => {
+      expect(player).toHaveProperty('totalPlayTime');
+      expect(player).toHaveProperty('isOnField');
+      expect(player).toHaveProperty('isGoalkeeper');
+      expect(player).toHaveProperty('position');
+    });
+  });
+
   test("handleUpdateSquad updates squad and calls setSelectedSquad", async () => {
     const { result } = renderHook(() => useEditSquadForm());
     
@@ -116,5 +128,28 @@ describe("useEditSquadForm", () => {
     // Check if player was removed
     expect(result.current.squadPlayersList).toHaveLength(1);
     expect(result.current.squadPlayersList[0].id).toBe("2");
+  });
+  
+  test("shows error when trying to update with empty squad name", async () => {
+    const { result } = renderHook(() => useEditSquadForm());
+    
+    // Set empty squad name
+    act(() => {
+      result.current.setSquadName("");
+    });
+    
+    // Mock form event
+    const mockEvent = {
+      preventDefault: vi.fn(),
+    } as unknown as React.FormEvent;
+    
+    // Call handleUpdateSquad
+    await act(async () => {
+      await result.current.handleUpdateSquad(mockEvent);
+    });
+    
+    // Check if error was set
+    expect(result.current.error).toBe("Squad name is required");
+    expect(global.fetch).not.toHaveBeenCalled();
   });
 });

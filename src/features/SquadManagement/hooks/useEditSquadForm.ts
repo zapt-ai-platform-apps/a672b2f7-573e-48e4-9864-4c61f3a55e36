@@ -28,13 +28,12 @@ export default function useEditSquadForm() {
       
       // Ensure all players have the required properties with default values
       const enrichedPlayers = (selectedSquad.players || []).map(player => ({
-        id: player.id,
-        name: player.name,
+        ...player, // First spread the original properties
+        // Then provide defaults for any missing properties
         totalPlayTime: player.totalPlayTime ?? 0,
         isOnField: player.isOnField ?? false,
         isGoalkeeper: player.isGoalkeeper ?? false,
-        position: player.position ?? { x: 0, y: 0 },
-        ...player, // Preserve any other properties
+        position: player.position ?? { x: 0, y: 0 }
       }));
       
       setSquadPlayersList(enrichedPlayers);
