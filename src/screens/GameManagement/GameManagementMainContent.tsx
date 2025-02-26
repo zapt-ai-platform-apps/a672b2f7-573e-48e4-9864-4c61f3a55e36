@@ -1,7 +1,6 @@
 import React from 'react';
 import PitchVisualization from '../../features/GameManagement/components/PitchVisualization';
 import SubstitutionPanel from '../../features/GameManagement/components/SubstitutionPanel';
-import PlayersSection from './components/PlayersSection';
 import RecordGoalButton from './components/RecordGoalButton';
 import { timeFormatter } from './utils/timeFormatter';
 import type { GameManagementScreenViewProps } from './GameManagementScreenView.types';
@@ -43,12 +42,7 @@ export default function GameManagementMainContent({
         cancelSubstitution={() => {}}
         showSubstitutionConfirmModal={false}
       />
-      <PlayersSection
-        onFieldPlayers={onFieldPlayers}
-        offFieldPlayers={offFieldPlayers}
-        getTotalPlayTime={getTotalPlayTime}
-        handlePlayerClick={handlePlayerClick}
-      />
+      {/* Removed PlayersSection component to eliminate duplication */}
       <div className="flex justify-center mb-8">
         <RecordGoalButton setShowGoalModal={setShowGoalModal} />
       </div>

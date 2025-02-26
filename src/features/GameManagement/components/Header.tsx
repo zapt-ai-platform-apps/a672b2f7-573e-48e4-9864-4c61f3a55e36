@@ -18,7 +18,7 @@ export default function Header({
   opponentScore
 }: HeaderProps): JSX.Element {
   return (
-    <div className="mb-6 p-4 bg-white/10 backdrop-blur-sm rounded-xl shadow-lg">
+    <div className="mb-6 p-4 bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg">
       <div className="flex flex-col md:flex-row justify-between items-center gap-4">
         <div className="flex-1">
           <h1 className="text-2xl font-bold text-center md:text-left bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
@@ -27,7 +27,7 @@ export default function Header({
         </div>
         
         <div className="flex-1 flex justify-center">
-          <div className="flex items-center space-x-4 bg-white/20 rounded-lg px-4 py-2">
+          <div className="flex items-center space-x-4 bg-indigo-800/80 rounded-lg px-4 py-2">
             <div className="text-white font-bold text-xl md:text-2xl">{ourScore}</div>
             <div className="text-white opacity-80 font-medium">:</div>
             <div className="text-white font-bold text-xl md:text-2xl">{opponentScore}</div>
@@ -36,7 +36,7 @@ export default function Header({
         
         <div className="flex-1 flex justify-center md:justify-end space-x-4">
           <div className="flex items-center gap-2">
-            <div className="bg-white/20 text-white rounded-lg px-3 py-1">
+            <div className="bg-indigo-800/80 text-white rounded-lg px-3 py-1">
               {getTimeElapsed()}
             </div>
             <button

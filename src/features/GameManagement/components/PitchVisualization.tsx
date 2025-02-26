@@ -40,13 +40,14 @@ function PitchVisualization({ players }: PitchVisualizationProps): JSX.Element {
 
   // Updated to pass the player ID to the pointer down handler
   const handlePointerDownWrapper = (e: React.PointerEvent<Element>, playerId?: string) => {
+    console.log('Pointer down on player:', playerId);
     handlePointerDown(e.nativeEvent, playerId);
   };
 
   return (
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-4 text-white">
-        Player Positions
+        Players on the Pitch
       </h2>
       <Pitch 
         pitchRef={pitchRef} 
@@ -54,8 +55,8 @@ function PitchVisualization({ players }: PitchVisualizationProps): JSX.Element {
         handlePointerDown={handlePointerDownWrapper}
         players={playersWithValidPositions} 
       />
-      <p className="mt-4 text-white">
-        Drag and drop players to set their positions.
+      <p className="mt-4 text-white opacity-80">
+        Drag and drop players to adjust their positions on the field.
       </p>
     </div>
   );

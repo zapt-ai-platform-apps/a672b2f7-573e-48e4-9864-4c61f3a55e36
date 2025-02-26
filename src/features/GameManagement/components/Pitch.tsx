@@ -32,11 +32,15 @@ function Pitch({ pitchRef, playerData, handlePointerDown, players }: PitchProps)
     const pitchElement = pitchRef.current;
     if (pitchElement) {
       pitchElement.addEventListener('playerPositionFinal', updatePlayerPosition);
+      
+      // Add real-time update listener for smoother UI feedback
+      pitchElement.addEventListener('playerPositionUpdate', updatePlayerPosition);
     }
     
     return () => {
       if (pitchElement) {
         pitchElement.removeEventListener('playerPositionFinal', updatePlayerPosition);
+        pitchElement.removeEventListener('playerPositionUpdate', updatePlayerPosition);
       }
     };
   }, [pitchRef, playerData]);
@@ -61,14 +65,17 @@ function Pitch({ pitchRef, playerData, handlePointerDown, players }: PitchProps)
       {/* Render players */}
       {players.map((player, index) => (
         <div 
-          key={index}
+          key={player.id || index}
           style={{
             position: 'absolute',
             left: `${player.position?.x || 0}%`,
             top: `${player.position?.y || 0}%`,
-            transform: 'translate(-50%, -50%)'
+            transform: 'translate(-50%, -50%)',
+            zIndex: 10, // Add z-index to ensure players are above pitch elements
+            touchAction: 'none' // Important for touch devices to prevent scrolling while dragging
           }}
           data-player-id={player.id?.toString()}
+          data-testid={`player-${player.id}`}
         >
           <Player 
             player={player}

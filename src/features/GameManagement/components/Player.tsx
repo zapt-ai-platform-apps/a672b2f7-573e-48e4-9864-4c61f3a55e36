@@ -46,17 +46,17 @@ const Player: React.FC<PlayerProps> = ({
         left: isPitchView ? player.position?.x : undefined,
         top: isPitchView ? player.position?.y : undefined,
         transform: isPitchView ? 'translate(-50%, -50%)' : undefined,
-        backgroundColor: isPitchView ? 'rgba(79, 70, 229, 0.7)' : undefined,
+        backgroundColor: isPitchView ? 'rgba(55, 48, 163, 0.9)' : undefined, // Darker indigo with higher opacity
         padding: isPitchView ? '0.5rem' : undefined,
         minWidth: isPitchView ? '80px' : undefined,
         backdropFilter: isPitchView ? 'blur(4px)' : undefined,
-        boxShadow: isPitchView ? '0 4px 6px rgba(0, 0, 0, 0.1)' : undefined,
+        boxShadow: isPitchView ? '0 4px 6px rgba(0, 0, 0, 0.3)' : undefined,
         borderRadius: isPitchView ? '0.5rem' : undefined,
       }}
     >
       <div className="flex items-center justify-between">
         {isPitchView ? (
-          <span className="pitch-player-name text-white font-medium">{displayName}</span>
+          <span className="pitch-player-name text-white font-medium drop-shadow-md">{displayName}</span>
         ) : (
           <span className="player-name text-white font-medium">{displayName}</span>
         )}
