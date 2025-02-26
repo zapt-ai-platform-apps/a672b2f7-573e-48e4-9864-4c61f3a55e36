@@ -15,7 +15,7 @@ export default function SquadCard({ squad, isSelected, onSelect, onEdit }: Squad
     <div
       className={`p-4 rounded-xl shadow-lg transition-all duration-200 cursor-pointer ${
         isSelected 
-          ? 'bg-gradient-to-r from-blue-600/80 to-indigo-700/80 text-white transform scale-105' 
+          ? 'bg-gradient-to-r from-blue-600/80 to-indigo-700/80 text-white' 
           : 'bg-white/10 text-white/90 backdrop-blur-sm hover:bg-white/20'
       }`}
       onClick={() => onSelect(squad)}

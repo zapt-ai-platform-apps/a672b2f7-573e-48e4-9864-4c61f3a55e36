@@ -11,7 +11,7 @@ export default function ParticipantItem({ player, isSelected, onToggle }: Partic
   return (
     <div
       className={`p-4 border rounded-lg cursor-pointer ${
-        isSelected ? 'bg-green-500/80 text-white' : 'bg-gray-200 dark:bg-gray-700'
+        isSelected ? 'bg-green-500/80 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white'
       } transition-colors duration-200 hover:scale-102 shadow-md`}
       onClick={onToggle}
     >
