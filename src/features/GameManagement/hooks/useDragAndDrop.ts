@@ -14,7 +14,7 @@ export interface DragState {
  * Hook for managing player drag and drop on the pitch
  * @returns Object with handlePointerDown and init functions
  */
-function useDragAndDrop() {
+const useDragAndDrop = () => {
   // Use a ref to maintain state between renders but not trigger re-renders
   const dragStateRef = useRef<DragState>({
     dragging: false,
@@ -113,6 +113,6 @@ function useDragAndDrop() {
     handlePointerDown,
     init
   };
-}
+};
 
 export default useDragAndDrop;

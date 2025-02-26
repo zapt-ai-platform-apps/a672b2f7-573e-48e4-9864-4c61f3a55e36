@@ -1,85 +1,55 @@
 import React from 'react';
-import { Player as PlayerType } from '../../../shared/models/player';
-import { motion } from 'framer-motion';
+import { Player as PlayerType } from '../../../types/GameTypes';
 
 interface PlayerProps {
   player: PlayerType;
-  onSelect?: (player: PlayerType) => void;
-  isActive?: boolean;
-  showStatus?: boolean;
-  onPointerDown?: (event: React.PointerEvent<HTMLDivElement>, playerId?: string) => void;
+  onDragStart?: (id: string) => void;
 }
 
-const Player: React.FC<PlayerProps> = ({ 
-  player, 
-  onSelect, 
-  isActive = false,
-  showStatus = true,
-  onPointerDown
-}) => {
-  const statusColor = player.status === 'playing' 
-    ? 'bg-green-500' 
-    : player.status === 'substitute' 
-      ? 'bg-yellow-500' 
-      : 'bg-gray-500';
+const Player: React.FC<PlayerProps> = ({ player, onDragStart }) => {
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if (onDragStart) {
+      e.preventDefault();
+      onDragStart(player.id);
+    }
+  };
 
-  // Ensure we're displaying player name as a string, not rendering the position object
-  const nameParts = player.name.split(' ');
-  const displayName = nameParts.length > 1 
-    ? `${nameParts[0]} ${nameParts[nameParts.length - 1].charAt(0)}.` 
+  // Display only first name or shortened name if too long
+  const displayName = player.name.includes(' ')
+    ? player.name.split(' ')[0]
+    : player.name.length > 10
+    ? `${player.name.substring(0, 8)}...`
     : player.name;
     
-  // Check if this is being used in the pitch view (onPointerDown exists)
-  const isPitchView = !!onPointerDown;
-
-  // Goalkeeper styling
-  const goalkeeperClasses = player.isGoalkeeper 
-    ? 'bg-yellow-600 hover:bg-yellow-500' 
-    : 'bg-indigo-800 hover:bg-indigo-700';
-  
-  const pitchViewGoalkeeperStyle = player.isGoalkeeper 
-    ? { backgroundColor: 'rgba(217, 119, 6, 0.9)' } // Yellow for goalkeeper
-    : { backgroundColor: 'rgba(55, 48, 163, 0.9)' }; // Default indigo
-    
   return (
-    <motion.div 
-      className={`rounded-lg p-3 mb-2 cursor-pointer transition-all ${
-        isActive ? 'bg-indigo-700 scale-105' : goalkeeperClasses
-      }`}
-      onClick={() => onSelect && onSelect(player)}
-      onPointerDown={(e) => onPointerDown && onPointerDown(e, player.id?.toString())}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+    <div
+      className={`player ${player.isGoalkeeper ? 'goalkeeper' : ''}`}
       style={{
-        position: isPitchView ? 'absolute' : 'relative',
-        left: isPitchView ? player.position?.x : undefined,
-        top: isPitchView ? player.position?.y : undefined,
-        transform: isPitchView ? 'translate(-50%, -50%)' : undefined,
-        ...(isPitchView ? pitchViewGoalkeeperStyle : {}),
-        padding: isPitchView ? '0.5rem' : undefined,
-        minWidth: isPitchView ? '80px' : undefined,
-        backdropFilter: isPitchView ? 'blur(4px)' : undefined,
-        boxShadow: isPitchView ? '0 4px 6px rgba(0, 0, 0, 0.3)' : undefined,
-        borderRadius: isPitchView ? '0.5rem' : undefined,
+        position: 'absolute',
+        left: `${player.position.x}%`,
+        top: `${player.position.y}%`,
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: player.isGoalkeeper ? '#ffcc00' : '#4299e1',
+        color: '#fff',
+        width: '40px',
+        height: '40px',
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+        cursor: 'grab',
+        userSelect: 'none',
+        touchAction: 'none',
+        zIndex: 10
       }}
+      onPointerDown={handlePointerDown}
+      data-player-id={player.id} // Adding data-player-id attribute for tests
+      role="button"
+      aria-label={`Player ${player.name}`}
     >
-      <div className="flex items-center justify-between">
-        {isPitchView ? (
-          <div className="flex items-center">
-            {player.isGoalkeeper && <span className="mr-1 text-white">🧤</span>}
-            <span className="pitch-player-name text-white font-medium drop-shadow-md">{displayName}</span>
-          </div>
-        ) : (
-          <div className="flex items-center">
-            {player.isGoalkeeper && <span className="mr-1">🧤</span>}
-            <span className="player-name text-white font-medium">{displayName}</span>
-          </div>
-        )}
-        {showStatus && !isPitchView && (
-          <span className={`w-3 h-3 rounded-full ${statusColor}`}></span>
-        )}
-      </div>
-    </motion.div>
+      {displayName}
+    </div>
   );
 };
 

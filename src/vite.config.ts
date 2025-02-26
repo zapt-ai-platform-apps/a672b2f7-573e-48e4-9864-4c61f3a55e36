@@ -19,7 +19,7 @@ export default defineConfig({
   resolve: {
     conditions: ['development', 'browser'],
     alias: {
-      '@': resolve(__dirname, './src')
+      '@': resolve(__dirname, 'src')
     }
   },
   optimizeDeps: {
@@ -36,6 +36,5 @@ export default defineConfig({
         'react-router-dom'
       ]
     }
-    // Resolver property has been removed as it's not supported in Vite's InlineConfig for tests
   }
 });

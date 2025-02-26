@@ -3,10 +3,10 @@ import * as Sentry from '@sentry/browser';
 
 interface Interval {
   startTime: number;
-  endTime?: number;
+  endTime?: number; // Using undefined instead of null
 }
 
-function useGameTimer() {
+const useGameTimer = () => {
   const [now, setNow] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [gameIntervals, setGameIntervals] = useState<Interval[]>([]);
@@ -17,8 +17,11 @@ function useGameTimer() {
     try {
       setIsRunning(true);
       
-      // Record this interval's start time
-      const newInterval: Interval = { startTime: Date.now() };
+      // Record this interval's start time - explicitly using undefined for endTime
+      const newInterval: Interval = { 
+        startTime: Date.now(),
+        // No endTime property at all to ensure it's undefined, not null
+      };
       setGameIntervals(prev => [...prev, newInterval]);
     } catch (error) {
       console.error('Error starting timer:', error);
@@ -37,6 +40,8 @@ function useGameTimer() {
         
         const lastIndex = prev.length - 1;
         const updatedIntervals = [...prev];
+        
+        // Use definite assignment (Date.now()) to ensure it's not null or undefined
         updatedIntervals[lastIndex] = {
           ...updatedIntervals[lastIndex],
           endTime: Date.now()
@@ -69,7 +74,7 @@ function useGameTimer() {
       // Base time is sum of completed intervals
       let total = gameIntervals.reduce((sum, interval) => {
         // If the interval has an end, add its duration
-        if (interval.endTime) {
+        if (interval.endTime !== undefined) {
           return sum + (interval.endTime - interval.startTime);
         }
         // Interval without end is still running, so calculate current duration
@@ -131,6 +136,6 @@ function useGameTimer() {
       return !isRunning;
     }
   };
-}
+};
 
 export default useGameTimer;

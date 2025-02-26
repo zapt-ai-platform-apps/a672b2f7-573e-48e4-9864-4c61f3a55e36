@@ -29,11 +29,20 @@ describe('Pitch Visualization Drag and Drop', () => {
   });
 
   it('renders players correctly on the pitch', () => {
-    const { container } = render(<PitchVisualization players={testPlayers} />);
+    const { container } = render(
+      <PitchVisualization 
+        players={testPlayers} 
+        data-testid="pitch-container"
+      />
+    );
     
     // Check for the pitch element
     const pitchElement = container.querySelector('.pitch');
     expect(pitchElement).toBeInTheDocument();
+    
+    // Check for player elements with data-player-id attribute
+    const playerElements = container.querySelectorAll('[data-player-id]');
+    expect(playerElements.length).toBe(2);
     
     // Check for player names (may be shortened based on Player component logic)
     expect(container.textContent).toContain('Player 1');
@@ -61,7 +70,7 @@ describe('Pitch Visualization Drag and Drop', () => {
     await act(async () => {
       const { container } = render(<PitchVisualization players={validPlayers} />);
       
-      // Check that all players are rendered properly
+      // Check that all players are rendered properly with data-player-id attribute
       const playerElements = container.querySelectorAll('[data-player-id]');
       expect(playerElements.length).toBe(2);
     });

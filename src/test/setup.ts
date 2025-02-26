@@ -32,15 +32,8 @@ export function setupRouterMocks() {
   return { mockNavigate };
 }
 
-// Mock ResizeObserver which is not implemented in JSDOM
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
-
-// Enhanced PointerEvent mock for drag and drop tests
-class MockPointerEvent extends Event {
+// Create a mock PointerEvent for drag and drop tests
+global.PointerEvent = class PointerEvent extends Event {
   button: number;
   clientX: number;
   clientY: number;
@@ -64,7 +57,7 @@ class MockPointerEvent extends Event {
   tangentialPressure: number;
   
   constructor(type: string, params: any = {}) {
-    super(type, params);
+    super(type, { bubbles: true, cancelable: true, ...params });
     this.button = params.button || 0;
     this.clientX = params.clientX || 0;
     this.clientY = params.clientY || 0;
@@ -87,10 +80,7 @@ class MockPointerEvent extends Event {
     this.twist = params.twist || 0;
     this.tangentialPressure = params.tangentialPressure || 0;
   }
-}
-
-// Assign the mock to global
-global.PointerEvent = MockPointerEvent as any;
+};
 
 // Mock Element.prototype.setPointerCapture
 Element.prototype.setPointerCapture = Element.prototype.setPointerCapture || vi.fn();

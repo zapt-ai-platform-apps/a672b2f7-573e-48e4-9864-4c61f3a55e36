@@ -9,7 +9,7 @@ import * as Sentry from "@sentry/browser";
  * Custom hook for managing authentication session
  * @returns Object with session, loading state, and signOut function
  */
-function useAuthSession() {
+const useAuthSession = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   
@@ -59,7 +59,6 @@ function useAuthSession() {
   };
 
   return { session, loading, signOut };
-}
+};
 
-// Export default for easier importing in tests
 export default useAuthSession;
