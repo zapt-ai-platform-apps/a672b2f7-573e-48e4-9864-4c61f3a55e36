@@ -23,8 +23,8 @@ vi.mock('../features/GameManagement/utils/assignInitialPositions', () => ({
 
 describe('Pitch Visualization Drag and Drop', () => {
   const testPlayers = [
-    { id: '1', name: 'Player 1', position: { x: 20, y: 30 }, status: 'playing' },
-    { id: '2', name: 'Player 2', position: { x: 40, y: 50 }, status: 'playing' }
+    { id: '1', name: 'Player 1', position: { x: 20, y: 30 }, status: 'playing', totalPlayTime: 0, isOnField: true, isGoalkeeper: false },
+    { id: '2', name: 'Player 2', position: { x: 40, y: 50 }, status: 'playing', totalPlayTime: 0, isOnField: true, isGoalkeeper: false }
   ];
   
   beforeEach(() => {
@@ -57,8 +57,8 @@ describe('Pitch Visualization Drag and Drop', () => {
 
   it('handles player positioning with valid data', () => {
     const validPlayers = [
-      { id: '3', name: 'Player 3', position: { x: 30, y: 40 }, status: 'playing' },
-      { id: '4', name: 'Player 4', position: null, status: 'playing' }
+      { id: '3', name: 'Player 3', position: { x: 30, y: 40 }, status: 'playing', totalPlayTime: 0, isOnField: true, isGoalkeeper: false },
+      { id: '4', name: 'Player 4', position: null, status: 'playing', totalPlayTime: 0, isOnField: true, isGoalkeeper: false }
     ];
     
     const { container } = render(<PitchVisualization players={validPlayers} />);

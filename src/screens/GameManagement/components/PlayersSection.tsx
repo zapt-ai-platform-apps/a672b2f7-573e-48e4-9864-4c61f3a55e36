@@ -16,6 +16,6 @@ export default function PlayersSection({
   getTotalPlayTime,
   handlePlayerClick
 }: PlayersSectionProps): JSX.Element {
-  // Return null to eliminate duplicated component
-  return null;
+  // Return an empty fragment instead of null to satisfy JSX.Element return type
+  return <></>;
 }
