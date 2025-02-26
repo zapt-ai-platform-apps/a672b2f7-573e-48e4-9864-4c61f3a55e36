@@ -35,12 +35,7 @@ export default defineConfig({
         '@testing-library/react',
         'react-router-dom'
       ]
-    },
-    // Add resolver for test module paths
-    resolver: {
-      alias: {
-        '@': resolve(__dirname, './src')
-      }
     }
+    // Removed resolver property which was causing the build error
   }
 });
