@@ -3,8 +3,8 @@ import { render, fireEvent, screen } from '@testing-library/react';
 import PitchVisualization from '../features/GameManagement/components/PitchVisualization';
 import { createEvent } from '@testing-library/dom';
 
-// Updated mock path to correctly import the hook
-vi.mock('../features/GameManagement/hooks/useDragAndDrop', () => {
+// Mock useDragAndDrop hook with correct export structure
+vi.mock('../features/GameManagement/hooks/useDragAndDrop.ts', () => {
   const mockHandlePointerDown = vi.fn();
   const mockInit = vi.fn(() => () => {});
   
@@ -48,7 +48,7 @@ describe('Pitch Visualization Drag and Drop', () => {
     const { container } = render(<PitchVisualization players={testPlayers} />);
     
     // Get the useDragAndDrop hook's init function
-    const useDragAndDropModule = require('../features/GameManagement/hooks/useDragAndDrop');
+    const useDragAndDropModule = require('../features/GameManagement/hooks/useDragAndDrop.ts');
     const { init } = useDragAndDropModule.default();
     
     // Verify init was called with pitch element

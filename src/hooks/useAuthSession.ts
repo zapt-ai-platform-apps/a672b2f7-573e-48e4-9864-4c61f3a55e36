@@ -5,7 +5,11 @@ import { supabase } from '../supabaseClient';
 import { subscribeAuthStateChangeUtil, getInitialSessionUtil } from './authSessionUtils';
 import * as Sentry from "@sentry/browser";
 
-export function useAuthSession() {
+/**
+ * Custom hook for managing authentication session
+ * @returns Object with session, loading state, and signOut function
+ */
+function useAuthSession() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   let navigate;

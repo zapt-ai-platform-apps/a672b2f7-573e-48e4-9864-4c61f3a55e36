@@ -8,9 +8,10 @@ import NavBarUserControls from '../components/navigation/NavBarUserControls';
 const mockNavigate = vi.fn();
 const mockSignOut = vi.fn();
 
-// Improved mock for useAuthSession with explicit path
-vi.mock('../hooks/useAuthSession', () => ({
-  useAuthSession: vi.fn(() => ({
+// Correctly mock the default export from useAuthSession
+vi.mock('../hooks/useAuthSession.ts', () => ({
+  __esModule: true,
+  default: vi.fn(() => ({
     session: null,
     signOut: mockSignOut
   }))
@@ -31,7 +32,7 @@ describe('NavBarUserControls - Signed In', () => {
     mockNavigate.mockClear();
     
     // Configure mock for signed-in user
-    require('../hooks/useAuthSession').useAuthSession.mockReturnValue({
+    require('../hooks/useAuthSession.ts').default.mockReturnValue({
       session: { user: { email: 'test@example.com' } },
       signOut: mockSignOut
     });
@@ -68,7 +69,7 @@ describe('NavBarUserControls - Signed Out', () => {
     mockNavigate.mockClear();
     
     // Configure mock for signed-out user
-    require('../hooks/useAuthSession').useAuthSession.mockReturnValue({
+    require('../hooks/useAuthSession.ts').default.mockReturnValue({
       session: null,
       signOut: mockSignOut
     });

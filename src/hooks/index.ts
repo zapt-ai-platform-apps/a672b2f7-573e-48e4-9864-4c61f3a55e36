@@ -1,9 +1,7 @@
-// This file re-exports hooks to make them available from a common location
-// This can help with import paths in tests and components
-
-export { useAuthSession } from './useAuthSession';
-export { useGameManagement } from './useGameManagement';
-export { useGameState } from './useGameState';
+// Export hooks with specific file extensions for test imports
+export { default as useAuthSession } from './useAuthSession';
+export { default as useGameManagement } from './useGameManagement';
+export { default as useGameState } from './useGameState';
 export { default as useGameTimer } from './useGameTimer';
-export { useSquadManagement } from './useSquadManagement';
-export { useStateContext } from './useStateContext';
+export { default as useSquadManagement } from './useSquadManagement';
+export { default as useStateContext } from './useStateContext';

@@ -49,13 +49,17 @@ describe('useGameManagement', () => {
       result.current.handleStartGame(mockPlayers, mockGoalkeeper, true);
     });
 
-    // Verify that isOnField is true for starting players
-    expect(result.current.playerData[0].isOnField).toBe(true); // Player 1 (starting)
-    expect(result.current.playerData[1].isOnField).toBe(true); // Player 2 (starting)
-    expect(result.current.playerData[2].isOnField).toBe(false); // Player 3 (not starting)
+    // Using toStrictEqual for object comparison
+    expect(result.current.playerData).toStrictEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: 'p1', isOnField: true }),
+        expect.objectContaining({ id: 'p2', isOnField: true }),
+        expect.objectContaining({ id: 'p3', isOnField: false })
+      ])
+    );
     
     // Verify other game state was set correctly
-    expect(result.current.goalkeeper).toBe(mockGoalkeeper);
+    expect(result.current.goalkeeper).toStrictEqual(mockGoalkeeper);
     expect(result.current.includeGKPlaytime).toBe(true);
   });
 
@@ -76,10 +80,10 @@ describe('useGameManagement', () => {
     });
 
     // Verify game state is reset
-    expect(result.current.playerData).toEqual([]);
+    expect(result.current.playerData).toStrictEqual([]);
     expect(result.current.ourScore).toBe(0);
     expect(result.current.opponentScore).toBe(0);
-    expect(result.current.goals).toEqual([]);
+    expect(result.current.goals).toStrictEqual([]);
   });
 
   test('goalkeeper is visually distinct from other players', () => {
@@ -125,8 +129,10 @@ describe('useGameManagement', () => {
       }
     });
 
-    // Verify goal was removed and score updated
-    expect(result.current.goals.length).toBe(1);
+    // Verify goal was removed and score updated using strict equality
+    expect(result.current.goals).toStrictEqual([
+      { team: 'our', scorerName: 'Player 1', time: 100 }
+    ]);
     expect(result.current.ourScore).toBe(1);
   });
 });

@@ -1,47 +1,38 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthSession } from '../../hooks/useAuthSession';
-import * as Sentry from "@sentry/browser";
+import useAuthSession from '../../hooks/useAuthSession';
 
-function NavBarUserControls(): JSX.Element {
-  const { session, signOut } = useAuthSession();
+/**
+ * User controls for the navigation bar
+ * @returns NavBarUserControls component
+ */
+const NavBarUserControls: React.FC = () => {
   const navigate = useNavigate();
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      // Navigation is handled in signOut function
-    } catch (error) {
-      console.error('Error signing out:', error);
-      Sentry.captureException(error);
-    }
-  };
+  const { session, signOut } = useAuthSession();
 
   const handleSignIn = () => {
     navigate('/sign-in');
   };
 
-  if (session?.user) {
-    return (
-      <button
-        onClick={handleSignOut}
-        className="px-4 py-2 bg-red-500 text-white rounded-md cursor-pointer hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 transition-colors duration-300 ease-in-out-custom"
-        aria-label="Sign out"
-      >
-        Sign Out
-      </button>
-    );
-  }
-
   return (
-    <button
-      onClick={handleSignIn}
-      className="px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors duration-300 ease-in-out-custom"
-      aria-label="Sign in"
-    >
-      Sign In
-    </button>
+    <div className="flex items-center">
+      {session ? (
+        <button
+          onClick={signOut}
+          className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          Sign Out
+        </button>
+      ) : (
+        <button
+          onClick={handleSignIn}
+          className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          Sign In
+        </button>
+      )}
+    </div>
   );
-}
+};
 
 export default NavBarUserControls;
