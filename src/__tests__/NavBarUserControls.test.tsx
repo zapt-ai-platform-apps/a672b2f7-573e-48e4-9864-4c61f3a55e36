@@ -14,7 +14,7 @@ const setupSignedInUser = () => {
       session: { user: { email: 'test@example.com' } },
       signOut: mockSignOut
     })
-  }), { virtual: true });
+  }));
 
   return { mockSignOut };
 };
@@ -28,7 +28,7 @@ const setupSignedOutUser = () => {
       session: null,
       signOut: mockSignOut
     })
-  }), { virtual: true });
+  }));
 
   return { mockSignOut };
 };

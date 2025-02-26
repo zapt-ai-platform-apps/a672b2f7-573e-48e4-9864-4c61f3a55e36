@@ -41,7 +41,7 @@ export default function StartingLineup(): JSX.Element {
     // Update matchSquad with selection information before navigating
     const updatedMatchSquad = matchSquad.map(player => {
       const isSelected = selectedPlayers.some(p => p.id === player.id);
-      const isGoalkeeper = goalkeeper?.id === player.id;
+      const isGoalkeeper = goalkeeper ? goalkeeper.id === player.id : false;
       
       return {
         ...player,
