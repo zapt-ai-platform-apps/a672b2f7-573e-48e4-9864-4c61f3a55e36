@@ -9,7 +9,7 @@ interface SquadPlayer {
 }
 
 export default function useEditSquadForm() {
-  const { state, dispatch } = useStateContext();
+  const { selectedSquad, setSelectedSquad } = useStateContext();
   const [squadName, setSquadName] = useState<string>("");
   const [squadPlayersList, setSquadPlayersList] = useState<SquadPlayer[]>([]);
   const [newPlayerName, setNewPlayerName] = useState<string>("");
@@ -18,11 +18,11 @@ export default function useEditSquadForm() {
 
   // Pre-populate form with current squad data when editing
   useEffect(() => {
-    if (state.selectedSquad) {
-      setSquadName(state.selectedSquad.name);
-      setSquadPlayersList(state.selectedSquad.players || []);
+    if (selectedSquad && 'name' in selectedSquad) {
+      setSquadName(selectedSquad.name);
+      setSquadPlayersList(selectedSquad.players || []);
     }
-  }, [state.selectedSquad]);
+  }, [selectedSquad]);
 
   const handleAddPlayer = (): void => {
     if (!newPlayerName.trim()) return;
@@ -57,15 +57,17 @@ export default function useEditSquadForm() {
     setError("");
 
     try {
+      if (!selectedSquad || !('id' in selectedSquad)) {
+        throw new Error("No squad selected or invalid squad");
+      }
+
       const updatedSquad: Squad = {
-        ...state.selectedSquad!,
+        ...selectedSquad,
         name: squadName.trim(),
         players: squadPlayersList,
       };
 
       // Update squad in database
-      // This implementation depends on your API structure
-      // Replace with the actual API call
       const response = await fetch(`/api/squads/${updatedSquad.id}`, {
         method: "PUT",
         headers: {
@@ -78,11 +80,8 @@ export default function useEditSquadForm() {
         throw new Error("Failed to update squad");
       }
 
-      // Update squad in state
-      dispatch({
-        type: "UPDATE_SQUAD",
-        payload: updatedSquad,
-      });
+      // Update squad in state using setSelectedSquad
+      setSelectedSquad(updatedSquad);
 
       setLoading(false);
     } catch (err) {
