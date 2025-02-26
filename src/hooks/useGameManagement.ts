@@ -1,50 +1,96 @@
 import { useState } from 'react';
 import { Player, Goal } from '../types/GameTypes';
+import * as Sentry from '@sentry/browser';
 
 export function useGameManagement() {
-  const [goalkeeper, setGoalkeeper] = useState<Player | null>(null);
-  const [currentGameState, setCurrentGameState] = useState<any>(null);
   const [playerData, setPlayerData] = useState<Player[]>([]);
+  const [goalkeeper, setGoalkeeper] = useState<Player | null>(null);
+  const [includeGKPlaytime, setIncludeGKPlaytime] = useState<boolean>(true);
   const [ourScore, setOurScore] = useState<number>(0);
   const [opponentScore, setOpponentScore] = useState<number>(0);
   const [goals, setGoals] = useState<Goal[]>([]);
-  const [includeGKPlaytime, setIncludeGKPlaytime] = useState<boolean>(false);
-
-  const resetGame = () => {
+  
+  /**
+   * Handle starting the game with selected players
+   * @param players The array of players
+   * @param selectedGoalkeeper The selected goalkeeper
+   * @param includeGoalkeeperPlaytime Whether to include goalkeeper in playtime calculations
+   */
+  const handleStartGame = (players: Player[], selectedGoalkeeper: Player | null, includeGoalkeeperPlaytime: boolean): void => {
+    try {
+      console.log('Starting game with players:', players);
+      console.log('Selected goalkeeper:', selectedGoalkeeper);
+      
+      if (!players || players.length === 0) {
+        console.error('No players provided to start game');
+        return;
+      }
+      
+      // Make sure to explicitly set the goalkeeper's isGoalkeeper property
+      const updatedPlayers = players.map(player => {
+        // Check if this player is the goalkeeper
+        const isGK = selectedGoalkeeper && player.id === selectedGoalkeeper.id;
+        
+        return {
+          ...player,
+          // If this is the goalkeeper, make sure isGoalkeeper is true
+          isGoalkeeper: isGK || false,
+          // Filter players based on their isStartingPlayer property
+          isOnField: !!player.isStartingPlayer
+        };
+      });
+      
+      // Set goalkeeper state
+      if (selectedGoalkeeper) {
+        // Make sure the goalkeeper object being set has isGoalkeeper: true
+        const updatedGoalkeeper = {
+          ...selectedGoalkeeper,
+          isGoalkeeper: true
+        };
+        setGoalkeeper(updatedGoalkeeper);
+      } else {
+        setGoalkeeper(null);
+      }
+      
+      // Update other game state
+      setPlayerData(updatedPlayers);
+      setIncludeGKPlaytime(includeGoalkeeperPlaytime);
+      
+      console.log('Game started with updated players:', updatedPlayers);
+    } catch (error) {
+      console.error('Error starting game:', error);
+      Sentry.captureException(error);
+    }
+  };
+  
+  /**
+   * Reset the game state
+   */
+  const resetGame = (): void => {
     setPlayerData([]);
+    setGoalkeeper(null);
+    setIncludeGKPlaytime(true);
     setOurScore(0);
     setOpponentScore(0);
     setGoals([]);
   };
 
-  const handleStartGame = (players: Player[], goalkeeperPlayer: Player, includeGKPlaytimeValue: boolean) => {
-    // Update players to set isOnField=true for starting players and mark the goalkeeper
-    const updatedPlayers = players.map(player => ({
-      ...player,
-      isOnField: player.isStartingPlayer === true,
-      isGoalkeeper: player.id === goalkeeperPlayer.id // Set isGoalkeeper flag for the selected goalkeeper
-    }));
-    
-    setPlayerData(updatedPlayers);
-    setGoalkeeper(goalkeeperPlayer);
-    setIncludeGKPlaytime(includeGKPlaytimeValue);
-  };
-
   return {
-    goalkeeper,
-    setGoalkeeper,
-    currentGameState,
-    setCurrentGameState,
     playerData,
     setPlayerData,
+    goalkeeper,
+    setGoalkeeper,
+    includeGKPlaytime,
+    setIncludeGKPlaytime,
     ourScore,
     setOurScore,
     opponentScore,
     setOpponentScore,
     goals,
     setGoals,
-    includeGKPlaytime,
-    resetGame,
     handleStartGame,
+    resetGame
   };
 }
+
+export default useGameManagement;

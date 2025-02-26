@@ -8,7 +8,7 @@ describe('useGameManagement', () => {
     name: 'Goalkeeper 1',
     totalPlayTime: 0,
     isOnField: false,
-    isGoalkeeper: true, // This property must be true for goalkeepers
+    isGoalkeeper: true, // Explicitly set to true for the test
     position: { x: 0, y: 0 }
   };
 

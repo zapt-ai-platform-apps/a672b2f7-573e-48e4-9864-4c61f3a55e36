@@ -55,3 +55,6 @@ export function useAuthSession() {
 
   return { session, loading, signOut };
 }
+
+// Export default for easier importing in tests
+export default useAuthSession;

@@ -8,9 +8,12 @@ import NavBarUserControls from '../components/navigation/NavBarUserControls';
 const mockNavigate = vi.fn();
 const mockSignOut = vi.fn();
 
-// Properly mock the auth hooks with correct path
+// Improved mock for useAuthSession with explicit path
 vi.mock('../hooks/useAuthSession', () => ({
-  useAuthSession: vi.fn()
+  useAuthSession: vi.fn(() => ({
+    session: null,
+    signOut: mockSignOut
+  }))
 }));
 
 // Mock router with correct import

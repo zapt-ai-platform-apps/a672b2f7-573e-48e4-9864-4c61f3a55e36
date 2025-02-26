@@ -109,7 +109,8 @@ describe('StartingLineup', () => {
       </BrowserRouter>
     );
     
-    const continueButton = screen.getByText(/Continue to Game Setup/);
+    // Updated to look for the actual button text in the component
+    const continueButton = screen.getByText(/Start Game/);
     fireEvent.click(continueButton);
     expect(screen.getByText(/Please select a goalkeeper/)).toBeInTheDocument();
   });
