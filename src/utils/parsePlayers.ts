@@ -16,7 +16,7 @@ export default function parsePlayers(input: string | any[]): Player[] {
       };
 
       // Ensure the position property is properly formatted
-      if (!player.position) {
+      if (!player.position || player.position === null) {
         processedPlayer.position = { x: 0, y: 0 };
       } else {
         // If position exists but contains string values, convert to numbers

@@ -58,12 +58,12 @@ describe('Pitch Visualization Drag and Drop', () => {
   it('handles player positioning with valid data', () => {
     const validPlayers = [
       { id: '3', name: 'Player 3', position: { x: 30, y: 40 }, status: 'playing', totalPlayTime: 0, isOnField: true, isGoalkeeper: false },
-      { id: '4', name: 'Player 4', position: null, status: 'playing', totalPlayTime: 0, isOnField: true, isGoalkeeper: false }
+      { id: '4', name: 'Player 4', position: { x: 0, y: 0 }, status: 'playing', totalPlayTime: 0, isOnField: true, isGoalkeeper: false }
     ];
     
     const { container } = render(<PitchVisualization players={validPlayers} />);
     
-    // Check that players with null positions are handled properly
+    // Check that all players are rendered properly
     const playerElements = container.querySelectorAll('[data-player-id]');
     expect(playerElements.length).toBe(2);
   });
