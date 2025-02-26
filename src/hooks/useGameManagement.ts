@@ -18,7 +18,13 @@ export function useGameManagement() {
   };
 
   const handleStartGame = (players: Player[], goalkeeperPlayer: Player, includeGKPlaytimeValue: boolean) => {
-    setPlayerData(players);
+    // Update players to set isOnField=true for starting players
+    const updatedPlayers = players.map(player => ({
+      ...player,
+      isOnField: player.isStartingPlayer === true
+    }));
+    
+    setPlayerData(updatedPlayers);
     setGoalkeeper(goalkeeperPlayer);
     setIncludeGKPlaytime(includeGKPlaytimeValue);
   };
