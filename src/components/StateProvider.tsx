@@ -12,8 +12,6 @@ export default function StateProvider({ children }: StateProviderProps): JSX.Ele
   const {
     goalkeeper,
     setGoalkeeper,
-    currentGameState,
-    setCurrentGameState,
     playerData,
     setPlayerData,
     ourScore,
@@ -36,8 +34,6 @@ export default function StateProvider({ children }: StateProviderProps): JSX.Ele
         setMatchSquad,
         goalkeeper,
         setGoalkeeper,
-        currentGameState,
-        setCurrentGameState,
         playerData,
         setPlayerData,
         ourScore,

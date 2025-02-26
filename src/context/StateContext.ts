@@ -14,10 +14,6 @@ export interface StateContextType {
   goalkeeper: Player | null;
   setGoalkeeper: (player: Player | null) => void;
   
-  // Game state
-  currentGameState: any; // Replace with proper type
-  setCurrentGameState: (state: any) => void;
-  
   // Game management properties
   playerData: Player[];
   setPlayerData: React.Dispatch<React.SetStateAction<Player[]>>;
@@ -42,9 +38,6 @@ const defaultContext: StateContextType = {
   
   goalkeeper: null,
   setGoalkeeper: () => {},
-  
-  currentGameState: null,
-  setCurrentGameState: () => {},
   
   playerData: [],
   setPlayerData: () => {},
