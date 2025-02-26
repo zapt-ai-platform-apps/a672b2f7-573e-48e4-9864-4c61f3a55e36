@@ -1,5 +1,6 @@
 // Import Jest DOM extensions for DOM testing
 import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/extend-expect';
 
 // Mock window.matchMedia which is not implemented in JSDOM
 Object.defineProperty(window, 'matchMedia', {

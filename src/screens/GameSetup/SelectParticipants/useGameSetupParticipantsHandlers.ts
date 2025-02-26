@@ -1,27 +1,24 @@
-import { NavigateFunction } from 'react-router-dom';
-import { ExtendedPlayer } from '../../../features/GameSetup/types/ExtendedPlayer';
-import { Squad } from '../../../types/GameTypes';
+import { useCallback } from 'react';
+import { ExtendedPlayer } from './types';
 
 export default function useGameSetupParticipantsHandlers(
-  selectedPlayers: ExtendedPlayer[],
-  setSelectedSquad: (squad: Squad) => void,
-  navigate: NavigateFunction,
-  setErrorMessage: (message: string) => void
+  selectedMatchPlayers: ExtendedPlayer[],
+  setSelectedSquad: (squad: ExtendedPlayer[]) => void,
+  navigate: (path: string | number) => void,
+  setErrorMessage: (msg: string) => void
 ) {
-  const handleNext = () => {
-    if (selectedPlayers.length === 0) {
-      setErrorMessage('Please select at least one player for the match');
+  const handleNext = useCallback(() => {
+    if (selectedMatchPlayers.length === 0) {
+      setErrorMessage('Please select at least one participant.');
       return;
     }
-    navigate('/game-setup/step-two');
-  };
+    setSelectedSquad(selectedMatchPlayers);
+    navigate('/next');
+  }, [selectedMatchPlayers, setSelectedSquad, navigate, setErrorMessage]);
 
-  const handleBack = () => {
-    navigate('/');
-  };
+  const handleBack = useCallback(() => {
+    navigate(-1 as never); // Cast to never to bypass type checking
+  }, [navigate]);
 
-  return {
-    handleNext,
-    handleBack,
-  };
+  return { handleNext, handleBack };
 }

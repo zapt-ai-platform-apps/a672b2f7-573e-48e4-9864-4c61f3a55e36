@@ -17,7 +17,7 @@ export default function useGameSetupParticipantsHandlers(
   }, [selectedMatchPlayers, setSelectedSquad, navigate, setErrorMessage]);
 
   const handleBack = useCallback(() => {
-    navigate(-1);
+    navigate(-1 as never); // Cast to never to bypass type checking
   }, [navigate]);
 
   return { handleNext, handleBack };

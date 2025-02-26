@@ -1,3 +1,6 @@
-import { ExtendedPlayer } from './GameSetupParticipantsScreen/types';
+import { Player } from '../../../types/GameTypes';
 
-export { ExtendedPlayer };
+export interface ExtendedPlayer extends Player {
+  isInMatchSquad: boolean;
+  number?: string;
+}
