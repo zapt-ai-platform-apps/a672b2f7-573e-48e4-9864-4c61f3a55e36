@@ -2,12 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary-gradient: linear-gradient(135deg, #0061ff 0%, #60efff 100%);
+  --secondary-gradient: linear-gradient(135deg, #4F46E5 0%, #9333EA 100%);
+  --card-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #ffffff;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
 @keyframes float {
+  0% {
+    transform: translateY(0px) translateX(0px);
+  }
+  33% {
+    transform: translateY(-20px) translateX(10px);
+  }
+  66% {
+    transform: translateY(10px) translateX(-10px);
+  }
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+}
+
+@keyframes pulse {
   0%, 100% {
-    transform: translateY(0px);
+    opacity: 0.6;
   }
   50% {
-    transform: translateY(-20px);
+    opacity: 1;
   }
 }
 
@@ -28,46 +68,54 @@
     transform: translateX(0) translateZ(0) scaleY(1);
   }
   50% {
-    transform: translateX(-15%) translateZ(0) scaleY(0.9);
+    transform: translateX(-25%) translateZ(0) scaleY(0.9);
   }
   100% {
-    transform: translateX(-30%) translateZ(0) scaleY(1);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
+    transform: translateX(-50%) translateZ(0) scaleY(1);
   }
 }
 
 @keyframes fadeIn {
-  from {
+  0% {
     opacity: 0;
     transform: translateY(10px);
   }
-  to {
+  100% {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@keyframes text-shimmer {
+@keyframes shimmer {
   0% {
-    background-position: -100% 0;
+    background-position: -1000px 0;
   }
   100% {
-    background-position: 200% 0;
+    background-position: 1000px 0;
   }
 }
 
 @keyframes shine {
   100% {
-    right: -50%;
-    left: 120%;
+    right: 125%;
+  }
+}
+
+@keyframes text-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes progress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
   }
 }
 
@@ -75,62 +123,27 @@
   animation: fadeIn 0.8s ease-out forwards;
 }
 
+.animate-pulse {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 .animate-wave {
-  animation: wave 25s -3s linear infinite;
+  animation: wave 12s linear infinite;
 }
 
 .animate-wave-slow {
-  animation: wave-slow 35s -4s linear infinite;
+  animation: wave-slow 18s linear infinite;
+}
+
+.animate-shine {
+  animation: shine 1.5s forwards;
 }
 
 .animate-text-shimmer {
   background-size: 200% auto;
-  animation: text-shimmer 4s linear infinite;
+  animation: text-shimmer 3s linear infinite;
 }
 
-.animate-shine {
-  animation: shine 1.5s linear infinite;
-}
-
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-/* Focus styles for accessibility */
-:focus-visible {
-  outline: 2px solid #60a5fa;
-  outline-offset: 2px;
-}
-
-/* Custom transition for smooth effects */
-.ease-in-out-custom {
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Ensure full height on all wrappers */
-html, body, #root {
-  height: 100%;
-}
-
-html {
-  overflow-x: hidden;
-}
-
-/* Background gradient utilities */
-.bg-gradient-radial {
-  background-image: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0) 70%);
-}
-
-.bg-radial-gradient {
-  background: radial-gradient(circle at top center, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
+.animate-progress {
+  animation: progress 2.5s ease-in-out forwards;
 }

@@ -2,23 +2,25 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
 import GoalkeeperSelector from '../screens/GameSetup/ConfigureLineup/GoalkeeperSelector';
+import { Player } from '../screens/GameSetup/ConfigureLineup/GoalkeeperTypes';
 
 describe('GoalkeeperSelector', () => {
   const mockSetGoalkeeper = vi.fn();
   const mockSetConfirmedGoalkeeper = vi.fn();
   
-  const startingPlayers = [
+  const startingPlayers: Player[] = [
     { id: '1', name: 'Player 1' },
-    { id: '2', name: 'Player 2' }
+    { id: '2', name: 'Player 2' },
+    { id: '3', name: 'Player 3' }
   ];
   
   beforeEach(() => {
     vi.clearAllMocks();
   });
   
-  test('renders the selector with players', () => {
+  test('renders without goalkeeper selected', () => {
     render(
-      <GoalkeeperSelector
+      <GoalkeeperSelector 
         startingPlayers={startingPlayers}
         goalkeeper={null}
         setGoalkeeper={mockSetGoalkeeper}
@@ -27,18 +29,33 @@ describe('GoalkeeperSelector', () => {
       />
     );
     
-    // Check for select element and options
-    const selectElement = screen.getByRole('combobox');
-    expect(selectElement).toBeInTheDocument();
+    expect(screen.getByText('Select Goalkeeper')).toBeInTheDocument();
+    expect(screen.getByText('Select a player')).toBeInTheDocument();
+    expect(screen.getByText('No goalkeeper confirmed yet')).toBeInTheDocument();
+  });
+  
+  test('displays all available players in dropdown', () => {
+    render(
+      <GoalkeeperSelector 
+        startingPlayers={startingPlayers}
+        goalkeeper={null}
+        setGoalkeeper={mockSetGoalkeeper}
+        confirmedGoalkeeper={null}
+        setConfirmedGoalkeeper={mockSetConfirmedGoalkeeper}
+      />
+    );
     
-    // Check for player options
+    const select = screen.getByRole('combobox');
+    fireEvent.click(select);
+    
     expect(screen.getByText('Player 1')).toBeInTheDocument();
     expect(screen.getByText('Player 2')).toBeInTheDocument();
+    expect(screen.getByText('Player 3')).toBeInTheDocument();
   });
   
-  test('selects a goalkeeper when option is changed', () => {
+  test('calls setGoalkeeper when player is selected', () => {
     render(
-      <GoalkeeperSelector
+      <GoalkeeperSelector 
         startingPlayers={startingPlayers}
         goalkeeper={null}
         setGoalkeeper={mockSetGoalkeeper}
@@ -47,19 +64,15 @@ describe('GoalkeeperSelector', () => {
       />
     );
     
-    // Select player 1
-    const selectElement = screen.getByRole('combobox');
-    fireEvent.change(selectElement, { target: { value: '1' } });
+    const select = screen.getByRole('combobox');
+    fireEvent.change(select, { target: { value: '2' } });
     
-    // Check if setGoalkeeper was called with player 1
-    expect(mockSetGoalkeeper).toHaveBeenCalledWith(
-      expect.objectContaining({ id: '1', name: 'Player 1' })
-    );
+    expect(mockSetGoalkeeper).toHaveBeenCalledWith(startingPlayers[1]);
   });
   
-  test('shows confirm button after selection', () => {
+  test('shows confirm button when goalkeeper is selected but not confirmed', () => {
     render(
-      <GoalkeeperSelector
+      <GoalkeeperSelector 
         startingPlayers={startingPlayers}
         goalkeeper={startingPlayers[0]}
         setGoalkeeper={mockSetGoalkeeper}
@@ -68,14 +81,12 @@ describe('GoalkeeperSelector', () => {
       />
     );
     
-    // Check if confirm button appears
-    const confirmButton = screen.getByText('Confirm Goalkeeper');
-    expect(confirmButton).toBeInTheDocument();
+    expect(screen.getByText('Confirm Goalkeeper')).toBeInTheDocument();
   });
   
-  test('confirms goalkeeper when button is clicked', () => {
+  test('calls setConfirmedGoalkeeper when confirm button is clicked', () => {
     render(
-      <GoalkeeperSelector
+      <GoalkeeperSelector 
         startingPlayers={startingPlayers}
         goalkeeper={startingPlayers[0]}
         setGoalkeeper={mockSetGoalkeeper}
@@ -84,19 +95,15 @@ describe('GoalkeeperSelector', () => {
       />
     );
     
-    // Click confirm button
     const confirmButton = screen.getByText('Confirm Goalkeeper');
     fireEvent.click(confirmButton);
     
-    // Check if setConfirmedGoalkeeper was called with player 1
-    expect(mockSetConfirmedGoalkeeper).toHaveBeenCalledWith(
-      expect.objectContaining({ id: '1', name: 'Player 1' })
-    );
+    expect(mockSetConfirmedGoalkeeper).toHaveBeenCalledWith(startingPlayers[0]);
   });
   
   test('shows confirmation message when goalkeeper is confirmed', () => {
     render(
-      <GoalkeeperSelector
+      <GoalkeeperSelector 
         startingPlayers={startingPlayers}
         goalkeeper={startingPlayers[0]}
         setGoalkeeper={mockSetGoalkeeper}
@@ -105,10 +112,7 @@ describe('GoalkeeperSelector', () => {
       />
     );
     
-    // Check for confirmation message
     expect(screen.getByText('Goalkeeper confirmed: Player 1')).toBeInTheDocument();
-    
-    // Confirm button should not be visible
     expect(screen.queryByText('Confirm Goalkeeper')).not.toBeInTheDocument();
   });
 });

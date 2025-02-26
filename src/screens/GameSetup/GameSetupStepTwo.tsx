@@ -1,17 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Sentry from '@sentry/browser';
+import { useStateContext } from '../../hooks/useStateContext';
 
 export function GameSetupStepTwo(): JSX.Element {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
+  const { matchSquad, goalkeeper } = useStateContext();
 
   useEffect(() => {
     const configureGame = async () => {
       setLoading(true);
       try {
-        console.log('Automatically configuring game setup...');
-        // Insert any necessary configuration logic here
+        console.log('Configuring game setup with squad:', matchSquad);
+        
+        if (!matchSquad || matchSquad.length === 0) {
+          console.error('No match squad available');
+          navigate('/setup/participants');
+          return;
+        }
+        
+        // Check if we have a goalkeeper selected
+        const hasGoalkeeper = matchSquad.some(player => player.isGoalkeeper);
+        
+        if (!hasGoalkeeper) {
+          console.error('No goalkeeper selected');
+          navigate('/setup/lineup');
+          return;
+        }
+        
+        // All checks passed, proceed to game management
         navigate('/game-management');
       } catch (error) {
         console.error('Error in game setup configuration:', error);
@@ -22,7 +40,7 @@ export function GameSetupStepTwo(): JSX.Element {
     };
 
     configureGame();
-  }, [navigate]);
+  }, [navigate, matchSquad, goalkeeper]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
@@ -34,9 +52,17 @@ export function GameSetupStepTwo(): JSX.Element {
       </button>
       
       <h1 className="text-4xl font-bold text-white mb-6 bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">Game Setup: Configuration</h1>
-      <p className="text-lg text-white mb-4">
-        {loading ? 'Configuring your game settings...' : 'Redirecting to game management...'}
-      </p>
+      <div className="max-w-md w-full bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg">
+        <div className="flex justify-center mb-6">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+        <p className="text-lg text-center text-white mb-4">
+          {loading ? 'Configuring your game settings...' : 'Finalizing setup...'}
+        </p>
+        <div className="h-2 w-full bg-white/20 rounded-full overflow-hidden">
+          <div className="h-full bg-blue-500 animate-progress rounded-full"></div>
+        </div>
+      </div>
     </div>
   );
 }

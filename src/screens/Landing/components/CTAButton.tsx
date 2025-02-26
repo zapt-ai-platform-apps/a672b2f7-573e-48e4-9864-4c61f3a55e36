@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 interface CTAButtonProps {
   onClick: () => void;
@@ -6,10 +7,13 @@ interface CTAButtonProps {
 
 function CTAButton({ onClick }: CTAButtonProps): JSX.Element {
   return (
-    <div className="mt-12 animate-fadeIn" style={{ animationDelay: '0.7s' }}>
+    <motion.div
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.98 }}
+    >
       <button
         onClick={onClick}
-        className="group relative overflow-hidden px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-xl font-medium rounded-xl shadow-lg hover:shadow-indigo-500/30 transition-all duration-500 transform hover:scale-105"
+        className="group relative overflow-hidden px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-xl font-medium rounded-xl shadow-lg hover:shadow-indigo-500/30 transition-all duration-500 transform cursor-pointer"
         aria-label="Get Started"
       >
         {/* Inner glow effect */}
@@ -35,7 +39,7 @@ function CTAButton({ onClick }: CTAButtonProps): JSX.Element {
         {/* Shine effect on hover */}
         <span className="absolute top-0 -inset-full h-full w-1/3 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-20 group-hover:animate-shine"></span>
       </button>
-    </div>
+    </motion.div>
   );
 }
 

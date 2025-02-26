@@ -1,16 +1,16 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import LandingScreen from './screens/Landing';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import SignIn from './components/SignIn';
-import ProtectedRoute from './components/ProtectedRoute';
-import SelectParticipants from './screens/GameSetup/SelectParticipants';
+import GameManagement from './screens/GameManagement';
 import SquadManagementScreen from './screens/SquadManagement';
-import GameSetupStepTwo from './screens/GameSetup/GameSetupStepTwo';
-import GameManagementScreen from './screens/GameManagement';
-import StartingLineup from './screens/GameSetup/ConfigureLineup/StartingLineup';
+import GameSetupParticipantsScreen from './screens/GameSetup/SelectParticipants';
 import GameSummary from './screens/GameSummary';
+import GameSetupStepTwo from './screens/GameSetup/GameSetupStepTwo';
+import StartingLineup from './screens/GameSetup/ConfigureLineup/StartingLineup';
 
-function AppRoutes() {
+const AppRoutes = () => {
   return (
     <Routes>
       {/* Public routes */}
@@ -18,59 +18,64 @@ function AppRoutes() {
       <Route path="/login" element={<SignIn />} />
       
       {/* Protected routes */}
-      <Route
-        path="/squads"
+      <Route 
+        path="/squads" 
         element={
           <ProtectedRoute>
             <SquadManagementScreen />
           </ProtectedRoute>
-        }
+        } 
       />
-      <Route
-        path="/setup/participants"
+      
+      <Route 
+        path="/setup/participants" 
         element={
           <ProtectedRoute>
-            <SelectParticipants />
+            <GameSetupParticipantsScreen />
           </ProtectedRoute>
-        }
+        } 
       />
-      <Route
-        path="/setup/starting-lineup"
+      
+      <Route 
+        path="/setup/lineup" 
         element={
           <ProtectedRoute>
             <StartingLineup />
           </ProtectedRoute>
-        }
+        } 
       />
-      <Route
-        path="/setup/configuration"
+      
+      <Route 
+        path="/setup/configuration" 
         element={
           <ProtectedRoute>
             <GameSetupStepTwo />
           </ProtectedRoute>
-        }
+        } 
       />
-      <Route
-        path="/game-management"
+      
+      <Route 
+        path="/game-management" 
         element={
           <ProtectedRoute>
-            <GameManagementScreen />
+            <GameManagement />
           </ProtectedRoute>
-        }
+        } 
       />
-      <Route
-        path="/game-summary"
+      
+      <Route 
+        path="/game-summary" 
         element={
           <ProtectedRoute>
             <GameSummary />
           </ProtectedRoute>
-        }
+        } 
       />
       
       {/* Fallback route */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
-}
+};
 
 export default AppRoutes;

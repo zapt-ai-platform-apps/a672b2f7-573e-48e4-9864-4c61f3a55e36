@@ -1,10 +1,26 @@
-import themeExtend from './theme.extend.js';
-
+/** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: 'class',
-  content: ['./index.html', './src/**/*.{ts,tsx}'],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: themeExtend,
+    extend: {
+      animation: {
+        "spin-slow": "spin 3s linear infinite",
+        shine: "shine 1.5s ease-in-out",
+        progress: "progress 2.5s ease-in-out forwards",
+      },
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+      },
+      keyframes: {
+        shine: {
+          "100%": { right: "125%" },
+        },
+        progress: {
+          "0%": { width: "0%" },
+          "100%": { width: "100%" },
+        },
+      },
+    },
   },
   plugins: [],
 };

@@ -12,6 +12,7 @@ export default function StartingLineup(): JSX.Element {
   const { matchSquad, setMatchSquad } = useStateContext();
   const navigate = useNavigate();
   const [error, setError] = useState('');
+  const [showError, setShowError] = useState(false);
 
   useEffect(() => {
     console.log('Current matchSquad in StartingLineup:', matchSquad);
@@ -28,13 +29,17 @@ export default function StartingLineup(): JSX.Element {
   }, [matchSquad, startingPlayers, selectedPlayers]);
 
   const handleContinue = (): void => {
+    setShowError(false);
+    
     if (selectedPlayers.length < 1) {
       setError('Please select at least one starting player');
+      setShowError(true);
       return;
     }
     
     if (!goalkeeper && selectedPlayers.length > 0) {
       setError('Please select a goalkeeper');
+      setShowError(true);
       return;
     }
     
@@ -65,8 +70,8 @@ export default function StartingLineup(): JSX.Element {
         <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">Select Starting Lineup</h1>
         <p className="text-lg text-white/90 mb-6">Choose which players will start the game</p>
         
-        {error && (
-          <div className="p-4 mb-6 bg-red-500/20 border border-red-500 rounded-lg text-white">
+        {showError && error && (
+          <div className="p-4 mb-6 bg-red-500/20 border border-red-500 rounded-lg text-white animate-fadeIn">
             <p>{error}</p>
           </div>
         )}
@@ -86,16 +91,19 @@ export default function StartingLineup(): JSX.Element {
               ))}
             </div>
             
-            {selectedPlayers.length > 0 && (
-              <div className="my-6 p-6 bg-white/10 backdrop-blur-sm rounded-lg shadow-lg">
-                <h3 className="text-xl font-semibold mb-4">Goalkeeper Selection</h3>
+            <div className="my-6 p-6 bg-white/10 backdrop-blur-sm rounded-lg shadow-lg">
+              <h3 className="text-xl font-semibold mb-4 text-white">Goalkeeper Selection</h3>
+              <p className="text-white/80 mb-4">Select one of your starting players to be the goalkeeper</p>
+              {selectedPlayers.length > 0 ? (
                 <GoalkeeperSelect 
                   players={selectedPlayers} 
                   goalkeeper={goalkeeper} 
                   setGoalkeeper={setGoalkeeper} 
                 />
-              </div>
-            )}
+              ) : (
+                <p className="text-amber-300">Please select at least one starting player first</p>
+              )}
+            </div>
           </>
         ) : (
           <div className="text-center p-8 bg-white/10 rounded-lg">
