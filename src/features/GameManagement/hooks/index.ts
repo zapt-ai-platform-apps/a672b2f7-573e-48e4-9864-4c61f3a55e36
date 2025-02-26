@@ -3,7 +3,7 @@
 import useDragAndDrop from './useDragAndDrop';
 import useAvailablePlayers from './useAvailablePlayers';
 import useEndGameManager from './useEndGameManager';
-import useGameManagementLogic from './useGameManagementLogic';
+import { useGameManagementLogic } from './useGameManagementLogic';
 import useGameTimer from './useGameTimer';
 import usePlayerManagement from './usePlayerManagement';
 import useSquadSetup from './useSquadSetup';

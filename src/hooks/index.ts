@@ -4,6 +4,6 @@
 export { useAuthSession } from './useAuthSession';
 export { useGameManagement } from './useGameManagement';
 export { useGameState } from './useGameState';
-export { useGameTimer } from './useGameTimer';
+export { default as useGameTimer } from './useGameTimer';
 export { useSquadManagement } from './useSquadManagement';
 export { useStateContext } from './useStateContext';
