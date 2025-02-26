@@ -6,7 +6,7 @@ import { useStateContext } from '../../hooks/useStateContext';
 export function GameSetupStepTwo(): JSX.Element {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
-  const { matchSquad, goalkeeper } = useStateContext();
+  const { matchSquad, goalkeeper, setPlayerData } = useStateContext();
 
   useEffect(() => {
     const configureGame = async () => {
@@ -29,6 +29,15 @@ export function GameSetupStepTwo(): JSX.Element {
           return;
         }
         
+        // Update playerData in state context to reflect starting lineup selection
+        // This ensures players marked as starting players will appear on field in game management
+        setPlayerData(matchSquad.map(player => ({ 
+          ...player, 
+          isOnField: player.isStartingPlayer 
+        })));
+        
+        console.log('Updated playerData with starting lineup information');
+        
         // All checks passed, proceed to game management
         navigate('/game-management');
       } catch (error) {
@@ -40,7 +49,7 @@ export function GameSetupStepTwo(): JSX.Element {
     };
 
     configureGame();
-  }, [navigate, matchSquad, goalkeeper]);
+  }, [navigate, matchSquad, goalkeeper, setPlayerData]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
