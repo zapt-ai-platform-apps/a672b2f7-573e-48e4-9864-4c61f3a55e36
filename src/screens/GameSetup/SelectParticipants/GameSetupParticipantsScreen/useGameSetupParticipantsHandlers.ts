@@ -1,12 +1,10 @@
 import { useCallback } from 'react';
-import { NavigateFunction } from 'react-router-dom';
-import { ExtendedPlayer } from '../../../../features/GameSetup/types/ExtendedPlayer';
 
 export default function useGameSetupParticipantsHandlers(
-  selectedMatchPlayers: ExtendedPlayer[],
-  setSelectedSquad: (players: ExtendedPlayer[]) => void,
-  navigate: NavigateFunction,
-  setErrorMessage: (message: string) => void
+  selectedMatchPlayers: Array<{ id: string }>,
+  setSelectedSquad: (squad: Array<{ id: string }>) => void,
+  navigate: (path: string | number) => void,
+  setErrorMessage: (msg: string) => void
 ) {
   const handleNext = useCallback(() => {
     if (selectedMatchPlayers.length === 0) {
@@ -14,12 +12,12 @@ export default function useGameSetupParticipantsHandlers(
       return;
     }
     setSelectedSquad(selectedMatchPlayers);
-    navigate('/game-setup/configure');
+    navigate('/next');
   }, [selectedMatchPlayers, setSelectedSquad, navigate, setErrorMessage]);
 
   const handleBack = useCallback(() => {
-    window.history.back();
-  }, []);
+    navigate(-1);
+  }, [navigate]);
 
   return { handleNext, handleBack };
 }

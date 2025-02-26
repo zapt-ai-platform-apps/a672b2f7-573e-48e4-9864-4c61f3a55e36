@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useMatchSquad from "../../../../features/GameSetup/hooks/useMatchSquad";
-import { useStateContext } from "../../../../hooks/useStateContext";
-import { ExtendedPlayer } from "../../../../features/GameSetup/types/ExtendedPlayer";
-import ParticipantItem from "./ParticipantItem";
-import useGameSetupParticipantsHandlers from "./useGameSetupParticipantsHandlers";
+import useMatchSquad from '../../../features/GameSetup/hooks/useMatchSquad';
+import { useStateContext } from '../../../hooks/useStateContext';
+import ParticipantItem from './ParticipantItem';
+import type { ExtendedPlayer } from './types';
+import useGameSetupParticipantsHandlers from './useGameSetupParticipantsHandlers';
 
 export default function GameSetupParticipantsScreen(): JSX.Element {
   const { matchSquadPlayers, toggleMatchPlayer } = useMatchSquad();
   const { setSelectedSquad } = useStateContext();
   const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const validPlayers = matchSquadPlayers.filter(
-    player => player && typeof player.id === "string"
+    player => player && typeof player.id === 'string'
   ) as ExtendedPlayer[];
 
-  console.log("Valid players for selection:", validPlayers);
+  console.log('Valid players for selection:', validPlayers);
 
   const selectedMatchPlayers = validPlayers.filter(
     (player) => player.isInMatchSquad
