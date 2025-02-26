@@ -19,11 +19,12 @@ export function useGameManagementLogic() {
   const location = useLocation();
   const navigate = useNavigate();
   const { 
-    state: { gameInProgress, playerData, goalkeeper, includeGKPlaytime },
-    setPlayerData,
-    resetGame,
-    setGameInProgress,
-    updateGameState
+    playerData, 
+    setPlayerData, 
+    goalkeeper, 
+    includeGKPlaytime, 
+    resetGame, 
+    handleStartGame 
   } = useStateContext();
   
   // State for managing game flow
@@ -35,6 +36,7 @@ export function useGameManagementLogic() {
   const [ourScore, setOurScore] = useState<number>(0);
   const [opponentScore, setOpponentScore] = useState<number>(0);
   const [goals, setGoals] = useState<Goal[]>([]);
+  const [gameInProgress, setGameInProgress] = useState<boolean>(false);
   
   // Computed properties from player data
   const { onField: onFieldPlayers, offField: offFieldPlayers } = 
@@ -47,8 +49,13 @@ export function useGameManagementLogic() {
     stopTimer,
     resetTimer,
     gameIntervals,
-    getTimeElapsed: getFormattedTimeElapsed
+    getTimeElapsed
   } = useGameTimer();
+  
+  // Format the time elapsed to return a string
+  const getFormattedTimeElapsed = useCallback(() => {
+    return timeFormatter(getTimeElapsed());
+  }, [getTimeElapsed]);
   
   const {
     selectedSubOffPlayer,
@@ -64,6 +71,11 @@ export function useGameManagementLogic() {
     isRunning
   });
 
+  // Update game state with new players
+  const updateGameState = useCallback((players: Player[], gk: Player | null, includeGkTime: boolean) => {
+    handleStartGame(players, gk!, includeGkTime);
+  }, [handleStartGame]);
+
   // Initialize the game if we have data from previous screen
   useEffect(() => {
     if (location.state?.players && !gameInProgress) {
@@ -77,7 +89,7 @@ export function useGameManagementLogic() {
       // If no game in progress and no data, redirect to game setup
       navigate('/game-setup');
     }
-  }, [location, gameInProgress, navigate, updateGameState, setGameInProgress]);
+  }, [location, gameInProgress, navigate, updateGameState]);
 
   // Timer functions
   const toggleTimer = useCallback(() => {

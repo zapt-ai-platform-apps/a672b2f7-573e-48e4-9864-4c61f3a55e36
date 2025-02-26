@@ -6,8 +6,8 @@ interface GameInterval {
 }
 
 interface GameTimerParams {
-  isRunning: boolean;
-  gameIntervals: GameInterval[];
+  isRunning?: boolean;
+  gameIntervals?: GameInterval[];
 }
 
 /**
@@ -15,7 +15,7 @@ interface GameTimerParams {
  * @param params Object containing isRunning state and game intervals
  * @returns Timer-related functions and state
  */
-function useGameTimer({ isRunning = false, gameIntervals = [] }: GameTimerParams) {
+function useGameTimer({ isRunning = false, gameIntervals = [] }: GameTimerParams = {}) {
   const [now, setNow] = useState<number>(Date.now());
 
   useEffect(() => {

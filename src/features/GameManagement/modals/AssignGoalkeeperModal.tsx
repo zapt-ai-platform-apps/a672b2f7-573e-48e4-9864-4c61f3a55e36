@@ -16,7 +16,7 @@ export default function AssignGoalkeeperModal({
   players,
   onAssign,
   currentGoalkeeper
-}: AssignGoalkeeperModalProps): JSX.Element {
+}: AssignGoalkeeperModalProps): JSX.Element | null {
   const [selectedPlayer, setSelectedPlayer] = useState<string | null>(
     currentGoalkeeper?.id?.toString() || null
   );

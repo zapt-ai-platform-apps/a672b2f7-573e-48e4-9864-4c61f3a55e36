@@ -9,7 +9,7 @@ export default function GameManagementScreen(): JSX.Element {
     isRunning,
     ourScore,
     opponentScore,
-    getTimeElapsed,
+    getTimeElapsed, // This now returns a formatted time string
     toggleTimer,
     handleEndGame,
     showEndGameConfirm,
