@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
-import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
-import useGameTimer from '../../../../hooks/useGameTimer';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import useGameTimer from '../useGameTimer';
 
 describe('useGameTimer', () => {
   beforeEach(() => {
@@ -8,67 +8,120 @@ describe('useGameTimer', () => {
   });
 
   afterEach(() => {
-    vi.runOnlyPendingTimers();
     vi.useRealTimers();
+    vi.clearAllMocks();
   });
 
-  test('initial state is correct', () => {
+  it('should initialize with correct default values', () => {
     const { result } = renderHook(() => useGameTimer());
     
     expect(result.current.timeElapsed).toBe(0);
-    expect(result.current.gameIntervals).toEqual([]);
+    expect(result.current.isRunning).toBe(false);
+    expect(result.current.intervalId).toBeNull();
   });
 
-  test('startTimer creates a new interval', () => {
+  it('should start the timer when startTimer is called', () => {
     const { result } = renderHook(() => useGameTimer());
     
     act(() => {
       result.current.startTimer();
     });
     
-    expect(result.current.gameIntervals.length).toBe(1);
-    expect(result.current.gameIntervals[0].start).toBeDefined();
-    expect(result.current.gameIntervals[0].end).toBeUndefined();
+    expect(result.current.isRunning).toBe(true);
+    expect(result.current.intervalId).not.toBeNull();
   });
 
-  test('stopTimer adds end time to last interval', () => {
+  it('should increase timeElapsed while timer is running', () => {
     const { result } = renderHook(() => useGameTimer());
     
     act(() => {
       result.current.startTimer();
+    });
+    
+    // Advance timer by 1 second
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
+    
+    expect(result.current.timeElapsed).toBe(1);
+    
+    // Advance timer by 5 more seconds
+    act(() => {
+      vi.advanceTimersByTime(5000);
+    });
+    
+    expect(result.current.timeElapsed).toBe(6);
+  });
+
+  it('should stop the timer when stopTimer is called', () => {
+    const { result } = renderHook(() => useGameTimer());
+    
+    act(() => {
+      result.current.startTimer();
+    });
+    
+    act(() => {
+      vi.advanceTimersByTime(3000);
+    });
+    
+    act(() => {
       result.current.stopTimer();
     });
     
-    expect(result.current.gameIntervals[0].end).toBeDefined();
+    expect(result.current.isRunning).toBe(false);
+    expect(result.current.intervalId).toBeNull();
+    
+    // Advance timer by 2 more seconds, time should not change
+    act(() => {
+      vi.advanceTimersByTime(2000);
+    });
+    
+    expect(result.current.timeElapsed).toBe(3);
   });
 
-  test('timeElapsed increases as time passes', () => {
+  it('should reset the timer when resetTimer is called', () => {
     const { result } = renderHook(() => useGameTimer());
     
     act(() => {
       result.current.startTimer();
     });
     
-    // Advance timer and check that timeElapsed increases
     act(() => {
-      vi.advanceTimersByTime(5000); // 5 seconds
-    });
-    
-    // Check result after timer advance
-    expect(result.current.timeElapsed).toBe(5);
-  });
-
-  test('resetTimer clears all state', () => {
-    const { result } = renderHook(() => useGameTimer());
-    
-    act(() => {
-      result.current.startTimer();
-      // Advance timer within the same act callback
       vi.advanceTimersByTime(5000);
+    });
+    
+    act(() => {
       result.current.resetTimer();
     });
     
     expect(result.current.timeElapsed).toBe(0);
-    expect(result.current.gameIntervals).toEqual([]);
+    expect(result.current.isRunning).toBe(false);
+    expect(result.current.intervalId).toBeNull();
+  });
+
+  it('should set a specific time when setTime is called', () => {
+    const { result } = renderHook(() => useGameTimer());
+    
+    act(() => {
+      result.current.setTime(10);
+    });
+    
+    expect(result.current.timeElapsed).toBe(10);
+  });
+
+  it('should clean up interval on unmount', () => {
+    const clearIntervalSpy = vi.spyOn(window, 'clearInterval');
+    
+    const { result, unmount } = renderHook(() => useGameTimer());
+    
+    act(() => {
+      result.current.startTimer();
+    });
+    
+    const intervalId = result.current.intervalId;
+    
+    unmount();
+    
+    expect(clearIntervalSpy).toHaveBeenCalledWith(intervalId);
   });
 });

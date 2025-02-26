@@ -12,7 +12,7 @@ import StartingLineup from './screens/GameSetup/ConfigureLineup/StartingLineup';
 
 const AppRoutes = () => {
   return (
-    <Routes>
+    <Routes future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       {/* Public routes */}
       <Route path="/" element={<LandingScreen />} />
       <Route path="/login" element={<SignIn />} />

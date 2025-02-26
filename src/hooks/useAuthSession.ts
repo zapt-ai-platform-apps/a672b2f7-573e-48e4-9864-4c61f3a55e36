@@ -12,8 +12,9 @@ import * as Sentry from "@sentry/browser";
 function useAuthSession() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  let navigate;
   
+  // Use try-catch to handle cases where hook is used outside of Router context (like in tests)
+  let navigate;
   try {
     navigate = useNavigate();
   } catch (error) {

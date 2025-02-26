@@ -39,5 +39,27 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
   disconnect: vi.fn(),
 }));
 
+// Mock createPointerEvent for drag and drop tests
+global.PointerEvent = class PointerEvent extends Event {
+  button: number;
+  clientX: number;
+  clientY: number;
+  pointerId: number;
+  pointerType: string;
+  
+  constructor(type: string, params: any = {}) {
+    super(type, params);
+    this.button = params.button || 0;
+    this.clientX = params.clientX || 0;
+    this.clientY = params.clientY || 0;
+    this.pointerId = params.pointerId || 1;
+    this.pointerType = params.pointerType || 'mouse';
+  }
+};
+
+// Mock Element.prototype.setPointerCapture
+Element.prototype.setPointerCapture = Element.prototype.setPointerCapture || vi.fn();
+Element.prototype.releasePointerCapture = Element.prototype.releasePointerCapture || vi.fn();
+
 // Global mocks
 global.fetch = vi.fn();

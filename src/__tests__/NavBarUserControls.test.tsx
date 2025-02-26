@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { vi, beforeEach, describe, test, expect } from 'vitest';
 import NavBarUserControls from '../components/navigation/NavBarUserControls';
+import { act } from '@testing-library/react';
 
 // Mock navigate
 const mockNavigate = vi.fn();
@@ -11,10 +12,10 @@ const mockSignOut = vi.fn();
 // Correctly mock the default export from useAuthSession
 vi.mock('../hooks/useAuthSession', () => ({
   __esModule: true,
-  default: vi.fn(() => ({
+  default: () => ({
     session: null,
     signOut: mockSignOut
-  }))
+  })
 }));
 
 // Mock router with correct import
@@ -38,26 +39,32 @@ describe('NavBarUserControls - Signed In', () => {
     });
   });
 
-  test('renders sign out button when user is signed in', () => {
-    render(
-      <BrowserRouter>
-        <NavBarUserControls />
-      </BrowserRouter>
-    );
+  test('renders sign out button when user is signed in', async () => {
+    await act(async () => {
+      render(
+        <BrowserRouter>
+          <NavBarUserControls />
+        </BrowserRouter>
+      );
+    });
     
     const signOutButton = screen.getByText('Sign Out');
     expect(signOutButton).toBeInTheDocument();
   });
   
-  test('calls signOut when sign out button is clicked', () => {
-    render(
-      <BrowserRouter>
-        <NavBarUserControls />
-      </BrowserRouter>
-    );
+  test('calls signOut when sign out button is clicked', async () => {
+    await act(async () => {
+      render(
+        <BrowserRouter>
+          <NavBarUserControls />
+        </BrowserRouter>
+      );
+    });
     
     const signOutButton = screen.getByText('Sign Out');
-    fireEvent.click(signOutButton);
+    await act(async () => {
+      fireEvent.click(signOutButton);
+    });
     expect(mockSignOut).toHaveBeenCalled();
   });
 });
@@ -75,26 +82,32 @@ describe('NavBarUserControls - Signed Out', () => {
     });
   });
 
-  test('renders sign in button when user is not signed in', () => {
-    render(
-      <BrowserRouter>
-        <NavBarUserControls />
-      </BrowserRouter>
-    );
+  test('renders sign in button when user is not signed in', async () => {
+    await act(async () => {
+      render(
+        <BrowserRouter>
+          <NavBarUserControls />
+        </BrowserRouter>
+      );
+    });
     
     const signInButton = screen.getByText('Sign In');
     expect(signInButton).toBeInTheDocument();
   });
   
-  test('navigates to sign-in when button is clicked', () => {
-    render(
-      <BrowserRouter>
-        <NavBarUserControls />
-      </BrowserRouter>
-    );
+  test('navigates to sign-in when button is clicked', async () => {
+    await act(async () => {
+      render(
+        <BrowserRouter>
+          <NavBarUserControls />
+        </BrowserRouter>
+      );
+    });
     
     const signInButton = screen.getByText('Sign In');
-    fireEvent.click(signInButton);
+    await act(async () => {
+      fireEvent.click(signInButton);
+    });
     expect(mockNavigate).toHaveBeenCalledWith('/sign-in');
   });
 });
