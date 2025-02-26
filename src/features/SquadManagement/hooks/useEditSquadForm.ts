@@ -1,10 +1,15 @@
 import { useState, useEffect, FormEvent } from "react";
 import { useStateContext } from "../../../hooks/useStateContext";
-import { Squad } from "../../../types/GameTypes";
+import { Player, Position, Squad } from "../../../types/GameTypes";
 
+// Updated interface to include all required Player properties
 interface SquadPlayer {
   id: string;
   name: string;
+  totalPlayTime: number;
+  isOnField: boolean;
+  isGoalkeeper: boolean;
+  position: Position;
   [key: string]: any;
 }
 
@@ -20,16 +25,33 @@ export default function useEditSquadForm() {
   useEffect(() => {
     if (selectedSquad && 'name' in selectedSquad) {
       setSquadName(selectedSquad.name);
-      setSquadPlayersList(selectedSquad.players || []);
+      
+      // Ensure all players have the required properties with default values
+      const enrichedPlayers = (selectedSquad.players || []).map(player => ({
+        id: player.id,
+        name: player.name,
+        totalPlayTime: player.totalPlayTime ?? 0,
+        isOnField: player.isOnField ?? false,
+        isGoalkeeper: player.isGoalkeeper ?? false,
+        position: player.position ?? { x: 0, y: 0 },
+        ...player, // Preserve any other properties
+      }));
+      
+      setSquadPlayersList(enrichedPlayers);
     }
   }, [selectedSquad]);
 
   const handleAddPlayer = (): void => {
     if (!newPlayerName.trim()) return;
 
+    // Add default values for all required Player properties
     const newPlayer: SquadPlayer = {
       id: Date.now().toString(),
       name: newPlayerName.trim(),
+      totalPlayTime: 0,
+      isOnField: false,
+      isGoalkeeper: false,
+      position: { x: 0, y: 0 }
     };
 
     setSquadPlayersList([...squadPlayersList, newPlayer]);
