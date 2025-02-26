@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useEffect } from "react";
 import { Player } from "./GoalkeeperTypes";
 
 interface GoalkeeperSelectorProps {
@@ -16,19 +16,35 @@ export default function GoalkeeperSelector({
   confirmedGoalkeeper,
   setConfirmedGoalkeeper,
 }: GoalkeeperSelectorProps) {
-  const [localSelection, setLocalSelection] = useState<Player | null>(null);
+  const [localSelection, setLocalSelection] = useState<Player | null>(goalkeeper);
+
+  // Update local selection when goalkeeper prop changes
+  useEffect(() => {
+    setLocalSelection(goalkeeper);
+  }, [goalkeeper]);
 
   const handleSelectGoalkeeper = (e: ChangeEvent<HTMLSelectElement>) => {
     const selectedId = e.target.value;
+    if (!selectedId) {
+      setLocalSelection(null);
+      setGoalkeeper(null);
+      return;
+    }
+    
     const selectedPlayer = startingPlayers.find(
       (player) => String(player.id) === selectedId
     );
-    setLocalSelection(selectedPlayer || null);
-    setGoalkeeper(selectedPlayer || null);
+    
+    if (selectedPlayer) {
+      console.log(`Selected goalkeeper: ${selectedPlayer.name}`);
+      setLocalSelection(selectedPlayer);
+      setGoalkeeper(selectedPlayer);
+    }
   };
 
   const handleConfirmSelection = () => {
     if (localSelection) {
+      console.log(`Confirmed goalkeeper: ${localSelection.name}`);
       setConfirmedGoalkeeper(localSelection);
     }
   };
@@ -39,7 +55,7 @@ export default function GoalkeeperSelector({
       <select
         value={localSelection ? String(localSelection.id) : ""}
         onChange={handleSelectGoalkeeper}
-        className="w-full p-3 border border-gray-300 rounded-lg"
+        className="w-full p-3 border border-gray-300 rounded-lg box-border"
       >
         <option value="" disabled>
           Select a player

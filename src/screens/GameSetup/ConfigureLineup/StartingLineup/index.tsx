@@ -3,16 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import useStartingLineup from './useStartingLineup';
 import PlayerCard from './PlayerCard';
 import { useStateContext } from '../../../../hooks/useStateContext';
+import GoalkeeperSelect from '../GoalkeeperSelect';
+import { Player } from '../../../../types/GameTypes';
 
 export default function StartingLineup(): JSX.Element {
-  const { startingPlayers, toggleStartingPlayer } = useStartingLineup();
-  const { matchSquad } = useStateContext();
+  const { startingPlayers, selectedPlayers, toggleStartingPlayer } = useStartingLineup();
+  const [goalkeeper, setGoalkeeper] = useState<Player | null>(null);
+  const { matchSquad, setMatchSquad } = useStateContext();
   const navigate = useNavigate();
   const [error, setError] = useState('');
 
   useEffect(() => {
     console.log('Current matchSquad in StartingLineup:', matchSquad);
     console.log('startingPlayers in StartingLineup:', startingPlayers);
+    console.log('Selected players:', selectedPlayers);
     
     if (!matchSquad || matchSquad.length === 0) {
       setError('No players available. Please go back and select participants.');
@@ -21,17 +25,33 @@ export default function StartingLineup(): JSX.Element {
     } else {
       setError('');
     }
-  }, [matchSquad, startingPlayers]);
+  }, [matchSquad, startingPlayers, selectedPlayers]);
 
   const handleContinue = (): void => {
-    const validPlayers = startingPlayers.filter(player => player && typeof player.id === 'string');
-    const selectedStartingPlayers = validPlayers.filter(player => player.selected);
-    
-    if (selectedStartingPlayers.length < 1) {
+    if (selectedPlayers.length < 1) {
       setError('Please select at least one starting player');
       return;
     }
     
+    if (!goalkeeper && selectedPlayers.length > 0) {
+      setError('Please select a goalkeeper');
+      return;
+    }
+    
+    // Update matchSquad with selection information before navigating
+    const updatedMatchSquad = matchSquad.map(player => {
+      const isSelected = selectedPlayers.some(p => p.id === player.id);
+      const isGoalkeeper = goalkeeper?.id === player.id;
+      
+      return {
+        ...player,
+        isStartingPlayer: isSelected,
+        isGoalkeeper: isGoalkeeper
+      };
+    });
+    
+    console.log("Updating match squad with selection info:", updatedMatchSquad);
+    setMatchSquad(updatedMatchSquad);
     navigate('/setup/configuration');
   };
 
@@ -52,18 +72,31 @@ export default function StartingLineup(): JSX.Element {
         )}
         
         {startingPlayers.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-            {startingPlayers
-              .filter(player => player && typeof player.id === 'string')
-              .map(player => (
-                <PlayerCard
-                  key={player.id}
-                  player={player}
-                  isSelected={player.selected}
-                  onToggle={() => toggleStartingPlayer(player.id)}
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+              {startingPlayers
+                .filter(player => player && typeof player.id === 'string')
+                .map(player => (
+                  <PlayerCard
+                    key={player.id}
+                    player={player}
+                    isSelected={player.selected}
+                    onToggle={() => toggleStartingPlayer(player.id)}
+                  />
+              ))}
+            </div>
+            
+            {selectedPlayers.length > 0 && (
+              <div className="my-6 p-6 bg-white/10 backdrop-blur-sm rounded-lg shadow-lg">
+                <h3 className="text-xl font-semibold mb-4">Goalkeeper Selection</h3>
+                <GoalkeeperSelect 
+                  players={selectedPlayers} 
+                  goalkeeper={goalkeeper} 
+                  setGoalkeeper={setGoalkeeper} 
                 />
-            ))}
-          </div>
+              </div>
+            )}
+          </>
         ) : (
           <div className="text-center p-8 bg-white/10 rounded-lg">
             {matchSquad && matchSquad.length > 0 ? (

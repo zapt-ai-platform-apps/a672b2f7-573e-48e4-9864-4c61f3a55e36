@@ -1,34 +1,31 @@
-import { Session } from '@supabase/supabase-js';
 import { supabase } from '../supabaseClient';
-import * as Sentry from "@sentry/browser";
-import { recordUserLogin, resetRecordedLogin } from '../lib/authRecording';
-import { EnvironmentType } from '../types/environment';
+import { Session } from '@supabase/supabase-js';
+import * as Sentry from '@sentry/browser';
+
+type SetSessionCallback = (session: Session | null) => void;
+type SetLoadingCallback = (loading: boolean) => void;
 
 export async function getInitialSessionUtil(
-  setSession: (session: Session | null) => void,
-  setLoading: (loading: boolean) => void
-) {
+  setSession: SetSessionCallback,
+  setLoading: SetLoadingCallback
+): Promise<void> {
   try {
     setLoading(true);
+    
     const { data, error } = await supabase.auth.getSession();
+    
     if (error) {
-      throw error;
+      console.error('Error getting session:', error);
+      Sentry.captureException(error);
+      return;
     }
-    setSession(data.session);
-    if (data.session?.user?.email) {
-      try {
-        await recordUserLogin(
-          data.session.user.email,
-          import.meta.env.VITE_PUBLIC_APP_ENV as EnvironmentType,
-          'Login recorded successfully'
-        );
-      } catch (recordError) {
-        console.error('Failed to record login:', recordError);
-        Sentry.captureException(recordError);
-      }
+    
+    if (data && data.session) {
+      console.log('Initial session loaded.');
+      setSession(data.session);
     }
   } catch (error) {
-    console.error('Error getting session:', error);
+    console.error('Error in getInitialSessionUtil:', error);
     Sentry.captureException(error);
   } finally {
     setLoading(false);
@@ -36,27 +33,29 @@ export async function getInitialSessionUtil(
 }
 
 export function subscribeAuthStateChangeUtil(
-  setSession: (session: Session | null) => void,
-  setLoading: (loading: boolean) => void
+  setSession: SetSessionCallback,
+  setLoading: SetLoadingCallback
 ) {
-  const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-    setSession(session);
-    setLoading(false);
-    if (event === 'SIGNED_IN' && session?.user?.email) {
-      try {
-        await recordUserLogin(
-          session.user.email,
-          import.meta.env.VITE_PUBLIC_APP_ENV as EnvironmentType,
-          'Login recorded on auth state change'
-        );
-      } catch (recordError) {
-        console.error('Failed to record login:', recordError);
-        Sentry.captureException(recordError);
+  try {
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        console.log(`Auth state changed: ${event}`);
+        setSession(session);
+        setLoading(false);
+        
+        if (event === 'SIGNED_OUT') {
+          console.log('User signed out, session cleared');
+        } else if (event === 'SIGNED_IN') {
+          console.log('User signed in, session updated');
+        }
       }
-    }
-    if (event === 'SIGNED_OUT') {
-      resetRecordedLogin();
-    }
-  });
-  return authListener;
+    );
+    
+    return authListener;
+  } catch (error) {
+    console.error('Error setting up auth listener:', error);
+    Sentry.captureException(error);
+    setLoading(false);
+    return null;
+  }
 }

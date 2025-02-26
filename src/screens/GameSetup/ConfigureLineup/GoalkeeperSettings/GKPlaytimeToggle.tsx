@@ -1,29 +1,36 @@
-import React from 'react';
+import React from "react";
 
 interface GKPlaytimeToggleProps {
   includeGKPlaytime: boolean;
-  onToggle: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setIncludeGKPlaytime: (value: boolean) => void;
 }
 
-export default function GKPlaytimeToggle({ includeGKPlaytime, onToggle }: GKPlaytimeToggleProps): JSX.Element {
+export default function GKPlaytimeToggle({
+  includeGKPlaytime,
+  setIncludeGKPlaytime,
+}: GKPlaytimeToggleProps) {
+  const handleTogglePlaytime = () => {
+    setIncludeGKPlaytime(!includeGKPlaytime);
+  };
+
   return (
-    <div className="relative flex items-start">
-      <div className="flex items-center h-5">
-        <input
-          id="includeGKPlaytime"
-          type="checkbox"
-          checked={includeGKPlaytime}
-          onChange={onToggle}
-          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-        />
-      </div>
-      <div className="ml-3 text-sm">
-        <label htmlFor="includeGKPlaytime" className="font-medium text-gray-700">
-          Include Goalkeeper Playtime
-        </label>
-        <p className="text-gray-500 mt-1">
-          Track goalkeeper's playing time same as field players
-        </p>
+    <div className="flex items-center mt-4">
+      <input
+        id="includeGKPlaytime"
+        type="checkbox"
+        checked={includeGKPlaytime}
+        onChange={handleTogglePlaytime}
+        className="h-4 w-4 text-blue-600 border-gray-300 rounded cursor-pointer"
+      />
+      <label htmlFor="includeGKPlaytime" className="ml-2 text-gray-200 cursor-pointer">
+        Include Goalkeeper in Rotation
+      </label>
+      <div className="ml-2 group relative">
+        <span className="text-gray-400 cursor-help">ⓘ</span>
+        <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-sm p-2 rounded w-64">
+          When enabled, the goalkeeper will be included in the regular player rotation. 
+          When disabled, the goalkeeper will stay in position for the entire game.
+        </div>
       </div>
     </div>
   );

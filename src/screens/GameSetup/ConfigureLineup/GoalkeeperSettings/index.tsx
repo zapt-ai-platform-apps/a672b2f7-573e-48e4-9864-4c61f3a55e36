@@ -1,43 +1,31 @@
-import React from 'react';
-import GoalkeeperSelect from './GoalkeeperSelect';
-import GKPlaytimeToggle from './GKPlaytimeToggle';
-import { Player } from '../../../../types/GameTypes';
+import React from "react";
+import { GoalkeeperSettingsProps } from "../GoalkeeperTypes";
+import GoalkeeperSelector from "../GoalkeeperSelector";
+import GKPlaytimeToggle from "./GKPlaytimeToggle";
 
-interface GoalkeeperSettingsProps {
-  goalkeeper: Player | null; // Changed from string | null to Player | null
-  setGoalkeeper: (gk: Player | null) => void; // Changed to accept Player | null
-  includeGKPlaytime: boolean;
-  setIncludeGKPlaytime: (include: boolean) => void;
-  squadPlayers: Player[]; // Changed from string[] to Player[]
-}
-
-function GoalkeeperSettings({
+export default function GoalkeeperSettings({
+  startingPlayers,
   goalkeeper,
   setGoalkeeper,
   includeGKPlaytime,
   setIncludeGKPlaytime,
-  squadPlayers
+  confirmedGoalkeeper,
+  setConfirmedGoalkeeper,
 }: GoalkeeperSettingsProps) {
   return (
-    <div className="space-y-4">
-      <div className="mb-4">
-        <GoalkeeperSelect
-          goalkeeper={goalkeeper}
-          setGoalkeeper={setGoalkeeper}
-          squadPlayers={squadPlayers}
-        />
-        {goalkeeper && (
-          <p className="mt-2 text-sm text-green-600 font-medium">
-            Selected Goalkeeper: {goalkeeper.name}
-          </p>
-        )}
-      </div>
+    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-6">
+      <h2 className="text-2xl font-bold mb-4 text-white">Goalkeeper Settings</h2>
+      <GoalkeeperSelector
+        startingPlayers={startingPlayers}
+        goalkeeper={goalkeeper}
+        setGoalkeeper={setGoalkeeper}
+        confirmedGoalkeeper={confirmedGoalkeeper}
+        setConfirmedGoalkeeper={setConfirmedGoalkeeper}
+      />
       <GKPlaytimeToggle
         includeGKPlaytime={includeGKPlaytime}
-        onToggle={(e) => setIncludeGKPlaytime(e.target.checked)}
+        setIncludeGKPlaytime={setIncludeGKPlaytime}
       />
     </div>
   );
 }
-
-export default GoalkeeperSettings;

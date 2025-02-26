@@ -1,48 +1,56 @@
-import React from 'react';
-import { Player } from '../../../../types/GameTypes';
+import React from "react";
+import { Player } from "../../../../types/GameTypes";
 
 interface GoalkeeperSelectProps {
+  players: Player[];
   goalkeeper: Player | null;
   setGoalkeeper: (player: Player | null) => void;
-  squadPlayers: Player[];
 }
 
-function GoalkeeperSelect({
+export default function GoalkeeperSelect({
+  players,
   goalkeeper,
   setGoalkeeper,
-  squadPlayers
-}: GoalkeeperSelectProps) {
+}: GoalkeeperSelectProps): JSX.Element {
   const handleSelectGoalkeeper = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedPlayerId = e.target.value;
-    if (selectedPlayerId === "") {
+    const selectedId = e.target.value;
+    if (selectedId === "") {
       setGoalkeeper(null);
-    } else {
-      const selectedPlayer = squadPlayers.find(player => player.id === selectedPlayerId);
-      if (selectedPlayer) {
-        setGoalkeeper(selectedPlayer);
-      }
+      return;
+    }
+
+    const selectedPlayer = players.find((player) => player.id === selectedId);
+    if (selectedPlayer) {
+      setGoalkeeper(selectedPlayer);
     }
   };
 
   return (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+    <div className="mb-4">
+      <label
+        htmlFor="goalkeeper"
+        className="block text-sm font-medium text-white mb-1"
+      >
         Select Goalkeeper
       </label>
       <select
-        className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        value={goalkeeper?.id || ""}
+        id="goalkeeper"
+        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900 box-border"
         onChange={handleSelectGoalkeeper}
+        value={goalkeeper?.id || ""}
       >
-        <option value="">Select a goalkeeper</option>
-        {squadPlayers.map((player) => (
+        <option value="">Select a player</option>
+        {players.map((player) => (
           <option key={player.id} value={player.id}>
             {player.name}
           </option>
         ))}
       </select>
+      {goalkeeper && (
+        <div className="mt-2 p-2 bg-blue-100 text-blue-800 rounded-md">
+          Current goalkeeper: {goalkeeper.name}
+        </div>
+      )}
     </div>
   );
 }
-
-export default GoalkeeperSelect;
