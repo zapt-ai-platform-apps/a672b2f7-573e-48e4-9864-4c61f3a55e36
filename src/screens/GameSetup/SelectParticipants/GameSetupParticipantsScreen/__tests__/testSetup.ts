@@ -1,4 +1,9 @@
 import { vi } from 'vitest';
+import { render } from '@testing-library/react';
+
+export function testSetup(component: JSX.Element) {
+  return render(component);
+}
 
 export const mockToggleMatchPlayer = vi.fn();
 export const mockSetSelectedSquad = vi.fn();
