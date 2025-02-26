@@ -86,6 +86,7 @@ export default function StartingLineup(): JSX.Element {
                     key={player.id}
                     player={player}
                     isSelected={!!player.selected}
+                    onClick={() => toggleStartingPlayer(player.id)}
                     onToggle={() => toggleStartingPlayer(player.id)}
                   />
               ))}
