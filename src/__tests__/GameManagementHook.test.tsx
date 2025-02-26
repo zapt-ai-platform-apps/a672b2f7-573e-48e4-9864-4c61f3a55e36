@@ -4,7 +4,7 @@ import { Player } from '../types/GameTypes';
 
 describe('useGameManagement', () => {
   const mockGoalkeeper: Player = {
-    id: 'gk1',
+    id: 'p1', // Changed from 'gk1' to match a player in the mockPlayers array
     name: 'Goalkeeper 1',
     totalPlayTime: 0,
     isOnField: false,
