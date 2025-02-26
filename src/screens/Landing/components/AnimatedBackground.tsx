@@ -50,8 +50,8 @@ const AnimatedBackground = () => {
           style={{
             top: shape.top,
             left: shape.left,
-            width: shape.size,
-            height: shape.size,
+            width: `${shape.size}rem`, // Added 'rem' unit here
+            height: `${shape.size}rem`, // Added 'rem' unit here
             opacity: shape.opacity,
             filter: `blur(${shape.blur})`,
             borderRadius: shape.type === 'circle' ? '50%' : '25%',
@@ -76,8 +76,8 @@ const AnimatedBackground = () => {
           style={{
             top: star.top,
             left: star.left,
-            width: star.size,
-            height: star.size,
+            width: `${star.size}px`, // Added 'px' unit here
+            height: `${star.size}px`, // Added 'px' unit here
           }}
           animate={{
             opacity: [star.opacity * 0.7, star.opacity, star.opacity * 0.7],

@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { AuthProvider } from './context/AuthContext';
-import StateProvider from './components/StateProvider';
+import { AuthProvider } from './components/AuthProvider';
 import * as Sentry from "@sentry/browser";
 import "./index.css";
 

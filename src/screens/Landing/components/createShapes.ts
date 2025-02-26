@@ -3,7 +3,7 @@ const createShapes = () => {
     id: i,
     top: `${Math.random() * 100}%`,
     left: `${Math.random() * 100}%`,
-    size: `${Math.random() * 8 + 3}rem`,
+    size: Math.random() * 8 + 3, // Changed to number (without 'rem')
     opacity: Math.random() * 0.15 + 0.05,
     blur: `${Math.random() * 60 + 40}px`,
     type: Math.random() > 0.5 ? 'circle' : 'square',

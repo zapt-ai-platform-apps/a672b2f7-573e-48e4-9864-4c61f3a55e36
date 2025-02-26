@@ -34,7 +34,6 @@ export default function Pitch({
         <Player
           key={player.id}
           player={player}
-          position={player.position}
           onPointerDown={handlePointerDown ? (e) => handlePointerDown(e, player.id) : undefined}
         />
       ))}
