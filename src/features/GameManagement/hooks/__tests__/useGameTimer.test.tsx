@@ -28,8 +28,8 @@ describe('useGameTimer', () => {
     
     // Check that we have one interval with a start time
     expect(result.current.gameIntervals.length).toBe(1);
-    expect(result.current.gameIntervals[0].start).toBeTruthy();
-    expect(result.current.gameIntervals[0].end).toBeUndefined();
+    expect(result.current.gameIntervals[0].startTime).toBeTruthy();
+    expect(result.current.gameIntervals[0].endTime).toBeUndefined();
   });
 
   it('should increase timeElapsed while timer is running', () => {
@@ -70,7 +70,7 @@ describe('useGameTimer', () => {
     });
     
     // Check that the interval has an end time
-    expect(result.current.gameIntervals[0].end).toBeTruthy();
+    expect(result.current.gameIntervals[0].endTime).toBeTruthy();
     
     // Advance timer by 2 more seconds, time should not change
     act(() => {
@@ -120,7 +120,7 @@ describe('useGameTimer', () => {
     });
     
     // Check the interval has an end time
-    expect(result.current.gameIntervals[0].end).toBeTruthy();
+    expect(result.current.gameIntervals[0].endTime).toBeTruthy();
     
     // Time should be about 2 seconds
     expect(result.current.timeElapsed).toBe(2);

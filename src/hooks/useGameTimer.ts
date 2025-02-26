@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import * as Sentry from '@sentry/browser';
 
 interface Interval {
-  start: number;
-  end?: number;
+  startTime: number;
+  endTime?: number;
 }
 
 function useGameTimer() {
@@ -18,7 +18,7 @@ function useGameTimer() {
       setIsRunning(true);
       
       // Record this interval's start time
-      const newInterval: Interval = { start: Date.now() };
+      const newInterval: Interval = { startTime: Date.now() };
       setGameIntervals(prev => [...prev, newInterval]);
     } catch (error) {
       console.error('Error starting timer:', error);
@@ -39,7 +39,7 @@ function useGameTimer() {
         const updatedIntervals = [...prev];
         updatedIntervals[lastIndex] = {
           ...updatedIntervals[lastIndex],
-          end: Date.now()
+          endTime: Date.now()
         };
         
         return updatedIntervals;
@@ -69,12 +69,12 @@ function useGameTimer() {
       // Base time is sum of completed intervals
       let total = gameIntervals.reduce((sum, interval) => {
         // If the interval has an end, add its duration
-        if (interval.end) {
-          return sum + (interval.end - interval.start);
+        if (interval.endTime) {
+          return sum + (interval.endTime - interval.startTime);
         }
         // Interval without end is still running, so calculate current duration
         else if (isRunning) {
-          return sum + (Date.now() - interval.start);
+          return sum + (Date.now() - interval.startTime);
         }
         return sum;
       }, 0);
