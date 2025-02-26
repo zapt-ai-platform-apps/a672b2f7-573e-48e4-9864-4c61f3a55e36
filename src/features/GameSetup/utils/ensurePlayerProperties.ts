@@ -1,24 +1,30 @@
-import { ExtendedPlayer } from '../types/ExtendedPlayer';
+import { Player, Position } from '../../../types/GameTypes';
 
 /**
- * Ensures that all required player properties are present.
- * If any are missing, default values will be applied.
- * 
- * @param player The player object to ensure properties for
- * @returns A player object with all required properties
+ * Ensures that a partial player object has all required properties of the Player interface.
+ * Provides default values for missing properties.
  */
-export function ensurePlayerProperties(player: any): ExtendedPlayer {
-  if (!player) {
-    throw new Error('Cannot ensure properties for undefined player');
-  }
-
+export function ensurePlayerProperties(player: Partial<Player>): Player {
+  // Default position if not provided
+  const defaultPosition: Position = { x: 0, y: 0 };
+  
   return {
     id: player.id || '',
     name: player.name || '',
-    isInMatchSquad: player.isInMatchSquad || false,
-    totalPlayTime: player.totalPlayTime || 0,
-    isOnField: player.isOnField || false,
-    isGoalkeeper: player.isGoalkeeper || false,
-    position: player.position || null,
+    totalPlayTime: player.totalPlayTime ?? 0,
+    isOnField: player.isOnField ?? false,
+    isGoalkeeper: player.isGoalkeeper ?? false,
+    position: player.position || defaultPosition,
+    // Optional properties with their original values or undefined
+    number: player.number,
+    playTime: player.playTime,
+    lastStart: player.lastStart,
+    isInMatchSquad: player.isInMatchSquad,
+    isStartingPlayer: player.isStartingPlayer,
+    isInStartingLineup: player.isInStartingLineup,
+    status: player.status,
+    minutesPlayed: player.minutesPlayed,
+    playIntervals: player.playIntervals,
+    selected: player.selected
   };
 }

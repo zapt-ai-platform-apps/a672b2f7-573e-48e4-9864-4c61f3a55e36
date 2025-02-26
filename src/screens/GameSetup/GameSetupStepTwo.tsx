@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Sentry from '@sentry/browser';
 import { useStateContext } from '../../hooks/useStateContext';
+import { ensurePlayerProperties } from '../../features/GameSetup/utils/ensurePlayerProperties';
 
 export function GameSetupStepTwo(): JSX.Element {
   const navigate = useNavigate();
@@ -30,11 +31,10 @@ export function GameSetupStepTwo(): JSX.Element {
         }
         
         // Update playerData in state context to reflect starting lineup selection
-        // This ensures players marked as starting players will appear on field in game management
-        // Fixed: Added type assertion to avoid "Spread types may only be created from object types" error
-        setPlayerData(matchSquad.map(player => ({ 
-          ...(player as Record<string, unknown>), 
-          isOnField: player.isStartingPlayer === true 
+        // Using ensurePlayerProperties to guarantee all required Player properties are present
+        setPlayerData(matchSquad.map(player => ensurePlayerProperties({
+          ...player,
+          isOnField: player.isStartingPlayer === true
         })));
         
         console.log('Updated playerData with starting lineup information');
