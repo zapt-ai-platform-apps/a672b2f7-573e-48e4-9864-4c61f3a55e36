@@ -38,7 +38,7 @@ describe('GameSetupStepTwo', () => {
       isOnField: false,
       isGoalkeeper: false,
       position: defaultPosition,
-      ...(overrides || {}) // Fix: ensure overrides is an object
+      ...((overrides && typeof overrides === 'object') ? overrides : {})
     };
   };
   
