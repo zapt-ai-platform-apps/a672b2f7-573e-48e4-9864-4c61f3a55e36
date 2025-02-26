@@ -3,8 +3,15 @@ import { Player } from '../types/GameTypes';
 export default function parsePlayers(text: string): Player[] {
   if (!text) return [];
   
+  // Determine if we should split by commas or newlines
+  const hasNewlines = text.includes('\n');
+  const hasCommas = text.includes(',');
+  
+  // If there are commas but no newlines, split by commas
+  const delimiter = (hasCommas && !hasNewlines) ? ',' : '\n';
+  
   return text
-    .split('\n')
+    .split(delimiter)
     .map(line => line.trim())
     .filter(line => line.length > 0)
     .map((name, index) => ({ 
