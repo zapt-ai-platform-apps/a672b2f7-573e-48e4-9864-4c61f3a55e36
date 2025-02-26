@@ -35,12 +35,7 @@ export default defineConfig({
         '@testing-library/react',
         'react-router-dom'
       ]
-    },
-    // Add resolver for test module paths
-    resolver: {
-      alias: {
-        '@': resolve(__dirname, './src')
-      }
     }
+    // Resolver property has been removed as it's not supported in Vite's InlineConfig for tests
   }
 });
