@@ -98,7 +98,7 @@ export default function StartingLineup(): JSX.Element {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          Select Starting Lineup
+          Configure Game
         </motion.h1>
         
         <motion.p 
@@ -200,7 +200,7 @@ export default function StartingLineup(): JSX.Element {
             whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.4)" }}
             whileTap={{ scale: 0.95 }}
           >
-            Continue to Game Setup →
+            Start Game
           </motion.button>
         </motion.div>
       </div>

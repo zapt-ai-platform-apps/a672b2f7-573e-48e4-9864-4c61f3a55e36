@@ -18,10 +18,11 @@ export function useGameManagement() {
   };
 
   const handleStartGame = (players: Player[], goalkeeperPlayer: Player, includeGKPlaytimeValue: boolean) => {
-    // Update players to set isOnField=true for starting players
+    // Update players to set isOnField=true for starting players and mark the goalkeeper
     const updatedPlayers = players.map(player => ({
       ...player,
-      isOnField: player.isStartingPlayer === true
+      isOnField: player.isStartingPlayer === true,
+      isGoalkeeper: player.id === goalkeeperPlayer.id // Set isGoalkeeper flag for the selected goalkeeper
     }));
     
     setPlayerData(updatedPlayers);

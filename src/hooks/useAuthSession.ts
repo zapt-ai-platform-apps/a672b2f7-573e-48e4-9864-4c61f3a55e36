@@ -55,3 +55,6 @@ export function useAuthSession() {
 
   return { session, loading, signOut };
 }
+
+// Export as a named export for test compatibility
+export { useAuthSession };
