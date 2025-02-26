@@ -31,8 +31,9 @@ export function GameSetupStepTwo(): JSX.Element {
         
         // Update playerData in state context to reflect starting lineup selection
         // This ensures players marked as starting players will appear on field in game management
+        // Fixed: Added type assertion to avoid "Spread types may only be created from object types" error
         setPlayerData(matchSquad.map(player => ({ 
-          ...player, 
+          ...(player as Record<string, unknown>), 
           isOnField: player.isStartingPlayer === true 
         })));
         
