@@ -32,6 +32,28 @@ export interface UseGameManagementLogicReturn {
   timeElapsed: number;
 }
 
+/**
+ * Converts position string values (like '35%') to numeric values
+ */
+const parsePositionToNumeric = (position: any): { x: number, y: number } => {
+  if (!position) {
+    return {
+      x: 30 + Math.random() * 40,
+      y: 30 + Math.random() * 40
+    };
+  }
+
+  const x = typeof position.x === 'string' 
+    ? parseFloat(position.x) 
+    : (typeof position.x === 'number' ? position.x : 30 + Math.random() * 40);
+  
+  const y = typeof position.y === 'string' 
+    ? parseFloat(position.y) 
+    : (typeof position.y === 'number' ? position.y : 30 + Math.random() * 40);
+
+  return { x, y };
+};
+
 export function useGameManagementLogic(): UseGameManagementLogicReturn {
   const {
     playerData,
@@ -97,11 +119,7 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
           playIntervals: [],
           isOnField: p.isStartingPlayer ?? false,
           // Add default positions for on-field players to ensure they appear on the pitch
-          position: p.isStartingPlayer ? 
-            p.position || { 
-              x: `${30 + Math.random() * 40}%`, 
-              y: `${30 + Math.random() * 40}%` 
-            } : undefined
+          position: p.isStartingPlayer ? parsePositionToNumeric(p.position) : undefined
         }));
         setPlayerData(initializedPlayers);
         console.log('Initialized players from squad with positions:', initializedPlayers);
@@ -179,7 +197,7 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
                   ...(player.playIntervals || []),
                   {
                     start: now,
-                    end: null,
+                    end: undefined, // Changed from null to undefined
                     isGoalkeeper: player.isGoalkeeper || false
                   }
                 ]
@@ -247,10 +265,7 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
             if (player.id === playerId && !player.position) {
               return {
                 ...player,
-                position: { 
-                  x: `${30 + Math.random() * 40}%`, 
-                  y: `${30 + Math.random() * 40}%` 
-                }
+                position: parsePositionToNumeric(null) // Use the same function for consistency
               };
             }
             return player;
