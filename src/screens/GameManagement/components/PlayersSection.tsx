@@ -1,5 +1,5 @@
 import React from 'react';
-import PlayerList from '../../../features/GameManagement/components/PlayerList'; // Corrected import path
+import PlayerList from '../../../features/GameManagement/components/PlayerList';
 import { timeFormatter } from '../utils/timeFormatter';
 import { Player } from '../../../types/GameTypes';
 
@@ -20,14 +20,14 @@ export function PlayersSection({
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
       <PlayerList
         players={onFieldPlayers}
-        title="On Field Players"
+        title="Players On Field"
         emptyMessage="No players currently on the field"
         getTotalPlayTime={getTotalPlayTime}
         onPlayerClick={handlePlayerClick}
         selectedPlayer={null}
         timeFormatter={timeFormatter}
-        selectedItemClass="bg-blue-100 dark:bg-blue-900"
-        defaultItemClass="bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600"
+        selectedItemClass="bg-blue-600 text-white"
+        defaultItemClass="bg-white/20 backdrop-blur-sm hover:bg-white/30"
         showGoalkeeper={true}
       />
       <PlayerList
@@ -38,8 +38,8 @@ export function PlayersSection({
         onPlayerClick={handlePlayerClick}
         selectedPlayer={null}
         timeFormatter={timeFormatter}
-        selectedItemClass="bg-blue-100 dark:bg-blue-900"
-        defaultItemClass="bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600"
+        selectedItemClass="bg-blue-600 text-white"
+        defaultItemClass="bg-white/20 backdrop-blur-sm hover:bg-white/30"
       />
     </div>
   );

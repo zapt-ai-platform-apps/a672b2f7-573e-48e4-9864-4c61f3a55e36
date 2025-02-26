@@ -28,9 +28,9 @@ function PlayerList({
 }: PlayerListProps): JSX.Element {
   return (
     <div>
-      <h3 className="text-xl font-bold mb-2">{title}</h3>
+      <h3 className="text-xl font-bold mb-2 text-white">{title}</h3>
       {players.length === 0 ? (
-        <p>{emptyMessage}</p>
+        <p className="text-white">{emptyMessage}</p>
       ) : (
         <ul>
           {players.map((player, index) => {
@@ -39,12 +39,14 @@ function PlayerList({
             return (
               <li
                 key={index}
-                className={`p-2 mb-1 cursor-pointer ${itemClass}`}
+                className={`p-2 mb-1 cursor-pointer ${itemClass} text-gray-800 dark:text-white`}
                 onClick={() => onPlayerClick(player)}
               >
                 <div>{player.name}</div>
                 <div>{timeFormatter(getTotalPlayTime(player))}</div>
-                {showGoalkeeper && player.isGoalkeeper && <div>Goalkeeper</div>}
+                {showGoalkeeper && player.isGoalkeeper && (
+                  <div className="text-yellow-600 dark:text-yellow-400 font-medium">Goalkeeper</div>
+                )}
               </li>
             );
           })}

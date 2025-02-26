@@ -24,7 +24,7 @@ function PitchVisualization({ players }: PitchVisualizationProps): JSX.Element {
   }));
 
   useEffect(() => {
-    // Call assignInitialPositions with the player array, not the DOM element
+    // Call assignInitialPositions with the player array
     assignInitialPositions(playersWithValidPositions);
   }, [players]);
 
@@ -38,14 +38,14 @@ function PitchVisualization({ players }: PitchVisualizationProps): JSX.Element {
     };
   }, [init]);
 
-  // Updated to use a more generic type for pointer events
+  // Updated to pass the player ID to the pointer down handler
   const handlePointerDownWrapper = (e: React.PointerEvent<Element>, playerId?: string) => {
-    handlePointerDown(e.nativeEvent);
+    handlePointerDown(e.nativeEvent, playerId);
   };
 
   return (
     <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-4 text-green-600 dark:text-green-400">
+      <h2 className="text-2xl font-bold mb-4 text-white">
         Player Positions
       </h2>
       <Pitch 
@@ -54,7 +54,7 @@ function PitchVisualization({ players }: PitchVisualizationProps): JSX.Element {
         handlePointerDown={handlePointerDownWrapper}
         players={playersWithValidPositions} 
       />
-      <p className="mt-4 text-gray-700 dark:text-gray-300">
+      <p className="mt-4 text-white">
         Drag and drop players to set their positions.
       </p>
     </div>

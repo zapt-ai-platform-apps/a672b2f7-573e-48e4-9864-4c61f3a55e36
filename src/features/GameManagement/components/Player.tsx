@@ -7,7 +7,7 @@ interface PlayerProps {
   onSelect?: (player: PlayerType) => void;
   isActive?: boolean;
   showStatus?: boolean;
-  onPointerDown?: (event: React.PointerEvent<HTMLDivElement>) => void;
+  onPointerDown?: (event: React.PointerEvent<HTMLDivElement>, playerId?: string) => void;
 }
 
 const Player: React.FC<PlayerProps> = ({ 
@@ -38,7 +38,7 @@ const Player: React.FC<PlayerProps> = ({
         isActive ? 'bg-indigo-700 scale-105' : 'bg-indigo-800 hover:bg-indigo-700'
       }`}
       onClick={() => onSelect && onSelect(player)}
-      onPointerDown={onPointerDown}
+      onPointerDown={(e) => onPointerDown && onPointerDown(e, player.id?.toString())}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       style={{
@@ -56,9 +56,9 @@ const Player: React.FC<PlayerProps> = ({
     >
       <div className="flex items-center justify-between">
         {isPitchView ? (
-          <span className="pitch-player-name">{displayName}</span>
+          <span className="pitch-player-name text-white font-medium">{displayName}</span>
         ) : (
-          <span className="player-name font-medium">{displayName}</span>
+          <span className="player-name text-white font-medium">{displayName}</span>
         )}
         {showStatus && !isPitchView && (
           <span className={`w-3 h-3 rounded-full ${statusColor}`}></span>

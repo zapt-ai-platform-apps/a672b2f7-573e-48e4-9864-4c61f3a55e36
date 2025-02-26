@@ -1,63 +1,84 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Player from './Player';
-import { PitchProps } from './types';
-import { motion } from 'framer-motion';
+import type { Player as PlayerType } from '../../../types/GameTypes';
 
-export default function Pitch({
-  players = [],
-  hideLabel = false,
-  pitchRef,
-  playerData,
-  handlePointerDown
-}: PitchProps): JSX.Element {
-  const displayPlayers = playerData || players;
+interface PitchProps {
+  pitchRef: React.RefObject<HTMLDivElement>;
+  playerData: PlayerType[];
+  players: PlayerType[];
+  handlePointerDown: (event: React.PointerEvent<Element>, playerId?: string) => void;
+}
+
+function Pitch({ pitchRef, playerData, handlePointerDown, players }: PitchProps): JSX.Element {
+  // Listen for position update events to update the state
+  useEffect(() => {
+    const updatePlayerPosition = (e: Event) => {
+      const { playerId, x, y } = (e as CustomEvent).detail;
+      
+      // Find the player in state and update its position
+      const playerIndex = playerData.findIndex(p => p.id?.toString() === playerId);
+      if (playerIndex !== -1) {
+        const updatedPlayerData = [...playerData];
+        updatedPlayerData[playerIndex] = {
+          ...updatedPlayerData[playerIndex],
+          position: { x, y }
+        };
+        
+        // This should trigger a state update in the parent component
+        console.log(`Updated position for player ${playerId}:`, { x, y });
+      }
+    };
+    
+    const pitchElement = pitchRef.current;
+    if (pitchElement) {
+      pitchElement.addEventListener('playerPositionFinal', updatePlayerPosition);
+    }
+    
+    return () => {
+      if (pitchElement) {
+        pitchElement.removeEventListener('playerPositionFinal', updatePlayerPosition);
+      }
+    };
+  }, [pitchRef, playerData]);
   
   return (
-    <div
+    <div 
       ref={pitchRef}
-      className="relative w-full aspect-[2/1.4] bg-gradient-to-b from-green-600 to-green-700 rounded-xl overflow-hidden shadow-lg border-4 border-white/20"
+      className="pitch relative w-full h-96 md:h-[450px] bg-green-600 rounded-xl overflow-hidden shadow-lg"
+      style={{
+        backgroundImage: `
+          linear-gradient(to right, transparent 49.9%, white 50%, transparent 50.1%),
+          linear-gradient(to bottom, transparent 49.9%, white 50%, transparent 50.1%),
+          radial-gradient(circle at center, white 2%, transparent 2.5%)
+        `,
+        backgroundSize: '100% 100%, 100% 100%, 100% 100%'
+      }}
     >
-      {/* Field markings */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/4 h-1/4 border-2 border-white/60 rounded-full"></div>
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-white/60"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-white/80 rounded-full"></div>
-        <div className="absolute left-1 top-1/3 bottom-1/3 w-1/10 border-2 border-white/60"></div>
-        <div className="absolute right-1 top-1/3 bottom-1/3 w-1/10 border-2 border-white/60"></div>
-        <div className="absolute left-0 top-1/4 bottom-1/4 w-1/6 border-2 border-white/60"></div>
-        <div className="absolute right-0 top-1/4 bottom-1/4 w-1/6 border-2 border-white/60"></div>
-      </div>
+      {/* Add pitch markings */}
+      <div className="absolute inset-x-0 top-0 h-[20%] border-b-2 border-white"></div> {/* Penalty area 1 */}
+      <div className="absolute inset-x-0 bottom-0 h-[20%] border-t-2 border-white"></div> {/* Penalty area 2 */}
       
-      {/* Field label */}
-      {!hideLabel && (
-        <motion.div 
-          className="absolute top-2 left-1/2 transform -translate-x-1/2 bg-white/30 backdrop-blur-sm px-3 py-1 rounded-full text-xs text-white font-medium"
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
+      {/* Render players */}
+      {players.map((player, index) => (
+        <div 
+          key={index}
+          style={{
+            position: 'absolute',
+            left: `${player.position?.x || 0}%`,
+            top: `${player.position?.y || 0}%`,
+            transform: 'translate(-50%, -50%)'
+          }}
+          data-player-id={player.id?.toString()}
         >
-          Field View
-        </motion.div>
-      )}
-      
-      {/* Debug overlay to show when players not displaying */}
-      {displayPlayers && displayPlayers.length === 0 && (
-        <div className="absolute inset-0 flex items-center justify-center text-white bg-black/40 backdrop-blur-sm">
-          <p className="text-center">No players positioned on the field</p>
+          <Player 
+            player={player}
+            onPointerDown={handlePointerDown}
+            showStatus={false}
+          />
         </div>
-      )}
-      
-      {/* Players */}
-      {displayPlayers && displayPlayers.map((player) => (
-        <Player
-          key={player.id}
-          player={player}
-          onPointerDown={handlePointerDown ? (e: React.PointerEvent<HTMLDivElement>) => handlePointerDown(e, player.id) : undefined}
-        />
       ))}
-      
-      {/* Field texture overlay for realism */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCI+CjxyZWN0IHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBvcGFjaXR5PSIwLjA1Ii8+Cjwvc3ZnPg==')] opacity-25 pointer-events-none"></div>
     </div>
   );
 }
+
+export default Pitch;
