@@ -118,8 +118,8 @@ export function useGameManagementLogic(): UseGameManagementLogicReturn {
           ...p,
           playIntervals: [],
           isOnField: p.isStartingPlayer ?? false,
-          // Add default positions for on-field players to ensure they appear on the pitch
-          position: p.isStartingPlayer ? parsePositionToNumeric(p.position) : undefined
+          // Always provide a position for all players, not just starting players
+          position: parsePositionToNumeric(p.position)
         }));
         setPlayerData(initializedPlayers);
         console.log('Initialized players from squad with positions:', initializedPlayers);

@@ -16,7 +16,7 @@ export default function createShapes() {
   ];
 
   for (let i = 0; i < shapesCount; i++) {
-    const type = Math.random() > 0.5 ? 'circle' : 'square';
+    const type: 'circle' | 'square' = Math.random() > 0.5 ? 'circle' : 'square';
     const size = Math.random() * 20 + 5; // 5-25rem
     const top = `${Math.random() * 100}%`;
     const left = `${Math.random() * 100}%`;

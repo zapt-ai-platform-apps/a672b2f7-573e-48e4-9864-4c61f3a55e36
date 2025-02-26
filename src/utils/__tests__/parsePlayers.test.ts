@@ -1,54 +1,55 @@
-import parsePlayers from '../parsePlayers';
+import { describe, it, expect } from 'vitest';
+import { parsePlayers } from '../parsePlayers';
 
 describe('parsePlayers', () => {
-  test('should correctly parse newline-separated player names', () => {
-    const input = 'John\nPaul\nGeorge\nRingo';
-    const result = parsePlayers(input);
+  it('should correctly parse player data with positions', () => {
+    const playerData = [
+      { id: 1, name: 'Player 1', isStartingPlayer: true },
+      { id: 2, name: 'Player 2', isStartingPlayer: false }
+    ];
+
+    const result = parsePlayers(playerData);
     
-    expect(result.length).toBe(4);
-    expect(result[0].name).toBe('John');
-    expect(result[1].name).toBe('Paul');
-    expect(result[2].name).toBe('George');
-    expect(result[3].name).toBe('Ringo');
+    // All players should have positions, regardless of isStartingPlayer status
+    expect(result.every(player => player.position && typeof player.position.x === 'number')).toBe(true);
+    expect(result.every(player => player.position && typeof player.position.y === 'number')).toBe(true);
   });
 
-  test('should correctly parse comma-separated player names', () => {
-    const input = 'John, Paul, George, Ringo';
-    const result = parsePlayers(input);
+  it('should assign positions even when none are provided', () => {
+    const playerData = [
+      { id: 1, name: 'Player 1' },
+      { id: 2, name: 'Player 2' }
+    ];
+
+    const result = parsePlayers(playerData);
     
-    expect(result.length).toBe(4);
-    expect(result[0].name).toBe('John');
-    expect(result[1].name).toBe('Paul');
-    expect(result[2].name).toBe('George');
-    expect(result[3].name).toBe('Ringo');
+    // All players should have valid positions
+    expect(result.every(player => player.position && typeof player.position.x === 'number')).toBe(true);
+    expect(result.every(player => player.position && typeof player.position.y === 'number')).toBe(true);
   });
 
-  test('should handle empty input', () => {
-    expect(parsePlayers('')).toEqual([]);
-  });
+  it('should handle existing position data correctly', () => {
+    const playerData = [
+      { 
+        id: 1, 
+        name: 'Player 1', 
+        position: { x: 10, y: 20 } 
+      },
+      { 
+        id: 2, 
+        name: 'Player 2', 
+        position: { x: '30%', y: '40%' } 
+      }
+    ];
 
-  test('should handle mixed format with preference for newlines', () => {
-    const input = 'John\nPaul, George\nRingo';
-    const result = parsePlayers(input);
+    const result = parsePlayers(playerData);
     
-    // Since there are newlines, it should split by newlines
-    expect(result.length).toBe(3);
-    expect(result[0].name).toBe('John');
-    expect(result[1].name).toBe('Paul, George');
-    expect(result[2].name).toBe('Ringo');
-  });
-
-  test('should create player objects with default properties', () => {
-    const input = 'John, Paul';
-    const result = parsePlayers(input);
+    // First player should keep their numeric position
+    expect(result[0].position.x).toBe(10);
+    expect(result[0].position.y).toBe(20);
     
-    expect(result[0]).toHaveProperty('id', '0');
-    expect(result[0]).toHaveProperty('name', 'John');
-    expect(result[0]).toHaveProperty('isStartingPlayer', false);
-    expect(result[0]).toHaveProperty('totalPlayTime', 0);
-    expect(result[0]).toHaveProperty('isOnField', false);
-    expect(result[0]).toHaveProperty('isGoalkeeper', false);
-    expect(result[0]).toHaveProperty('position');
-    expect(result[0].position).toEqual({ x: 0, y: 0 });
+    // Second player's position should be converted from strings to numbers
+    expect(typeof result[1].position.x).toBe('number');
+    expect(typeof result[1].position.y).toBe('number');
   });
 });
