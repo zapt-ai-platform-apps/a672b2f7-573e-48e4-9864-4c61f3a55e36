@@ -3,16 +3,18 @@ import { Player as PlayerType } from '../../../shared/models/player';
 
 interface PlayerProps {
   player: PlayerType;
-  onSelect: (player: PlayerType) => void;
+  onSelect?: (player: PlayerType) => void;
   isActive?: boolean;
   showStatus?: boolean;
+  onPointerDown?: (event: React.PointerEvent<HTMLDivElement>) => void;
 }
 
 const Player: React.FC<PlayerProps> = ({ 
   player, 
   onSelect, 
   isActive = false,
-  showStatus = true
+  showStatus = true,
+  onPointerDown
 }) => {
   const statusColor = player.status === 'playing' 
     ? 'bg-green-500' 
@@ -31,7 +33,8 @@ const Player: React.FC<PlayerProps> = ({
       className={`rounded-lg p-3 mb-2 cursor-pointer transition-all ${
         isActive ? 'bg-indigo-700 scale-105' : 'bg-indigo-800 hover:bg-indigo-700'
       }`}
-      onClick={() => onSelect(player)}
+      onClick={() => onSelect && onSelect(player)}
+      onPointerDown={onPointerDown}
     >
       <div className="flex items-center justify-between">
         <span className="font-medium">{displayName}</span>

@@ -34,7 +34,7 @@ export default function Pitch({
         <Player
           key={player.id}
           player={player}
-          onPointerDown={handlePointerDown ? (e) => handlePointerDown(e, player.id) : undefined}
+          onPointerDown={handlePointerDown ? (e: React.PointerEvent<HTMLDivElement>) => handlePointerDown(e, player.id) : undefined}
         />
       ))}
     </div>

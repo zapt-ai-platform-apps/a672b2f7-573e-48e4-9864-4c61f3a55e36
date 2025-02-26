@@ -1,3 +1,5 @@
+type ShapeType = 'circle' | 'square';
+
 const createShapes = () => {
   return Array.from({ length: 20 }).map((_, i) => ({
     id: i,
@@ -6,7 +8,7 @@ const createShapes = () => {
     size: Math.random() * 8 + 3, // Changed to number (without 'rem')
     opacity: Math.random() * 0.15 + 0.05,
     blur: `${Math.random() * 60 + 40}px`,
-    type: Math.random() > 0.5 ? 'circle' : 'square',
+    type: (Math.random() > 0.5 ? 'circle' : 'square') as ShapeType,
     color: i % 3 === 0 
       ? 'from-blue-400 to-blue-600' 
       : i % 3 === 1 
