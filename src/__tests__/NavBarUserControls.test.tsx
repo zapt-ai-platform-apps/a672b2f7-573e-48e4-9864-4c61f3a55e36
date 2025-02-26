@@ -8,7 +8,7 @@ import NavBarUserControls from '../components/navigation/NavBarUserControls';
 const mockNavigate = vi.fn();
 const mockSignOut = vi.fn();
 
-// Mock auth hooks
+// Properly mock the auth hooks with correct path
 vi.mock('../hooks/useAuthSession', () => ({
   useAuthSession: vi.fn()
 }));

@@ -3,7 +3,7 @@ import { render, fireEvent, screen } from '@testing-library/react';
 import PitchVisualization from '../features/GameManagement/components/PitchVisualization';
 import { createEvent } from '@testing-library/dom';
 
-// Correctly mock the useDragAndDrop hook with explicit path
+// Mock the useDragAndDrop hook with correct path
 vi.mock('../features/GameManagement/hooks/useDragAndDrop', () => {
   const mockHandlePointerDown = vi.fn();
   const mockInit = vi.fn(() => () => {});

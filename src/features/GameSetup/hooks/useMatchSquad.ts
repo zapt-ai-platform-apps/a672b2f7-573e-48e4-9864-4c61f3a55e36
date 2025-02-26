@@ -27,6 +27,9 @@ export default function useMatchSquad() {
           
       const initialPlayers = initializeMatchSquadPlayers(squad, matchSquad as ExtendedPlayer[]);
       setMatchSquadPlayers(initialPlayers);
+    } else {
+      // Ensure we always have an empty array if no squad is selected
+      setMatchSquadPlayers([]);
     }
   }, [selectedSquad, matchSquad]);
 

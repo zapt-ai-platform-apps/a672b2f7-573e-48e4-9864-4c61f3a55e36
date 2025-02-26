@@ -6,13 +6,14 @@ import ParticipantItem from './ParticipantItem';
 import { ExtendedPlayer } from './types';
 import useGameSetupParticipantsHandlers from './useGameSetupParticipantsHandlers';
 
-export default function GameSetupParticipantsScreen(): JSX.Element {
+export function GameSetupParticipantsScreen(): JSX.Element {
   const { matchSquadPlayers, toggleMatchPlayer } = useMatchSquad();
   const { setSelectedSquad } = useStateContext();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const validPlayers = matchSquadPlayers.filter(
+  // Ensure matchSquadPlayers is always an array before filtering
+  const validPlayers = (matchSquadPlayers || []).filter(
     player => player && typeof player.id === 'string'
   ) as ExtendedPlayer[];
 
@@ -74,3 +75,5 @@ export default function GameSetupParticipantsScreen(): JSX.Element {
     </div>
   );
 }
+
+export default GameSetupParticipantsScreen;
