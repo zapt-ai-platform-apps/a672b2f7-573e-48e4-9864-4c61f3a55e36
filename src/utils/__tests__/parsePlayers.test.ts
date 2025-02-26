@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { parsePlayers } from '../parsePlayers';
+import parsePlayers from '../parsePlayers';
+import { Player } from '../../types/GameTypes';
 
 describe('parsePlayers', () => {
   it('should correctly parse player data with positions', () => {
@@ -11,8 +12,8 @@ describe('parsePlayers', () => {
     const result = parsePlayers(playerData);
     
     // All players should have positions, regardless of isStartingPlayer status
-    expect(result.every(player => player.position && typeof player.position.x === 'number')).toBe(true);
-    expect(result.every(player => player.position && typeof player.position.y === 'number')).toBe(true);
+    expect(result.every((player: Player) => player.position && typeof player.position.x === 'number')).toBe(true);
+    expect(result.every((player: Player) => player.position && typeof player.position.y === 'number')).toBe(true);
   });
 
   it('should assign positions even when none are provided', () => {
@@ -24,8 +25,8 @@ describe('parsePlayers', () => {
     const result = parsePlayers(playerData);
     
     // All players should have valid positions
-    expect(result.every(player => player.position && typeof player.position.x === 'number')).toBe(true);
-    expect(result.every(player => player.position && typeof player.position.y === 'number')).toBe(true);
+    expect(result.every((player: Player) => player.position && typeof player.position.x === 'number')).toBe(true);
+    expect(result.every((player: Player) => player.position && typeof player.position.y === 'number')).toBe(true);
   });
 
   it('should handle existing position data correctly', () => {
