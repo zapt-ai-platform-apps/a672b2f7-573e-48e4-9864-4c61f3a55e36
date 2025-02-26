@@ -52,7 +52,8 @@ export default function StartingLineup(): JSX.Element {
       return {
         ...player,
         isStartingPlayer: isSelected,
-        isGoalkeeper: isGoalkeeper
+        isGoalkeeper: isGoalkeeper,
+        isOnField: isSelected // Set isOnField based on whether player is selected for starting lineup
       };
     });
     
