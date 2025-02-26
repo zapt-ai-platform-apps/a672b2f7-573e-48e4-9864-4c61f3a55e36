@@ -9,7 +9,7 @@ type ProtectedRouteProps = {
 };
 
 export function ProtectedRoute({ children }: ProtectedRouteProps): JSX.Element {
-  const { session, isLoading } = useAuth();
+  const { session, loading: isLoading } = useAuth(); // Fixed: aliasing loading as isLoading
   const location = useLocation();
 
   useEffect(() => {

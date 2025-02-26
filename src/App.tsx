@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import AppRoutes from './AppRoutes';
 import ErrorBoundary from './components/ErrorBoundary';
-import AuthProvider from './components/AuthProvider';
 import StateProvider from './components/StateProvider';
 
 function App() {
@@ -10,11 +9,9 @@ function App() {
     <div className="min-h-screen h-full text-white bg-gradient-to-br from-purple-900 via-blue-800 to-indigo-900">
       <Router>
         <ErrorBoundary>
-          <AuthProvider>
-            <StateProvider>
-              <AppRoutes />
-            </StateProvider>
-          </AuthProvider>
+          <StateProvider>
+            <AppRoutes />
+          </StateProvider>
         </ErrorBoundary>
       </Router>
       <footer className="fixed bottom-0 inset-x-0 p-2 text-center text-xs bg-white/20 backdrop-blur-sm z-10">

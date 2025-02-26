@@ -3,9 +3,36 @@ import { motion } from 'framer-motion';
 import createShapes from './createShapes';
 import createStars from './createStars';
 
+// Define types for shapes and stars
+interface ShapeType {
+  id: number;
+  top: string;
+  left: string;
+  size: number;
+  opacity: number;
+  blur: string;
+  type: 'circle' | 'square';
+  color: string;
+  move: {
+    x: number;
+    y: number;
+    duration: number;
+  };
+}
+
+interface StarType {
+  id: number;
+  top: string;
+  left: string;
+  size: number;
+  opacity: number;
+  duration: number;
+  pulse: boolean;
+}
+
 const AnimatedBackground = () => {
-  const [shapes, setShapes] = useState([]);
-  const [stars, setStars] = useState([]);
+  const [shapes, setShapes] = useState<ShapeType[]>([]);
+  const [stars, setStars] = useState<StarType[]>([]);
   
   useEffect(() => {
     setShapes(createShapes());

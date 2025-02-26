@@ -1,47 +1,46 @@
 import React from 'react';
-
-interface Position {
-  x: number;
-  y: number;
-}
+import { Player as PlayerType } from '../../../shared/models/player';
 
 interface PlayerProps {
-  player: {
-    id: string;
-    name: string;
-    isGoalkeeper?: boolean;
-    [key: string]: any;
-  };
-  position: Position;
-  onPointerDown?: (e: React.PointerEvent) => void;
+  player: PlayerType;
+  onSelect: (player: PlayerType) => void;
+  isActive?: boolean;
+  showStatus?: boolean;
 }
 
-function Player({ player, position, onPointerDown }: PlayerProps): JSX.Element {
-  // Default position if not provided
-  const pos = position || { x: 50, y: 50 };
-  
-  // Calculate position as percentage of parent container
-  const style = {
-    left: `${pos.x}%`,
-    top: `${pos.y}%`,
-  };
+const Player: React.FC<PlayerProps> = ({ 
+  player, 
+  onSelect, 
+  isActive = false,
+  showStatus = true
+}) => {
+  const statusColor = player.status === 'playing' 
+    ? 'bg-green-500' 
+    : player.status === 'substitute' 
+      ? 'bg-yellow-500' 
+      : 'bg-gray-500';
 
+  // Ensure we're displaying player name as a string, not rendering the position object
+  const nameParts = player.name.split(' ');
+  const displayName = nameParts.length > 1 
+    ? `${nameParts[0]} ${nameParts[nameParts.length - 1].charAt(0)}.` 
+    : player.name;
+    
   return (
-    <div
-      className={`absolute transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full select-none touch-none ${
-        player.isGoalkeeper
-          ? 'bg-yellow-500 text-black'
-          : 'bg-blue-600 text-white'
-      } shadow-md border-2 border-white cursor-move ${onPointerDown ? 'hover:scale-110' : ''} transition-transform`}
-      style={style}
-      onPointerDown={onPointerDown}
-      data-player-id={player.id}
+    <div 
+      className={`rounded-lg p-3 mb-2 cursor-pointer transition-all ${
+        isActive ? 'bg-indigo-700 scale-105' : 'bg-indigo-800 hover:bg-indigo-700'
+      }`}
+      onClick={() => onSelect(player)}
     >
-      <div className="text-xs font-semibold truncate max-w-[90%] text-center pointer-events-none">
-        {player.name.split(' ')[0]}
+      <div className="flex items-center justify-between">
+        <span className="font-medium">{displayName}</span>
+        {showStatus && (
+          <span className={`w-3 h-3 rounded-full ${statusColor}`}></span>
+        )}
       </div>
     </div>
   );
-}
+};
 
 export default Player;
