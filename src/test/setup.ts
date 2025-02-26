@@ -55,6 +55,9 @@ global.PointerEvent = class PointerEvent extends Event {
   tiltY: number;
   twist: number;
   tangentialPressure: number;
+  // Adding missing properties
+  altitudeAngle: number;
+  azimuthAngle: number;
   
   constructor(type: string, params: any = {}) {
     super(type, { bubbles: true, cancelable: true, ...params });
@@ -79,6 +82,9 @@ global.PointerEvent = class PointerEvent extends Event {
     this.tiltY = params.tiltY || 0;
     this.twist = params.twist || 0;
     this.tangentialPressure = params.tangentialPressure || 0;
+    // Setting missing properties
+    this.altitudeAngle = params.altitudeAngle || 0;
+    this.azimuthAngle = params.azimuthAngle || 0;
   }
 };
 

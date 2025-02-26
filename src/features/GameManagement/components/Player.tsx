@@ -1,56 +1,36 @@
 import React from 'react';
-import { Player as PlayerType } from '../../../types/GameTypes';
+import type { Player as PlayerType } from '../../../types/GameTypes';
 
-interface PlayerProps {
+export interface PlayerProps {
   player: PlayerType;
-  onDragStart?: (id: string) => void;
+  showStatus?: boolean;
+  onPointerDown?: (event: React.PointerEvent<Element>, playerId?: string) => void;
 }
 
-const Player: React.FC<PlayerProps> = ({ player, onDragStart }) => {
-  const handlePointerDown = (e: React.PointerEvent) => {
-    if (onDragStart) {
-      e.preventDefault();
-      onDragStart(player.id);
+function Player({ player, showStatus = true, onPointerDown }: PlayerProps): JSX.Element {
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (onPointerDown) {
+      onPointerDown(event, player.id?.toString());
     }
   };
 
-  // Display only first name or shortened name if too long
-  const displayName = player.name.includes(' ')
-    ? player.name.split(' ')[0]
-    : player.name.length > 10
-    ? `${player.name.substring(0, 8)}...`
-    : player.name;
-    
   return (
     <div
-      className={`player ${player.isGoalkeeper ? 'goalkeeper' : ''}`}
+      className="player-token w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold cursor-move shadow-md"
       style={{
-        position: 'absolute',
-        left: `${player.position.x}%`,
-        top: `${player.position.y}%`,
-        transform: 'translate(-50%, -50%)',
-        backgroundColor: player.isGoalkeeper ? '#ffcc00' : '#4299e1',
-        color: '#fff',
-        width: '40px',
-        height: '40px',
-        borderRadius: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-        cursor: 'grab',
-        userSelect: 'none',
-        touchAction: 'none',
-        zIndex: 10
+        backgroundColor: player.isGoalkeeper ? '#ffcc00' : '#3b82f6',
+        color: player.isGoalkeeper ? '#000' : '#fff'
       }}
       onPointerDown={handlePointerDown}
-      data-player-id={player.id} // Adding data-player-id attribute for tests
-      role="button"
-      aria-label={`Player ${player.name}`}
+      data-player-id={player.id}
+      data-testid={`player-token-${player.id}`}
     >
-      {displayName}
+      {player.number || '?'}
+      {showStatus && player.status && (
+        <div className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-red-500"></div>
+      )}
     </div>
   );
-};
+}
 
 export default Player;

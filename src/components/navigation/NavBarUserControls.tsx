@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import useAuthSession from '@/hooks/useAuthSession';
+import useAuthSession from '../../hooks/useAuthSession';
 
 const NavBarUserControls: React.FC = () => {
   const navigate = useNavigate();
