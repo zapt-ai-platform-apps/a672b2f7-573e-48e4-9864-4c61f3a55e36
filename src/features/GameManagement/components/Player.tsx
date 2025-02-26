@@ -31,11 +31,20 @@ const Player: React.FC<PlayerProps> = ({
     
   // Check if this is being used in the pitch view (onPointerDown exists)
   const isPitchView = !!onPointerDown;
+
+  // Goalkeeper styling
+  const goalkeeperClasses = player.isGoalkeeper 
+    ? 'bg-yellow-600 hover:bg-yellow-500' 
+    : 'bg-indigo-800 hover:bg-indigo-700';
+  
+  const pitchViewGoalkeeperStyle = player.isGoalkeeper 
+    ? { backgroundColor: 'rgba(217, 119, 6, 0.9)' } // Yellow for goalkeeper
+    : { backgroundColor: 'rgba(55, 48, 163, 0.9)' }; // Default indigo
     
   return (
     <motion.div 
       className={`rounded-lg p-3 mb-2 cursor-pointer transition-all ${
-        isActive ? 'bg-indigo-700 scale-105' : 'bg-indigo-800 hover:bg-indigo-700'
+        isActive ? 'bg-indigo-700 scale-105' : goalkeeperClasses
       }`}
       onClick={() => onSelect && onSelect(player)}
       onPointerDown={(e) => onPointerDown && onPointerDown(e, player.id?.toString())}
@@ -46,7 +55,7 @@ const Player: React.FC<PlayerProps> = ({
         left: isPitchView ? player.position?.x : undefined,
         top: isPitchView ? player.position?.y : undefined,
         transform: isPitchView ? 'translate(-50%, -50%)' : undefined,
-        backgroundColor: isPitchView ? 'rgba(55, 48, 163, 0.9)' : undefined, // Darker indigo with higher opacity
+        ...(isPitchView ? pitchViewGoalkeeperStyle : {}),
         padding: isPitchView ? '0.5rem' : undefined,
         minWidth: isPitchView ? '80px' : undefined,
         backdropFilter: isPitchView ? 'blur(4px)' : undefined,
@@ -56,9 +65,15 @@ const Player: React.FC<PlayerProps> = ({
     >
       <div className="flex items-center justify-between">
         {isPitchView ? (
-          <span className="pitch-player-name text-white font-medium drop-shadow-md">{displayName}</span>
+          <div className="flex items-center">
+            {player.isGoalkeeper && <span className="mr-1 text-white">🧤</span>}
+            <span className="pitch-player-name text-white font-medium drop-shadow-md">{displayName}</span>
+          </div>
         ) : (
-          <span className="player-name text-white font-medium">{displayName}</span>
+          <div className="flex items-center">
+            {player.isGoalkeeper && <span className="mr-1">🧤</span>}
+            <span className="player-name text-white font-medium">{displayName}</span>
+          </div>
         )}
         {showStatus && !isPitchView && (
           <span className={`w-3 h-3 rounded-full ${statusColor}`}></span>

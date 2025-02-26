@@ -9,8 +9,8 @@ interface PlayerListProps {
   onPlayerClick: (player: Player) => void;
   timeFormatter: (seconds: number) => string;
   getTotalPlayTime: (player: Player) => number;
-  selectedItemClass: string;
-  defaultItemClass: string;
+  selectedItemClass?: string;
+  defaultItemClass?: string;
   showGoalkeeper?: boolean;
 }
 
@@ -22,35 +22,41 @@ function PlayerList({
   onPlayerClick,
   timeFormatter,
   getTotalPlayTime,
-  selectedItemClass,
-  defaultItemClass,
+  selectedItemClass = 'bg-blue-200 dark:bg-blue-900',
+  defaultItemClass = 'bg-white dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-800',
   showGoalkeeper = false
 }: PlayerListProps): JSX.Element {
   return (
     <div>
-      <h3 className="text-xl font-bold mb-2 text-gray-800 dark:text-white">{title}</h3>
+      <h3 className="text-xl font-semibold mb-3 text-white">{title}</h3>
+      
       {players.length === 0 ? (
-        <p className="text-gray-600 dark:text-gray-200">{emptyMessage}</p>
+        <p className="text-gray-300 text-center py-4">{emptyMessage}</p>
       ) : (
-        <ul>
-          {players.map((player, index) => {
-            const isSelected = selectedPlayer && player === selectedPlayer;
-            const itemClass = isSelected ? selectedItemClass : defaultItemClass;
-            return (
-              <li
-                key={player.id || index}
-                className={`p-2 mb-1 cursor-pointer ${itemClass}`}
-                onClick={() => onPlayerClick(player)}
-              >
-                <div className="text-gray-800 dark:text-white font-medium">{player.name}</div>
-                <div className="text-gray-600 dark:text-gray-200">{timeFormatter(getTotalPlayTime(player))}</div>
-                {showGoalkeeper && player.isGoalkeeper && (
-                  <div className="text-yellow-600 dark:text-yellow-300 font-medium">Goalkeeper</div>
-                )}
-              </li>
-            );
-          })}
-        </ul>
+        <div className="space-y-2">
+          {players.map((player) => (
+            <div
+              key={player.id?.toString()}
+              className={`p-3 rounded-lg cursor-pointer transition-colors ${
+                selectedPlayer?.id === player.id ? selectedItemClass : defaultItemClass
+              }`}
+              onClick={() => onPlayerClick(player)}
+              data-testid={`player-item-${player.id}`}
+            >
+              <div className="flex justify-between items-center">
+                <div className="flex items-center">
+                  {player.isGoalkeeper && showGoalkeeper && (
+                    <span className="mr-2 text-lg">🧤</span>
+                  )}
+                  <span className="text-black dark:text-white font-medium">{player.name}</span>
+                </div>
+                <span className="text-xs text-gray-600 dark:text-gray-300">
+                  {timeFormatter(getTotalPlayTime(player))}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

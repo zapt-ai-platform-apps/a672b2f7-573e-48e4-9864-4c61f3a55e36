@@ -1,41 +1,76 @@
-import { changeGoalkeeper } from '../../../models/goalkeeperModel';
 import type { Player } from '../../../types/GameTypes';
+import * as Sentry from '@sentry/browser';
 
-interface GoalkeeperProps {
-  playerData: Player[];
-  goalkeeper: Player | null;
-  isRunning: boolean;
-  setPlayerData: (players: Player[]) => void;
-  setGoalkeeper: (player: Player | null) => void;
-  updatePlayerLists: () => void;
-  onFieldPlayers: Player[];
+/**
+ * Assigns a new goalkeeper from the list of players
+ * @param players - Current list of all players
+ * @param playerId - ID of the player to be assigned as goalkeeper
+ * @returns Updated list of players with the new goalkeeper assigned
+ */
+export function assignGoalkeeper(players: Player[], playerId: string): Player[] {
+  try {
+    // First, remove goalkeeper status from all players
+    const resetPlayers = players.map(player => ({
+      ...player,
+      isGoalkeeper: false
+    }));
+
+    // Then assign goalkeeper status to the selected player
+    return resetPlayers.map(player => {
+      if (player.id?.toString() === playerId) {
+        return {
+          ...player,
+          isGoalkeeper: true
+        };
+      }
+      return player;
+    });
+  } catch (error) {
+    console.error('Error assigning goalkeeper:', error);
+    Sentry.captureException(error);
+    // Return original players if there was an error
+    return players;
+  }
 }
 
-export function createGoalkeeperHandlers(
-  props: GoalkeeperProps,
-  setShowGKModal: (show: boolean) => void,
-  setShowGKConfirmModal: (show: boolean) => void
-) {
-  const assignGoalkeeper = (): void => {
-    setShowGKModal(true);
-  };
+/**
+ * Finds the current goalkeeper in the player list
+ * @param players - List of all players
+ * @returns The current goalkeeper or null if none found
+ */
+export function getCurrentGoalkeeper(players: Player[]): Player | null {
+  return players.find(player => player.isGoalkeeper) || null;
+}
 
-  const confirmGoalkeeper = (player: Player): void => {
-    const updatedPlayers = changeGoalkeeper(props.playerData, player, props.goalkeeper, props.isRunning);
-    props.setPlayerData(updatedPlayers);
-    props.setGoalkeeper(player);
-    setShowGKConfirmModal(false);
-    setShowGKModal(false);
-    props.updatePlayerLists();
-  };
+/**
+ * Handles substituting the goalkeeper with another player
+ * @param players - List of all players 
+ * @param currentGkId - ID of the current goalkeeper
+ * @param newGkId - ID of the player who will become the new goalkeeper
+ * @returns Updated player list with the new goalkeeper
+ */
+export function substituteGoalkeeper(
+  players: Player[],
+  currentGkId: string,
+  newGkId: string
+): Player[] {
+  try {
+    if (currentGkId === newGkId) {
+      return players; // No change needed
+    }
 
-  const availableGoalkeepers = (): Player[] => {
-    return props.onFieldPlayers.filter((player) => player !== props.goalkeeper);
-  };
-
-  return {
-    assignGoalkeeper,
-    confirmGoalkeeper,
-    availableGoalkeepers
-  };
+    return players.map(player => {
+      if (player.id?.toString() === currentGkId) {
+        return { ...player, isGoalkeeper: false };
+      }
+      if (player.id?.toString() === newGkId) {
+        return { ...player, isGoalkeeper: true };
+      }
+      return player;
+    });
+  } catch (error) {
+    console.error('Error substituting goalkeeper:', error);
+    Sentry.captureException(error);
+    return players;
+  }
 }

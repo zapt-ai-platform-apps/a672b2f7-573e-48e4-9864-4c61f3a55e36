@@ -1,56 +1,103 @@
-import React from 'react';
-
-interface Player {
-  name: string;
-}
+import React, { useState, useEffect } from 'react';
+import type { Player } from '../../../types/GameTypes';
+import { motion } from 'framer-motion';
 
 interface AssignGoalkeeperModalProps {
-  showGKModal: boolean;
-  availablePlayers: Player[] | (() => Player[]);
-  setSelectedNewGoalkeeper: (name: string) => void;
-  setShowGKConfirmModal: (value: boolean) => void;
-  setShowGKModal: (value: boolean) => void;
+  isOpen: boolean;
+  onClose: () => void;
+  players: Player[];
+  onAssign: (playerId: string) => void;
+  currentGoalkeeper: Player | null;
 }
 
 export default function AssignGoalkeeperModal({
-  showGKModal,
-  availablePlayers,
-  setSelectedNewGoalkeeper,
-  setShowGKConfirmModal,
-  setShowGKModal
-}: AssignGoalkeeperModalProps): JSX.Element | null {
-  const selectGoalkeeper = (playerName: string): void => {
-    setSelectedNewGoalkeeper(playerName);
-    setShowGKModal(false);
-    setShowGKConfirmModal(true);
+  isOpen,
+  onClose,
+  players,
+  onAssign,
+  currentGoalkeeper
+}: AssignGoalkeeperModalProps): JSX.Element {
+  const [selectedPlayer, setSelectedPlayer] = useState<string | null>(
+    currentGoalkeeper?.id?.toString() || null
+  );
+
+  // Reset selected player when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedPlayer(currentGoalkeeper?.id?.toString() || null);
+    }
+  }, [isOpen, currentGoalkeeper]);
+
+  if (!isOpen) return null;
+
+  const handleAssign = () => {
+    if (selectedPlayer) {
+      onAssign(selectedPlayer);
+      onClose();
+    }
   };
 
-  if (!showGKModal) return null;
-  const playersArray: Player[] = typeof availablePlayers === 'function' ? availablePlayers() : availablePlayers;
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 p-8 rounded-md shadow-lg max-w-md w-full">
-        <h2 className="text-2xl mb-4 text-gray-800 dark:text-white">Select a New Goalkeeper</h2>
-        <ul>
-          {playersArray.map((player, index) => (
-            <li key={index} className="mb-2">
-              <button
-                className="w-full px-4 py-2 bg-brand-500 text-white rounded-md hover:bg-brand-600 transition-all duration-300 ease-in-out-custom focus:outline-none focus:ring-2 focus:ring-brand-400 cursor-pointer"
-                onClick={() => selectGoalkeeper(player.name)}
-              >
-                {player.name}
-              </button>
-            </li>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        className="bg-gray-800 rounded-lg p-6 max-w-md w-full shadow-xl"
+      >
+        <h2 className="text-2xl font-bold mb-4 text-white">Assign Goalkeeper</h2>
+        <p className="mb-4 text-gray-300">
+          Select a player to assign as goalkeeper. The current goalkeeper is{' '}
+          <span className="font-bold">
+            {currentGoalkeeper?.name || 'None'}
+          </span>
+        </p>
+
+        <div className="max-h-[300px] overflow-y-auto mb-4">
+          {players.map((player) => (
+            <div
+              key={player.id}
+              className={`p-3 mb-2 rounded-lg cursor-pointer transition-colors ${
+                selectedPlayer === player.id?.toString()
+                  ? 'bg-yellow-600'
+                  : 'bg-gray-700 hover:bg-gray-600'
+              }`}
+              onClick={() => setSelectedPlayer(player.id?.toString() || null)}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-white">
+                  {player.isGoalkeeper ? '🧤 ' : ''}{player.name}
+                </span>
+                {player.isOnField && (
+                  <span className="text-xs bg-green-500 text-white px-2 py-1 rounded">
+                    On Field
+                  </span>
+                )}
+              </div>
+            </div>
           ))}
-        </ul>
-        <button
-          className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-all duration-300 ease-in-out-custom focus:outline-none focus:ring-2 focus:ring-gray-400 cursor-pointer"
-          onClick={() => setShowGKModal(false)}
-        >
-          Cancel
-        </button>
-      </div>
+        </div>
+
+        <div className="flex justify-end space-x-3">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-gray-600 text-white rounded cursor-pointer hover:bg-gray-500 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleAssign}
+            disabled={!selectedPlayer}
+            className={`px-4 py-2 rounded cursor-pointer transition-colors ${
+              !selectedPlayer
+                ? 'bg-gray-500 cursor-not-allowed'
+                : 'bg-yellow-600 hover:bg-yellow-500 text-white'
+            }`}
+          >
+            Assign Goalkeeper
+          </button>
+        </div>
+      </motion.div>
     </div>
   );
 }

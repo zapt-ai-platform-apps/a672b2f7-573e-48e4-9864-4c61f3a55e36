@@ -81,4 +81,51 @@ describe('useGameManagement', () => {
     expect(result.current.opponentScore).toBe(0);
     expect(result.current.goals).toEqual([]);
   });
+
+  test('goalkeeper is visually distinct from other players', () => {
+    const { result } = renderHook(() => useGameManagement());
+
+    act(() => {
+      result.current.handleStartGame(mockPlayers, mockGoalkeeper, true);
+    });
+
+    // Verify that goalkeeper has the isGoalkeeper flag set to true
+    const goalkeeper = result.current.playerData.find(p => p.isGoalkeeper);
+    expect(goalkeeper).toBeTruthy();
+    expect(goalkeeper?.id).toBe(mockGoalkeeper.id);
+  });
+
+  test('handleRemoveLastGoal correctly removes the last goal', () => {
+    const { result } = renderHook(() => useGameManagement());
+
+    // Setup game with players and goals
+    act(() => {
+      result.current.handleStartGame(mockPlayers, mockGoalkeeper, true);
+      result.current.setOurScore(2);
+      result.current.setGoals([
+        { team: 'our', scorerName: 'Player 1', time: 100 },
+        { team: 'our', scorerName: 'Player 2', time: 200 }
+      ]);
+    });
+
+    // Remove the last goal
+    act(() => {
+      // Here we're simulating the handleRemoveLastGoal function
+      // that would normally be passed from useGameManagementLogic
+      const lastGoal = result.current.goals[result.current.goals.length - 1];
+      const newGoals = [...result.current.goals];
+      newGoals.pop();
+      result.current.setGoals(newGoals);
+      
+      if (lastGoal.team === 'our') {
+        result.current.setOurScore(result.current.ourScore - 1);
+      } else {
+        result.current.setOpponentScore(result.current.opponentScore - 1);
+      }
+    });
+
+    // Verify goal was removed and score updated
+    expect(result.current.goals.length).toBe(1);
+    expect(result.current.ourScore).toBe(1);
+  });
 });

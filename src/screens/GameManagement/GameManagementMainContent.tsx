@@ -1,18 +1,20 @@
 import React from 'react';
-import PitchVisualization from '../../features/GameManagement/components/PitchVisualization';
 import SubstitutionPanel from '../../features/GameManagement/components/SubstitutionPanel';
-import RecordGoalButton from './components/RecordGoalButton';
+import PitchVisualization from '../../features/GameManagement/components/PitchVisualization';
+import { GameActions } from '../../features/GameManagement/components/GameActions';
 import { timeFormatter } from './utils/timeFormatter';
-import type { GameManagementScreenViewProps } from './GameManagementScreenView.types';
+import { Player } from '../../types/GameTypes';
+import AssignGoalkeeperModal from '../../features/GameManagement/modals/AssignGoalkeeperModal';
+import { useGameManagementLogic } from '../../features/GameManagement/hooks/useGameManagementLogic';
 
-interface GameManagementMainContentProps {
-  playerData: GameManagementScreenViewProps["playerData"];
-  isRunning: GameManagementScreenViewProps["isRunning"];
-  onFieldPlayers: GameManagementScreenViewProps["onFieldPlayers"];
-  offFieldPlayers: GameManagementScreenViewProps["offFieldPlayers"];
-  getTotalPlayTime: GameManagementScreenViewProps["getTotalPlayTime"];
-  handlePlayerClick: GameManagementScreenViewProps["handlePlayerClick"];
-  setShowGoalModal: GameManagementScreenViewProps["setShowGoalModal"];
+interface MainContentProps {
+  playerData: Player[];
+  isRunning: boolean;
+  onFieldPlayers: Player[];
+  offFieldPlayers: Player[];
+  getTotalPlayTime: (player: Player) => number;
+  handlePlayerClick: (player: Player) => void;
+  setShowGoalModal: (value: boolean) => void;
 }
 
 export default function GameManagementMainContent({
@@ -21,31 +23,69 @@ export default function GameManagementMainContent({
   onFieldPlayers,
   offFieldPlayers,
   getTotalPlayTime,
-  handlePlayerClick,
   setShowGoalModal
-}: GameManagementMainContentProps): JSX.Element {
+}: MainContentProps): JSX.Element {
+  const {
+    selectedSubOffPlayer,
+    selectedSubOnPlayer,
+    showSubstitutionConfirmModal,
+    handleSubOffPlayerClick,
+    handleSubOnPlayerClick,
+    confirmSubstitution,
+    cancelSubstitution,
+    assignGoalkeeper,
+    handleRemoveLastGoal,
+    handleIncreasePlayers,
+    handleDecreasePlayers,
+    showAssignGkModal,
+    setShowAssignGkModal,
+    handleAssignGkConfirm,
+    currentGoalkeeper,
+    setShowAddPlayerModal
+  } = useGameManagementLogic();
+
+  // Only render players who are on the field for the pitch visualization
+  const playersOnField = playerData.filter(player => player.isOnField);
+
   return (
-    <div className="max-w-6xl mx-auto space-y-6 w-full">
-      <PitchVisualization players={onFieldPlayers} />
+    <div className="flex flex-col space-y-8 mt-8">
+      <PitchVisualization players={playersOnField} />
+
+      <h2 className="text-2xl font-bold mb-4 text-white">
+        Substitutions
+      </h2>
       <SubstitutionPanel
-        playerData={playerData}
-        isRunning={isRunning}
         onFieldPlayers={onFieldPlayers}
         offFieldPlayers={offFieldPlayers}
-        getTotalPlayTime={getTotalPlayTime}
         timeFormatter={timeFormatter}
-        selectedSubOffPlayer={null}
-        selectedSubOnPlayer={null}
-        handleSubOffPlayerClick={() => {}}
-        handleSubOnPlayerClick={() => {}}
-        confirmSubstitution={() => {}}
-        cancelSubstitution={() => {}}
-        showSubstitutionConfirmModal={false}
+        getTotalPlayTime={getTotalPlayTime}
+        selectedSubOffPlayer={selectedSubOffPlayer}
+        selectedSubOnPlayer={selectedSubOnPlayer}
+        handleSubOffPlayerClick={handleSubOffPlayerClick}
+        handleSubOnPlayerClick={handleSubOnPlayerClick}
+        confirmSubstitution={confirmSubstitution}
+        cancelSubstitution={cancelSubstitution}
+        showSubstitutionConfirmModal={showSubstitutionConfirmModal}
+        isRunning={isRunning}
       />
-      {/* Removed PlayersSection component to eliminate duplication */}
-      <div className="flex justify-center mb-8">
-        <RecordGoalButton setShowGoalModal={setShowGoalModal} />
-      </div>
+
+      <GameActions
+        assignGoalkeeper={assignGoalkeeper}
+        handleRemoveLastGoal={handleRemoveLastGoal}
+        setShowGoalModal={setShowGoalModal}
+        setShowAddPlayerModal={setShowAddPlayerModal}
+        handleIncreasePlayers={handleIncreasePlayers}
+        handleDecreasePlayers={handleDecreasePlayers}
+        isRunning={isRunning}
+      />
+
+      <AssignGoalkeeperModal
+        isOpen={showAssignGkModal}
+        onClose={() => setShowAssignGkModal(false)}
+        players={playerData}
+        onAssign={handleAssignGkConfirm}
+        currentGoalkeeper={currentGoalkeeper}
+      />
     </div>
   );
 }
