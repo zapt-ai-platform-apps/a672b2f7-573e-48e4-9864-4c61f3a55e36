@@ -5,12 +5,18 @@ export interface PlayerProps {
   player: PlayerType;
   showStatus?: boolean;
   onPointerDown?: (event: React.PointerEvent<Element>, playerId?: string) => void;
+  onDragStart?: (playerId: string) => void;
 }
 
-function Player({ player, showStatus = true, onPointerDown }: PlayerProps): JSX.Element {
+function Player({ player, showStatus = true, onPointerDown, onDragStart }: PlayerProps): JSX.Element {
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (onPointerDown) {
       onPointerDown(event, player.id?.toString());
+    }
+    
+    // Call onDragStart if it exists
+    if (onDragStart && player.id) {
+      onDragStart(player.id.toString());
     }
   };
 

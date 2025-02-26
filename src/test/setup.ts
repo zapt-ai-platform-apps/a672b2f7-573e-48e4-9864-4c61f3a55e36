@@ -86,7 +86,7 @@ global.PointerEvent = class PointerEvent extends Event {
     this.altitudeAngle = params.altitudeAngle || 0;
     this.azimuthAngle = params.azimuthAngle || 0;
   }
-};
+} as unknown as typeof PointerEvent;
 
 // Mock Element.prototype.setPointerCapture
 Element.prototype.setPointerCapture = Element.prototype.setPointerCapture || vi.fn();
