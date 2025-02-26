@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useMatchSquad from '../../../features/GameSetup/hooks/useMatchSquad';
-import { useStateContext } from '../../../hooks/useStateContext';
+import useMatchSquad from '../../../../features/GameSetup/hooks/useMatchSquad';
+import { useStateContext } from '../../../../hooks/useStateContext';
 import ParticipantItem from './ParticipantItem';
-import type { ExtendedPlayer } from './types';
+import type { ExtendedPlayer } from './ParticipantItem';
 import useGameSetupParticipantsHandlers from './useGameSetupParticipantsHandlers';
 
 export default function GameSetupParticipantsScreen(): JSX.Element {
@@ -13,13 +13,16 @@ export default function GameSetupParticipantsScreen(): JSX.Element {
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const validPlayers = matchSquadPlayers.filter(
-    player => player && typeof player.id === 'string'
-  ) as ExtendedPlayer[];
+    (player): player is ExtendedPlayer =>
+      player !== null &&
+      player !== undefined &&
+      typeof player.id === 'string'
+  );
 
   console.log('Valid players for selection:', validPlayers);
 
   const selectedMatchPlayers = validPlayers.filter(
-    (player) => player.isInMatchSquad
+    (player: ExtendedPlayer) => player.isInMatchSquad
   );
 
   const { handleNext, handleBack } = useGameSetupParticipantsHandlers(
