@@ -9,7 +9,7 @@ const mockNavigate = vi.fn();
 const mockSignOut = vi.fn();
 
 // Correctly mock the default export from useAuthSession
-vi.mock('../hooks/useAuthSession.ts', () => ({
+vi.mock('../hooks/useAuthSession', () => ({
   __esModule: true,
   default: vi.fn(() => ({
     session: null,
@@ -32,7 +32,7 @@ describe('NavBarUserControls - Signed In', () => {
     mockNavigate.mockClear();
     
     // Configure mock for signed-in user
-    require('../hooks/useAuthSession.ts').default.mockReturnValue({
+    require('../hooks/useAuthSession').default.mockReturnValue({
       session: { user: { email: 'test@example.com' } },
       signOut: mockSignOut
     });
@@ -69,7 +69,7 @@ describe('NavBarUserControls - Signed Out', () => {
     mockNavigate.mockClear();
     
     // Configure mock for signed-out user
-    require('../hooks/useAuthSession.ts').default.mockReturnValue({
+    require('../hooks/useAuthSession').default.mockReturnValue({
       session: null,
       signOut: mockSignOut
     });

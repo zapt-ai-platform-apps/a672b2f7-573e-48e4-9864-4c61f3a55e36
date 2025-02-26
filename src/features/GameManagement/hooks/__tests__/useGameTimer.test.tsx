@@ -54,6 +54,7 @@ describe('useGameTimer', () => {
       vi.advanceTimersByTime(5000); // 5 seconds
     });
     
+    // Check result after timer advance
     expect(result.current.timeElapsed).toBe(5);
   });
 
@@ -62,6 +63,7 @@ describe('useGameTimer', () => {
     
     act(() => {
       result.current.startTimer();
+      // Advance timer within the same act callback
       vi.advanceTimersByTime(5000);
       result.current.resetTimer();
     });

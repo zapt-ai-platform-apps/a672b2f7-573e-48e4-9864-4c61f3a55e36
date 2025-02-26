@@ -30,6 +30,15 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
-    transformMode: { web: [/\.tsx?$/] }
+    transformMode: {
+      web: [/\.tsx?$/]
+    },
+    // Ensure ESM transform for test files
+    deps: {
+      inline: [
+        '@testing-library/react',
+        'react-router-dom'
+      ]
+    }
   }
 });

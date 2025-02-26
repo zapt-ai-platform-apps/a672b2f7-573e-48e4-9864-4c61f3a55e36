@@ -4,18 +4,13 @@ import PitchVisualization from '../features/GameManagement/components/PitchVisua
 import { createEvent } from '@testing-library/dom';
 
 // Mock useDragAndDrop hook with correct export structure
-vi.mock('../features/GameManagement/hooks/useDragAndDrop.ts', () => {
-  const mockHandlePointerDown = vi.fn();
-  const mockInit = vi.fn(() => () => {});
-  
-  return {
-    __esModule: true,
-    default: () => ({
-      handlePointerDown: mockHandlePointerDown,
-      init: mockInit
-    })
-  };
-});
+vi.mock('../features/GameManagement/hooks/useDragAndDrop', () => ({
+  __esModule: true,
+  default: () => ({
+    handlePointerDown: vi.fn(),
+    init: vi.fn(() => () => {})
+  })
+}));
 
 // Mock assignInitialPositions utility
 vi.mock('../features/GameManagement/utils/assignInitialPositions', () => ({
@@ -48,7 +43,7 @@ describe('Pitch Visualization Drag and Drop', () => {
     const { container } = render(<PitchVisualization players={testPlayers} />);
     
     // Get the useDragAndDrop hook's init function
-    const useDragAndDropModule = require('../features/GameManagement/hooks/useDragAndDrop.ts');
+    const useDragAndDropModule = require('../features/GameManagement/hooks/useDragAndDrop');
     const { init } = useDragAndDropModule.default();
     
     // Verify init was called with pitch element
