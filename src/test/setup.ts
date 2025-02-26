@@ -39,13 +39,29 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
   disconnect: vi.fn(),
 }));
 
-// Mock createPointerEvent for drag and drop tests
-global.PointerEvent = class PointerEvent extends Event {
+// Enhanced PointerEvent mock for drag and drop tests
+class MockPointerEvent extends Event {
   button: number;
   clientX: number;
   clientY: number;
   pointerId: number;
   pointerType: string;
+  isPrimary: boolean;
+  screenX: number;
+  screenY: number;
+  pageX: number;
+  pageY: number;
+  offsetX: number;
+  offsetY: number;
+  movementX: number;
+  movementY: number;
+  width: number;
+  height: number;
+  pressure: number;
+  tiltX: number;
+  tiltY: number;
+  twist: number;
+  tangentialPressure: number;
   
   constructor(type: string, params: any = {}) {
     super(type, params);
@@ -54,8 +70,27 @@ global.PointerEvent = class PointerEvent extends Event {
     this.clientY = params.clientY || 0;
     this.pointerId = params.pointerId || 1;
     this.pointerType = params.pointerType || 'mouse';
+    this.isPrimary = params.isPrimary !== undefined ? params.isPrimary : true;
+    this.screenX = params.screenX || 0;
+    this.screenY = params.screenY || 0;
+    this.pageX = params.pageX || 0;
+    this.pageY = params.pageY || 0;
+    this.offsetX = params.offsetX || 0;
+    this.offsetY = params.offsetY || 0;
+    this.movementX = params.movementX || 0;
+    this.movementY = params.movementY || 0;
+    this.width = params.width || 0;
+    this.height = params.height || 0;
+    this.pressure = params.pressure || 0;
+    this.tiltX = params.tiltX || 0;
+    this.tiltY = params.tiltY || 0;
+    this.twist = params.twist || 0;
+    this.tangentialPressure = params.tangentialPressure || 0;
   }
-};
+}
+
+// Assign the mock to global
+global.PointerEvent = MockPointerEvent as any;
 
 // Mock Element.prototype.setPointerCapture
 Element.prototype.setPointerCapture = Element.prototype.setPointerCapture || vi.fn();

@@ -14,7 +14,6 @@ export default defineConfig({
   ],
   build: {
     target: 'esnext',
-    polyfillDynamicImport: false,
     sourcemap: true
   },
   resolve: {
@@ -30,9 +29,6 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
-    transformMode: {
-      web: [/\.tsx?$/]
-    },
     // Ensure ESM transform for test files
     deps: {
       inline: [

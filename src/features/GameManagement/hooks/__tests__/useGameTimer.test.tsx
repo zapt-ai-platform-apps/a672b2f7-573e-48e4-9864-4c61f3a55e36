@@ -16,8 +16,7 @@ describe('useGameTimer', () => {
     const { result } = renderHook(() => useGameTimer());
     
     expect(result.current.timeElapsed).toBe(0);
-    expect(result.current.isRunning).toBe(false);
-    expect(result.current.intervalId).toBeNull();
+    expect(result.current.gameIntervals).toEqual([]);
   });
 
   it('should start the timer when startTimer is called', () => {
@@ -27,8 +26,10 @@ describe('useGameTimer', () => {
       result.current.startTimer();
     });
     
-    expect(result.current.isRunning).toBe(true);
-    expect(result.current.intervalId).not.toBeNull();
+    // Check that we have one interval with a start time
+    expect(result.current.gameIntervals.length).toBe(1);
+    expect(result.current.gameIntervals[0].start).toBeTruthy();
+    expect(result.current.gameIntervals[0].end).toBeUndefined();
   });
 
   it('should increase timeElapsed while timer is running', () => {
@@ -68,8 +69,8 @@ describe('useGameTimer', () => {
       result.current.stopTimer();
     });
     
-    expect(result.current.isRunning).toBe(false);
-    expect(result.current.intervalId).toBeNull();
+    // Check that the interval has an end time
+    expect(result.current.gameIntervals[0].end).toBeTruthy();
     
     // Advance timer by 2 more seconds, time should not change
     act(() => {
@@ -95,18 +96,34 @@ describe('useGameTimer', () => {
     });
     
     expect(result.current.timeElapsed).toBe(0);
-    expect(result.current.isRunning).toBe(false);
-    expect(result.current.intervalId).toBeNull();
+    expect(result.current.gameIntervals).toEqual([]);
   });
 
-  it('should set a specific time when setTime is called', () => {
+  it('should toggle timer state with toggleTimer', () => {
     const { result } = renderHook(() => useGameTimer());
     
+    // Start timer with toggle
     act(() => {
-      result.current.setTime(10);
+      result.current.toggleTimer();
     });
     
-    expect(result.current.timeElapsed).toBe(10);
+    // Check timer started
+    expect(result.current.gameIntervals.length).toBe(1);
+    
+    act(() => {
+      vi.advanceTimersByTime(2000);
+    });
+    
+    // Stop timer with toggle
+    act(() => {
+      result.current.toggleTimer();
+    });
+    
+    // Check the interval has an end time
+    expect(result.current.gameIntervals[0].end).toBeTruthy();
+    
+    // Time should be about 2 seconds
+    expect(result.current.timeElapsed).toBe(2);
   });
 
   it('should clean up interval on unmount', () => {
@@ -118,10 +135,9 @@ describe('useGameTimer', () => {
       result.current.startTimer();
     });
     
-    const intervalId = result.current.intervalId;
-    
     unmount();
     
-    expect(clearIntervalSpy).toHaveBeenCalledWith(intervalId);
+    // Check clearInterval was called
+    expect(clearIntervalSpy).toHaveBeenCalled();
   });
 });
