@@ -27,6 +27,8 @@ export interface Player {
     endTime?: number | null;
     isGoalkeeper?: boolean;
   }>;
+  // Adding the missing selected property to fix TypeScript errors
+  selected?: boolean;
 }
 
 export interface Goal {

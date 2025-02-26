@@ -17,7 +17,7 @@ export default function useStartingLineup(): StartingLineupHook {
     if (matchSquad && matchSquad.length > 0) {
       console.log("Setting starting players from matchSquad:", matchSquad);
       // Initialize with existing selection state if available
-      setStartingPlayers(matchSquad.map((player: any) => ({
+      setStartingPlayers(matchSquad.map((player: Player) => ({
         ...player,
         selected: player.selected || false
       })));

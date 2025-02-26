@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 import StartingLineup from '../screens/GameSetup/ConfigureLineup/StartingLineup';
+import { Player } from '../types/GameTypes';
 
 // Mock hooks and navigate
 const mockToggleStartingPlayer = vi.fn();
@@ -14,10 +15,10 @@ vi.mock('../screens/GameSetup/ConfigureLineup/StartingLineup/useStartingLineup',
   __esModule: true,
   default: () => ({
     startingPlayers: [
-      { id: '1', name: 'Player 1', selected: true },
-      { id: '2', name: 'Player 2', selected: false }
+      { id: '1', name: 'Player 1', selected: true } as Player,
+      { id: '2', name: 'Player 2', selected: false } as Player
     ],
-    selectedPlayers: [{ id: '1', name: 'Player 1', selected: true }],
+    selectedPlayers: [{ id: '1', name: 'Player 1', selected: true } as Player],
     toggleStartingPlayer: mockToggleStartingPlayer,
     clearSelectedPlayers: vi.fn()
   })
@@ -27,8 +28,8 @@ vi.mock('../screens/GameSetup/ConfigureLineup/StartingLineup/useStartingLineup',
 vi.mock('../../../../hooks/useStateContext', () => ({
   useStateContext: () => ({
     matchSquad: [
-      { id: '1', name: 'Player 1' },
-      { id: '2', name: 'Player 2' }
+      { id: '1', name: 'Player 1' } as Player,
+      { id: '2', name: 'Player 2' } as Player
     ],
     setMatchSquad: mockSetMatchSquad
   })
@@ -37,7 +38,11 @@ vi.mock('../../../../hooks/useStateContext', () => ({
 // Mock the GoalkeeperSelect component
 vi.mock('../screens/GameSetup/ConfigureLineup/GoalkeeperSelect', () => ({
   __esModule: true,
-  default: ({ players, goalkeeper, setGoalkeeper }) => (
+  default: ({ players, goalkeeper, setGoalkeeper }: {
+    players: Player[];
+    goalkeeper: Player | null;
+    setGoalkeeper: (player: Player | null) => void;
+  }) => (
     <div data-testid="goalkeeper-select">
       <select 
         data-testid="gk-select"
@@ -50,7 +55,7 @@ vi.mock('../screens/GameSetup/ConfigureLineup/GoalkeeperSelect', () => ({
         }}
       >
         <option value="">Select GK</option>
-        {players.map(p => (
+        {players.map((p: Player) => (
           <option key={p.id} value={p.id}>{p.name}</option>
         ))}
       </select>
