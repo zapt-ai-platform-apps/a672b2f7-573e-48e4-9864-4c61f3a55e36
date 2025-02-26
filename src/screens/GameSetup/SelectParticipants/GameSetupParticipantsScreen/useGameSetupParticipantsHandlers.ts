@@ -18,7 +18,7 @@ export default function useGameSetupParticipantsHandlers(
   }, [selectedMatchPlayers, setSelectedSquad, navigate, setErrorMessage]);
 
   const handleBack = useCallback(() => {
-    navigate(-1 as number);
+    navigate(-1);
   }, [navigate]);
 
   return { handleNext, handleBack };

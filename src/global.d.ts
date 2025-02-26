@@ -1,3 +1,5 @@
+/// <reference types="vitest/globals" />
+
 interface ImportMetaEnv {
   readonly VITE_PUBLIC_APP_ID: string;
   readonly VITE_PUBLIC_APP_ENV: string;
