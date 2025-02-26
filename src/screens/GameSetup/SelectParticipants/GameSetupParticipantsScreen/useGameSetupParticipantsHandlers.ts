@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { ExtendedPlayer } from './types';
+import { ExtendedPlayer } from './ParticipantItem';
 
 export default function useGameSetupParticipantsHandlers(
   selectedMatchPlayers: ExtendedPlayer[],
