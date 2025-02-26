@@ -1,53 +1,38 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { vi } from 'vitest';
+import { vi, beforeEach, describe, test, expect } from 'vitest';
 import NavBarUserControls from '../components/navigation/NavBarUserControls';
 
-// Create separate mock setups for the two different test scenarios
-const setupSignedInUser = () => {
-  // Mock auth session with a signed-in user
-  const mockSignOut = vi.fn();
-  
-  vi.mock('../hooks/useAuthSession', () => ({
-    useAuthSession: () => ({
-      session: { user: { email: 'test@example.com' } },
-      signOut: mockSignOut
-    })
-  }));
-
-  return { mockSignOut };
-};
-
-const setupSignedOutUser = () => {
-  // Mock auth session with no user
-  const mockSignOut = vi.fn();
-  
-  vi.mock('../hooks/useAuthSession', () => ({
-    useAuthSession: () => ({
-      session: null,
-      signOut: mockSignOut
-    })
-  }));
-
-  return { mockSignOut };
-};
-
-// Mock navigate function
+// Mock navigate
 const mockNavigate = vi.fn();
+const mockSignOut = vi.fn();
 
-vi.mock('react-router-dom', () => ({
-  ...vi.importActual('react-router-dom'),
-  useNavigate: () => mockNavigate
+// Mock auth hooks
+vi.mock('../hooks/useAuthSession', () => ({
+  useAuthSession: vi.fn()
 }));
 
-describe('NavBarUserControls', () => {
+// Mock router with correct import
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...(actual as any),
+    useNavigate: () => mockNavigate
+  };
+});
+
+describe('NavBarUserControls - Signed In', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockNavigate.mockClear();
+    
+    // Configure mock for signed-in user
+    require('../hooks/useAuthSession').useAuthSession.mockReturnValue({
+      session: { user: { email: 'test@example.com' } },
+      signOut: mockSignOut
+    });
   });
-
-  // Setup for signed-in user tests
-  const { mockSignOut } = setupSignedInUser();
 
   test('renders sign out button when user is signed in', () => {
     render(
@@ -74,13 +59,17 @@ describe('NavBarUserControls', () => {
 });
 
 // Separate describe block for signed-out user tests
-describe('NavBarUserControls when signed out', () => {
+describe('NavBarUserControls - Signed Out', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockNavigate.mockClear();
+    
+    // Configure mock for signed-out user
+    require('../hooks/useAuthSession').useAuthSession.mockReturnValue({
+      session: null,
+      signOut: mockSignOut
+    });
   });
-
-  // Setup for signed-out user tests
-  setupSignedOutUser();
 
   test('renders sign in button when user is not signed in', () => {
     render(

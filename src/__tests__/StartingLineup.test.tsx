@@ -10,6 +10,15 @@ const mockToggleStartingPlayer = vi.fn();
 const mockNavigate = vi.fn();
 const mockSetMatchSquad = vi.fn();
 
+// Mock react-router-dom properly
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...(actual as any),
+    useNavigate: () => mockNavigate
+  };
+});
+
 // Mock the useStartingLineup hook
 vi.mock('../screens/GameSetup/ConfigureLineup/StartingLineup/useStartingLineup', () => ({
   __esModule: true,
@@ -24,8 +33,8 @@ vi.mock('../screens/GameSetup/ConfigureLineup/StartingLineup/useStartingLineup',
   })
 }));
 
-// Mock the useStateContext hook
-vi.mock('../../../../hooks/useStateContext', () => ({
+// Mock the useStateContext hook with correct path
+vi.mock('../hooks/useStateContext', () => ({
   useStateContext: () => ({
     matchSquad: [
       { id: '1', name: 'Player 1' } as Player,
@@ -63,15 +72,10 @@ vi.mock('../screens/GameSetup/ConfigureLineup/GoalkeeperSelect', () => ({
   )
 }));
 
-// Mock react-router-dom
-vi.mock('react-router-dom', () => ({
-  ...vi.importActual('react-router-dom'),
-  useNavigate: () => mockNavigate
-}));
-
 describe('StartingLineup', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockNavigate.mockClear();
   });
 
   test('renders player cards', () => {
@@ -108,11 +112,5 @@ describe('StartingLineup', () => {
     const continueButton = screen.getByText(/Continue to Game Setup/);
     fireEvent.click(continueButton);
     expect(screen.getByText(/Please select a goalkeeper/)).toBeInTheDocument();
-  });
-
-  test('sets isOnField property when updating match squad', () => {
-    // This test would require mocking a goalkeeper selection and continuing
-    // Just testing that setMatchSquad gets called with the right properties would be sufficient
-    // But we'd need to implement the full test
   });
 });

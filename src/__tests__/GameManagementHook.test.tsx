@@ -8,7 +8,7 @@ describe('useGameManagement', () => {
     name: 'Goalkeeper 1',
     totalPlayTime: 0,
     isOnField: false,
-    isGoalkeeper: true,
+    isGoalkeeper: true, // This property must be true for goalkeepers
     position: { x: 0, y: 0 }
   };
 
@@ -93,6 +93,7 @@ describe('useGameManagement', () => {
     const goalkeeper = result.current.playerData.find(p => p.isGoalkeeper);
     expect(goalkeeper).toBeTruthy();
     expect(goalkeeper?.id).toBe(mockGoalkeeper.id);
+    expect(goalkeeper?.isGoalkeeper).toBe(true); // Explicitly check isGoalkeeper is true
   });
 
   test('handleRemoveLastGoal correctly removes the last goal', () => {

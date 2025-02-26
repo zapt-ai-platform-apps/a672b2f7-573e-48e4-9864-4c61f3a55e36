@@ -6,10 +6,15 @@ import StartingLineup from '../screens/GameSetup/ConfigureLineup/StartingLineup'
 
 // Mock the navigate function
 const mockNavigate = vi.fn();
-vi.mock('react-router-dom', () => ({
-  ...vi.importActual('react-router-dom'),
-  useNavigate: () => mockNavigate
-}));
+
+// Mock react-router-dom with the correct approach
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...(actual as any),
+    useNavigate: () => mockNavigate
+  };
+});
 
 // Mock the useStartingLineup hook
 vi.mock('../screens/GameSetup/ConfigureLineup/StartingLineup/useStartingLineup', () => ({
@@ -45,6 +50,7 @@ vi.mock('../screens/GameSetup/ConfigureLineup/GoalkeeperSelect', () => ({
 describe('Back Button Functionality', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockNavigate.mockClear();
   });
 
   test('back button calls navigate(-1)', () => {

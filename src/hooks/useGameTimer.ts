@@ -98,6 +98,10 @@ function useGameTimer() {
     let intervalId: number;
     
     if (isRunning) {
+      // Update immediately to avoid delay
+      setTimeElapsed(getTimeElapsed());
+      
+      // Then set up interval for regular updates
       intervalId = window.setInterval(() => {
         setNow(Date.now());
         setTimeElapsed(getTimeElapsed());

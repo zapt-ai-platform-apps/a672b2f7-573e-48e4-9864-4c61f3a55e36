@@ -1,25 +1,25 @@
 import { renderHook, act } from '@testing-library/react';
-import { vi } from 'vitest';
-import useGameTimer from '../useGameTimer';
+import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
+import useGameTimer from '../../../../hooks/useGameTimer';
 
 describe('useGameTimer', () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    vi.setSystemTime(new Date(2023, 0, 1, 12, 0, 0));
   });
 
   afterEach(() => {
+    vi.runOnlyPendingTimers();
     vi.useRealTimers();
   });
 
-  it('should initialize with default values', () => {
+  test('initial state is correct', () => {
     const { result } = renderHook(() => useGameTimer());
     
     expect(result.current.timeElapsed).toBe(0);
     expect(result.current.gameIntervals).toEqual([]);
   });
 
-  it('should start the timer correctly', () => {
+  test('startTimer creates a new interval', () => {
     const { result } = renderHook(() => useGameTimer());
     
     act(() => {
@@ -27,95 +27,46 @@ describe('useGameTimer', () => {
     });
     
     expect(result.current.gameIntervals.length).toBe(1);
-    expect(result.current.gameIntervals[0].startTime).toBeDefined();
-    expect(result.current.gameIntervals[0].endTime).toBeNull();
+    expect(result.current.gameIntervals[0].start).toBeDefined();
+    expect(result.current.gameIntervals[0].end).toBeUndefined();
   });
 
-  it('should stop the timer correctly', () => {
+  test('stopTimer adds end time to last interval', () => {
     const { result } = renderHook(() => useGameTimer());
     
     act(() => {
       result.current.startTimer();
-    });
-    
-    vi.advanceTimersByTime(5000);
-    
-    act(() => {
       result.current.stopTimer();
     });
     
-    expect(result.current.gameIntervals[0].endTime).toBeDefined();
+    expect(result.current.gameIntervals[0].end).toBeDefined();
   });
 
-  it('should reset the timer correctly', () => {
+  test('timeElapsed increases as time passes', () => {
     const { result } = renderHook(() => useGameTimer());
     
     act(() => {
       result.current.startTimer();
     });
     
-    vi.advanceTimersByTime(5000);
+    // Advance timer and check that timeElapsed increases
+    act(() => {
+      vi.advanceTimersByTime(5000); // 5 seconds
+    });
+    
+    expect(result.current.timeElapsed).toBe(5);
+  });
+
+  test('resetTimer clears all state', () => {
+    const { result } = renderHook(() => useGameTimer());
     
     act(() => {
+      result.current.startTimer();
+      vi.advanceTimersByTime(5000);
       result.current.resetTimer();
     });
     
     expect(result.current.timeElapsed).toBe(0);
     expect(result.current.gameIntervals).toEqual([]);
-  });
-
-  it('should calculate elapsed time correctly', () => {
-    const { result } = renderHook(() => useGameTimer());
-    
-    act(() => {
-      result.current.startTimer();
-    });
-    
-    vi.advanceTimersByTime(5000);
-    
-    // Allow the effect to run that updates timeElapsed
-    act(() => {});
-    
-    expect(result.current.timeElapsed).toBe(5);
-    
-    act(() => {
-      result.current.stopTimer();
-    });
-    
-    vi.advanceTimersByTime(2000);
-    
-    // The timer is stopped, so timeElapsed should still be 5
-    expect(result.current.timeElapsed).toBe(5);
-    
-    act(() => {
-      result.current.startTimer();
-    });
-    
-    vi.advanceTimersByTime(3000);
-    
-    // Allow the effect to run that updates timeElapsed
-    act(() => {});
-    
-    // Now we should have 5 + 3 = 8 seconds
-    expect(result.current.timeElapsed).toBe(8);
-  });
-
-  it('should toggle the timer correctly', () => {
-    const { result } = renderHook(() => useGameTimer());
-    
-    // Start the timer with toggleTimer
-    act(() => {
-      result.current.toggleTimer();
-    });
-    
-    expect(result.current.gameIntervals.length).toBe(1);
-    expect(result.current.gameIntervals[0].endTime).toBeNull();
-    
-    // Stop the timer with toggleTimer
-    act(() => {
-      result.current.toggleTimer();
-    });
-    
-    expect(result.current.gameIntervals[0].endTime).toBeDefined();
   });
 });

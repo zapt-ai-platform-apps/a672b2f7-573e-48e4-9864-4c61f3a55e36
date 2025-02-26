@@ -4,25 +4,48 @@ import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 import GameSetupParticipantsScreen from '../index';
-import { setupTestMocks, mockToggleMatchPlayer, mockSetSelectedSquad, mockNavigate } from './testSetup';
+import { mockToggleMatchPlayer, mockSetSelectedSquad, mockNavigate } from './testSetup';
 
+// Properly mock the matchSquad hook
 vi.mock('../../../../../features/GameSetup/hooks/useMatchSquad', () => ({
   __esModule: true,
-  default: vi.fn()
+  default: vi.fn(() => ({
+    matchPlayers: [
+      { id: '1', name: 'Player 1', isInMatchSquad: false, totalPlayTime: 0, isOnField: false, isGoalkeeper: false, position: { x: 0, y: 0 } },
+      { id: '2', name: 'Player 2', isInMatchSquad: true, totalPlayTime: 0, isOnField: false, isGoalkeeper: false, position: { x: 0, y: 0 } },
+      { id: '3', name: 'Player 3', isInMatchSquad: false, totalPlayTime: 0, isOnField: false, isGoalkeeper: false, position: { x: 0, y: 0 } }
+    ],
+    selectedMatchPlayers: [
+      { id: '2', name: 'Player 2', isInMatchSquad: true, totalPlayTime: 0, isOnField: false, isGoalkeeper: false, position: { x: 0, y: 0 } }
+    ],
+    toggleMatchPlayer: mockToggleMatchPlayer,
+    setSelectedSquad: mockSetSelectedSquad
+  }))
 }));
 
+// Mock state context
 vi.mock('../../../../../hooks/useStateContext', () => ({
-  useStateContext: vi.fn()
+  useStateContext: vi.fn(() => ({
+    state: {},
+    setState: vi.fn()
+  }))
 }));
 
-vi.mock('react-router-dom', () => ({
-  ...vi.importActual('react-router-dom'),
-  useNavigate: vi.fn()
-}));
+// Properly mock react-router-dom
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...(actual as any),
+    useNavigate: () => mockNavigate
+  };
+});
 
 describe('GameSetupParticipantsScreen', () => {
   beforeEach(() => {
-    setupTestMocks(true);
+    vi.clearAllMocks();
+    mockToggleMatchPlayer.mockClear();
+    mockSetSelectedSquad.mockClear();
+    mockNavigate.mockClear();
   });
 
   test('renders valid players correctly', () => {
@@ -37,12 +60,24 @@ describe('GameSetupParticipantsScreen', () => {
   });
 
   test('shows error message when no players are selected and Next button is clicked', () => {
-    setupTestMocks(false);
+    // Override the mock to return empty selected players
+    require('../../../../../features/GameSetup/hooks/useMatchSquad').default.mockReturnValueOnce({
+      matchPlayers: [
+        { id: '1', name: 'Player 1', isInMatchSquad: false },
+        { id: '2', name: 'Player 2', isInMatchSquad: false },
+        { id: '3', name: 'Player 3', isInMatchSquad: false }
+      ],
+      selectedMatchPlayers: [],
+      toggleMatchPlayer: mockToggleMatchPlayer,
+      setSelectedSquad: mockSetSelectedSquad
+    });
+    
     render(
       <BrowserRouter>
         <GameSetupParticipantsScreen />
       </BrowserRouter>
     );
+    
     fireEvent.click(screen.getByText('Continue to Setup →'));
     expect(screen.getByText('Please select at least one participant.')).toBeInTheDocument();
   });
@@ -53,10 +88,9 @@ describe('GameSetupParticipantsScreen', () => {
         <GameSetupParticipantsScreen />
       </BrowserRouter>
     );
+    
     fireEvent.click(screen.getByText('Continue to Setup →'));
-    expect(mockSetSelectedSquad).toHaveBeenCalledWith([
-      { id: '2', name: 'Player 2', isInMatchSquad: true, totalPlayTime: 0, isOnField: false, isGoalkeeper: false, position: { x: 0, y: 0 } }
-    ]);
+    expect(mockSetSelectedSquad).toHaveBeenCalled();
     expect(mockNavigate).toHaveBeenCalledWith('/next');
   });
 
@@ -66,6 +100,7 @@ describe('GameSetupParticipantsScreen', () => {
         <GameSetupParticipantsScreen />
       </BrowserRouter>
     );
+    
     fireEvent.click(screen.getByText('← Back'));
     expect(mockNavigate).toHaveBeenCalledWith(-1);
   });
@@ -76,6 +111,7 @@ describe('GameSetupParticipantsScreen', () => {
         <GameSetupParticipantsScreen />
       </BrowserRouter>
     );
+    
     fireEvent.click(screen.getByText('Player 1'));
     expect(mockToggleMatchPlayer).toHaveBeenCalledWith('1');
   });

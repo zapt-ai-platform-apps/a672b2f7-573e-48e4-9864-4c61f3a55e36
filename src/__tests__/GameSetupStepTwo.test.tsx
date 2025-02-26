@@ -6,21 +6,24 @@ import { useStateContext } from '../hooks/useStateContext';
 // Mock the context hook
 vi.mock('../hooks/useStateContext');
 
-// Mock react-router-dom with the type assertion fix
+// Mock navigate function
+const mockNavigate = vi.fn();
+
+// Mock react-router-dom with proper import technique
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
-    ...(actual as Record<string, unknown>),
-    useNavigate: vi.fn(),
+    ...(actual as any),
+    useNavigate: () => mockNavigate,
   };
 });
 
 describe('GameSetupStepTwo', () => {
   const mockSetState = vi.fn();
-  const mockNavigate = vi.fn();
   
   beforeEach(() => {
     vi.clearAllMocks();
+    mockNavigate.mockClear();
     
     // Setup mock returns
     (useStateContext as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
@@ -35,9 +38,6 @@ describe('GameSetupStepTwo', () => {
       },
       setState: mockSetState
     });
-    
-    // Mock useNavigate
-    require('react-router-dom').useNavigate.mockReturnValue(mockNavigate);
   });
 
   it('renders the component with players', () => {
