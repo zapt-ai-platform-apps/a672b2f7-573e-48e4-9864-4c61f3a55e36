@@ -33,7 +33,7 @@ export function GameSetupStepTwo(): JSX.Element {
         // This ensures players marked as starting players will appear on field in game management
         setPlayerData(matchSquad.map(player => ({ 
           ...player, 
-          isOnField: player.isStartingPlayer 
+          isOnField: player.isStartingPlayer === true 
         })));
         
         console.log('Updated playerData with starting lineup information');
