@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { ExtendedPlayer } from './ParticipantItem';
+import { ExtendedPlayer } from './types';
 
 export default function useGameSetupParticipantsHandlers(
   selectedMatchPlayers: ExtendedPlayer[],
@@ -17,7 +17,7 @@ export default function useGameSetupParticipantsHandlers(
   }, [selectedMatchPlayers, setSelectedSquad, navigate, setErrorMessage]);
 
   const handleBack = useCallback(() => {
-    navigate(-1 as unknown as number);
+    navigate(-1);
   }, [navigate]);
 
   return { handleNext, handleBack };

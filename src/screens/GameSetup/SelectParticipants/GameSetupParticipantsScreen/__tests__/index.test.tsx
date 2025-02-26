@@ -4,11 +4,18 @@ import { BrowserRouter } from 'react-router-dom';
 import GameSetupParticipantsScreen from '../index';
 import { setupTestMocks, mockToggleMatchPlayer, mockSetSelectedSquad, mockNavigate } from './testSetup';
 
-jest.mock('../../features/GameSetup/hooks/useMatchSquad');
-jest.mock('../../hooks/useStateContext');
+jest.mock('../../../../../features/GameSetup/hooks/useMatchSquad', () => ({
+  __esModule: true,
+  default: jest.fn()
+}));
+
+jest.mock('../../../../../hooks/useStateContext', () => ({
+  useStateContext: jest.fn()
+}));
+
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => jest.fn(),
+  useNavigate: jest.fn()
 }));
 
 describe('GameSetupParticipantsScreen', () => {
@@ -46,7 +53,7 @@ describe('GameSetupParticipantsScreen', () => {
     );
     fireEvent.click(screen.getByText('Continue to Setup →'));
     expect(mockSetSelectedSquad).toHaveBeenCalledWith([
-      { id: '2', name: 'Player 2', isInMatchSquad: true },
+      { id: '2', name: 'Player 2', isInMatchSquad: true, totalPlayTime: 0, isOnField: false, isGoalkeeper: false, position: { x: 0, y: 0 } }
     ]);
     expect(mockNavigate).toHaveBeenCalledWith('/next');
   });

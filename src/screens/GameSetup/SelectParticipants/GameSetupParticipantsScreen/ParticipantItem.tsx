@@ -1,26 +1,23 @@
 import React from 'react';
 
-export type ExtendedPlayer = {
+export interface ExtendedPlayer {
   id: string;
   isInMatchSquad: boolean;
-  name?: string;
-};
+}
 
-type ParticipantItemProps = {
+interface ParticipantItemProps {
   player: ExtendedPlayer;
   isSelected: boolean;
   onToggle: () => void;
-};
+}
 
 export default function ParticipantItem({ player, isSelected, onToggle }: ParticipantItemProps): JSX.Element {
   return (
     <div
+      className={`p-4 border rounded-md cursor-pointer ${isSelected ? 'bg-blue-200' : 'bg-gray-100'}`}
       onClick={onToggle}
-      className={`p-4 border rounded-lg cursor-pointer transition-colors ${
-        isSelected ? 'bg-green-500' : 'bg-gray-700'
-      }`}
     >
-      <p className="text-white text-lg">{player.name || `Player ${player.id}`}</p>
+      <p>{player.id}</p>
     </div>
   );
 }
