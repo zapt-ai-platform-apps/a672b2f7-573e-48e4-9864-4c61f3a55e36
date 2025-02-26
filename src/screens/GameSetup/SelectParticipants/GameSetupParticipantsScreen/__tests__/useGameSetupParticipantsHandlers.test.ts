@@ -1,77 +1,56 @@
+import { vi } from 'vitest';
 import useGameSetupParticipantsHandlers from '../useGameSetupParticipantsHandlers';
-import { ExtendedPlayer } from '../types';
-
-// Mock players with required fields
-const mockPlayer1: ExtendedPlayer = {
-  id: '1',
-  name: 'Test Player 1',
-  isInMatchSquad: true,
-  totalPlayTime: 0,
-  isOnField: false,
-  isGoalkeeper: false,
-  position: { x: 0, y: 0 }
-};
-
-const mockPlayer2: ExtendedPlayer = {
-  id: '2',
-  name: 'Test Player 2',
-  isInMatchSquad: true,
-  totalPlayTime: 0,
-  isOnField: false,
-  isGoalkeeper: false,
-  position: { x: 0, y: 0 }
-};
 
 describe('useGameSetupParticipantsHandlers', () => {
-  const setSelectedSquad = jest.fn();
-  const navigate = jest.fn();
-  const setErrorMessage = jest.fn();
+  const mockSetSelectedSquad = vi.fn();
+  const mockNavigate = vi.fn();
+  const mockSetErrorMessage = vi.fn();
   
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.resetAllMocks();
   });
   
-  test('handleNext should set error when no players are selected', () => {
+  test('handleNext should show error when no players selected', () => {
     const { handleNext } = useGameSetupParticipantsHandlers(
-      [], 
-      setSelectedSquad, 
-      navigate, 
-      setErrorMessage
+      [],
+      mockSetSelectedSquad,
+      mockNavigate,
+      mockSetErrorMessage
     );
     
     handleNext();
     
-    expect(setErrorMessage).toHaveBeenCalledWith('Please select at least one participant.');
-    expect(setSelectedSquad).not.toHaveBeenCalled();
-    expect(navigate).not.toHaveBeenCalled();
+    expect(mockSetErrorMessage).toHaveBeenCalledWith('Please select at least one participant.');
+    expect(mockSetSelectedSquad).not.toHaveBeenCalled();
+    expect(mockNavigate).not.toHaveBeenCalled();
   });
   
-  test('handleNext should set selected squad and navigate when players are selected', () => {
-    const selectedPlayers = [mockPlayer1, mockPlayer2];
+  test('handleNext should set squad and navigate when players selected', () => {
+    const selectedPlayers = [{ id: '1', name: 'Player 1', isInMatchSquad: true }];
     const { handleNext } = useGameSetupParticipantsHandlers(
-      selectedPlayers, 
-      setSelectedSquad, 
-      navigate, 
-      setErrorMessage
+      selectedPlayers as any,
+      mockSetSelectedSquad,
+      mockNavigate,
+      mockSetErrorMessage
     );
     
     handleNext();
     
-    expect(setErrorMessage).not.toHaveBeenCalled();
-    expect(setSelectedSquad).toHaveBeenCalledWith(selectedPlayers);
-    expect(navigate).toHaveBeenCalledWith('/next');
+    expect(mockSetErrorMessage).not.toHaveBeenCalled();
+    expect(mockSetSelectedSquad).toHaveBeenCalledWith(selectedPlayers);
+    expect(mockNavigate).toHaveBeenCalledWith('/next');
   });
   
   test('handleBack should navigate back', () => {
     const { handleBack } = useGameSetupParticipantsHandlers(
-      [], 
-      setSelectedSquad, 
-      navigate, 
-      setErrorMessage
+      [],
+      mockSetSelectedSquad,
+      mockNavigate,
+      mockSetErrorMessage
     );
     
     handleBack();
     
-    expect(navigate).toHaveBeenCalledWith(-1);
+    expect(mockNavigate).toHaveBeenCalledWith(-1);
   });
 });

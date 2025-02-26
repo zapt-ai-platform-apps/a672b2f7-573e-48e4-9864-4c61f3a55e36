@@ -2,21 +2,22 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
+import { vi } from 'vitest';
 import GameSetupParticipantsScreen from '../index';
 import { setupTestMocks, mockToggleMatchPlayer, mockSetSelectedSquad, mockNavigate } from './testSetup';
 
-jest.mock('../../../../../features/GameSetup/hooks/useMatchSquad', () => ({
+vi.mock('../../../../../features/GameSetup/hooks/useMatchSquad', () => ({
   __esModule: true,
-  default: jest.fn()
+  default: vi.fn()
 }));
 
-jest.mock('../../../../../hooks/useStateContext', () => ({
-  useStateContext: jest.fn()
+vi.mock('../../../../../hooks/useStateContext', () => ({
+  useStateContext: vi.fn()
 }));
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: jest.fn()
+vi.mock('react-router-dom', () => ({
+  ...vi.importActual('react-router-dom'),
+  useNavigate: vi.fn()
 }));
 
 describe('GameSetupParticipantsScreen', () => {
