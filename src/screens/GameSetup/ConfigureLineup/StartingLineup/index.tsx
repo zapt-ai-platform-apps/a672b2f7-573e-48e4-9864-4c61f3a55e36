@@ -61,15 +61,15 @@ const StartingLineup: React.FC = () => {
           <PlayerCard
             key={player.id}
             player={player}
-            selected={player.selected}
-            onClick={toggleStartingPlayer}
+            selected={!!player.selected}
+            onClick={(player) => toggleStartingPlayer(player.id)}
           />
         ))}
       </div>
       
       <button
         onClick={handleContinue}
-        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg w-full md:w-auto"
+        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg w-full md:w-auto cursor-pointer"
       >
         Start Game
       </button>
