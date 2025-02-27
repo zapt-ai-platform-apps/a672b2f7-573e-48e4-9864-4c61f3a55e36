@@ -1,51 +1,51 @@
-import type { Player } from "../types/GameTypes";
+import { Player } from '../shared/models/player';
+
+interface GoalkeeperData {
+  id: string;
+  name: string;
+}
 
 /**
- * Handles the business logic for changing the goalkeeper.
+ * Create a goalkeeper player with all required Player properties
  */
-export function changeGoalkeeper(
-  playerData: Player[],
-  newGoalkeeper: Player,
-  previousGoalkeeper: Player | null,
-  isRunning: boolean
-): Player[] {
-  const now = Date.now();
-  return playerData.map(player => {
-    // Handle previous goalkeeper
-    if (previousGoalkeeper && player.id === previousGoalkeeper.id) {
-      const updatedIntervals = player.playIntervals?.map(interval => {
-        if (interval.endTime === null) {
-          return { ...interval, endTime: now };
-        }
-        return interval;
-      }) || [];
-      return {
-        ...player,
-        isGoalkeeper: false,
-        playIntervals: updatedIntervals
-      };
-    }
+export const createGoalkeeper = (data: GoalkeeperData): Player => {
+  return {
+    id: data.id,
+    name: data.name,
+    isInMatchSquad: true,
+    isInStartingLineup: true,
+    isGoalkeeper: true,
+    position: 'goalkeeper',
+    playIntervals: [], // Fix: Initialize with empty array
+    goals: []
+  };
+};
 
-    // Handle new goalkeeper
-    if (player.id === newGoalkeeper.id) {
-      const newInterval = {
-        start: now,
-        end: isRunning ? undefined : now,
-        startTime: now,
-        endTime: isRunning ? null : now,
-        isGoalkeeper: true
-      };
-      
-      return {
-        ...player,
-        isGoalkeeper: true,
-        playIntervals: [
-          ...(player.playIntervals || []),
-          newInterval
-        ]
-      };
-    }
+/**
+ * Converts an array of goalkeeper data to fully formed Player objects
+ */
+export const convertGoalkeepersToPlayers = (goalkeepers: GoalkeeperData[]): Player[] => {
+  return goalkeepers.map(createGoalkeeper);
+};
 
-    return player;
-  });
-}
+/**
+ * Returns a player marked as the new goalkeeper
+ */
+export const assignGoalkeeper = (player: Player): Player => {
+  return {
+    ...player,
+    isGoalkeeper: true,
+    position: 'goalkeeper'
+  };
+};
+
+/**
+ * Returns a player with goalkeeper status removed
+ */
+export const removeGoalkeeperStatus = (player: Player): Player => {
+  return {
+    ...player,
+    isGoalkeeper: false,
+    position: null
+  };
+};

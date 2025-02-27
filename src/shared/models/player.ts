@@ -1,32 +1,52 @@
-import { Player } from '../../types/GameTypes';
+import { TimeInterval } from './timeUtils';
 
-// Export the Player type for use in other modules
-export type { Player };
-
-/**
- * Creates a new player with the specified properties.
- * 
- * @param params Player creation parameters
- * @returns A new player object with default values for unspecified properties
- */
-export function createPlayer({
-  name,
-  isInMatchSquad,
-  isInStartingLineup
-}: {
-  name: string;
-  isInMatchSquad?: boolean;
-  isInStartingLineup?: boolean;
-}): Player {
-  return {
-    id: String(Date.now() + Math.random()), // Convert to string
-    name,
-    playIntervals: [],
-    isOnField: false,
-    isGoalkeeper: false,
-    totalPlayTime: 0,
-    position: { x: 0, y: 0 },
-    isInMatchSquad: isInMatchSquad ?? false,
-    isInStartingLineup: isInStartingLineup ?? false,
-  };
+export interface Goal {
+  id: string;
+  playerId: string;
+  timestamp: number;
+  period?: number;
 }
+
+export interface Player {
+  id: string;
+  name: string;
+  isInMatchSquad: boolean;
+  isInStartingLineup: boolean;
+  position: string | null;
+  isGoalkeeper: boolean;
+  playIntervals: TimeInterval[];
+  goals: Goal[];
+}
+
+export const createPlayer = (id: string, name: string): Player => {
+  return {
+    id,
+    name,
+    isInMatchSquad: false,
+    isInStartingLineup: false,
+    position: null,
+    isGoalkeeper: false,
+    playIntervals: [],
+    goals: []
+  };
+};
+
+export const toggleMatchSquad = (player: Player): Player => {
+  const isInMatchSquad = !player.isInMatchSquad;
+  return {
+    ...player,
+    isInMatchSquad,
+    // Remove from starting lineup if removed from match squad
+    isInStartingLineup: isInMatchSquad ? player.isInStartingLineup : false
+  };
+};
+
+export const toggleStartingLineup = (player: Player): Player => {
+  // Can only be in starting lineup if in match squad
+  if (!player.isInMatchSquad) return player;
+  
+  return {
+    ...player,
+    isInStartingLineup: !player.isInStartingLineup
+  };
+};

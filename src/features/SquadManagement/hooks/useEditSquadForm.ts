@@ -1,131 +1,103 @@
-import { useState, useEffect, FormEvent } from "react";
-import { useStateContext } from "../../../hooks/useStateContext";
-import { Player, Position, Squad } from "../../../types/GameTypes";
+import { useState, useEffect } from 'react';
+import { Player } from '../../../shared/models/player';
+import { SquadPlayer } from '../types';
 
-// Updated interface to include all required Player properties
-interface SquadPlayer {
-  id: string;
-  name: string;
-  totalPlayTime: number;
-  isOnField: boolean;
-  isGoalkeeper: boolean;
-  position: Position;
-  [key: string]: any;
+interface EditSquadFormProps {
+  squadId: string;
+  initialSquadName: string;
+  initialPlayers: SquadPlayer[];
+  onUpdate: (name: string, players: Player[]) => Promise<void>;
+  onCancel: () => void;
 }
 
-export default function useEditSquadForm() {
-  const { selectedSquad, setSelectedSquad } = useStateContext();
-  const [squadName, setSquadName] = useState<string>("");
-  const [squadPlayersList, setSquadPlayersList] = useState<SquadPlayer[]>([]);
-  const [newPlayerName, setNewPlayerName] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+// Fix: Correct the type conversion from SquadPlayer[] to Player[]
+export const useEditSquadForm = ({
+  squadId,
+  initialSquadName,
+  initialPlayers,
+  onUpdate,
+  onCancel
+}: EditSquadFormProps) => {
+  const [squadName, setSquadName] = useState(initialSquadName);
+  const [players, setPlayers] = useState<SquadPlayer[]>(initialPlayers);
+  const [newPlayerName, setNewPlayerName] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Pre-populate form with current squad data when editing
-  useEffect(() => {
-    if (selectedSquad && 'name' in selectedSquad) {
-      setSquadName(selectedSquad.name);
-      
-      // Ensure all players have the required properties with default values
-      const enrichedPlayers = (selectedSquad.players || []).map(player => ({
-        ...player, // First spread the original properties
-        // Then provide defaults for any missing properties
-        totalPlayTime: player.totalPlayTime ?? 0,
-        isOnField: player.isOnField ?? false,
-        isGoalkeeper: player.isGoalkeeper ?? false,
-        position: player.position ?? { x: 0, y: 0 }
-      }));
-      
-      setSquadPlayersList(enrichedPlayers);
-    }
-  }, [selectedSquad]);
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSquadName(e.target.value);
+  };
 
-  const handleAddPlayer = (): void => {
+  const handleAddPlayer = () => {
     if (!newPlayerName.trim()) return;
-
-    // Add default values for all required Player properties
+    
     const newPlayer: SquadPlayer = {
-      id: Date.now().toString(),
-      name: newPlayerName.trim(),
-      totalPlayTime: 0,
-      isOnField: false,
-      isGoalkeeper: false,
-      position: { x: 0, y: 0 }
+      id: `temp-${Date.now()}`,
+      name: newPlayerName.trim()
     };
-
-    setSquadPlayersList([...squadPlayersList, newPlayer]);
-    setNewPlayerName("");
+    
+    setPlayers([...players, newPlayer]);
+    setNewPlayerName('');
   };
 
-  const handleDeletePlayer = (playerId: string): void => {
-    setSquadPlayersList(squadPlayersList.filter((player) => player.id !== playerId));
+  const handleRemovePlayer = (id: string) => {
+    setPlayers(players.filter(player => player.id !== id));
   };
 
-  const handleUpdateSquad = async (e: FormEvent): Promise<void> => {
+  const handlePlayerNameChange = (id: string, name: string) => {
+    setPlayers(
+      players.map(player => 
+        player.id === id ? { ...player, name } : player
+      )
+    );
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!squadName.trim()) {
-      setError("Squad name is required");
+      setError('Squad name is required');
       return;
     }
-
-    if (squadPlayersList.length === 0) {
-      setError("At least one player is required");
-      return;
-    }
-
-    setLoading(true);
-    setError("");
-
+    
     try {
-      if (!selectedSquad || !('id' in selectedSquad)) {
-        throw new Error("No squad selected or invalid squad");
-      }
-
-      const updatedSquad: Squad = {
-        ...selectedSquad,
-        name: squadName.trim(),
-        players: squadPlayersList,
-      };
-
-      // Update squad in database
-      const response = await fetch(`/api/squads/${updatedSquad.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedSquad),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update squad");
-      }
-
-      // Update squad in state using setSelectedSquad
-      setSelectedSquad(updatedSquad);
-
-      setLoading(false);
+      setIsSubmitting(true);
+      setError(null);
+      
+      // Convert SquadPlayer[] to Player[] with all required properties
+      const playersWithRequiredProps: Player[] = players.map(squadPlayer => ({
+        id: squadPlayer.id,
+        name: squadPlayer.name,
+        isInMatchSquad: false,
+        isInStartingLineup: false,
+        playIntervals: [],
+        position: null,
+        isGoalkeeper: false,
+        goals: []
+      }));
+      
+      await onUpdate(squadName, playersWithRequiredProps);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An unknown error occurred");
-      setLoading(false);
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setIsSubmitting(false);
     }
-  };
-
-  const handleBack = (): void => {
-    setError("");
   };
 
   return {
     squadName,
-    setSquadName,
-    squadPlayersList,
+    players,
     newPlayerName,
-    setNewPlayerName,
-    loading,
+    isSubmitting,
     error,
+    handleNameChange,
+    setNewPlayerName,
     handleAddPlayer,
-    handleDeletePlayer,
-    handleUpdateSquad,
-    handleBack,
+    handleRemovePlayer,
+    handlePlayerNameChange,
+    handleSubmit,
+    handleCancel: onCancel
   };
-}
+};
+
+export default useEditSquadForm;

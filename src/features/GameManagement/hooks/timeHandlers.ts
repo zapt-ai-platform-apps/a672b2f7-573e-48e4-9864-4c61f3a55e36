@@ -1,35 +1,26 @@
-import { calculateTotalPlayTime, calculateElapsedTime } from '../../../shared/models/timeUtils';
-import type { Player } from '../../../types/GameTypes';
+import { GameInterval, convertIntervalsToTimeIntervals } from './intervalOperations';
+import { TimeInterval } from '../../../shared/models/timeUtils';
 
-interface Interval {
-  start: number;
-  end: number | null;
-}
+// Fix: Ensure we properly convert GameInterval[] to TimeInterval[]
+export const calculatePlaytimes = (intervals: GameInterval[]): number => {
+  return intervals.reduce((total, interval) => {
+    if (interval.end === null) return total;
+    return total + (interval.end - interval.start);
+  }, 0);
+};
 
-export function getTotalPlayTime(player: Player, includeGKPlaytime: boolean, isRunning: boolean): number {
-  return calculateTotalPlayTime(player, includeGKPlaytime, isRunning);
-}
+export const formatPlaytimeIntervals = (intervals: GameInterval[]): TimeInterval[] => {
+  // Use the helper function to ensure proper conversion
+  return convertIntervalsToTimeIntervals(intervals);
+};
 
-export function getTimeElapsed(gameIntervals: Interval[], isRunning: boolean): number {
-  return calculateElapsedTime(gameIntervals, isRunning);
-}
-
-export function toggleTimer(
-  setIsRunning: (value: boolean | ((prev: boolean) => boolean)) => void,
-  gameIntervals: Interval[],
-  setGameIntervals: (intervals: Interval[]) => void
-): void {
-  setIsRunning((prev) => {
-    if (!prev) {
-      setGameIntervals([...gameIntervals, { start: Date.now(), end: null }]);
-    } else {
-      const lastInterval = gameIntervals[gameIntervals.length - 1];
-      if (lastInterval && lastInterval.end === null) {
-        const updatedIntervals = [...gameIntervals];
-        updatedIntervals[updatedIntervals.length - 1].end = Date.now();
-        setGameIntervals(updatedIntervals);
-      }
-    }
-    return !prev;
-  });
-}
+export const getActiveInterval = (intervals: GameInterval[]): GameInterval | null => {
+  if (intervals.length === 0) return null;
+  
+  const lastInterval = intervals[intervals.length - 1];
+  if (lastInterval.end === null) {
+    return lastInterval;
+  }
+  
+  return null;
+};

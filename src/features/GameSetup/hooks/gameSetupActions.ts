@@ -1,60 +1,36 @@
-import { Player } from '../../../types/GameTypes';
+import { Player } from '../../../shared/models/player';
 
-export function addPlayerAction(
-  playerName: string,
-  players: Player[],
-  setPlayers: (players: Player[]) => void,
-  setPlayerName: (name: string) => void
-): boolean {
-  if (playerName.trim() !== '') {
-    const newPlayer: Player = {
-      id: String(Date.now()), // Convert to string
-      name: playerName.trim(),
-      playIntervals: [],
-      isOnField: false,
-      isGoalkeeper: false,
-      totalPlayTime: 0,
-      position: { x: 0, y: 0 }, // Use 0 instead of null
-      isStartingPlayer: false
-    };
-    const updatedPlayers = [...players, newPlayer];
-    setPlayers(updatedPlayers);
-    localStorage.setItem('players', JSON.stringify(updatedPlayers));
-    setPlayerName('');
-    return true;
+// Fix: Ensure we create players with all required properties
+export const createPlayer = (id: string, name: string): Player => {
+  return {
+    id,
+    name,
+    isInMatchSquad: false,
+    isInStartingLineup: false,
+    playIntervals: [],
+    position: null,
+    isGoalkeeper: false,
+    goals: []
+  };
+};
+
+export const togglePlayerInMatchSquad = (player: Player): Player => {
+  return {
+    ...player,
+    isInMatchSquad: !player.isInMatchSquad,
+    // If removing from match squad, also remove from starting lineup
+    isInStartingLineup: player.isInMatchSquad ? false : player.isInStartingLineup
+  };
+};
+
+export const togglePlayerInStartingLineup = (player: Player): Player => {
+  // Can only be in starting lineup if they're in the match squad
+  if (!player.isInMatchSquad) {
+    return player;
   }
-  return false;
-}
-
-export function deletePlayerAction(
-  playerNameToDelete: string,
-  players: Player[],
-  setPlayers: (players: Player[]) => void
-): boolean {
-  const confirmDelete = window.confirm(`Are you sure you want to delete ${playerNameToDelete}?`);
-  if (confirmDelete) {
-    const updatedPlayers = players.filter((player) => player.name !== playerNameToDelete);
-    setPlayers(updatedPlayers);
-    localStorage.setItem('players', JSON.stringify(updatedPlayers));
-    return true;
-  }
-  return false;
-}
-
-export function toggleStartingPlayerAction(
-  playerNameToToggle: string,
-  players: Player[],
-  setPlayers: (players: Player[]) => void,
-  setStartingPlayersCount: (count: number) => void,
-  setStartingPlayers: (players: Player[]) => void
-): void {
-  const updatedPlayers = players.map(player =>
-    player.name === playerNameToToggle
-      ? { ...player, isStartingPlayer: !player.isStartingPlayer }
-      : player
-  );
-  setPlayers(updatedPlayers);
-  const count = updatedPlayers.filter(p => p.isStartingPlayer).length;
-  setStartingPlayersCount(count);
-  setStartingPlayers(updatedPlayers.filter(p => p.isStartingPlayer));
-}
+  
+  return {
+    ...player,
+    isInStartingLineup: !player.isInStartingLineup
+  };
+};
