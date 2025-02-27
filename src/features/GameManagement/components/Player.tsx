@@ -4,9 +4,10 @@ import { Player as PlayerType } from '../../../types/GameTypes';
 interface PlayerProps {
   player: PlayerType;
   onDragStart: (playerId: string) => void;
+  onPointerDown?: (event: React.PointerEvent<HTMLDivElement>) => void;
 }
 
-const Player: React.FC<PlayerProps> = ({ player, onDragStart }) => {
+const Player: React.FC<PlayerProps> = ({ player, onDragStart, onPointerDown }) => {
   const handleDragStart = () => {
     onDragStart(player.id);
   };
@@ -33,7 +34,7 @@ const Player: React.FC<PlayerProps> = ({ player, onDragStart }) => {
         userSelect: 'none',
         touchAction: 'none'
       }}
-      onPointerDown={handleDragStart}
+      onPointerDown={onPointerDown || handleDragStart}
       data-player-id={player.id.toString()}
     >
       <span className="sr-only">{player.name}</span>

@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import PitchVisualization from '../features/GameManagement/components/PitchVisualization';
 import { act } from '@testing-library/react';
+import { Player } from '../types/GameTypes';
 
 // Mock useDragAndDrop hook with correct export structure
 vi.mock('../features/GameManagement/hooks/useDragAndDrop', () => ({
@@ -18,7 +19,7 @@ vi.mock('../features/GameManagement/utils/assignInitialPositions', () => ({
 }));
 
 describe('Pitch Visualization Drag and Drop', () => {
-  const testPlayers = [
+  const testPlayers: Player[] = [
     { id: '1', name: 'Player 1', position: { x: 20, y: 30 }, status: 'playing', totalPlayTime: 0, isOnField: true, isGoalkeeper: false },
     { id: '2', name: 'Player 2', position: { x: 40, y: 50 }, status: 'playing', totalPlayTime: 0, isOnField: true, isGoalkeeper: false }
   ];
@@ -61,7 +62,7 @@ describe('Pitch Visualization Drag and Drop', () => {
   });
 
   it('handles player positioning with valid data', async () => {
-    const validPlayers = [
+    const validPlayers: Player[] = [
       { id: '3', name: 'Player 3', position: { x: 30, y: 40 }, status: 'playing', totalPlayTime: 0, isOnField: true, isGoalkeeper: false },
       { id: '4', name: 'Player 4', position: { x: 0, y: 0 }, status: 'playing', totalPlayTime: 0, isOnField: true, isGoalkeeper: false }
     ];

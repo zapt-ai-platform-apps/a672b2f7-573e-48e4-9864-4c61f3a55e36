@@ -2,6 +2,7 @@ import { Session } from '@supabase/supabase-js';
 import { supabase } from '../supabaseClient';
 import { recordLogin } from '../supabaseClient';
 import * as Sentry from "@sentry/browser";
+import { environmentType } from '../types/environment';
 
 type SetSessionFunction = (session: Session | null) => void;
 type SetLoadingFunction = (loading: boolean) => void;
@@ -19,7 +20,7 @@ export const getInitialSessionUtil = async (
     // Record login if user exists
     if (session?.user?.email) {
       try {
-        await recordLogin(session.user.email, import.meta.env.VITE_PUBLIC_APP_ENV);
+        await recordLogin(session.user.email, import.meta.env.VITE_PUBLIC_APP_ENV as unknown as environmentType);
       } catch (error) {
         console.error('Failed to record login:', error);
         Sentry.captureException(error);
