@@ -10,9 +10,12 @@ import { environmentType } from '../types/environment';
 export const recordLogin = async (email: string): Promise<void> => {
   try {
     console.log('Recording login for:', email);
-    // Convert 'staging' to 'production' for recordLogin
-    const effectiveEnv = import.meta.env.VITE_PUBLIC_APP_ENV === 'staging' ? 'production' : import.meta.env.VITE_PUBLIC_APP_ENV;
-    await zapt_recordLogin(email, effectiveEnv as environmentType);
+    // First cast env value to environmentType
+    const appEnv = import.meta.env.VITE_PUBLIC_APP_ENV as environmentType;
+    // Then compute effectiveEnv without further casting needed
+    const effectiveEnv = appEnv === 'staging' ? 'production' : appEnv;
+    
+    await zapt_recordLogin(email, effectiveEnv);
     console.log('Login recorded successfully');
     
     // Also create a login event
