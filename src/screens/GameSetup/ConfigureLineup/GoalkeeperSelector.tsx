@@ -16,6 +16,8 @@ export default function GoalkeeperSelector({
   confirmedGoalkeeper,
   setConfirmedGoalkeeper
 }: GoalkeeperSelectorProps): JSX.Element {
+  // startingPlayers should already be filtered to only contain players in starting lineup
+  
   const handleSelectGoalkeeper = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = e.target.value;
     if (selectedId === '') {
@@ -45,11 +47,17 @@ export default function GoalkeeperSelector({
           data-testid="goalkeeper-select"
         >
           <option value="" className="bg-blue-900">Select a goalkeeper</option>
-          {startingPlayers.map(player => (
-            <option key={player.id} value={player.id} className="bg-blue-900">
-              {player.name}
+          {startingPlayers.length > 0 ? (
+            startingPlayers.map(player => (
+              <option key={player.id} value={player.id} className="bg-blue-900">
+                {player.name}
+              </option>
+            ))
+          ) : (
+            <option value="" disabled className="bg-blue-900">
+              Select players for starting lineup first
             </option>
-          ))}
+          )}
         </select>
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
           <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

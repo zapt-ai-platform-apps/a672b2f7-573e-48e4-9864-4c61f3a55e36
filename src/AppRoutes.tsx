@@ -21,7 +21,7 @@ const AppRoutes: React.FC = () => {
 
   return (
     <>
-      <main className="w-full px-4 pb-16 h-full">
+      <main className="w-full pb-16 h-full">
         <React.Suspense fallback={<LoadingScreen />}>
           <AnimatePresence mode="wait">
             <Routes 

@@ -42,6 +42,15 @@ export function GameSetupStepTwo(): JSX.Element {
         return player;
       })
     );
+    
+    // If a player is removed from starting lineup and they were the goalkeeper, reset goalkeeper
+    if (goalkeeperPlayer && goalkeeperPlayer.id === playerId) {
+      const player = startingPlayers.find(p => p.id === playerId);
+      if (player && player.isStartingPlayer) {
+        setGoalkeeperPlayer(null);
+        setConfirmedGoalkeeper(false);
+      }
+    }
   };
 
   const handleStartGame = () => {
@@ -126,8 +135,10 @@ export function GameSetupStepTwo(): JSX.Element {
           data-testid="configure-lineup-title"
         >
           Game Setup: Configuration
-          <span className="block text-white text-2xl mt-2" data-testid="configure-lineup">Configure Lineup</span>
         </h1>
+        <h2 className="text-2xl font-semibold text-white mb-8" data-testid="configure-lineup">
+          Configure Lineup
+        </h2>
         
         {error && (
           <div className="mb-6 p-4 bg-red-500/30 border border-red-500 rounded-lg text-white">
@@ -136,18 +147,7 @@ export function GameSetupStepTwo(): JSX.Element {
         )}
         
         <div className="space-y-8">
-          {/* Goalkeeper Selection */}
-          <GoalkeeperSettings
-            startingPlayers={startingPlayers}
-            goalkeeper={goalkeeperPlayer}
-            setGoalkeeper={setGoalkeeperPlayer}
-            includeGKPlaytime={includeGKPlaytime}
-            setIncludeGKPlaytime={setIncludeGKPlaytime}
-            confirmedGoalkeeper={confirmedGoalkeeper}
-            setConfirmedGoalkeeper={setConfirmedGoalkeeper}
-          />
-          
-          {/* Starting Lineup Selection */}
+          {/* Starting Lineup Selection - Moved to be FIRST */}
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
             <h2 className="text-2xl font-bold mb-4 text-white">Starting Lineup</h2>
             <StartingLineup 
@@ -155,6 +155,17 @@ export function GameSetupStepTwo(): JSX.Element {
               onTogglePlayer={handleTogglePlayer}
             />
           </div>
+          
+          {/* Goalkeeper Selection - Moved to be SECOND */}
+          <GoalkeeperSettings
+            startingPlayers={startingPlayers.filter(player => player.isStartingPlayer)}
+            goalkeeper={goalkeeperPlayer}
+            setGoalkeeper={setGoalkeeperPlayer}
+            includeGKPlaytime={includeGKPlaytime}
+            setIncludeGKPlaytime={setIncludeGKPlaytime}
+            confirmedGoalkeeper={confirmedGoalkeeper}
+            setConfirmedGoalkeeper={setConfirmedGoalkeeper}
+          />
           
           {/* Action Buttons */}
           <div className="flex justify-end space-x-4 mt-8">
