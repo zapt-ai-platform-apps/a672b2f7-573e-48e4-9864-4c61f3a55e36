@@ -1,6 +1,5 @@
 import { supabase } from '../../../supabaseClient';
-import parsePlayers from '../../../utils/parsePlayers';
-import { getSquadPlayers } from '../utils/squadUtils';
+import { parsePlayers } from '../utils/playerParsing';
 import * as Sentry from '@sentry/browser';
 
 export interface Squad {
@@ -32,7 +31,15 @@ export async function fetchSquads(): Promise<Squad[]> {
     }
     
     const squads = await response.json();
-    return squads;
+    
+    // Process each squad to ensure players are properly parsed
+    return squads.map(squad => ({
+      ...squad,
+      // Parse players if they're stored as a string
+      players: typeof squad.players === 'string' 
+        ? parsePlayers(squad.players, `squad-${squad.id}`) 
+        : squad.players
+    }));
   } catch (error) {
     console.error('Error fetching squads:', error);
     Sentry.captureException(error);
@@ -51,12 +58,22 @@ export async function createSquad(squadData: Partial<Squad>): Promise<Squad> {
       throw new Error('No authenticated session');
     }
     
-    // If players data is an array, convert to comma-separated string format
+    // Always store players as a JSON string for consistency
     if (Array.isArray(squadData.players)) {
-      squadData.players = squadData.players.map(p => 
-        typeof p === 'string' ? p : p.name
-      ).join(',');
+      // Convert array of objects to array of strings if needed
+      const playerNames = squadData.players.map(p => 
+        typeof p === 'string' ? p : (p.name || '')
+      ).filter(Boolean);
+      
+      // Store as JSON string
+      squadData.players = JSON.stringify(playerNames);
+    } else if (typeof squadData.players === 'string' && !squadData.players.startsWith('[')) {
+      // If it's a string but not JSON, convert comma/newline-separated string to JSON
+      const playerList = parsePlayers(squadData.players, 'createSquad');
+      squadData.players = JSON.stringify(playerList);
     }
+    
+    console.log('Creating squad with players data:', squadData.players);
     
     const response = await fetch('/api/squads', {
       method: 'POST',
@@ -91,12 +108,22 @@ export async function updateSquad(squadId: number, squadData: Partial<Squad>): P
       throw new Error('No authenticated session');
     }
     
-    // If players data is an array, convert to comma-separated string format
+    // Always store players as a JSON string for consistency
     if (Array.isArray(squadData.players)) {
-      squadData.players = squadData.players.map(p => 
-        typeof p === 'string' ? p : p.name
-      ).join(',');
+      // Convert array of objects to array of strings if needed
+      const playerNames = squadData.players.map(p => 
+        typeof p === 'string' ? p : (p.name || '')
+      ).filter(Boolean);
+      
+      // Store as JSON string
+      squadData.players = JSON.stringify(playerNames);
+    } else if (typeof squadData.players === 'string' && !squadData.players.startsWith('[')) {
+      // If it's a string but not JSON, convert comma/newline-separated string to JSON
+      const playerList = parsePlayers(squadData.players, 'updateSquad');
+      squadData.players = JSON.stringify(playerList);
     }
+    
+    console.log('Updating squad with players data:', squadData.players);
     
     const response = await fetch(`/api/squadService?id=${squadId}`, {
       method: 'PUT',
@@ -170,6 +197,12 @@ export async function fetchSquadById(squadId: number): Promise<Squad> {
     }
     
     const squad = await response.json();
+    
+    // Ensure players are properly parsed
+    if (typeof squad.players === 'string') {
+      squad.players = parsePlayers(squad.players, `fetchSquad-${squadId}`);
+    }
+    
     return squad;
   } catch (error) {
     console.error('Error fetching squad:', error);

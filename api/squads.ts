@@ -1,115 +1,65 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import * as Sentry from "@sentry/node";
-import { squads } from '../drizzle/schema.js';
-import { eq } from 'drizzle-orm';
-
-// Initialize Sentry
-Sentry.init({
-  dsn: process.env.VITE_PUBLIC_SENTRY_DSN,
-  environment: process.env.VITE_PUBLIC_APP_ENV,
-  initialScope: {
-    tags: {
-      type: 'backend',
-      projectId: process.env.VITE_PUBLIC_APP_ID
-    }
-  }
-});
-
-// Initialize database connection
-const client = postgres(process.env.COCKROACH_DB_URL || '');
-const db = drizzle(client);
+import { squads } from '../drizzle/schema.ts';
+import { authenticateUser } from './_apiUtils.ts';
+import { transformSquadFromDB } from '../src/models/squadModel.ts';
+import * as Sentry from '@sentry/node';
 
 export default async function handler(req, res) {
   try {
-    // GET /api/squads
-    if (req.method === 'GET' && !req.query.id) {
-      const allSquads = await db.select().from(squads);
+    // Authenticate the user
+    const user = await authenticateUser(req);
+    
+    // Initialize database connection
+    const client = postgres(process.env.COCKROACH_DB_URL);
+    const db = drizzle(client);
+    
+    if (req.method === 'GET') {
+      // Fetch all squads for the user
+      const result = await db.select().from(squads);
       
-      // Ensure all IDs are returned as numbers
-      const squadsWithNumberIds = allSquads.map(squad => ({
-        ...squad,
-        id: typeof squad.id === 'string' ? parseInt(squad.id, 10) : squad.id
-      }));
+      // Transform the result to ensure players are correctly parsed
+      const transformedSquads = result.map(squad => transformSquadFromDB(squad));
       
-      return res.status(200).json(squadsWithNumberIds);
-    }
-
-    // GET /api/squads/:id
-    if (req.method === 'GET' && req.query.id) {
-      const id = parseInt(req.query.id, 10);
-      const [squad] = await db.select().from(squads).where(eq(squads.id, id));
+      console.log('API - Fetched and transformed squads:', 
+        transformedSquads.map(s => ({ 
+          id: s.id, 
+          name: s.name, 
+          playersType: typeof s.players,
+          playersLength: Array.isArray(s.players) ? s.players.length : 'n/a'
+        }))
+      );
       
-      if (!squad) {
-        return res.status(404).json({ error: 'Squad not found' });
-      }
-      
-      // Ensure ID is returned as a number
-      return res.status(200).json({
-        ...squad,
-        id: typeof squad.id === 'string' ? parseInt(squad.id, 10) : squad.id
-      });
-    }
-
-    // POST /api/squads
-    if (req.method === 'POST') {
+      res.status(200).json(transformedSquads);
+    } else if (req.method === 'POST') {
+      // Create a new squad
       const { name, players } = req.body;
       
-      if (!name) {
-        return res.status(400).json({ error: 'Squad name is required' });
+      if (!name || !players) {
+        return res.status(400).json({ error: 'Name and players are required' });
       }
       
-      const [newSquad] = await db.insert(squads).values({
+      console.log('API - Creating squad with players:', players);
+      
+      const result = await db.insert(squads).values({
         name,
-        players: JSON.stringify(players || [])
+        players: typeof players === 'string' ? players : JSON.stringify(players),
       }).returning();
       
-      // Ensure ID is returned as a number
-      return res.status(201).json({
-        ...newSquad,
-        id: typeof newSquad.id === 'string' ? parseInt(newSquad.id, 10) : newSquad.id
-      });
-    }
-
-    // PUT /api/squads/:id
-    if (req.method === 'PUT' && req.query.id) {
-      const id = parseInt(req.query.id, 10);
-      const { name, players } = req.body;
-      
-      if (!name) {
-        return res.status(400).json({ error: 'Squad name is required' });
+      if (result.length === 0) {
+        return res.status(500).json({ error: 'Failed to create squad' });
       }
       
-      const [updatedSquad] = await db.update(squads)
-        .set({
-          name,
-          players: JSON.stringify(players || [])
-        })
-        .where(eq(squads.id, id))
-        .returning();
+      // Transform the result for the response
+      const transformedSquad = transformSquadFromDB(result[0]);
       
-      if (!updatedSquad) {
-        return res.status(404).json({ error: 'Squad not found' });
-      }
-      
-      // Ensure ID is returned as a number
-      return res.status(200).json({
-        ...updatedSquad,
-        id: typeof updatedSquad.id === 'string' ? parseInt(updatedSquad.id, 10) : updatedSquad.id
-      });
+      res.status(201).json(transformedSquad);
+    } else {
+      res.status(405).json({ error: 'Method not allowed' });
     }
-
-    // DELETE /api/squads/:id
-    if (req.method === 'DELETE' && req.query.id) {
-      const id = parseInt(req.query.id, 10);
-      await db.delete(squads).where(eq(squads.id, id));
-      return res.status(204).end();
-    }
-
-    return res.status(405).json({ error: 'Method not allowed' });
   } catch (error) {
-    console.error('API error:', error);
+    console.error('API Error:', error);
     Sentry.captureException(error);
-    return res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: error.message || 'Internal server error' });
   }
 }

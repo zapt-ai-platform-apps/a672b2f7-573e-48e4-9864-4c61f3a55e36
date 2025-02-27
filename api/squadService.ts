@@ -1,79 +1,102 @@
-import { authenticateUser } from "./_apiUtils.js";
-import Sentry from "./_sentry.js";
-import { eq, and } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import { squads } from '../drizzle/schema.js';
+import { eq } from 'drizzle-orm';
+import { squads } from '../drizzle/schema.ts';
+import { authenticateUser } from './_apiUtils.ts';
+import { transformSquadFromDB } from '../src/models/squadModel.ts';
+import * as Sentry from '@sentry/node';
 
-interface ApiRequest {
-  query: Record<string, string | string[]>;
-  method: string;
-  body: any;
-  headers: Record<string, string>;
-}
-
-interface ApiResponse {
-  status: (statusCode: number) => ApiResponse;
-  json: (body: any) => void;
-}
-
-export default async function handler(req: ApiRequest, res: ApiResponse) {
+export default async function handler(req, res) {
   try {
-    const user = await authenticateUser(req);
-    const client = postgres(process.env.COCKROACH_DB_URL as string);
-    const db = drizzle(client);
-    
+    // Check if ID is provided
     const { id } = req.query;
+    
     if (!id) {
       return res.status(400).json({ error: 'Squad ID is required' });
     }
     
-    const squadId = parseInt(Array.isArray(id) ? id[0] : id);
+    // Authenticate the user
+    const user = await authenticateUser(req);
+    
+    // Initialize database connection
+    const client = postgres(process.env.COCKROACH_DB_URL);
+    const db = drizzle(client);
+    
+    // Convert ID to number
+    const squadId = parseInt(id);
+    
+    if (isNaN(squadId)) {
+      return res.status(400).json({ error: 'Invalid squad ID' });
+    }
     
     if (req.method === 'GET') {
+      // Fetch a specific squad
       const result = await db.select()
         .from(squads)
-        .where(and(
-          eq(squads.id, squadId),
-          eq(squads.userId, user.id)
-        ));
+        .where(eq(squads.id, squadId));
       
-      if (!result.length) {
+      if (result.length === 0) {
         return res.status(404).json({ error: 'Squad not found' });
       }
-      return res.status(200).json(result[0]);
+      
+      // Transform the result to ensure players are correctly parsed
+      const transformedSquad = transformSquadFromDB(result[0]);
+      
+      console.log('API - Fetched and transformed squad:', { 
+        id: transformedSquad.id, 
+        name: transformedSquad.name, 
+        playersType: typeof transformedSquad.players,
+        playersArray: Array.isArray(transformedSquad.players),
+        playersLength: Array.isArray(transformedSquad.players) ? transformedSquad.players.length : 'n/a'
+      });
+      
+      res.status(200).json(transformedSquad);
     } else if (req.method === 'PUT') {
-      const squadData = req.body;
+      // Update a squad
+      const { name, players } = req.body;
+      
+      if (!name && !players) {
+        return res.status(400).json({ error: 'At least one field to update is required' });
+      }
+      
+      // Prepare update data
+      const updateData = {};
+      if (name) updateData.name = name;
+      if (players) {
+        updateData.players = typeof players === 'string' ? players : JSON.stringify(players);
+        console.log('API - Updating squad players:', updateData.players);
+      }
+      
       const result = await db.update(squads)
-        .set(squadData)
-        .where(and(
-          eq(squads.id, squadId),
-          eq(squads.userId, user.id)
-        ))
+        .set(updateData)
+        .where(eq(squads.id, squadId))
         .returning();
       
-      if (!result.length) {
+      if (result.length === 0) {
         return res.status(404).json({ error: 'Squad not found' });
       }
-      return res.status(200).json(result[0]);
+      
+      // Transform the result for the response
+      const transformedSquad = transformSquadFromDB(result[0]);
+      
+      res.status(200).json(transformedSquad);
     } else if (req.method === 'DELETE') {
+      // Delete a squad
       const result = await db.delete(squads)
-        .where(and(
-          eq(squads.id, squadId),
-          eq(squads.userId, user.id)
-        ))
+        .where(eq(squads.id, squadId))
         .returning();
       
-      if (!result.length) {
+      if (result.length === 0) {
         return res.status(404).json({ error: 'Squad not found' });
       }
-      return res.status(200).json({ message: 'Squad deleted successfully' });
+      
+      res.status(200).json({ message: 'Squad deleted successfully' });
     } else {
-      return res.status(405).json({ error: 'Method not allowed' });
+      res.status(405).json({ error: 'Method not allowed' });
     }
   } catch (error) {
-    console.error('Error in squadService endpoint:', error);
+    console.error('API Error:', error);
     Sentry.captureException(error);
-    return res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: error.message || 'Internal server error' });
   }
 }

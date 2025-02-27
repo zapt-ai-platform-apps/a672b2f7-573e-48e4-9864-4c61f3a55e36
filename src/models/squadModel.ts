@@ -1,4 +1,4 @@
-import parsePlayers from '../utils/parsePlayers';
+import { parsePlayers } from '../features/SquadManagement/utils/playerParsing';
 import * as Sentry from "@sentry/browser";
 
 export interface SquadData {
@@ -24,9 +24,37 @@ export function validateSquadCreation(data: SquadData): void {
  */
 export function transformPlayersForDB(players: unknown[] | string): string {
   if (Array.isArray(players)) {
-    return JSON.stringify(players);
+    // Convert to array of strings if needed
+    const playerNames = players.map(p => 
+      typeof p === 'string' ? p : (
+        typeof p === 'object' && p !== null && 'name' in p ? 
+        String((p as {name: unknown}).name) : 
+        String(p)
+      )
+    );
+    return JSON.stringify(playerNames);
   }
-  return typeof players === 'string' ? players : '';
+  
+  if (typeof players === 'string') {
+    // If it's already a JSON string starting with [ and ending with ]
+    if (players.trim().startsWith('[') && players.trim().endsWith(']')) {
+      try {
+        // Validate it's a proper JSON array
+        const parsed = JSON.parse(players);
+        if (Array.isArray(parsed)) {
+          return players; // Return the valid JSON string as is
+        }
+      } catch (e) {
+        // Not valid JSON, continue to process as a regular string
+      }
+    }
+    
+    // If it's a regular string, parse it to get player names
+    const playerNames = parsePlayers(players, 'transformPlayersForDB');
+    return JSON.stringify(playerNames);
+  }
+  
+  return '[]'; // Return empty array if input is invalid
 }
 
 /**
@@ -39,14 +67,14 @@ export function transformSquadFromDB(row: Record<string, unknown>): Record<strin
     // Log the players data type and content for debugging
     console.log('transformSquadFromDB - players data type:', typeof row.players);
     if (typeof row.players === 'string') {
-      console.log('transformSquadFromDB - players content:', row.players);
+      console.log('transformSquadFromDB - players content:', row.players.substring(0, 100) + (row.players.length > 100 ? '...' : ''));
     }
     
     // Fix: Explicitly check if row.players is a string, otherwise use an empty string
     const playersData = typeof row.players === 'string' ? row.players : '';
     
-    // We use the updated parsePlayers function that handles both CSV and JSON formats
-    const parsedPlayers = parsePlayers(playersData);
+    // We use the parsePlayers function that handles both CSV and JSON formats
+    const parsedPlayers = parsePlayers(playersData, `squad-${row.id}`);
     console.log('transformSquadFromDB - parsed players:', parsedPlayers);
     
     return {
