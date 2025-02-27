@@ -11,9 +11,13 @@ export const recordUserLogin = async (email?: string, environment?: EnvironmentT
   try {
     // If email is not provided, retrieve the current user via Supabase
     if (!email) {
-      const { data: { user } } = await supabase.auth.getUser();
-      email = user?.email;
-      if (!email) return; // If no email available, do nothing
+      const response = await supabase.auth.getUser();
+      // Check if user exists and has an email
+      if (response.data?.user?.email) {
+        email = response.data.user.email;
+      } else {
+        return; // If no email available, do nothing
+      }
     }
 
     // Use VITE_PUBLIC_APP_ENV if environment is not provided
