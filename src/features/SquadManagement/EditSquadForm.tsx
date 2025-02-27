@@ -1,135 +1,132 @@
-import React, { ChangeEvent, FormEvent } from "react";
-import useEditSquadForm from "./hooks/useEditSquadForm";
-import PlayersManager from "./components/PlayersManager";
-import { FiX, FiSave, FiEdit2 } from "react-icons/fi";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import * as Sentry from '@sentry/browser';
+import useEditSquadForm from './hooks/useEditSquadForm';
+import PlayersManager from './components/PlayersManager';
+import { Player } from '../../types/GameTypes';
 
-interface EditSquadFormProps {
-  onCancel: () => void;
-}
-
-function EditSquadForm({ onCancel }: EditSquadFormProps): JSX.Element {
+const EditSquadForm: React.FC = () => {
+  const { squadId } = useParams<{ squadId?: string }>();
+  const navigate = useNavigate();
+  const [newPlayerName, setNewPlayerName] = useState('');
+  
+  // Convert squadId to number or use default
+  const id = squadId ? parseInt(squadId, 10) : 0;
+  
   const {
+    squad,
+    players,
     squadName,
-    setSquadName, // Fix: This value now comes correctly from the hook
-    squadPlayersList,
-    newPlayerName,
-    setNewPlayerName,
     loading,
     error,
+    handleSquadNameChange,
     handleAddPlayer,
-    handleDeletePlayer,
-    handleUpdateSquad,
-    handleBack,
-  } = useEditSquadForm();
+    handleRemovePlayer,
+    handleSaveSquad,
+    handleDeleteSquad,
+    handleCancel
+  } = useEditSquadForm(id);
 
-  const handleCancel = (): void => {
-    handleBack();
-    onCancel();
-  };
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
-  const handleFormSubmit = (e: FormEvent): void => {
-    e.preventDefault();
-    handleUpdateSquad(e).then(() => {
-      onCancel();
-    });
+  if (error) {
+    return (
+      <div className="p-6 bg-red-500/20 border border-red-500 rounded-lg max-w-md mx-auto my-10">
+        <h2 className="text-xl font-bold text-white mb-2">Error</h2>
+        <p className="text-white">{error}</p>
+        <button 
+          onClick={() => navigate('/squads')}
+          className="mt-4 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded cursor-pointer"
+        >
+          Back to Squads
+        </button>
+      </div>
+    );
+  }
+
+  // Function to handle player addition
+  const handleAddNewPlayer = () => {
+    if (newPlayerName.trim()) {
+      try {
+        // Create a new player with required properties
+        const newPlayer: Player = {
+          id: Date.now().toString(),
+          name: newPlayerName.trim(),
+          isOnField: false,
+          isGoalkeeper: false,
+          position: { x: 0, y: 0 },
+          totalPlayTime: 0,
+          isInMatchSquad: false,
+          isInStartingLineup: false,
+          playIntervals: []
+        };
+        
+        handleAddPlayer(newPlayer);
+        setNewPlayerName('');
+      } catch (error) {
+        console.error('Failed to add player:', error);
+        Sentry.captureException(error);
+      }
+    }
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.3 }}
-      className="max-w-2xl w-full mx-auto bg-white/10 backdrop-blur-md rounded-xl shadow-lg overflow-hidden border border-white/20"
-    >
-      <div className="px-6 py-4 bg-gradient-to-r from-blue-800/50 to-indigo-800/50 border-b border-white/10">
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold text-white flex items-center">
-            <FiEdit2 className="mr-2" /> Edit Squad
-          </h2>
-          <motion.button 
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={handleCancel}
-            className="text-white/80 hover:text-white cursor-pointer"
-            aria-label="Close"
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <h1 className="text-3xl font-bold mb-8 text-center text-white">Edit Squad</h1>
+      
+      <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl shadow-lg">
+        {/* Squad Name Input */}
+        <div className="mb-6">
+          <label className="block text-white text-sm font-medium mb-2">Squad Name</label>
+          <input
+            type="text"
+            value={squadName}
+            onChange={handleSquadNameChange}
+            className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:outline-none box-border"
+            placeholder="Enter squad name"
+          />
+        </div>
+        
+        {/* Players Manager Component */}
+        <PlayersManager
+          squadPlayersList={players}
+          newPlayerName={newPlayerName}
+          onNewPlayerNameChange={setNewPlayerName}
+          handleAddPlayer={handleAddNewPlayer}
+          handleDeletePlayer={handleRemovePlayer}
+        />
+        
+        {/* Action Buttons */}
+        <div className="flex flex-col md:flex-row gap-4 mt-8">
+          <button
+            onClick={handleSaveSquad}
+            disabled={loading}
+            className="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white text-lg rounded-lg shadow-md cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <FiX className="h-6 w-6" />
-          </motion.button>
+            {loading ? 'Saving...' : 'Save Squad'}
+          </button>
+          <button
+            onClick={handleCancel}
+            className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 text-white text-lg rounded-lg shadow-md cursor-pointer transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleDeleteSquad}
+            className="flex-1 px-6 py-3 bg-red-600 hover:bg-red-700 text-white text-lg rounded-lg shadow-md cursor-pointer transition-colors"
+          >
+            Delete Squad
+          </button>
         </div>
       </div>
-      
-      <div className="p-6">
-        {error && (
-          <motion.div 
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-4 p-4 bg-red-500/20 border border-red-400/30 text-red-100 rounded-lg"
-          >
-            {error}
-          </motion.div>
-        )}
-        
-        <form onSubmit={handleFormSubmit}>
-          <div className="mb-6">
-            <label className="block text-white text-sm font-medium mb-2">
-              Squad Name
-            </label>
-            <input
-              type="text"
-              value={squadName}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setSquadName(e.target.value)}
-              className="shadow-sm appearance-none border border-white/20 rounded-lg w-full py-3 px-4 text-white bg-white/10 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent box-border placeholder-white/40"
-              placeholder="Enter squad name"
-              required
-            />
-          </div>
-          
-          <PlayersManager
-            squadPlayersList={squadPlayersList}
-            newPlayerName={newPlayerName}
-            onNewPlayerNameChange={setNewPlayerName}
-            handleAddPlayer={handleAddPlayer}
-            handleDeletePlayer={handleDeletePlayer}
-          />
-          
-          <div className="flex items-center justify-end space-x-4 mt-6">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              type="button"
-              onClick={handleCancel}
-              className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors duration-200 cursor-pointer border border-white/10"
-              disabled={loading}
-            >
-              Cancel
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              type="submit"
-              disabled={loading}
-              className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-lg shadow-md transition-colors duration-200 cursor-pointer disabled:opacity-50 flex items-center"
-            >
-              {loading ? (
-                <span className="flex items-center">
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Updating...
-                </span>
-              ) : (
-                <>
-                  <FiSave className="mr-2" /> Update Squad
-                </>
-              )}
-            </motion.button>
-          </div>
-        </form>
-      </div>
-    </motion.div>
+    </div>
   );
-}
+};
 
 export default EditSquadForm;

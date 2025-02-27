@@ -1,4 +1,4 @@
-import { TimeInterval } from './timeUtils';
+import { Interval } from './timeUtils';
 
 export interface Goal {
   id: string;
@@ -14,13 +14,13 @@ export interface Player {
   isInStartingLineup: boolean;
   position: string | null;
   isGoalkeeper: boolean;
-  playIntervals: TimeInterval[];
+  playIntervals: Interval[];
   goals: Goal[];
 }
 
-export const createPlayer = (id: string, name: string): Player => {
+export const createPlayer = ({ name }: { name: string }): Player => {
   return {
-    id,
+    id: Date.now().toString(),
     name,
     isInMatchSquad: false,
     isInStartingLineup: false,

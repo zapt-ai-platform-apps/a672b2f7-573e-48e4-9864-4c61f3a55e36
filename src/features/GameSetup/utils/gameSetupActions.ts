@@ -1,29 +1,48 @@
-import { Player } from '../../../types/GameTypes';
+import { Player, Position } from '../../../types/GameTypes';
 
-export function addPlayerToList(players: Player[], name: string): Player[] {
-  return [
-    ...players,
-    { 
-      id: String(Date.now()), 
-      name, 
-      isStartingPlayer: true,
-      totalPlayTime: 0,
-      isOnField: false,
-      isGoalkeeper: false,
-      position: { x: 0, y: 0 }
-    }
-  ];
+/**
+ * Creates a new player with the specified properties
+ */
+export function createPlayer(id: string, name: string): Player {
+  const defaultPosition: Position = { x: 0, y: 0 };
+  
+  return {
+    id,
+    name,
+    isInMatchSquad: false,
+    isInStartingLineup: false,
+    isStartingPlayer: false,
+    isOnField: false,
+    isGoalkeeper: false,
+    totalPlayTime: 0,
+    position: defaultPosition,
+    playIntervals: []
+  };
 }
 
-export function removePlayerFromList(players: Player[], playerId: number | string): Player[] {
-  return players.filter(player => player.id !== playerId);
+/**
+ * Toggles a player's match squad status
+ */
+export function togglePlayerInMatchSquad(player: Player): Player {
+  return {
+    ...player,
+    isInMatchSquad: !player.isInMatchSquad,
+    // If removing from match squad, also remove from starting lineup
+    isInStartingLineup: player.isInMatchSquad ? false : player.isInStartingLineup
+  };
 }
 
-export function togglePlayerInList(players: Player[], playerId: number | string): Player[] {
-  return players.map(player => {
-    if (player.id === playerId) {
-      return { ...player, isStartingPlayer: !player.isStartingPlayer };
-    }
+/**
+ * Toggles a player's starting lineup status
+ */
+export function togglePlayerInStartingLineup(player: Player): Player {
+  // Can only be in starting lineup if they're in the match squad
+  if (!player.isInMatchSquad) {
     return player;
-  });
+  }
+  
+  return {
+    ...player,
+    isInStartingLineup: !player.isInStartingLineup
+  };
 }

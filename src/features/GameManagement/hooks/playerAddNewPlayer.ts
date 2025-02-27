@@ -1,6 +1,4 @@
-import { createPlayer } from '../../../shared/models/player';
-import { calculateTotalPlayTime } from '../../../shared/models/timeUtils';
-import type { Player, Position } from '../../../types/GameTypes';
+import { Player, Position } from '../../../types/GameTypes';
 
 interface PlayInterval {
   start: number;
@@ -27,6 +25,23 @@ interface AddNewPlayerParams {
   setShowAddPlayerModal: (show: boolean) => void;
 }
 
+/**
+ * Creates a new player with default properties
+ */
+function createPlayer({ name }: { name: string }): Partial<Player> {
+  return {
+    id: Date.now().toString(),
+    name,
+    totalPlayTime: 0,
+    isOnField: false,
+    isGoalkeeper: false,
+    playIntervals: []
+  };
+}
+
+/**
+ * Function to handle adding a new player to the game
+ */
 export function createAddNewPlayer({
   props,
   newPlayerName,
@@ -36,15 +51,16 @@ export function createAddNewPlayer({
   return (playerNameOptional?: string): void => {
     const name = playerNameOptional ? playerNameOptional : newPlayerName.trim();
     if (name !== "") {
-      // Fix: Pass both required arguments to calculateTotalPlayTime
+      // Calculate default play time based on existing players or use 0
       const defaultPlayTime = props.playerData.length > 0 
-        ? calculateTotalPlayTime(props.playerData[0], false)
+        ? calculateTotalPlayTime(props.playerData[0], false, false)
         : 0;
         
       const defaultPosition: Position = { x: 0, y: 0 };
       
       const newPlayer: PlayerWithIntervals = {
         ...createPlayer({ name }),
+        id: Date.now().toString(),
         playIntervals: [] as PlayInterval[],
         isOnField: false,
         isGoalkeeper: false,
@@ -59,4 +75,19 @@ export function createAddNewPlayer({
       setShowAddPlayerModal(false);
     }
   };
+}
+
+/**
+ * Helper function to calculate total play time
+ */
+function calculateTotalPlayTime(player: PlayerWithIntervals, includeGKPlaytime: boolean, isRunning: boolean): number {
+  if (!player.playIntervals) return 0;
+  
+  let total = 0;
+  for (const interval of player.playIntervals) {
+    const end = interval.end || (isRunning && player.isOnField ? Date.now() : interval.start);
+    total += end - interval.start;
+  }
+  
+  return Math.floor(total / 1000);
 }

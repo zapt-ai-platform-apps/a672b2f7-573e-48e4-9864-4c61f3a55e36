@@ -1,6 +1,27 @@
-import { createPlayer } from '../../../shared/models/player';
-import type { Player } from '../../../types/GameTypes';
+import { Player, Position } from '../../../types/GameTypes';
 
+/**
+ * Creates a player object with default values
+ */
+function createPlayer({ name }: { name: string }): Player {
+  const position: Position = { x: 0, y: 0 };
+  return {
+    id: Date.now().toString(),
+    name,
+    position,
+    isOnField: false,
+    isGoalkeeper: false,
+    totalPlayTime: 0,
+    isInMatchSquad: true,
+    isInStartingLineup: true,
+    isStartingPlayer: true,
+    playIntervals: []
+  };
+}
+
+/**
+ * Adds a new player to the starting players list
+ */
 export function addPlayer(
   playerName: string,
   setStartingPlayers: (update: (prev: Player[]) => Player[]) => void,
@@ -9,16 +30,7 @@ export function addPlayer(
   if (playerName.trim() !== '') {
     setStartingPlayers((prev: Player[]) => {
       const player = createPlayer({ name: playerName.trim() });
-      // Fix: Ensure the returned object matches Player type exactly
-      const newPlayer: Player = {
-        ...player,
-        isOnField: false,
-        totalPlayTime: 0,
-        isStartingPlayer: true,
-        isInMatchSquad: true,
-        isInStartingLineup: true
-      };
-      return [...prev, newPlayer];
+      return [...prev, player];
     });
     setPlayerName('');
   }

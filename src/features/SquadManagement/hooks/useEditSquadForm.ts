@@ -36,7 +36,12 @@ export function useEditSquadForm(squadId: number) {
         
         // Parse players from JSON string
         try {
-          const parsedPlayers = JSON.parse(fetchedSquad.players);
+          let parsedPlayers: Player[] = [];
+          if (typeof fetchedSquad.players === 'string') {
+            parsedPlayers = JSON.parse(fetchedSquad.players);
+          } else if (Array.isArray(fetchedSquad.players)) {
+            parsedPlayers = fetchedSquad.players;
+          }
           setPlayers(Array.isArray(parsedPlayers) ? parsedPlayers : []);
         } catch (parseError) {
           console.error('Error parsing players:', parseError);
@@ -107,10 +112,10 @@ export function useEditSquadForm(squadId: number) {
         players: JSON.stringify(players)
       };
       
-      await updateSquad(updatedSquad);
+      const result = await updateSquad(updatedSquad.id, updatedSquad);
       
       // Type guard for selectedSquad
-      setSelectedSquad((prev) => {
+      setSelectedSquad((prev: any) => {
         // If prev is an array of Player, we should return the updated players array
         if (Array.isArray(prev)) {
           return players;

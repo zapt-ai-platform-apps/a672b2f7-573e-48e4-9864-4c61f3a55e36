@@ -49,7 +49,7 @@ export default function useMatchSquad() {
       
       if (isSquad(processedSquad)) {
         // It's a Squad object with players property
-        playersToUse = processedSquad.players || [];
+        playersToUse = Array.isArray(processedSquad.players) ? processedSquad.players : [];
       } else if (Array.isArray(processedSquad)) {
         // It's an array of players directly
         playersToUse = processedSquad;
@@ -78,7 +78,7 @@ export default function useMatchSquad() {
         players: playersToUse
       };
       
-      const initialPlayers = initializeMatchSquadPlayers(squad, matchSquad as ExtendedPlayer[]);
+      const initialPlayers = initializeMatchSquadPlayers(squad, matchSquad as ExtendedPlayer[] || []);
       console.log('Initialized match squad players:', initialPlayers);
       setMatchSquadPlayers(initialPlayers);
     } catch (error) {
