@@ -15,8 +15,9 @@ export function processSession(session: any, setUser: (user: any) => void): void
     setUser(user);
     const recordedKey = `recordedLogin_${user.id}`;
     if (!sessionStorage.getItem(recordedKey) && user.email) {
-      // Type cast environment variable to ensure type compatibility
-      recordLogin(user.email, import.meta.env.VITE_PUBLIC_APP_ENV as environmentType)
+      // Convert 'staging' to 'production' for recordLogin
+      const env = import.meta.env.VITE_PUBLIC_APP_ENV === 'staging' ? 'production' : import.meta.env.VITE_PUBLIC_APP_ENV;
+      recordLogin(user.email, env as environmentType)
         .catch((error: any) => {
           console.error('Failed to record login:', error);
           Sentry.captureException(error);
