@@ -36,6 +36,8 @@ export interface GameManagementScreenViewProps {
   setSelectedGoalkeeper?: (id: string | null) => void;
   handleIncreasePlayers?: () => void;
   handleDecreasePlayers?: () => void;
+  
+  // Updated timerControls type to include all properties returned by useGameTimer
   timerControls?: {
     isRunning: boolean;
     timeElapsed: number;
