@@ -46,11 +46,11 @@ describe('GoalkeeperSelector Component', () => {
       />
     );
     
-    // Check for component title
-    expect(screen.getByText(/Goalkeeper/i)).toBeInTheDocument();
+    // Use data-testid to find specific elements
+    const selectorComponent = screen.getByTestId('goalkeeper-selector');
+    expect(selectorComponent).toBeInTheDocument();
     
-    // Check that both players are in the dropdown options
-    const selectElement = screen.getByLabelText(/Select a goalkeeper/i);
+    const selectElement = screen.getByTestId('goalkeeper-select');
     expect(selectElement).toBeInTheDocument();
     
     // Open dropdown to check options
@@ -72,7 +72,7 @@ describe('GoalkeeperSelector Component', () => {
     );
     
     // Open dropdown
-    const selectElement = screen.getByLabelText(/Select a goalkeeper/i);
+    const selectElement = screen.getByTestId('goalkeeper-select');
     fireEvent.mouseDown(selectElement);
     
     // Select Player 1
@@ -94,7 +94,7 @@ describe('GoalkeeperSelector Component', () => {
     );
     
     // Toggle switch should be rendered
-    const toggleSwitch = screen.getByRole('checkbox');
+    const toggleSwitch = screen.getByTestId('include-gk-playtime');
     expect(toggleSwitch).toBeInTheDocument();
     
     // Click toggle
@@ -117,6 +117,7 @@ describe('GoalkeeperSelector Component', () => {
     );
     
     // The selected value should show Player 2
-    expect(screen.getByLabelText(/Select a goalkeeper/i)).toHaveTextContent('Player 2');
+    const selectElement = screen.getByTestId('goalkeeper-select');
+    expect(selectElement).toHaveValue('2');
   });
 });

@@ -4,27 +4,48 @@ import { Player } from '../../../../types/GameTypes';
 interface PlayerCardProps {
   player: Player;
   selected: boolean;
-  onClick: (player: Player) => void;
+  onClick: () => void;
+  'data-testid'?: string;
 }
 
-/**
- * Player card component for the starting lineup selection
- * @param props - Component props
- * @returns Player card component
- */
-const PlayerCard: React.FC<PlayerCardProps> = ({ player, selected, onClick }) => {
+const PlayerCard: React.FC<PlayerCardProps> = ({ 
+  player, 
+  selected, 
+  onClick,
+  'data-testid': dataTestId = 'player-card' 
+}) => {
+  if (!player) {
+    console.error('PlayerCard received null player');
+    return null;
+  }
+
   return (
-    <div
-      data-testid={`player-card-${player.id}`}
+    <div 
       className={`
-        border rounded-lg p-3 cursor-pointer transition-all
-        ${selected ? 'bg-blue-500 text-white border-blue-600' : 'bg-white text-gray-800 border-gray-300'}
-        hover:shadow-md
+        p-4 rounded-lg border shadow-sm transition-all cursor-pointer
+        ${selected 
+          ? 'bg-blue-100 border-blue-500 shadow-md' 
+          : 'bg-white border-gray-200 hover:border-blue-300 hover:shadow'}
       `}
-      onClick={() => onClick(player)}
+      onClick={onClick}
+      data-testid={dataTestId}
+      data-player-id={player.id}
     >
-      <div className="font-medium text-center">
-        {player.name}
+      <div className="flex items-center">
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${
+          selected ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600'
+        }`}>
+          {player.number || 
+           (player.name && player.name.charAt(0).toUpperCase())}
+        </div>
+        <div className="flex-grow">
+          <h3 className="font-medium text-gray-800">{player.name}</h3>
+          {player.isGoalkeeper && (
+            <span className="text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
+              Goalkeeper
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );

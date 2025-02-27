@@ -66,7 +66,11 @@ export default function GoalkeeperSelector({
       console.log(`Selected goalkeeper: ${selectedPlayer.name}`);
       setLocalSelection(selectedPlayer);
       if (setGoalkeeper) setGoalkeeper(selectedPlayer);
-      if (onSelectGoalkeeper) onSelectGoalkeeper(selectedId);
+      
+      // Ensure we call the onSelectGoalkeeper callback
+      if (onSelectGoalkeeper) {
+        onSelectGoalkeeper(selectedId);
+      }
     }
   };
 
@@ -85,15 +89,17 @@ export default function GoalkeeperSelector({
   };
 
   return (
-    <div className="mb-4">
-      <label className="block text-gray-700 mb-2">
+    <div className="mb-4" data-testid="goalkeeper-selector">
+      <label htmlFor="goalkeeper-select" className="block text-gray-700 mb-2" data-testid="goalkeeper-label">
         {selectedGoalkeeper ? "Select a goalkeeper" : "Select Goalkeeper"}
       </label>
       <select
+        id="goalkeeper-select"
         value={selectedGoalkeeper || (localSelection ? String(localSelection.id) : "")}
         onChange={handleSelectGoalkeeper}
         className="w-full p-3 border border-gray-300 rounded-lg box-border"
         aria-label="Select a goalkeeper"
+        data-testid="goalkeeper-select"
       >
         <option value="" disabled>
           Select a player
@@ -101,7 +107,7 @@ export default function GoalkeeperSelector({
         {playersToUse &&
           playersToUse.length > 0 &&
           playersToUse.map((player) => (
-            <option key={player.id} value={String(player.id)}>
+            <option key={player.id} value={String(player.id)} data-testid={`player-option-${player.id}`}>
               {player.name}
             </option>
           ))}
@@ -117,8 +123,9 @@ export default function GoalkeeperSelector({
             onChange={handleToggleIncludeGKPlaytime}
             className="mr-2"
             role="checkbox"
+            data-testid="include-gk-playtime"
           />
-          <label htmlFor="include-gk-playtime">
+          <label htmlFor="include-gk-playtime" data-testid="include-gk-playtime-label">
             Include goalkeeper in playtime calculations
           </label>
         </div>
@@ -128,19 +135,20 @@ export default function GoalkeeperSelector({
         <button
           onClick={handleConfirmSelection}
           className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer"
+          data-testid="confirm-goalkeeper-button"
         >
           Confirm Goalkeeper
         </button>
       )}
 
       {confirmedGoalkeeper ? (
-        <div className="mt-4 p-3 bg-green-100 rounded-lg border border-green-200">
+        <div className="mt-4 p-3 bg-green-100 rounded-lg border border-green-200" data-testid="confirmed-goalkeeper">
           <p className="text-green-700 font-semibold">
             Goalkeeper confirmed: {confirmedGoalkeeper.name}
           </p>
         </div>
       ) : (
-        <p className="mt-2 text-sm text-gray-500">
+        <p className="mt-2 text-sm text-gray-500" data-testid="no-goalkeeper-message">
           No goalkeeper confirmed yet
         </p>
       )}

@@ -1,47 +1,52 @@
-import React, { useEffect, useRef } from 'react';
-import { Player } from '../../../types/GameTypes';
+import React, { useRef, useEffect } from 'react';
 import Pitch from './Pitch';
+import Player from './Player';
 import useDragAndDrop from '../hooks/useDragAndDrop';
+import { Player as PlayerType } from '@/types/GameTypes';
 import { assignInitialPositions } from '../utils/assignInitialPositions';
 
 interface PitchVisualizationProps {
-  players: Player[];
+  players: PlayerType[];
   'data-testid'?: string;
 }
 
+/**
+ * Component to visualize players on a pitch with drag and drop functionality
+ */
 const PitchVisualization: React.FC<PitchVisualizationProps> = ({ 
-  players,
-  'data-testid': testId 
+  players, 
+  'data-testid': dataTestId = 'pitch-visualization'
 }) => {
   const pitchRef = useRef<HTMLDivElement>(null);
-  const { init, handlePointerDown } = useDragAndDrop();
-
+  const { handlePointerDown, init } = useDragAndDrop();
+  
   // Initialize drag and drop functionality
   useEffect(() => {
     if (pitchRef.current) {
-      const cleanup = init(pitchRef.current);
-      return cleanup;
+      const cleanupFn = init(pitchRef.current);
+      return cleanupFn;
     }
   }, [init]);
-
-  // Assign initial positions to players
-  useEffect(() => {
-    if (players) {
-      assignInitialPositions(players);
-    }
-  }, [players]);
-
+  
+  // Ensure players have valid positions
+  const playersWithPositions = assignInitialPositions(players);
+  
+  // Only render players that are on the field
+  const onFieldPlayers = playersWithPositions.filter(player => player.isOnField);
+  
   return (
-    <div className="w-full h-full relative" data-testid={testId}>
-      <div ref={pitchRef} className="pitch w-full h-full bg-green-800 relative rounded-lg overflow-hidden">
-        <Pitch 
-          pitchRef={pitchRef} 
-          playerData={players} 
-          players={players} 
-          handlePointerDown={handlePointerDown} 
-        />
-        {/* Removed duplicate player rendering here */}
-      </div>
+    <div className="relative" ref={pitchRef} data-testid={dataTestId}>
+      <Pitch>
+        {onFieldPlayers.map((player) => (
+          <Player
+            key={player.id}
+            player={player}
+            onPointerDown={(e) => handlePointerDown(e, player.id)}
+            data-testid={`player-on-field-${player.id}`}
+            data-player-id={player.id}
+          />
+        ))}
+      </Pitch>
     </div>
   );
 };

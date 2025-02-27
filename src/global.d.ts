@@ -19,3 +19,9 @@ interface Window {
     shortName: string;
   };
 }
+
+// Add path aliases
+declare module '@/*' {
+  const content: any;
+  export = content;
+}

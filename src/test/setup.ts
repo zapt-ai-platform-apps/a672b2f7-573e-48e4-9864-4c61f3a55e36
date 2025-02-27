@@ -2,13 +2,31 @@ import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 import { resolve } from 'path';
 
-// Configure path aliases for tests
+// Mock lodash modules if needed
+vi.mock('lodash.debounce', () => {
+  return {
+    default: (fn: any) => fn,
+    __esModule: true,
+  };
+});
+
+// Mock path aliases
 vi.mock('@/hooks/useAuthSession', () => {
   return {
     __esModule: true,
     default: () => ({
-      session: null,
+      session: { user: { id: 'test-user-id' } },
       signOut: vi.fn()
+    })
+  };
+});
+
+vi.mock('@/features/GameManagement/hooks/useDragAndDrop', () => {
+  return {
+    __esModule: true,
+    default: () => ({
+      handlePointerDown: vi.fn(),
+      init: vi.fn(() => () => {})
     })
   };
 });
@@ -38,6 +56,30 @@ export function setupRouterMocks() {
     return {
       ...(actual as any),
       useNavigate: () => mockNavigate,
+      useLocation: () => ({
+        state: {
+          players: [
+            {
+              id: '1',
+              name: 'Player 1',
+              position: { x: 0, y: 0 },
+              isOnField: true,
+              isGoalkeeper: false,
+              totalPlayTime: 0,
+              isInMatchSquad: true
+            },
+            {
+              id: '2',
+              name: 'Player 2',
+              position: { x: 0, y: 0 },
+              isOnField: false,
+              isGoalkeeper: false,
+              totalPlayTime: 0,
+              isInMatchSquad: true
+            }
+          ]
+        }
+      })
     };
   });
 
@@ -106,14 +148,3 @@ Element.prototype.releasePointerCapture = Element.prototype.releasePointerCaptur
 
 // Global mocks
 global.fetch = vi.fn();
-
-// Mock modules with path aliases for consistent imports in tests
-vi.mock('@/features/GameManagement/hooks/useDragAndDrop', async () => {
-  return {
-    __esModule: true,
-    default: () => ({
-      handlePointerDown: vi.fn(),
-      init: vi.fn(() => () => {})
-    })
-  };
-});

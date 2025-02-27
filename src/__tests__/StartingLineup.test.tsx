@@ -4,6 +4,39 @@ import { BrowserRouter } from 'react-router-dom';
 import StartingLineup from '@/screens/GameSetup/ConfigureLineup/StartingLineup';
 import { Player } from '@/types/GameTypes';
 
+// Mock the useNavigate hook
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...(actual as any),
+    useNavigate: () => vi.fn()
+  };
+});
+
+// Mock the useStateContext hook
+vi.mock('@/hooks/useStateContext', () => ({
+  useStateContext: () => ({
+    matchSquad: [
+      {
+        id: '1',
+        name: 'Player 1',
+        position: { x: 0, y: 0 },
+        isOnField: true,
+        isGoalkeeper: false,
+        totalPlayTime: 0,
+      },
+      {
+        id: '2',
+        name: 'Player 2',
+        position: { x: 0, y: 0 },
+        isOnField: false,
+        isGoalkeeper: false,
+        totalPlayTime: 0,
+      }
+    ]
+  })
+}));
+
 describe('StartingLineup Component', () => {
   let mockOnTogglePlayer: any;
   let mockPlayers: Player[];
@@ -76,11 +109,14 @@ describe('StartingLineup Component', () => {
     );
     
     // Find and click Player 1
-    const playerCard = screen.getByText('Player 1').closest('[data-testid="player-card"]');
-    expect(playerCard).not.toBeNull();
+    const playerCards = screen.getAllByTestId('player-card');
+    const player1Card = playerCards.find(card => card.textContent?.includes('Player 1'));
     
-    if (playerCard) {
-      fireEvent.click(playerCard);
+    expect(player1Card).not.toBeNull();
+    expect(player1Card).toBeInTheDocument();
+    
+    if (player1Card) {
+      fireEvent.click(player1Card);
       expect(mockOnTogglePlayer).toHaveBeenCalledWith('1');
     }
   });

@@ -1,57 +1,44 @@
 import React from 'react';
-import { Player as PlayerType } from '../../../types/GameTypes';
+import { Player as PlayerType } from '@/types/GameTypes';
 
 interface PlayerProps {
   player: PlayerType;
-  onDragStart?: (playerId: string) => void;
-  onPointerDown?: (event: React.PointerEvent<HTMLDivElement>) => void;
-  showStatus?: boolean;
+  onPointerDown: (e: React.PointerEvent<HTMLDivElement>) => void;
+  'data-testid'?: string;
+  'data-player-id'?: string;
 }
 
-const Player: React.FC<PlayerProps> = ({ player, onDragStart, onPointerDown, showStatus }) => {
-  const handleDragStart = () => {
-    if (onDragStart) {
-      onDragStart(player.id);
-    }
+/**
+ * Component to represent a player on the pitch
+ */
+const Player: React.FC<PlayerProps> = ({ 
+  player, 
+  onPointerDown,
+  'data-testid': dataTestId,
+  'data-player-id': dataPlayerId
+}) => {
+  const { name, position, isGoalkeeper } = player;
+  
+  // Calculate position styles based on player position
+  const positionStyle = {
+    left: `${position.x}%`,
+    top: `${position.y}%`,
   };
 
   return (
     <div
-      className="player-token"
-      style={{
-        position: 'absolute',
-        left: `${player.position.x}%`,
-        top: `${player.position.y}%`,
-        width: '40px',
-        height: '40px',
-        borderRadius: '50%',
-        backgroundColor: player.isGoalkeeper ? '#ffcc00' : '#ffffff',
-        color: '#000000',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
-        transform: 'translate(-50%, -50%)',
-        zIndex: 2,
-        userSelect: 'none',
-        touchAction: 'none'
-      }}
-      onPointerDown={onPointerDown || handleDragStart}
-      data-player-id={player.id.toString()}
+      className={`absolute w-16 h-16 flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2 cursor-grab active:cursor-grabbing transition-transform`}
+      style={positionStyle}
+      onPointerDown={onPointerDown}
+      data-testid={dataTestId || `player-${player.id}`}
+      data-player-id={dataPlayerId || player.id}
     >
-      <span className="sr-only">{player.name}</span>
-      <span style={{
-        fontSize: '12px',
-        fontWeight: 'bold'
-      }}>
-        {player.name.slice(0, 2)}
-      </span>
-      {showStatus && player.status && (
-        <div className="absolute -bottom-5 text-xs font-medium bg-white px-1 rounded">
-          {player.status}
-        </div>
-      )}
+      <div
+        className={`w-14 h-14 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md
+          ${isGoalkeeper ? 'bg-yellow-500' : 'bg-blue-600'}`}
+      >
+        <span className="pointer-events-none">{name}</span>
+      </div>
     </div>
   );
 };
