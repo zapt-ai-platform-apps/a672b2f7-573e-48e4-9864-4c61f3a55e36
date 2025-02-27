@@ -9,7 +9,7 @@ export default defineConfig({
     react(),
     sentryVitePlugin({
       org: "zapt-apps",
-      project: "football-subs",
+      project: process.env.VITE_PUBLIC_APP_ID,
       authToken: process.env.SENTRY_AUTH_TOKEN,
     }),
   ],
