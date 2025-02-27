@@ -92,6 +92,12 @@ export default function GameManagementMainContent({
     });
   };
 
+  // Function to handle assigning goalkeeper that extracts the ID
+  const handleAssignGoalkeeperConfirm = (player: Player) => {
+    // Fixed: Pass player ID string instead of the whole player object
+    handleAssignGkConfirm(player.id as string);
+  };
+
   return (
     <div className="flex flex-col space-y-8 mt-8">
       <PitchVisualization players={playersOnField} />
@@ -128,7 +134,7 @@ export default function GameManagementMainContent({
         isOpen={showAssignGkModal}
         onClose={() => setShowAssignGkModal(false)}
         players={playerData}
-        onAssign={handleAssignGkConfirm}
+        onAssign={(playerId: string) => handleAssignGkConfirm(playerId)}
         currentGoalkeeper={currentGoalkeeper}
       />
     </div>

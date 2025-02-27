@@ -18,6 +18,10 @@ export interface GameManagementScreenViewProps {
   showGoalModal?: boolean;
   setShowGoalModal?: (show: boolean) => void;
   handlePlayerClick?: (player: Player) => void;
+  goals?: Goal[];
+  setGoals?: (goals: Goal[]) => void;
+  setOurScore?: (score: number) => void;
+  setOpponentScore?: (score: number) => void;
   
   // Additional props for GameManagementScreenViewContent
   showAddPlayerModal?: boolean;
