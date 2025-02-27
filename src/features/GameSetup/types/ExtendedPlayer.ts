@@ -5,6 +5,7 @@ export interface ExtendedPlayer {
   name: string;
   number?: string;
   isInMatchSquad: boolean;
+  isInStartingLineup: boolean; // Added missing property
   totalPlayTime: number;
   isOnField: boolean;
   isGoalkeeper: boolean;

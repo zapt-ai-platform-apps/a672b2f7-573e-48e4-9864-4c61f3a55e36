@@ -7,13 +7,14 @@ export function addPlayer(
   setPlayerName: (name: string) => void
 ): void {
   if (playerName.trim() !== '') {
-    setStartingPlayers((prev) => {
+    setStartingPlayers((prev: Player[]) => {
       const player = createPlayer({ name: playerName.trim() });
-      const newPlayer = {
+      // Fix: Ensure the returned object matches Player type exactly
+      const newPlayer: Player = {
         ...player,
         isStartingPlayer: true,
         isInMatchSquad: true,
-        isInStartingLineup: false // Add missing property
+        isInStartingLineup: true
       };
       return [...prev, newPlayer];
     });

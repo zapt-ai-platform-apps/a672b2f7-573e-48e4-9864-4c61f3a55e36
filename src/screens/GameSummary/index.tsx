@@ -5,7 +5,7 @@ import GoalsList from '../../features/GameSummary/components/GoalsList';
 import PlayerPlaytimes from '../../features/GameSummary/components/PlayerPlaytimes';
 import FinalScore from '../../features/GameSummary/components/FinalScore';
 import ShareSummaryButton from '../../features/GameSummary/components/ShareSummaryButton';
-import { formatTime } from '../../shared/models/timeUtils';
+import { formatTime } from '../../shared/models/timeUtils'; // Updated import path
 import { createGetTotalPlayTime } from './utils';
 import { getPlayersWithDefaults } from './helpers';
 import { Player } from '../../types/GameTypes';

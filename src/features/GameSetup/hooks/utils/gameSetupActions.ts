@@ -2,14 +2,17 @@ import { Player } from '../../../../types/GameTypes';
 
 function createPlayer(name: string): Player {
   return {
-    id: String(Date.now() + Math.random()), // Convert to string to match expected type
+    id: String(Date.now() + Math.random()),
     name: name.trim(),
     playIntervals: [],
     isOnField: true,
     isGoalkeeper: false,
     totalPlayTime: 0,
-    position: { x: 0, y: 0 }, // Changed from null to 0 to match Position type
-    isStartingPlayer: true
+    position: { x: 0, y: 0 },
+    isStartingPlayer: true,
+    // Added missing required properties
+    isInMatchSquad: true,
+    isInStartingLineup: true
   };
 }
 

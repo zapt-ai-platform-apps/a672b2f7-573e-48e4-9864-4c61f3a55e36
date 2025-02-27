@@ -36,12 +36,11 @@ export function createAddNewPlayer({
   return (playerNameOptional?: string): void => {
     const name = playerNameOptional ? playerNameOptional : newPlayerName.trim();
     if (name !== "") {
-      // Use calculateTotalPlayTime with correct parameter count
+      // Fix: Pass both required arguments to calculateTotalPlayTime
       const defaultPlayTime = props.playerData.length > 0 
-        ? calculateTotalPlayTime(props.playerData[0], false, false)
+        ? calculateTotalPlayTime(props.playerData[0], false)
         : 0;
         
-      // Fix: Create proper Position object
       const defaultPosition: Position = { x: 0, y: 0 };
       
       const newPlayer: PlayerWithIntervals = {
@@ -52,7 +51,7 @@ export function createAddNewPlayer({
         totalPlayTime: defaultPlayTime,
         position: defaultPosition,
         isInStartingLineup: false,
-        isInMatchSquad: false // Added required property
+        isInMatchSquad: false
       };
       props.setPlayerData([...props.playerData, newPlayer]);
       setNewPlayerName("");
