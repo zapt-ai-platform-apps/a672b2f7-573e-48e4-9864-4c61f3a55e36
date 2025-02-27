@@ -25,7 +25,6 @@ export function ensurePlayerProperties(player: Partial<Player>): Player {
     lastStart: player.lastStart,
     isStartingPlayer: player.isStartingPlayer,
     status: player.status,
-    minutesPlayed: player.minutesPlayed,
     selected: player.selected
   };
 }

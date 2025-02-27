@@ -1,131 +1,172 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useStateContext } from '../../../hooks/useStateContext';
-import { squadServiceApi } from '../services/squadServiceApi';
+import { Player, Squad } from '../../../types/GameTypes';
+import { useStateContext } from '../../../state';
+import { fetchSquadById, updateSquad, deleteSquad } from '../api/squadApi';
 import * as Sentry from '@sentry/browser';
 
-export default function useEditSquadForm() {
-  const { selectedSquad } = useStateContext();
+/**
+ * Custom hook for managing the edit squad form functionality
+ */
+export function useEditSquadForm(squadId: number) {
+  const [squad, setSquad] = useState<Squad | null>(null);
+  const [players, setPlayers] = useState<Player[]>([]);
   const [squadName, setSquadName] = useState<string>('');
-  const [squadPlayersList, setSquadPlayersList] = useState<any[]>([]);
-  const [newPlayerName, setNewPlayerName] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { setSelectedSquad } = useStateContext();
 
+  // Load squad data on component mount
   useEffect(() => {
-    if (selectedSquad) {
-      // Initialize form with selected squad data
-      if ('name' in selectedSquad) {
-        setSquadName(selectedSquad.name || '');
+    const loadSquad = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const fetchedSquad = await fetchSquadById(squadId);
+        if (!fetchedSquad) {
+          setError('Squad not found');
+          setLoading(false);
+          return;
+        }
+        
+        setSquad(fetchedSquad);
+        setSquadName(fetchedSquad.name);
+        
+        // Parse players from JSON string
+        try {
+          const parsedPlayers = JSON.parse(fetchedSquad.players);
+          setPlayers(Array.isArray(parsedPlayers) ? parsedPlayers : []);
+        } catch (parseError) {
+          console.error('Error parsing players:', parseError);
+          Sentry.captureException(parseError);
+          setPlayers([]);
+        }
+      } catch (err) {
+        console.error('Error loading squad:', err);
+        Sentry.captureException(err);
+        setError('Failed to load squad data');
+      } finally {
+        setLoading(false);
       }
-
-      const parsePlayers = (players: any): any[] => {
-        if (Array.isArray(players)) {
-          return players.map(player => {
-            // If player is a string, create object
-            if (typeof player === 'string') {
-              return { id: Date.now() + Math.random(), name: player };
-            }
-            // If player is an object with name property
-            if (player && typeof player === 'object' && 'name' in player) {
-              return { id: player.id || Date.now() + Math.random(), name: player.name };
-            }
-            return null;
-          }).filter(Boolean);
-        }
-        // If players is a string, try to parse it
-        if (typeof players === 'string') {
-          try {
-            const parsed = JSON.parse(players);
-            if (Array.isArray(parsed)) {
-              return parsePlayers(parsed);
-            }
-          } catch (error) {
-            // If not valid JSON, split by newlines or commas
-            return players
-              .split(/[\n,]/)
-              .map(name => name.trim())
-              .filter(Boolean)
-              .map(name => ({ id: Date.now() + Math.random(), name }));
-          }
-        }
-        return [];
-      };
-
-      const playersData = 'players' in selectedSquad ? selectedSquad.players : [];
-      const parsedPlayers = parsePlayers(playersData);
-      
-      setSquadPlayersList(parsedPlayers);
-    }
-  }, [selectedSquad]);
-
-  const handleAddPlayer = () => {
-    if (newPlayerName.trim()) {
-      setSquadPlayersList([
-        ...squadPlayersList,
-        { id: Date.now().toString(), name: newPlayerName.trim() }
-      ]);
-      setNewPlayerName('');
-    }
-  };
-
-  const handleDeletePlayer = (id: string) => {
-    setSquadPlayersList(squadPlayersList.filter(player => player.id !== id));
-  };
-
-  const handleUpdateSquad = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
+    };
     
-    if (!selectedSquad) {
-      setError('No squad selected for update');
-      return Promise.reject(new Error('No squad selected for update'));
-    }
+    loadSquad();
+  }, [squadId]);
 
-    if (!squadName.trim()) {
-      setError('Squad name is required');
-      return Promise.reject(new Error('Squad name is required'));
-    }
+  // Handle squad name change
+  const handleSquadNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSquadName(e.target.value);
+  };
 
-    setLoading(true);
-    setError('');
+  // Add new player to squad
+  const handleAddPlayer = (player: Player) => {
+    setPlayers(prevPlayers => [...prevPlayers, player]);
+  };
 
+  // Update existing player
+  const handleUpdatePlayer = (updatedPlayer: Player) => {
+    setPlayers(prevPlayers => 
+      prevPlayers.map(player => 
+        player.id === updatedPlayer.id ? updatedPlayer : player
+      )
+    );
+  };
+
+  // Remove player from squad
+  const handleRemovePlayer = (playerId: string) => {
+    setPlayers(prevPlayers => prevPlayers.filter(player => player.id !== playerId));
+  };
+
+  // Save squad changes
+  const handleSaveSquad = async () => {
     try {
-      const squadId = selectedSquad.id;
-      const playersString = JSON.stringify(squadPlayersList.map(p => p.name));
+      if (!squadName.trim()) {
+        setError('Squad name is required');
+        return;
+      }
       
-      await squadServiceApi.updateSquad(squadId, {
+      if (players.length === 0) {
+        setError('At least one player is required');
+        return;
+      }
+      
+      setLoading(true);
+      
+      // Use non-null assertion only after checking squad exists
+      if (!squad) {
+        setError('Squad not found');
+        setLoading(false);
+        return;
+      }
+      
+      const updatedSquad = {
+        ...squad,
         name: squadName,
-        players: playersString
+        players: JSON.stringify(players)
+      };
+      
+      await updateSquad(updatedSquad);
+      
+      // Type guard for selectedSquad
+      setSelectedSquad((prev) => {
+        // If prev is an array of Player, we should return the updated players array
+        if (Array.isArray(prev)) {
+          return players;
+        }
+        // If prev is a Squad object, we need to return the full updated squad
+        return updatedSquad;
       });
-
+      
       navigate('/squads');
-      return Promise.resolve();
     } catch (err) {
-      console.error('Error updating squad:', err);
+      console.error('Error saving squad:', err);
       Sentry.captureException(err);
-      setError('Failed to update squad. Please try again.');
-      return Promise.reject(err);
+      setError('Failed to save squad');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleBack = () => {
+  // Delete squad
+  const handleDeleteSquad = async () => {
+    try {
+      if (!squad) {
+        setError('Squad not found');
+        return;
+      }
+      
+      setLoading(true);
+      await deleteSquad(squad.id);
+      navigate('/squads');
+    } catch (err) {
+      console.error('Error deleting squad:', err);
+      Sentry.captureException(err);
+      setError('Failed to delete squad');
+      setLoading(false);
+    }
+  };
+
+  // Cancel edit and go back
+  const handleCancel = () => {
     navigate('/squads');
   };
 
   return {
+    squad,
+    players,
     squadName,
-    setSquadName,
-    squadPlayersList,
-    newPlayerName,
-    setNewPlayerName,
     loading,
     error,
+    handleSquadNameChange,
     handleAddPlayer,
-    handleDeletePlayer,
-    handleUpdateSquad,
-    handleBack,
+    handleUpdatePlayer,
+    handleRemovePlayer,
+    handleSaveSquad,
+    handleDeleteSquad,
+    handleCancel
   };
 }
+
+export default useEditSquadForm;

@@ -12,6 +12,8 @@ export function addPlayer(
       // Fix: Ensure the returned object matches Player type exactly
       const newPlayer: Player = {
         ...player,
+        isOnField: false,
+        totalPlayTime: 0,
         isStartingPlayer: true,
         isInMatchSquad: true,
         isInStartingLineup: true

@@ -27,6 +27,12 @@ export default function GameSummaryScreen(): JSX.Element {
     navigate('/');
   };
 
+  // Sanitized goals to ensure scorerName is always a string
+  const sanitizedGoals = goals.map(goal => ({
+    ...goal,
+    scorerName: goal.scorerName || 'Unknown Player'
+  }));
+
   return (
     <div className="min-h-screen flex flex-col p-8">
       <div className="flex-grow">
@@ -35,7 +41,7 @@ export default function GameSummaryScreen(): JSX.Element {
           <FinalScore ourScore={ourScore} opponentScore={opponentScore} />
         </div>
         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg mb-6">
-          <GoalsList goals={goals} />
+          <GoalsList goals={sanitizedGoals} />
         </div>
         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg mb-6">
           <PlayerPlaytimes
@@ -58,7 +64,7 @@ export default function GameSummaryScreen(): JSX.Element {
             ourScore={ourScore}
             opponentScore={opponentScore}
             playerData={playersWithDefaults}
-            goals={goals}
+            goals={sanitizedGoals}
             includeGKPlaytime={includeGKPlaytime}
             getTotalPlayTime={getTotalPlayTime}
             formatTime={formatTime}
