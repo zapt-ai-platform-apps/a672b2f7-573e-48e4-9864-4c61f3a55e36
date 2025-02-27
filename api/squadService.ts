@@ -1,7 +1,7 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { eq, desc } from 'drizzle-orm';
-import { squads } from '../drizzle/schema.ts';
+import { squads } from '../drizzle/schema.js';
 import * as Sentry from '@sentry/node';
 
 // Get database client

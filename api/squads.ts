@@ -1,6 +1,6 @@
-import { tryAuthenticateUser } from './_apiUtils.ts';
+import { tryAuthenticateUser } from './_apiUtils.js';
 import * as Sentry from '@sentry/node';
-import { getSquads } from './squadService.ts';
+import { getSquads } from './squadService.js';
 
 // Initialize Sentry
 Sentry.init({
