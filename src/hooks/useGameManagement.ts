@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Player, Goal } from '../types/GameTypes';
+import useGameTimer from './useGameTimer';
 import * as Sentry from '@sentry/browser';
 
 export function useGameManagement() {
@@ -9,6 +10,41 @@ export function useGameManagement() {
   const [ourScore, setOurScore] = useState<number>(0);
   const [opponentScore, setOpponentScore] = useState<number>(0);
   const [goals, setGoals] = useState<Goal[]>([]);
+  
+  // Add timer controls using useGameTimer hook
+  const timerControls = useGameTimer();
+  const isGameRunning = timerControls.isRunning;
+  const gameTime = timerControls.timeElapsed;
+  
+  // Player management functions
+  const playerManager = {
+    addPlayer: (player: Partial<Player>) => {
+      try {
+        setPlayerData(prev => [
+          ...prev,
+          {
+            ...player,
+            id: player.id || Math.random().toString(36).substring(2, 9),
+            position: player.position || { x: 0, y: 0 },
+            isOnField: player.isOnField || false,
+            isGoalkeeper: player.isGoalkeeper || false,
+            totalPlayTime: player.totalPlayTime || 0
+          } as Player
+        ]);
+      } catch (error) {
+        console.error('Error adding player:', error);
+        Sentry.captureException(error);
+      }
+    },
+    deletePlayer: (playerId: string) => {
+      try {
+        setPlayerData(prev => prev.filter(p => p.id !== playerId));
+      } catch (error) {
+        console.error('Error deleting player:', error);
+        Sentry.captureException(error);
+      }
+    }
+  };
   
   /**
    * Handle starting the game with selected players
@@ -73,9 +109,11 @@ export function useGameManagement() {
     setOurScore(0);
     setOpponentScore(0);
     setGoals([]);
+    timerControls.resetTimer();
   };
 
   return {
+    // Original state and functions
     playerData,
     setPlayerData,
     goalkeeper,
@@ -89,7 +127,13 @@ export function useGameManagement() {
     goals,
     setGoals,
     handleStartGame,
-    resetGame
+    resetGame,
+    
+    // New properties expected by tests
+    gameTime,
+    isGameRunning,
+    timerControls,
+    playerManager
   };
 }
 
