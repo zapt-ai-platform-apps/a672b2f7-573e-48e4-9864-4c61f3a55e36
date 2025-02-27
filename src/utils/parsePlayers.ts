@@ -38,31 +38,63 @@ export default function parsePlayers(input: string | any[]): Player[] {
     });
   }
 
-  // Handle string input (original functionality)
-  if (!input) return [];
+  // Handle string input
+  if (!input || typeof input !== 'string') return [];
+  
+  const text = input.trim();
+  if (!text) return [];
+  
+  // Log for debugging
+  console.log('Parsing players from string:', text);
+  
+  // First check if it's a JSON string
+  try {
+    if (text.startsWith('[') && text.endsWith(']')) {
+      const parsed = JSON.parse(text);
+      if (Array.isArray(parsed)) {
+        return parsed.map((name, index) => ({
+          id: String(index),
+          name: typeof name === 'string' ? name : String(name),
+          isStartingPlayer: false,
+          totalPlayTime: 0,
+          isOnField: false,
+          isGoalkeeper: false,
+          position: { x: 0, y: 0 },
+          isInMatchSquad: false,
+          isInStartingLineup: false,
+          playIntervals: []
+        }));
+      }
+    }
+  } catch (e) {
+    console.log('Not valid JSON, trying other formats');
+  }
   
   // Determine if we should split by commas or newlines
-  const text = input as string;
   const hasNewlines = text.includes('\n');
   const hasCommas = text.includes(',');
   
   // If there are commas but no newlines, split by commas
-  const delimiter = (hasCommas && !hasNewlines) ? ',' : '\n';
+  const delimiter = (hasCommas) ? ',' : '\n';
   
-  return text
+  // Split the string and create player objects
+  const playerNames = text
     .split(delimiter)
-    .map(line => line.trim())
-    .filter(line => line.length > 0)
-    .map((name, index) => ({ 
-      id: String(index), 
-      name: name, 
-      isStartingPlayer: false,
-      totalPlayTime: 0,
-      isOnField: false,
-      isGoalkeeper: false,
-      position: { x: 0, y: 0 },
-      isInMatchSquad: false,
-      isInStartingLineup: false,
-      playIntervals: []
-    }));
+    .map(name => name.trim())
+    .filter(name => name.length > 0);
+  
+  console.log('Parsed player names:', playerNames);
+  
+  return playerNames.map((name, index) => ({ 
+    id: String(index), 
+    name: name, 
+    isStartingPlayer: false,
+    totalPlayTime: 0,
+    isOnField: false,
+    isGoalkeeper: false,
+    position: { x: 0, y: 0 },
+    isInMatchSquad: false,
+    isInStartingLineup: false,
+    playIntervals: []
+  }));
 }

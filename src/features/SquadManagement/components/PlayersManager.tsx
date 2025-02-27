@@ -32,6 +32,10 @@ function PlayersManager({
     }
   };
 
+  // Log the player count to help with debugging
+  console.log(`PlayersManager rendering with ${squadPlayersList.length} players:`, 
+    squadPlayersList.map(p => p.name));
+
   return (
     <div>
       <div className="mb-6">

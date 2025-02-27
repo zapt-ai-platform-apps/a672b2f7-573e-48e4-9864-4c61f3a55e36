@@ -12,6 +12,10 @@ interface PlayersListProps {
 }
 
 export default function PlayersList({ players, squadPlayersList, onDeletePlayer }: PlayersListProps): JSX.Element | null {
+  // Log for debugging
+  console.log('PlayersList - players:', players);
+  console.log('PlayersList - squadPlayersList:', squadPlayersList);
+  
   if (squadPlayersList && squadPlayersList.length > 0) {
     return (
       <div className="mt-2">

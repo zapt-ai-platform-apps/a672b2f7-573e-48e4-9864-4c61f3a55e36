@@ -36,13 +36,22 @@ export function transformPlayersForDB(players: unknown[] | string): string {
  */
 export function transformSquadFromDB(row: Record<string, unknown>): Record<string, unknown> {
   try {
+    // Log the players data type and content for debugging
+    console.log('transformSquadFromDB - players data type:', typeof row.players);
+    if (typeof row.players === 'string') {
+      console.log('transformSquadFromDB - players content:', row.players);
+    }
+    
     // Fix: Explicitly check if row.players is a string, otherwise use an empty string
     const playersData = typeof row.players === 'string' ? row.players : '';
     
     // We use the updated parsePlayers function that handles both CSV and JSON formats
+    const parsedPlayers = parsePlayers(playersData);
+    console.log('transformSquadFromDB - parsed players:', parsedPlayers);
+    
     return {
       ...row,
-      players: parsePlayers(playersData)
+      players: parsedPlayers
     };
   } catch (error) {
     console.error("Error transforming squad from DB:", error);

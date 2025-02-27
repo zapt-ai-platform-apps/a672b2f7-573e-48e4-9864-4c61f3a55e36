@@ -4,6 +4,7 @@ import { Player, Squad } from '../../../types/GameTypes';
 import { useStateContext } from '../../../state';
 import { fetchSquadById, updateSquad, deleteSquad } from '../api/squadApi';
 import * as Sentry from '@sentry/browser';
+import parsePlayers from '../../../utils/parsePlayers';
 
 /**
  * Custom hook for managing the edit squad form functionality
@@ -34,14 +35,21 @@ export function useEditSquadForm(squadId: number) {
         setSquad(fetchedSquad);
         setSquadName(fetchedSquad.name);
         
-        // Parse players from JSON string
+        // Parse players using the improved parsePlayers function
         try {
+          console.log('Squad player data type:', typeof fetchedSquad.players);
+          console.log('Squad player data:', fetchedSquad.players);
+          
           let parsedPlayers: Player[] = [];
+          
           if (typeof fetchedSquad.players === 'string') {
-            parsedPlayers = JSON.parse(fetchedSquad.players);
+            // Use the improved parsePlayers function
+            parsedPlayers = parsePlayers(fetchedSquad.players);
           } else if (Array.isArray(fetchedSquad.players)) {
             parsedPlayers = fetchedSquad.players;
           }
+          
+          console.log('Parsed players:', parsedPlayers);
           setPlayers(Array.isArray(parsedPlayers) ? parsedPlayers : []);
         } catch (parseError) {
           console.error('Error parsing players:', parseError);
