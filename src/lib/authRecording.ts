@@ -1,18 +1,38 @@
-import { recordLogin } from '../supabaseClient';
-import { environmentType } from '../types/environment';
+/**
+ * Utility module to track when users have logged in to prevent duplicate login records
+ */
 
-let hasRecordedLogin = false;
+// Store recently logged in emails with timestamps
+const recentLogins: Record<string, number> = {};
 
-export async function recordUserLogin(email: string, environment: environmentType, logMessage: string): Promise<void> {
-  if (!hasRecordedLogin) {
-    // Convert 'staging' to 'production' for recordLogin
-    const effectiveEnv = (environment === 'staging') ? 'production' : environment;
-    await recordLogin(email, effectiveEnv);
-    hasRecordedLogin = true;
-    console.log(logMessage);
+// 2 hours in milliseconds
+const LOGIN_RECORD_TIMEOUT = 2 * 60 * 60 * 1000;
+
+/**
+ * Checks if a user has logged in recently (within the timeout period)
+ * @param email The user's email address
+ * @returns Boolean indicating if user has logged in recently
+ */
+export const hasLoggedInRecently = (email: string): boolean => {
+  if (!email) return false;
+  
+  const now = Date.now();
+  const lastLogin = recentLogins[email];
+  
+  if (lastLogin && now - lastLogin < LOGIN_RECORD_TIMEOUT) {
+    return true;
   }
-}
+  
+  // Update the last login time
+  recentLogins[email] = now;
+  return false;
+};
 
-export function resetRecordedLogin(): void {
-  hasRecordedLogin = false;
-}
+/**
+ * Clears the recent login cache for testing or when needed
+ */
+export const clearLoginCache = (): void => {
+  Object.keys(recentLogins).forEach(key => {
+    delete recentLogins[key];
+  });
+};

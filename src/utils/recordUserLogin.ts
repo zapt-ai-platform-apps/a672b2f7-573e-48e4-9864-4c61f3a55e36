@@ -1,52 +1,22 @@
-import { supabase, createEvent, recordLogin as zapt_recordLogin } from '../supabaseClient';
-import * as Sentry from "@sentry/browser";
-import { environmentType } from '../types/environment';
+import { EnvironmentType } from '../types/environment';
+import { recordLogin as recordLoginFromClient } from '../supabaseClient';
+import { hasLoggedInRecently } from '../lib/authRecording';
 
 /**
- * Records a user login event when a user logs in
- * @returns Promise that resolves when the login is recorded
+ * Records a user login event
+ * @param email The email address of the user logging in
+ * @param environment The current environment the app is running in
  */
-export const recordUserLogin = async (): Promise<void> => {
+export const recordUserLogin = async (email: string, environment: EnvironmentType): Promise<void> => {
   try {
-    // Get the current user from Supabase auth
-    const { data: { user }, error } = await supabase.auth.getUser();
-    
-    if (error) {
-      console.error('Error getting user:', error);
-      Sentry.captureException(error);
-      return;
-    }
-    
-    if (!user?.email) {
-      console.log('No user email available to record login');
-      return;
-    }
-    
-    try {
-      // Get the raw environment value
-      const rawEnv = import.meta.env.VITE_PUBLIC_APP_ENV as string;
-      // Convert 'staging' to 'production' to match the expected types
-      const appEnv = rawEnv === 'staging' ? 'production' : rawEnv;
-      
-      // Record the login with the user's email and properly converted environment
-      await zapt_recordLogin(user.email, appEnv);
-      console.log('Login recorded successfully');
-      
-      // Create an additional login event
-      await createEvent('user.login', { 
-        email: user.email,
-        timestamp: new Date().toISOString(),
-        appEnv: import.meta.env.VITE_PUBLIC_APP_ENV
-      });
-    } catch (recordError) {
-      console.error('Failed to record login:', recordError);
-      Sentry.captureException(recordError);
+    // Check if this user has logged in recently to avoid duplicate events
+    if (!hasLoggedInRecently(email)) {
+      console.log(`Recording login for user: ${email} in environment: ${environment}`);
+      await recordLoginFromClient(email, environment);
+    } else {
+      console.log(`User ${email} already logged in recently, skipping login record`);
     }
   } catch (error) {
-    console.error('Error in recordUserLogin:', error);
-    Sentry.captureException(error);
+    console.error('Failed to record login:', error);
   }
 };
-
-// For backwards compatibility with any code using the original function name
-export const recordLogin = recordUserLogin;
