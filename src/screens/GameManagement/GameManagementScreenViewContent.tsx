@@ -42,10 +42,10 @@ export default function GameManagementScreenViewContent({
   // Create a default no-op function for handleEndGame if it's undefined
   const safeHandleEndGame = handleEndGame || (() => {});
 
-  const handleRecordGoal = (goal: GoalData) => {
+  const handleRecordGoal = (goalData: GoalData) => {
     if (recordGoal && setGoals && setOurScore && setOpponentScore) {
-      // We're using GoalData directly without conversion to avoid type mismatches
-      recordGoal(goal, setGoals, setOurScore, setOpponentScore);
+      // Using GoalData directly to ensure correct typing
+      recordGoal(goalData, setGoals, setOurScore, setOpponentScore);
       setShowGoalModal(false);
     }
   };
@@ -97,7 +97,7 @@ export default function GameManagementScreenViewContent({
           onClose={() => setShowGoalModal(false)}
           onScoreGoal={handleRecordGoal}
           playerList={playerData || []}
-          currentGoals={goals || []}
+          currentGoals={goals as GoalData[] || []}
         />
       )}
 

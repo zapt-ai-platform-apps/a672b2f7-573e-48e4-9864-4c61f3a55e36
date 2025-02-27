@@ -107,13 +107,19 @@ export function useEditSquadForm(squadId: number) {
       }
       
       // Create an API-compatible object with JSON string for players
-      const apiSquad = {
+      const apiSquad: Partial<{
+        id: string;
+        name: string;
+        players: string;
+        createdAt?: string;
+        userId?: string;
+      }> = {
         ...squad,
         name: squadName,
         players: JSON.stringify(players)
       };
       
-      await updateSquad(apiSquad.id, apiSquad);
+      await updateSquad(apiSquad.id!, apiSquad);
       
       // Updated Squad with players as an array of Player objects for local state
       const updatedSquad: Squad = {
