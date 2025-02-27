@@ -4,6 +4,13 @@ import * as Sentry from '@sentry/browser';
 import { removeLastGoal } from '../../../models/scoreCalculations';
 
 export function useGameManagementLogic() {
+  const [selectedSubOffPlayer, setSelectedSubOffPlayer] = useState<Player | null>(null);
+  const [selectedSubOnPlayer, setSelectedSubOnPlayer] = useState<Player | null>(null);
+  const [showSubstitutionConfirmModal, setShowSubstitutionConfirmModal] = useState<boolean>(false);
+  const [showAssignGkModal, setShowAssignGkModal] = useState<boolean>(false);
+  const [currentGoalkeeper, setCurrentGoalkeeper] = useState<Player | null>(null);
+  const [showAddPlayerModal, setShowAddPlayerModal] = useState<boolean>(false);
+
   // Function to handle removing the last goal
   const handleRemoveLastGoal = useCallback((goals: Goal[], ourScore: number, opponentScore: number, setGoals: (goals: Goal[]) => void, setOurScore: (score: number) => void, setOpponentScore: (score: number) => void) => {
     try {
@@ -75,10 +82,58 @@ export function useGameManagementLogic() {
     }
   }, []);
 
+  // Handle substitution logic
+  const handleSubOffPlayerClick = (player: Player): void => {
+    setSelectedSubOffPlayer(player);
+    if (selectedSubOnPlayer) setShowSubstitutionConfirmModal(true);
+  };
+
+  const handleSubOnPlayerClick = (player: Player): void => {
+    setSelectedSubOnPlayer(player);
+    if (selectedSubOffPlayer) setShowSubstitutionConfirmModal(true);
+  };
+
+  const confirmSubstitution = (): void => {
+    // Substitution logic would go here
+    setShowSubstitutionConfirmModal(false);
+    setSelectedSubOffPlayer(null);
+    setSelectedSubOnPlayer(null);
+  };
+
+  const cancelSubstitution = (): void => {
+    setShowSubstitutionConfirmModal(false);
+    setSelectedSubOffPlayer(null);
+    setSelectedSubOnPlayer(null);
+  };
+
+  // Goalkeeper management
+  const assignGoalkeeper = (): void => {
+    setShowAssignGkModal(true);
+  };
+
+  const handleAssignGkConfirm = (player: Player): void => {
+    setCurrentGoalkeeper(player);
+    setShowAssignGkModal(false);
+  };
+
   return {
     handleRemoveLastGoal,
     handleIncreasePlayers,
-    handleDecreasePlayers
+    handleDecreasePlayers,
+    selectedSubOffPlayer,
+    selectedSubOnPlayer,
+    showSubstitutionConfirmModal,
+    handleSubOffPlayerClick,
+    handleSubOnPlayerClick,
+    confirmSubstitution,
+    cancelSubstitution,
+    assignGoalkeeper,
+    showAssignGkModal,
+    setShowAssignGkModal,
+    handleAssignGkConfirm,
+    currentGoalkeeper,
+    showAddPlayerModal,
+    setShowAddPlayerModal
   };
 }
 

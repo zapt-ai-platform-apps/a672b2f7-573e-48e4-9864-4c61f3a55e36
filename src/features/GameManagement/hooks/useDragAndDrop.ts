@@ -21,13 +21,14 @@ const useDragAndDrop = () => {
   let initialY = 0;
   let offsetX = 0;
   let offsetY = 0;
+  let pitchElement: HTMLElement | null = null;
   let pitchRect: DOMRect | null = null;
 
   /**
    * Handle pointer move events
    */
   const handlePointerMove = useCallback((e: PointerEvent) => {
-    if (!activePlayer || !pitchRect) return;
+    if (!activePlayer || !pitchRect || !pitchElement) return;
     
     // Calculate position within pitch
     const x = ((e.clientX - pitchRect.left - offsetX) / pitchRect.width) * 100;
@@ -50,14 +51,14 @@ const useDragAndDrop = () => {
       }
     });
     
-    pitchRect.ownerDocument.dispatchEvent(positionEvent);
+    pitchElement.ownerDocument.dispatchEvent(positionEvent);
   }, []);
 
   /**
    * Handle pointer up events
    */
   const handlePointerUp = useCallback((e: PointerEvent) => {
-    if (!activePlayer || !pitchRect) return;
+    if (!activePlayer || !pitchRect || !pitchElement) return;
     
     const playerId = activePlayer.getAttribute('data-player-id');
     console.log(`Drag ended for player ${playerId}`);
@@ -80,7 +81,7 @@ const useDragAndDrop = () => {
       }
     });
     
-    pitchRect.ownerDocument.dispatchEvent(positionEvent);
+    pitchElement.ownerDocument.dispatchEvent(positionEvent);
     
     // Update player position
     activePlayer.style.left = `${constrainedX}%`;
@@ -97,8 +98,10 @@ const useDragAndDrop = () => {
   /**
    * Initialize drag events for the pitch element
    */
-  const init = useCallback((pitchElement: HTMLElement) => {
-    if (!pitchElement) return () => {}; // Return empty cleanup if no element
+  const init = useCallback((pitchElem: HTMLElement) => {
+    if (!pitchElem) return () => {}; // Return empty cleanup if no element
+    
+    pitchElement = pitchElem;
     
     // Return cleanup function
     return () => {
@@ -146,6 +149,7 @@ const useDragAndDrop = () => {
       const pitch = target.closest('.pitch') as HTMLElement;
       if (pitch) {
         pitchRect = pitch.getBoundingClientRect();
+        pitchElement = pitch;
       }
       
       // Add event listeners for move and up events

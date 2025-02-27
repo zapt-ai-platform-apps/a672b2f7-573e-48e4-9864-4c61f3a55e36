@@ -1,12 +1,10 @@
 import React from 'react';
 import Header from '../../features/GameManagement/components/Header';
-import EndGameConfirmationModal from '../../features/GameManagement/modals/EndGameConfirmationModal';
-import GoalScoredModal from '../../features/GameManagement/modals/GoalScoredModal';
-import BackButton from './BackButton';
-import GameManagementMainContent from './GameManagementMainContent';
-import type { GameManagementScreenViewProps } from './GameManagementScreenView.types';
+import { EndGameConfirmationModal } from '../../features/GameManagement/components/GameModalAndVisualization';
+import { GameManagementScreenViewProps } from './GameManagementScreenView.types';
+import { timeFormatter } from './utils/timeFormatter';
 
-export default function GameManagementScreenView({
+export default function GameManagementScreenViewContent({
   playerData,
   isRunning,
   ourScore,
@@ -16,45 +14,29 @@ export default function GameManagementScreenView({
   handleEndGame,
   showEndGameConfirm,
   confirmEndGame,
-  cancelEndGame,
-  recordGoal,
-  onFieldPlayers,
-  offFieldPlayers,
-  getTotalPlayTime,
-  showGoalModal,
-  setShowGoalModal,
-  handlePlayerClick
+  cancelEndGame
 }: GameManagementScreenViewProps): JSX.Element {
+  // Format time for display
+  const formattedTimeElapsed = (): string => {
+    const seconds = getTimeElapsed();
+    return timeFormatter(seconds);
+  };
+
   return (
-    <div className="min-h-screen flex flex-col p-4">
-      {!isRunning && <BackButton />}
+    <div className="w-full">
       <Header
         isRunning={isRunning}
         toggleTimer={toggleTimer}
-        getTimeElapsed={getTimeElapsed}
+        getTimeElapsed={formattedTimeElapsed}
         handleEndGame={handleEndGame}
         ourScore={ourScore}
         opponentScore={opponentScore}
       />
-      <GameManagementMainContent
-        playerData={playerData}
-        isRunning={isRunning}
-        onFieldPlayers={onFieldPlayers}
-        offFieldPlayers={offFieldPlayers}
-        getTotalPlayTime={getTotalPlayTime}
-        handlePlayerClick={handlePlayerClick}
-        setShowGoalModal={setShowGoalModal}
-      />
+
       <EndGameConfirmationModal
         showEndGameConfirm={showEndGameConfirm}
         confirmEndGame={confirmEndGame}
         cancelEndGame={cancelEndGame}
-      />
-      <GoalScoredModal
-        showGoalModal={showGoalModal}
-        setShowGoalModal={setShowGoalModal}
-        players={playerData}
-        recordGoal={recordGoal}
       />
     </div>
   );

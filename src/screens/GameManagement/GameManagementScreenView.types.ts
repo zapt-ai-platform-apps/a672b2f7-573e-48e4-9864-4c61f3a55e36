@@ -11,13 +11,13 @@ export interface GameManagementScreenViewProps {
   showEndGameConfirm: boolean;
   confirmEndGame: () => void;
   cancelEndGame: () => void;
-  recordGoal: (team: 'our' | 'opponent', scorer: string, time: number) => void;
-  onFieldPlayers: Player[];
-  offFieldPlayers: Player[];
-  getTotalPlayTime: (player: Player) => number;
-  showGoalModal: boolean;
-  setShowGoalModal: (show: boolean) => void;
-  handlePlayerClick: (player: Player) => void;
+  recordGoal?: (team: 'our' | 'opponent', scorer: string, time: number) => void;
+  onFieldPlayers?: Player[];
+  offFieldPlayers?: Player[];
+  getTotalPlayTime?: (player: Player) => number;
+  showGoalModal?: boolean;
+  setShowGoalModal?: (show: boolean) => void;
+  handlePlayerClick?: (player: Player) => void;
   
   // Additional props for GameManagementScreenViewContent
   showAddPlayerModal?: boolean;

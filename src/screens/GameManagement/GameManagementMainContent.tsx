@@ -5,7 +5,7 @@ import { GameActions } from '../../features/GameManagement/components/GameAction
 import { timeFormatter } from './utils/timeFormatter';
 import { Player, Goal } from '../../types/GameTypes';
 import AssignGoalkeeperModal from '../../features/GameManagement/modals/AssignGoalkeeperModal';
-import { useGameManagementLogic } from '../../features/GameManagement/hooks/useGameManagementLogic';
+import { useGameManagementLogic } from '../../features/GameManagement/hooks';
 
 interface MainContentProps {
   playerData: Player[];
@@ -31,6 +31,10 @@ interface MainContentProps {
   };
   ourScore: number;
   opponentScore: number;
+  goals?: Goal[];
+  setGoals?: (goals: Goal[]) => void;
+  setOurScore?: (score: number) => void;
+  setOpponentScore?: (score: number) => void;
 }
 
 export default function GameManagementMainContent({
@@ -42,7 +46,11 @@ export default function GameManagementMainContent({
   setShowGoalModal,
   timerControls,
   ourScore,
-  opponentScore
+  opponentScore,
+  goals = [],
+  setGoals = () => {},
+  setOurScore = () => {},
+  setOpponentScore = () => {}
 }: MainContentProps): JSX.Element {
   const {
     selectedSubOffPlayer,
@@ -68,10 +76,20 @@ export default function GameManagementMainContent({
 
   // Create a wrapper function that doesn't require parameters
   const handleRemoveLastGoalWrapper = () => {
-    // Call the original function with expected parameters
-    if (handleRemoveLastGoal) {
-      handleRemoveLastGoal([], ourScore, opponentScore, () => {}, () => {}, () => {});
-    }
+    handleRemoveLastGoal(goals, ourScore, opponentScore, setGoals, setOurScore, setOpponentScore);
+  };
+
+  // Create wrapper functions for player operations
+  const handleIncreasePlayersWrapper = () => {
+    handleIncreasePlayers(playerData, (updatedPlayers) => {
+      // You might need to update this based on your app's state management
+    });
+  };
+
+  const handleDecreasePlayersWrapper = () => {
+    handleDecreasePlayers(playerData, (updatedPlayers) => {
+      // You might need to update this based on your app's state management
+    });
   };
 
   return (
@@ -101,8 +119,8 @@ export default function GameManagementMainContent({
         handleRemoveLastGoal={handleRemoveLastGoalWrapper}
         setShowGoalModal={setShowGoalModal}
         setShowAddPlayerModal={setShowAddPlayerModal}
-        handleIncreasePlayers={handleIncreasePlayers}
-        handleDecreasePlayers={handleDecreasePlayers}
+        handleIncreasePlayers={handleIncreasePlayersWrapper}
+        handleDecreasePlayers={handleDecreasePlayersWrapper}
         isRunning={isRunning}
       />
 

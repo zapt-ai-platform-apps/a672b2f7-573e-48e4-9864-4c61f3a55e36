@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { StateContext } from '../context/StateContext';
 import { Player, Goal, Squad } from '../types/GameTypes';
 import useGameManagement from '../hooks/useGameManagement';
+import useGameTimer from '../hooks/useGameTimer';
 
 const StateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
@@ -13,6 +14,9 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   
   // Game management
   const gameManagement = useGameManagement();
+  
+  // Use separate timer hook to get timer controls
+  const timerControls = useGameTimer();
   
   // Start a new game with selected players
   const handleStartGame = useCallback((
@@ -67,7 +71,10 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         
         // Game functions
         resetGame,
-        handleStartGame
+        handleStartGame,
+        
+        // Timer controls
+        timerControls
       }}
     >
       {children}
