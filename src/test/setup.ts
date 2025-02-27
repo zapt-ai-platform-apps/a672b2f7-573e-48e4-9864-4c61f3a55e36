@@ -1,5 +1,17 @@
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
+import { resolve } from 'path';
+
+// Configure path aliases for tests
+vi.mock('@/hooks/useAuthSession', () => {
+  return {
+    __esModule: true,
+    default: () => ({
+      session: null,
+      signOut: vi.fn()
+    })
+  };
+});
 
 // Mock window.matchMedia which is not implemented in JSDOM
 Object.defineProperty(window, 'matchMedia', {

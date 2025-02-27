@@ -1,41 +1,34 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { resolve } from 'path';
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
     sentryVitePlugin({
-      org: "zapt-apps",
-      project: process.env.VITE_PUBLIC_APP_ID,
-      authToken: process.env.SENTRY_AUTH_TOKEN
-    })
+      org: "zapt",
+      project: "football-subs",
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+    }),
   ],
-  build: {
-    target: 'esnext',
-    sourcemap: true
-  },
   resolve: {
-    conditions: ['development', 'browser'],
     alias: {
-      '@': resolve(__dirname, './src')
-    }
+      '@': resolve(__dirname, './src'),
+    },
   },
-  optimizeDeps: {
-    exclude: ['drizzle-orm']
-  },
+  // Configure Vitest
   test: {
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
-    // Ensure ESM transform for test files
-    deps: {
-      inline: [
-        '@testing-library/react',
-        'react-router-dom'
-      ]
-    }
-    // Removed resolver property which was causing the build error
-  }
+    // Ensure path aliases work in tests
+    alias: {
+      '@': resolve(__dirname, './src'),
+    },
+  },
+  build: {
+    sourcemap: true,
+  },
 });

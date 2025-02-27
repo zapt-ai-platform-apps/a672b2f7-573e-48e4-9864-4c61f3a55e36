@@ -17,10 +17,10 @@ const useGameTimer = () => {
     try {
       setIsRunning(true);
       
-      // Record this interval's start time - explicitly using undefined for endTime
+      // Create new interval with only startTime property to ensure endTime is undefined
       const newInterval: Interval = { 
-        startTime: Date.now(),
-        // No endTime property at all to ensure it's undefined, not null
+        startTime: Date.now()
+        // No endTime property at all - this ensures it remains undefined
       };
       setGameIntervals(prev => [...prev, newInterval]);
     } catch (error) {

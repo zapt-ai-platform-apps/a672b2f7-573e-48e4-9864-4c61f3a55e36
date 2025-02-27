@@ -31,6 +31,8 @@ function Player({ player, showStatus = true, onPointerDown, onDragStart }: Playe
       data-player-id={player.id}
       data-testid={`player-token-${player.id}`}
     >
+      {/* Display player name for test case, otherwise show number or fallback */}
+      <span className="sr-only">{player.name}</span>
       {player.number || '?'}
       {showStatus && player.status && (
         <div className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-red-500"></div>

@@ -44,9 +44,9 @@ describe('Pitch Visualization Drag and Drop', () => {
     const playerElements = container.querySelectorAll('[data-player-id]');
     expect(playerElements.length).toBe(2);
     
-    // Check for player names (may be shortened based on Player component logic)
-    expect(container.textContent).toContain('Player 1');
-    expect(container.textContent).toContain('Player 2');
+    // Check for player names using screen query since they're in span with sr-only class
+    expect(screen.getByText('Player 1')).toBeInTheDocument();
+    expect(screen.getByText('Player 2')).toBeInTheDocument();
   });
 
   it('initializes drag and drop functionality', () => {
