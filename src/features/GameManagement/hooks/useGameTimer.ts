@@ -26,7 +26,7 @@ const useGameTimer = () => {
   useEffect(() => {
     return () => {
       if (timerRef.current.timerId !== null) {
-        clearInterval(timerRef.current.timerId as number);
+        clearInterval(timerRef.current.timerId);
       }
     };
   }, []);
@@ -79,7 +79,7 @@ const useGameTimer = () => {
       }
 
       // Clear the interval
-      clearInterval(timerRef.current.timerId as number);
+      clearInterval(timerRef.current.timerId);
       timerRef.current.timerId = null;
 
       const now = Date.now();
@@ -111,7 +111,7 @@ const useGameTimer = () => {
     try {
       // Clear the interval if it's running
       if (timerRef.current.timerId !== null) {
-        clearInterval(timerRef.current.timerId as number);
+        clearInterval(timerRef.current.timerId);
         timerRef.current.timerId = null;
       }
 
