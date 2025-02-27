@@ -1,87 +1,139 @@
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { recordUserLogin } from '../recordUserLogin';
-import { supabase, recordLogin as recordLoginFromClient } from '../../supabaseClient';
-import { hasLoggedInRecently } from '../../lib/authRecording';
+import * as supabaseClient from '../../supabaseClient';
 
-// Mock dependencies
+// Mock the supabaseClient module
 vi.mock('../../supabaseClient', () => ({
+  recordLogin: vi.fn(),
+  createEvent: vi.fn(),
   supabase: {
     auth: {
       getUser: vi.fn()
     }
-  },
-  recordLogin: vi.fn()
+  }
 }));
 
-vi.mock('../../lib/authRecording', () => ({
-  hasLoggedInRecently: vi.fn()
-}));
+// Create a full user object that matches Supabase User type
+const fullUser = {
+  id: 'user-id',
+  email: 'test@example.com',
+  app_metadata: {},
+  user_metadata: {},
+  aud: 'authenticated',
+  created_at: '2023-01-01T00:00:00Z'
+};
 
-describe('recordUserLogin', () => {
+describe('recordUserLogin utility', () => {
   beforeEach(() => {
-    vi.resetAllMocks();
-    // Default mocks
-    vi.mocked(hasLoggedInRecently).mockReturnValue(false);
-    vi.mocked(supabase.auth.getUser).mockResolvedValue({
-      data: { user: { email: 'test@example.com' } },
+    // Clear mock calls between tests
+    vi.clearAllMocks();
+    
+    // Set up default mock with complete user object
+    vi.mocked(supabaseClient.supabase.auth.getUser).mockResolvedValue({
+      data: { user: fullUser },
       error: null
     });
   });
 
-  afterEach(() => {
-    vi.resetAllMocks();
+  it('should call recordLogin with the correct parameters', async () => {
+    // Set the environment variable value
+    vi.stubEnv('VITE_PUBLIC_APP_ENV', 'test-environment');
+
+    // Call the function to test
+    await recordUserLogin();
+
+    // Check that recordLogin was called with the correct parameters
+    expect(supabaseClient.recordLogin).toHaveBeenCalledWith(
+      'test@example.com', 
+      'test-environment'
+    );
   });
 
-  it('should map staging environment to production', async () => {
-    await recordUserLogin('user@example.com', 'staging');
-    
-    expect(recordLoginFromClient).toHaveBeenCalledWith('user@example.com', 'production');
+  it('should call createEvent after successful login recording', async () => {
+    // Mock recordLogin to resolve successfully
+    vi.mocked(supabaseClient.recordLogin).mockResolvedValue(undefined);
+
+    // Call the function to test
+    await recordUserLogin();
+
+    // Check that createEvent was called after recordLogin
+    expect(supabaseClient.createEvent).toHaveBeenCalledTimes(1);
   });
 
-  it('should keep development environment unchanged', async () => {
-    await recordUserLogin('user@example.com', 'development');
-    
-    expect(recordLoginFromClient).toHaveBeenCalledWith('user@example.com', 'development');
-  });
-
-  it('should keep production environment unchanged', async () => {
-    await recordUserLogin('user@example.com', 'production');
-    
-    expect(recordLoginFromClient).toHaveBeenCalledWith('user@example.com', 'production');
-  });
-
-  it('should not call recordLogin if user has recently logged in', async () => {
-    vi.mocked(hasLoggedInRecently).mockReturnValue(true);
-    
-    await recordUserLogin('user@example.com', 'development');
-    
-    expect(recordLoginFromClient).not.toHaveBeenCalled();
-  });
-
-  it('should fetch user email if not provided', async () => {
-    await recordUserLogin(undefined, 'development');
-    
-    expect(supabase.auth.getUser).toHaveBeenCalled();
-    expect(recordLoginFromClient).toHaveBeenCalledWith('test@example.com', 'development');
-  });
-
-  it('should not call recordLogin if no email is available', async () => {
-    vi.mocked(supabase.auth.getUser).mockResolvedValue({
-      data: { user: null },
+  it('should not call recordLogin if user email is not available', async () => {
+    // Mock the supabase.auth.getUser response with a user that has no email
+    const userWithoutEmail = { ...fullUser, email: undefined };
+    vi.mocked(supabaseClient.supabase.auth.getUser).mockResolvedValue({
+      data: { user: userWithoutEmail },
       error: null
     });
-    
-    await recordUserLogin(undefined, 'development');
-    
-    expect(recordLoginFromClient).not.toHaveBeenCalled();
+
+    // Call the function to test
+    await recordUserLogin();
+
+    // Check that recordLogin was not called
+    expect(supabaseClient.recordLogin).not.toHaveBeenCalled();
+    expect(supabaseClient.createEvent).not.toHaveBeenCalled();
   });
 
-  it('should handle errors gracefully', async () => {
-    vi.mocked(recordLoginFromClient).mockRejectedValue(new Error('API error'));
+  it('should handle null user gracefully', async () => {
+    // Mock the supabase.auth.getUser response with null user (using type casting)
+    vi.mocked(supabaseClient.supabase.auth.getUser).mockResolvedValue({
+      data: { user: null as any },
+      error: null
+    });
+
+    // Call the function to test
+    await recordUserLogin();
+
+    // Check that recordLogin was not called
+    expect(supabaseClient.recordLogin).not.toHaveBeenCalled();
+    expect(supabaseClient.createEvent).not.toHaveBeenCalled();
+  });
+
+  it('should handle auth errors gracefully', async () => {
+    // Mock the supabase.auth.getUser to throw an error
+    vi.mocked(supabaseClient.supabase.auth.getUser).mockRejectedValue(
+      new Error('Auth error')
+    );
+
+    // Call the function to test
+    await recordUserLogin();
+
+    // Check that recordLogin was not called
+    expect(supabaseClient.recordLogin).not.toHaveBeenCalled();
+    expect(supabaseClient.createEvent).not.toHaveBeenCalled();
+  });
+
+  it('should handle recordLogin errors gracefully', async () => {
+    // Mock recordLogin to throw an error
+    vi.mocked(supabaseClient.recordLogin).mockRejectedValue(
+      new Error('Failed to record login')
+    );
+
+    // Call the function to test
+    await recordUserLogin();
+
+    // Check that createEvent was not called after recordLogin failed
+    expect(supabaseClient.createEvent).not.toHaveBeenCalled();
+  });
+
+  it('should log errors to console but not crash the application', async () => {
+    // Spy on console.error
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     
-    // This should not throw
-    await recordUserLogin('user@example.com', 'development');
+    // Mock recordLogin to throw an error
+    vi.mocked(supabaseClient.recordLogin).mockRejectedValue(
+      new Error('Login recording failed')
+    );
+
+    // Call the function and ensure it doesn't throw
+    await expect(recordUserLogin()).resolves.not.toThrow();
     
-    expect(recordLoginFromClient).toHaveBeenCalled();
+    // Verify error was logged
+    expect(consoleErrorSpy).toHaveBeenCalled();
+    
+    // Restore console.error
+    consoleErrorSpy.mockRestore();
   });
 });
