@@ -106,17 +106,11 @@ export function useEditSquadForm(squadId: number) {
         return;
       }
       
-      // Create an API-compatible object with JSON string for players
-      const apiSquad: Partial<{
-        id: string;
-        name: string;
-        players: string;
-        createdAt?: string;
-        userId?: string;
-      }> = {
+      // Create an API-compatible object - KEEP players as an array, not a JSON string
+      const apiSquad: Partial<Squad> = {
         ...squad,
         name: squadName,
-        players: JSON.stringify(players)
+        players: players // Keep players as an array
       };
       
       await updateSquad(apiSquad.id!, apiSquad);
@@ -125,7 +119,7 @@ export function useEditSquadForm(squadId: number) {
       const updatedSquad: Squad = {
         ...squad,
         name: squadName,
-        players // Pass the players array directly, not as a JSON string
+        players // Pass the players array directly
       };
       
       setSelectedSquad(updatedSquad);
