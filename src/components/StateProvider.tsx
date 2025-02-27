@@ -22,7 +22,13 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   ) => {
     if (gameManagement.handleStartGame) {
       gameManagement.handleStartGame(players, goalkeeper, includeGKPlaytime);
-      navigate('/game-management');
+      navigate('/game-management', {
+        state: {
+          players,
+          goalkeeper,
+          includeGKPlaytime
+        }
+      });
     } else {
       console.error('handleStartGame function not available');
     }

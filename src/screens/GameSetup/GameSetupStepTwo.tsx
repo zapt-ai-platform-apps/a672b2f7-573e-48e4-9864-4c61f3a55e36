@@ -93,11 +93,11 @@ export function GameSetupStepTwo(): JSX.Element {
       // Use the handleStartGame from context if available
       if (contextHandleStartGame) {
         contextHandleStartGame(updatedSquad, goalkeeperPlayer, includeGKPlaytime);
+        // No need to navigate here as contextHandleStartGame takes care of that
+      } else {
+        console.error('handleStartGame function not available in context');
+        setError('Unable to start game. System error.');
       }
-      
-      // Navigate directly to game management screen
-      console.log('Navigating to game management');
-      navigate('/game-management');
       
     } catch (error) {
       console.error('Error in game setup configuration:', error);
