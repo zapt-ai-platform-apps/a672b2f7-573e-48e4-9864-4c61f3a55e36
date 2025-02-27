@@ -5,13 +5,16 @@ import { act } from '@testing-library/react';
 import { Player } from '../types/GameTypes';
 
 // Mock useDragAndDrop hook with correct export structure
-vi.mock('../features/GameManagement/hooks/useDragAndDrop', () => ({
-  __esModule: true,
-  default: () => ({
-    handlePointerDown: vi.fn(),
-    init: vi.fn(() => () => {})
-  })
-}));
+vi.mock('../features/GameManagement/hooks/useDragAndDrop', async () => {
+  const actual = await vi.importActual('../features/GameManagement/hooks/useDragAndDrop');
+  return {
+    __esModule: true,
+    default: () => ({
+      handlePointerDown: vi.fn(),
+      init: vi.fn(() => () => {})
+    })
+  };
+});
 
 // Mock assignInitialPositions utility
 vi.mock('../features/GameManagement/utils/assignInitialPositions', () => ({

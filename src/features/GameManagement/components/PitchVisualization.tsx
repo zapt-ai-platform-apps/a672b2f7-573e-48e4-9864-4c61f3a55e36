@@ -40,25 +40,7 @@ const PitchVisualization: React.FC<PitchVisualizationProps> = ({
           players={players} 
           handlePointerDown={handlePointerDown} 
         />
-        {players.map(player => (
-          <div
-            key={player.id}
-            data-player-id={player.id}
-            className={`absolute w-12 h-12 flex items-center justify-center rounded-full cursor-move 
-                ${player.isGoalkeeper ? 'bg-yellow-500' : 'bg-blue-600'} 
-                ${player.status === 'injured' ? 'opacity-50' : ''}
-                shadow-md transform transition-transform`}
-            style={{
-              left: `${player.position.x}%`,
-              top: `${player.position.y}%`,
-              transform: 'translate(-50%, -50%)'
-            }}
-            onPointerDown={(e) => handlePointerDown(e, player.id)}
-          >
-            <span className="text-white font-bold">{player.name.charAt(0)}</span>
-            <span className="sr-only">{player.name}</span>
-          </div>
-        ))}
+        {/* Removed duplicate player rendering here */}
       </div>
     </div>
   );

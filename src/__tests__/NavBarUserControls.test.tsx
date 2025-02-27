@@ -10,13 +10,16 @@ const mockNavigate = vi.fn();
 const mockSignOut = vi.fn();
 
 // Mock useAuthSession hook
-vi.mock('../hooks/useAuthSession', () => ({
-  __esModule: true,
-  default: () => ({
-    session: null,
-    signOut: mockSignOut
-  })
-}));
+vi.mock('../hooks/useAuthSession', async () => {
+  const actual = await vi.importActual('../hooks/useAuthSession');
+  return {
+    __esModule: true,
+    default: () => ({
+      session: null,
+      signOut: mockSignOut
+    })
+  };
+});
 
 // Mock router
 vi.mock('react-router-dom', async () => {
