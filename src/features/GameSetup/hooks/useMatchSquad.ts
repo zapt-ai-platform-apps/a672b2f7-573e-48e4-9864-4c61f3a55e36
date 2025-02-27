@@ -94,11 +94,13 @@ export default function useMatchSquad() {
     setMatchSquadPlayers(updatedPlayers);
     
     // Convert ExtendedPlayer[] to Player[] before setting matchSquad
+    // Fix: Ensure isInStartingLineup property is always included
     const selectedPlayers = updatedPlayers
       .filter((player: ExtendedPlayer) => player.isInMatchSquad)
       .map((player: ExtendedPlayer): Player => ({
         ...player,
         isInMatchSquad: player.isInMatchSquad,
+        isInStartingLineup: player.isInStartingLineup || false, // Fix: Ensure this property exists
         position: player.position
       }));
     

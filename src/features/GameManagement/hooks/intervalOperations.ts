@@ -1,5 +1,21 @@
 import { Interval, TimeInterval } from '../../../shared/models/timeUtils';
 
+// Fix: Export getTimeElapsed directly to fix the import error
+export function getTimeElapsed(intervals: Interval[], isRunning: boolean): number {
+  let total = 0;
+  const now = Date.now();
+  
+  intervals.forEach(interval => {
+    if (interval.end) {
+      total += (interval.end - interval.start);
+    } else if (isRunning) {
+      total += (now - interval.start);
+    }
+  });
+  
+  return Math.floor(total / 1000);
+}
+
 // Fix: Make Interval compatible with TimeInterval by changing how we define these types
 // Instead of extending TimeInterval, create a separate interface with compatible properties
 export interface GameInterval {

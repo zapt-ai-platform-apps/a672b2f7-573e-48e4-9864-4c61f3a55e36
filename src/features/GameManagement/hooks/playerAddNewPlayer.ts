@@ -1,6 +1,6 @@
 import { createPlayer } from '../../../shared/models/player';
 import { calculateTotalPlayTime } from '../../../shared/models/playerUtils';
-import type { Player } from '../../../types/GameTypes';
+import type { Player, Position } from '../../../types/GameTypes';
 
 interface PlayInterval {
   start: number;
@@ -41,12 +41,17 @@ export function createAddNewPlayer({
         ? calculateTotalPlayTime(props.playerData[0], false, false)
         : 0;
         
+      // Fix: Create proper Position object rather than null
+      const defaultPosition: Position = { x: 0, y: 0 };
+      
       const newPlayer: PlayerWithIntervals = {
         ...createPlayer({ name }),
         playIntervals: [] as PlayInterval[],
         isOnField: false,
         isGoalkeeper: false,
         totalPlayTime: defaultPlayTime,
+        position: defaultPosition, // Fix: Use properly typed Position object
+        isInStartingLineup: false // Ensure this property exists
       };
       props.setPlayerData([...props.playerData, newPlayer]);
       setNewPlayerName("");

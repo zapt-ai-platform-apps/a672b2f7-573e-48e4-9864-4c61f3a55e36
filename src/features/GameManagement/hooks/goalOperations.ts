@@ -1,4 +1,5 @@
-import { getTimeElapsed, Interval } from './intervalOperations';
+import { getTimeElapsed } from './intervalOperations';
+import { Interval } from '../../../shared/models/timeUtils';
 
 export function recordGoal(
   team: 'our' | 'opponent',

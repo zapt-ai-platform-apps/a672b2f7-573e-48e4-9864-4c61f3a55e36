@@ -22,7 +22,8 @@ export function removeLastGoal(
   let newOurScore = ourScore;
   let newOpponentScore = opponentScore;
   
-  if (lastGoal.isOpponentGoal) {
+  // Fix: Use team property instead of isOpponentGoal
+  if (lastGoal.team === 'opponent') {
     newOpponentScore = Math.max(0, opponentScore - 1);
   } else {
     newOurScore = Math.max(0, ourScore - 1);
@@ -37,31 +38,27 @@ export function removeLastGoal(
 
 /**
  * Adds a new goal to the goals array and updates scores
+ * @param team The team that scored ('our' or 'opponent')
+ * @param scorerName The name of the scorer
+ * @param timeElapsed The time when the goal was scored
  * @param goals Current list of goals
- * @param newGoal Goal to add
- * @param ourScore Current team score
- * @param opponentScore Current opponent score
  * @returns Object containing updated scores and goals array
  */
 export function addGoal(
-  goals: Goal[],
-  newGoal: Goal,
-  ourScore: number,
-  opponentScore: number
+  team: 'our' | 'opponent',
+  scorerName: string,
+  timeElapsed: number,
+  goals: Goal[]
 ) {
-  const newGoals = [...goals, newGoal];
-  let newOurScore = ourScore;
-  let newOpponentScore = opponentScore;
+  const newGoal: Goal = {
+    team,
+    scorerName,
+    time: timeElapsed
+  };
   
-  if (newGoal.isOpponentGoal) {
-    newOpponentScore += 1;
-  } else {
-    newOurScore += 1;
-  }
+  const newGoals = [...goals, newGoal];
   
   return {
-    newOurScore,
-    newOpponentScore,
     newGoals
   };
 }

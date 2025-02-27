@@ -11,7 +11,7 @@ interface EditSquadFormProps {
 function EditSquadForm({ onCancel }: EditSquadFormProps): JSX.Element {
   const {
     squadName,
-    setSquadName,
+    setSquadName, // Fix: This value now comes correctly from the hook
     squadPlayersList,
     newPlayerName,
     setNewPlayerName,
