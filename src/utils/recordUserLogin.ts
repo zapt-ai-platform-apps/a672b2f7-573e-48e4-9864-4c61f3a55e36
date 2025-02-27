@@ -1,37 +1,48 @@
-import { createEvent, recordLogin as zapt_recordLogin } from '../supabaseClient';
+import { supabase, createEvent, recordLogin as zapt_recordLogin } from '../supabaseClient';
 import * as Sentry from "@sentry/browser";
 import { environmentType } from '../types/environment';
 
 /**
- * Record a user login event
- * @param email User's email
- * @returns Promise that resolves when login is recorded
+ * Records a user login event when a user logs in
+ * @returns Promise that resolves when the login is recorded
  */
-export const recordLogin = async (email: string): Promise<void> => {
+export const recordUserLogin = async (): Promise<void> => {
   try {
-    console.log('Recording login for:', email);
-    // First cast env value to environmentType
-    const appEnv = import.meta.env.VITE_PUBLIC_APP_ENV as environmentType;
-    // Then compute effectiveEnv without further casting needed
-    const effectiveEnv = appEnv === 'staging' ? 'production' : appEnv;
+    // Get the current user from Supabase auth
+    const { data: { user }, error } = await supabase.auth.getUser();
     
-    await zapt_recordLogin(email, effectiveEnv);
-    console.log('Login recorded successfully');
+    if (error) {
+      console.error('Error getting user:', error);
+      Sentry.captureException(error);
+      return;
+    }
     
-    // Also create a login event
+    if (!user?.email) {
+      console.log('No user email available to record login');
+      return;
+    }
+    
     try {
+      // Record the login with the user's email
+      const appEnv = import.meta.env.VITE_PUBLIC_APP_ENV as environmentType;
+      await zapt_recordLogin(user.email, appEnv);
+      console.log('Login recorded successfully');
+      
+      // Create an additional login event
       await createEvent('user.login', { 
-        email,
+        email: user.email,
         timestamp: new Date().toISOString(),
         appEnv: import.meta.env.VITE_PUBLIC_APP_ENV
       });
-    } catch (createEventError) {
-      console.error('Failed to create login event:', createEventError);
-      Sentry.captureException(createEventError);
+    } catch (recordError) {
+      console.error('Failed to record login:', recordError);
+      Sentry.captureException(recordError);
     }
   } catch (error) {
-    console.error('Error recording login:', error);
+    console.error('Error in recordUserLogin:', error);
     Sentry.captureException(error);
-    throw error;
   }
 };
+
+// For backwards compatibility with any code using the original function name
+export const recordLogin = recordUserLogin;

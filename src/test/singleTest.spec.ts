@@ -13,6 +13,16 @@ vi.mock('../supabaseClient', () => ({
   }
 }));
 
+// Create a full user object that matches Supabase User type
+const fullUser = {
+  id: 'user-id',
+  email: 'test@example.com',
+  app_metadata: {},
+  user_metadata: {},
+  aud: 'authenticated',
+  created_at: '2023-01-01T00:00:00Z'
+};
+
 describe('recordUserLogin utility', () => {
   beforeEach(() => {
     // Clear mock calls between tests
@@ -20,10 +30,9 @@ describe('recordUserLogin utility', () => {
   });
 
   it('should call recordLogin with the correct parameters', async () => {
-    // Mock the supabase.auth.getUser response
-    const mockUser = { email: 'test@example.com' };
+    // Mock the supabase.auth.getUser response with a complete user object
     vi.mocked(supabaseClient.supabase.auth.getUser).mockResolvedValue({
-      data: { user: mockUser },
+      data: { user: fullUser },
       error: null
     });
 
@@ -41,10 +50,9 @@ describe('recordUserLogin utility', () => {
   });
 
   it('should call createEvent after successful login recording', async () => {
-    // Mock the supabase.auth.getUser response
-    const mockUser = { email: 'test@example.com' };
+    // Mock the supabase.auth.getUser response with a complete user object
     vi.mocked(supabaseClient.supabase.auth.getUser).mockResolvedValue({
-      data: { user: mockUser },
+      data: { user: fullUser },
       error: null
     });
 
@@ -59,9 +67,10 @@ describe('recordUserLogin utility', () => {
   });
 
   it('should not call recordLogin if user email is not available', async () => {
-    // Mock the supabase.auth.getUser response with null user
+    // Mock the supabase.auth.getUser response with a user that has no email
+    const userWithoutEmail = { ...fullUser, email: undefined };
     vi.mocked(supabaseClient.supabase.auth.getUser).mockResolvedValue({
-      data: { user: null },
+      data: { user: userWithoutEmail },
       error: null
     });
 
@@ -88,10 +97,9 @@ describe('recordUserLogin utility', () => {
   });
 
   it('should handle recordLogin errors gracefully', async () => {
-    // Mock the supabase.auth.getUser response
-    const mockUser = { email: 'test@example.com' };
+    // Mock the supabase.auth.getUser response with a complete user object
     vi.mocked(supabaseClient.supabase.auth.getUser).mockResolvedValue({
-      data: { user: mockUser },
+      data: { user: fullUser },
       error: null
     });
 
@@ -116,9 +124,9 @@ describe('recordUserLogin utility', () => {
       new Error('Login recording failed')
     );
     
-    // Mock the supabase.auth.getUser response
+    // Mock the supabase.auth.getUser response with a complete user object
     vi.mocked(supabaseClient.supabase.auth.getUser).mockResolvedValue({
-      data: { user: { email: 'test@example.com' } },
+      data: { user: fullUser },
       error: null
     });
 
