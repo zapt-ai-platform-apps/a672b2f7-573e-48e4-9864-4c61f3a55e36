@@ -1,10 +1,12 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { eq } from 'drizzle-orm';
-import { squads } from '../drizzle/schema.ts';
-import { authenticateUser } from './_apiUtils.ts';
-import { transformSquadFromDB } from '../src/models/squadModel.ts';
+import { authenticateUser } from './_apiUtils.js';
+import { transformSquadFromDB } from '../src/models/squadModel.js';
 import * as Sentry from '@sentry/node';
+
+// Import schema locally to ensure it's available during deployment
+import { squads } from './schema.js';
 
 export default async function handler(req, res) {
   try {
