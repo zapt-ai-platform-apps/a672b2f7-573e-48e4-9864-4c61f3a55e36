@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [
     react(),
     sentryVitePlugin({
-      org: "zapt",
+      org: "zapt-apps",
       project: "football-subs",
       authToken: process.env.SENTRY_AUTH_TOKEN,
     }),
