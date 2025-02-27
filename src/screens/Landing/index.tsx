@@ -52,12 +52,10 @@ export default function LandingScreen(): JSX.Element {
           
           <motion.button
             className="px-5 py-2 bg-white/10 backdrop-blur-sm rounded-lg text-white border border-white/20 hover:bg-white/20 transition-all duration-300 cursor-pointer shadow-lg"
-            whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 255, 255, 0.15)" }}
-            whileTap={{ scale: 0.98 }}
-            onClick={handleGetStarted}
             initial={{ x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
+            onClick={handleGetStarted}
           >
             Sign In
           </motion.button>
@@ -105,14 +103,12 @@ export default function LandingScreen(): JSX.Element {
               <p className="text-blue-200">Join coaches who are already using Football Subs</p>
             </div>
             
-            <motion.button
+            <button
               className="px-8 py-4 bg-white text-indigo-900 rounded-xl font-bold hover:bg-blue-100 transition-colors cursor-pointer shadow-lg"
-              whileHover={{ scale: 1.05, boxShadow: "0 15px 30px rgba(0, 0, 0, 0.1)" }}
-              whileTap={{ scale: 0.98 }}
               onClick={handleGetStarted}
             >
               Get Started Today
-            </motion.button>
+            </button>
           </div>
         </div>
       </motion.div>
@@ -120,42 +116,25 @@ export default function LandingScreen(): JSX.Element {
       <footer className="bg-indigo-950 text-white py-8 relative z-10">
         <div className="w-full px-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <motion.div 
-              className="flex items-center mb-6 md:mb-0"
-              whileHover={{ scale: 1.05 }}
-            >
+            <div className="flex items-center mb-6 md:mb-0">
               <img 
                 src="https://otebnzqfzytqyyjdfhzr.supabase.co/storage/v1/render/image/public/icons/a672b2f7-573e-48e4-9864-4c61f3a55e36/a07d10c7-40ae-490b-922a-cffd0ccb2aea.png?width=48&height=48" 
                 alt="Football Subs Logo" 
                 className="w-8 h-8 mr-2"
               />
               <span className="text-lg font-bold">Football Subs</span>
-            </motion.div>
+            </div>
             
             <div className="flex flex-col md:flex-row gap-4 md:gap-8">
-              <motion.a 
-                href="#features" 
-                className="text-blue-200 hover:text-white transition-colors"
-                whileHover={{ x: 2 }}
-              >
+              <a href="#features" className="text-blue-200 hover:text-white transition-colors">
                 Features
-              </motion.a>
-              <motion.a 
-                href="/sign-in" 
-                className="text-blue-200 hover:text-white transition-colors"
-                whileHover={{ x: 2 }}
-              >
+              </a>
+              <a href="/sign-in" className="text-blue-200 hover:text-white transition-colors">
                 Sign In
-              </motion.a>
-              <motion.a 
-                href="https://www.zapt.ai" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="text-blue-200 hover:text-white transition-colors"
-                whileHover={{ x: 2 }}
-              >
+              </a>
+              <a href="https://www.zapt.ai" target="_blank" rel="noopener noreferrer" className="text-blue-200 hover:text-white transition-colors">
                 Made on ZAPT
-              </motion.a>
+              </a>
             </div>
           </div>
           

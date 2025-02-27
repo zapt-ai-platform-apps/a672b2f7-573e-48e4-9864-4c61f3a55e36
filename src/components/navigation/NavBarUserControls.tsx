@@ -13,6 +13,7 @@ const NavBarUserControls: React.FC = () => {
   const handleSignOut = async () => {
     try {
       await signOut();
+      navigate('/sign-in');
     } catch (error) {
       console.error('Error signing out:', error);
     }

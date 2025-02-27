@@ -50,8 +50,7 @@ const useAuthSession = () => {
       console.log("Signing out...");
       await supabase.auth.signOut();
       console.log("Sign out successful");
-      // No need to manually set session as the auth listener will do this
-      navigate('/');
+      // We'll let the NavBarUserControls handle navigation to the sign-in page
     } catch (error) {
       console.error('Error signing out:', error);
       Sentry.captureException(error);

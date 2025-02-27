@@ -96,6 +96,7 @@ export function GameSetupStepTwo(): JSX.Element {
       }
       
       // Navigate directly to game management screen
+      console.log('Navigating to game management');
       navigate('/game-management');
       
     } catch (error) {
