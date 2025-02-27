@@ -33,6 +33,7 @@ export const initializeMatchSquadPlayers = (
       // Convert number to string if it's a number type
       number: player.number !== undefined ? String(player.number) : '',
       isInMatchSquad: existingPlayer ? existingPlayer.isInMatchSquad : false,
+      isInStartingLineup: existingPlayer ? existingPlayer.isInStartingLineup : false,
       totalPlayTime: player.totalPlayTime || 0,
       isOnField: player.isOnField || false,
       isGoalkeeper: player.isGoalkeeper || false,

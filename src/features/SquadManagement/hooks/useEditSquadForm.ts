@@ -114,14 +114,17 @@ export function useEditSquadForm(squadId: number) {
       
       const result = await updateSquad(updatedSquad.id, updatedSquad);
       
-      // Type guard for selectedSquad
+      // Type guard for selectedSquad to ensure players is passed as an array, not a string
       setSelectedSquad((prev: any) => {
         // If prev is an array of Player, we should return the updated players array
         if (Array.isArray(prev)) {
           return players;
         }
         // If prev is a Squad object, we need to return the full updated squad
-        return updatedSquad;
+        return {
+          ...updatedSquad,
+          players: players // Use the players array, not the JSON string
+        };
       });
       
       navigate('/squads');

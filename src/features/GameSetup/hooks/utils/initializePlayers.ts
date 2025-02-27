@@ -10,7 +10,10 @@ function initializePlayers(squad: Squad): Player[] {
     totalPlayTime: 0,
     isOnField: false,
     isGoalkeeper: false,
-    position: { x: 0, y: 0 }
+    position: { x: 0, y: 0 },
+    isInMatchSquad: false,
+    isInStartingLineup: false,
+    playIntervals: []
   }));
 }
 

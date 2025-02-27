@@ -13,6 +13,9 @@ export default function parsePlayers(input: string | any[]): Player[] {
         totalPlayTime: player.totalPlayTime || 0,
         isOnField: player.isOnField || false,
         isGoalkeeper: player.isGoalkeeper || false,
+        isInMatchSquad: player.isInMatchSquad || false,
+        isInStartingLineup: player.isInStartingLineup || false,
+        playIntervals: player.playIntervals || []
       };
 
       // Ensure the position property is properly formatted
@@ -57,6 +60,9 @@ export default function parsePlayers(input: string | any[]): Player[] {
       totalPlayTime: 0,
       isOnField: false,
       isGoalkeeper: false,
-      position: { x: 0, y: 0 }
+      position: { x: 0, y: 0 },
+      isInMatchSquad: false,
+      isInStartingLineup: false,
+      playIntervals: []
     }));
 }

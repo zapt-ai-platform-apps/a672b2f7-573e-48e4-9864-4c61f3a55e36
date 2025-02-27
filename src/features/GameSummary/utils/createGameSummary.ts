@@ -67,7 +67,7 @@ export function createGameSummary(gameState: GameSummaryProps): string {
     for (const player of allPlayers) {
       const playTime = getTotalPlayTime 
         ? getTotalPlayTime(player) 
-        : (player.minutesPlayed || 0);
+        : (player.totalPlayTime || 0);
         
       summary += `${player.name}: ${playTime} min\n`;
     }
