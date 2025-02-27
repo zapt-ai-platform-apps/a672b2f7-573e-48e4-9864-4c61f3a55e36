@@ -25,7 +25,7 @@ const useGameTimer = () => {
   // Clean up interval on unmount
   useEffect(() => {
     return () => {
-      if (timerRef.current.timerId !== null) {
+      if (timerRef.current.timerId !== undefined) {
         clearInterval(timerRef.current.timerId);
       }
     };
@@ -110,7 +110,7 @@ const useGameTimer = () => {
   const resetTimer = useCallback(() => {
     try {
       // Clear the interval if it's running
-      if (timerRef.current.timerId !== null) {
+      if (timerRef.current.timerId !== undefined) {
         clearInterval(timerRef.current.timerId);
         timerRef.current.timerId = null;
       }
