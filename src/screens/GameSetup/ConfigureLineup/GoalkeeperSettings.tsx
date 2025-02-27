@@ -16,8 +16,8 @@ export default function GoalkeeperSettings({
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">Goalkeeper Settings</h2>
+    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
+      <h2 className="text-2xl font-bold mb-4 text-white">Goalkeeper Settings</h2>
       <GoalkeeperSelector
         startingPlayers={startingPlayers}
         goalkeeper={goalkeeper}
@@ -25,7 +25,7 @@ export default function GoalkeeperSettings({
         confirmedGoalkeeper={confirmedGoalkeeper}
         setConfirmedGoalkeeper={setConfirmedGoalkeeper}
       />
-      <div className="flex items-center">
+      <div className="flex items-center mt-4">
         <input
           id="includeGKPlaytime"
           type="checkbox"
@@ -33,7 +33,7 @@ export default function GoalkeeperSettings({
           onChange={handleTogglePlaytime}
           className="h-4 w-4 text-blue-600 border-gray-300 rounded"
         />
-        <label htmlFor="includeGKPlaytime" className="ml-2 text-gray-700">
+        <label htmlFor="includeGKPlaytime" className="ml-2 text-white">
           Include Goalkeeper Playtime
         </label>
       </div>

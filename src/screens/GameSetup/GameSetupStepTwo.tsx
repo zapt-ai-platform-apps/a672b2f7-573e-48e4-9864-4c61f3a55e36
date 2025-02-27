@@ -95,8 +95,9 @@ export function GameSetupStepTwo(): JSX.Element {
         contextHandleStartGame(updatedSquad, goalkeeperPlayer, includeGKPlaytime);
       }
       
-      // All checks passed, proceed to game management
+      // Navigate directly to game management screen
       navigate('/game-management');
+      
     } catch (error) {
       console.error('Error in game setup configuration:', error);
       Sentry.captureException(error);
