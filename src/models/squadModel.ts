@@ -1,9 +1,10 @@
 import { parsePlayers } from '../features/SquadManagement/utils/playerParsing';
 import * as Sentry from "@sentry/browser";
+import { Player } from '../types/GameTypes';
 
 export interface SquadData {
   name?: string;
-  players?: unknown[] | string;
+  players?: Player[] | string;
 }
 
 /**
@@ -22,7 +23,7 @@ export function validateSquadCreation(data: SquadData): void {
  * @param players - Players array or string.
  * @returns JSON string of players.
  */
-export function transformPlayersForDB(players: unknown[] | string): string {
+export function transformPlayersForDB(players: Player[] | string): string {
   if (Array.isArray(players)) {
     // Convert to array of strings if needed
     const playerNames = players.map(p => 
