@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useStateContext } from '../../../hooks/useStateContext';
 import { ExtendedPlayer } from '../types/ExtendedPlayer';
 import { initializeMatchSquadPlayers } from '../utils/matchSquadUtils';
-import { Player, Squad, Position } from '../../../types/GameTypes';
+import { Player, Squad, Position, PlayInterval } from '../../../types/GameTypes';
 
 /**
  * Type guard to check if an object is a Squad
@@ -98,6 +98,19 @@ export default function useMatchSquad() {
       .filter((player: ExtendedPlayer) => player.isInMatchSquad)
       .map((player: ExtendedPlayer): Player => {
         const defaultPosition: Position = { x: 0, y: 0 };
+        
+        // Convert any playIntervals with null endTime to undefined
+        const safePlayIntervals: PlayInterval[] = (player.playIntervals || []).map(interval => {
+          // Handle the case where endTime could be null
+          const safeInterval: PlayInterval = {
+            start: interval.start,
+            // If endTime is null, convert to undefined, otherwise keep the value
+            ...(interval.endTime !== null ? { end: interval.endTime } : {}),
+            ...(interval.isGoalkeeper ? { isGoalkeeper: interval.isGoalkeeper } : {})
+          };
+          return safeInterval;
+        });
+        
         return {
           id: player.id,
           name: player.name,
@@ -107,7 +120,7 @@ export default function useMatchSquad() {
           isInMatchSquad: player.isInMatchSquad,
           isInStartingLineup: player.isInStartingLineup || false,
           totalPlayTime: player.totalPlayTime || 0,
-          playIntervals: player.playIntervals || [],
+          playIntervals: safePlayIntervals,
           number: player.number
         };
       });

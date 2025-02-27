@@ -56,17 +56,16 @@ export default function GameManagementScreenViewContent({
         timestamp: goal.timestamp
       };
       
-      // Create a new array to avoid direct mutation
-      const updatedGoals = goals ? [...goals] : [];
+      // Type-safe implementation to handle the callback correctly
+      const updatedGoalsHandler = (newGoalsOrCallback: Goal[] | ((prevGoals: Goal[]) => Goal[])) => {
+        if (typeof newGoalsOrCallback === 'function') {
+          setGoals(prevGoals => newGoalsOrCallback(prevGoals));
+        } else {
+          setGoals(newGoalsOrCallback);
+        }
+      };
       
-      recordGoal(goal, 
-        // Properly typed callback for setGoals
-        (newGoals: Goal[]) => {
-          if (setGoals) setGoals(newGoals);
-        },
-        setOurScore,
-        setOpponentScore
-      );
+      recordGoal(goal, updatedGoalsHandler, setOurScore, setOpponentScore);
       setShowGoalModal(false);
     }
   };

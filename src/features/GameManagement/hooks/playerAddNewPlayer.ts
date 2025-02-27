@@ -59,8 +59,9 @@ export function createAddNewPlayer({
         
       const defaultPosition: Position = { x: 0, y: 0 };
       
+      // Explicitly type name as string to ensure it matches PlayerWithIntervals expectations
       const newPlayer: PlayerWithIntervals = {
-        ...createPlayer({ name }), // name is guaranteed to be a string here
+        ...(createPlayer({ name }) as Player), // Ensure it's cast to Player 
         id: Date.now().toString(),
         playIntervals: [] as PlayInterval[],
         isOnField: false,

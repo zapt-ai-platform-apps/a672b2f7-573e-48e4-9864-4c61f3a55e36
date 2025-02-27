@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useStateContext } from '../../hooks/useStateContext';
 import GameManagementScreenView from './GameManagementScreenView';
-import { Player, Goal } from '../../types/GameTypes';
+import { Player, Goal, GoalData } from '../../types/GameTypes';
 
 export default function GameManagementScreen(): JSX.Element {
   // Use state context to get game management data
@@ -44,14 +44,26 @@ export default function GameManagementScreen(): JSX.Element {
     console.log("Player clicked:", player);
   };
   
-  // Record a goal scored
+  // Record a goal scored - fixed to properly convert GoalData to Goal
   const recordGoal = (
-    goal: Goal, 
+    goalData: GoalData, 
     setGoals: React.Dispatch<React.SetStateAction<Goal[]>>,
     setOurScore: React.Dispatch<React.SetStateAction<number>>,
     setOpponentScore: React.Dispatch<React.SetStateAction<number>>
   ): void => {
-    // Add the goal to the goals array
+    // Convert GoalData to Goal type
+    const goal: Goal = {
+      team: goalData.team,
+      scorerName: goalData.scorer, // Set scorerName from scorer property
+      time: goalData.minute,       // Set time from minute property
+      id: goalData.id,
+      minute: goalData.minute,
+      scorer: goalData.scorer,
+      scorerId: goalData.scorerId,
+      timestamp: goalData.timestamp
+    };
+    
+    // Add the goal to the goals array using the functional update pattern
     setGoals(prevGoals => [...prevGoals, goal]);
     
     // Update the appropriate score

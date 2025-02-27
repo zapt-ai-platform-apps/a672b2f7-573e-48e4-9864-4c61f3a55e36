@@ -1,4 +1,4 @@
-import { formatTime } from '../../../models/timeUtils';
+import { formatTime } from '../../../shared/models/timeFormatters';
 import { Player, Goal, GameSummaryProps } from '../types';
 
 export function createGameSummary(gameState: GameSummaryProps): string {
