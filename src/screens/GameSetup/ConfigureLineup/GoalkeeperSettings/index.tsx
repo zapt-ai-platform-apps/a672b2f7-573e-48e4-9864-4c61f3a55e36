@@ -2,6 +2,7 @@ import React from "react";
 import { GoalkeeperSettingsProps } from "../GoalkeeperTypes";
 import GoalkeeperSelector from "../GoalkeeperSelector";
 import GKPlaytimeToggle from "./GKPlaytimeToggle";
+import { Player } from "../../../../types/GameTypes"; // Import the correct Player type
 
 export default function GoalkeeperSettings({
   startingPlayers,

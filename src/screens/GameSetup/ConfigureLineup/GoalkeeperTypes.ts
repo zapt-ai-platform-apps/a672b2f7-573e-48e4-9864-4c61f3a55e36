@@ -1,10 +1,7 @@
-export interface Player {
-  id: string;
-  name: string;
-  isGoalkeeper?: boolean;
-  isStartingPlayer?: boolean;
-  [key: string]: any;
-}
+import { Player as GamePlayer, Position } from '../../../types/GameTypes';
+
+// Update the Player interface to extend from GamePlayer
+export type Player = GamePlayer;
 
 export interface GoalkeeperSelectorProps {
   players: Player[];
