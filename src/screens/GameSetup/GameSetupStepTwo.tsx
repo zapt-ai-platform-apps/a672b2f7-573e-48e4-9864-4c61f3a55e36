@@ -9,7 +9,7 @@ import StartingLineup from './ConfigureLineup/StartingLineup';
 export function GameSetupStepTwo(): JSX.Element {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
-  const { matchSquad, setPlayerData, setGoalkeeper } = useStateContext();
+  const { matchSquad, setPlayerData, setGoalkeeper, handleStartGame: contextHandleStartGame } = useStateContext();
   const [goalkeeperPlayer, setGoalkeeperPlayer] = useState<any>(null);
   const [confirmedGoalkeeper, setConfirmedGoalkeeper] = useState<boolean>(false);
   const [includeGKPlaytime, setIncludeGKPlaytime] = useState<boolean>(true);
@@ -89,6 +89,11 @@ export function GameSetupStepTwo(): JSX.Element {
       
       // Update player data in state context
       setPlayerData(updatedSquad);
+
+      // Use the handleStartGame from context if available
+      if (contextHandleStartGame) {
+        contextHandleStartGame(updatedSquad, goalkeeperPlayer, includeGKPlaytime);
+      }
       
       // All checks passed, proceed to game management
       navigate('/game-management');
@@ -104,7 +109,7 @@ export function GameSetupStepTwo(): JSX.Element {
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4">
-        <h1 className="text-4xl font-bold text-white mb-6 bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold text-white mb-6">
           Game Setup: Configuration
         </h1>
         <div className="max-w-md w-full bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg">
@@ -131,7 +136,7 @@ export function GameSetupStepTwo(): JSX.Element {
       
       <div className="container mx-auto max-w-4xl px-4">
         <h1 
-          className="text-3xl font-bold text-white mb-6 bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent"
+          className="text-3xl font-bold text-white mb-6"
           data-testid="configure-lineup-title"
         >
           Game Setup: Configuration
