@@ -23,7 +23,7 @@ export const initializeMatchSquadPlayers = (
     return {
       id: player.id,
       name: player.name,
-      number: player.number,
+      number: player.number || '',
       isInMatchSquad: existingPlayer ? existingPlayer.isInMatchSquad : false,
       totalPlayTime: player.totalPlayTime || 0,
       isOnField: player.isOnField || false,

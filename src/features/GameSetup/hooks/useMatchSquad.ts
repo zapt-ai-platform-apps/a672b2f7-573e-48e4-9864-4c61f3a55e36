@@ -4,9 +4,18 @@ import { ExtendedPlayer } from '../types/ExtendedPlayer';
 import { initializeMatchSquadPlayers } from '../utils/matchSquadUtils';
 import { Player, Squad } from '../../../types/GameTypes';
 
-// Type guard to check if an object is a Squad
-const isSquad = (obj: any): obj is Squad => {
-  return obj && typeof obj === 'object' && 'id' in obj && 'name' in obj && 'players' in obj;
+/**
+ * Type guard to check if an object is a Squad
+ */
+const isSquad = (obj: unknown): obj is Squad => {
+  return Boolean(
+    obj && 
+    typeof obj === 'object' && 
+    obj !== null &&
+    'id' in obj && 
+    'name' in obj && 
+    'players' in obj
+  );
 };
 
 export default function useMatchSquad() {
@@ -15,39 +24,56 @@ export default function useMatchSquad() {
 
   useEffect(() => {
     console.log('selectedSquad in useMatchSquad:', selectedSquad);
-    if (selectedSquad) {
-      try {
-        // Handle case where selectedSquad might be stored as a string
-        let processedSquad = selectedSquad;
-        if (typeof selectedSquad === 'string') {
-          try {
-            processedSquad = JSON.parse(selectedSquad);
-          } catch (e) {
-            console.error('Failed to parse selectedSquad as JSON:', e);
-          }
+    if (!selectedSquad) {
+      setMatchSquadPlayers([]);
+      return;
+    }
+
+    try {
+      // Handle different possible types of selectedSquad
+      let processedSquad: Squad | Player[] | unknown = selectedSquad;
+      
+      // Handle case where selectedSquad might be stored as a string
+      if (typeof selectedSquad === 'string') {
+        try {
+          processedSquad = JSON.parse(selectedSquad);
+        } catch (e) {
+          console.error('Failed to parse selectedSquad as JSON:', e);
+          setMatchSquadPlayers([]);
+          return;
         }
-        
-        // Determine if we have a Squad object or an array of Players
-        const squad: Squad = isSquad(processedSquad) 
-          ? processedSquad 
-          : {
-              id: 'temp-squad-id',
-              name: 'Temporary Squad',
-              players: Array.isArray(processedSquad) 
-                ? processedSquad 
-                : (processedSquad && typeof processedSquad === 'object' && 'players' in processedSquad 
-                  ? processedSquad.players 
-                  : [])
-            };
-        
-        const initialPlayers = initializeMatchSquadPlayers(squad, matchSquad as ExtendedPlayer[]);
-        setMatchSquadPlayers(initialPlayers);
-      } catch (error) {
-        console.error('Error processing selectedSquad:', error);
-        setMatchSquadPlayers([]);
       }
-    } else {
-      // Ensure we always have an empty array if no squad is selected
+      
+      // Initialize players based on the structure of processedSquad
+      let playersToUse: Player[] = [];
+      
+      if (isSquad(processedSquad)) {
+        // It's a Squad object with players property
+        playersToUse = processedSquad.players;
+      } else if (Array.isArray(processedSquad)) {
+        // It's an array of players directly
+        playersToUse = processedSquad;
+      } else if (
+        processedSquad && 
+        typeof processedSquad === 'object' && 
+        'players' in processedSquad && 
+        Array.isArray(processedSquad.players)
+      ) {
+        // It has a players property that's an array
+        playersToUse = processedSquad.players;
+      }
+      
+      // Create a temporary squad object to pass to initializer
+      const squad: Squad = {
+        id: 'temp-squad-id',
+        name: 'Temporary Squad',
+        players: playersToUse
+      };
+      
+      const initialPlayers = initializeMatchSquadPlayers(squad, matchSquad as ExtendedPlayer[]);
+      setMatchSquadPlayers(initialPlayers);
+    } catch (error) {
+      console.error('Error processing selectedSquad:', error);
       setMatchSquadPlayers([]);
     }
   }, [selectedSquad, matchSquad]);
