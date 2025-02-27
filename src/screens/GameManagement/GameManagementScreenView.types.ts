@@ -19,9 +19,9 @@ export interface GameManagementScreenViewProps {
   setShowGoalModal?: (show: boolean) => void;
   handlePlayerClick?: (player: Player) => void;
   goals?: Goal[];
-  setGoals?: (goals: Goal[]) => void;
-  setOurScore?: (score: number) => void;
-  setOpponentScore?: (score: number) => void;
+  setGoals?: React.Dispatch<React.SetStateAction<Goal[]>>;
+  setOurScore?: React.Dispatch<React.SetStateAction<number>>;
+  setOpponentScore?: React.Dispatch<React.SetStateAction<number>>;
   
   // Additional props for GameManagementScreenViewContent
   showAddPlayerModal?: boolean;
@@ -36,4 +36,18 @@ export interface GameManagementScreenViewProps {
   setSelectedGoalkeeper?: (id: string | null) => void;
   handleIncreasePlayers?: () => void;
   handleDecreasePlayers?: () => void;
+  timerControls?: {
+    isRunning: boolean;
+    timeElapsed: number;
+    toggleTimer: () => boolean;
+    startTimer: () => void;
+    stopTimer: () => void;
+    resetTimer: () => void;
+    getTimeElapsed: () => number;
+    gameIntervals: Array<{ startTime: number; endTime?: number }>;
+    startGame: () => void;
+    pauseGame: () => void;
+    now: number;
+    startUITimer: () => void;
+  };
 }

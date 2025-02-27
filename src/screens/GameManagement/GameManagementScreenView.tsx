@@ -6,16 +6,23 @@ import GameManagementScreenViewContent from './GameManagementScreenViewContent';
 import BackButton from './BackButton';
 import { motion } from 'framer-motion';
 import useGameManagementLogic from '../../features/GameManagement/hooks/useGameManagementLogic';
+import { GameManagementScreenViewProps } from './GameManagementScreenView.types';
 
-export default function GameManagementScreenView(): JSX.Element {
+export default function GameManagementScreenView(props: GameManagementScreenViewProps): JSX.Element {
   const navigate = useNavigate();
+  const { setPlayerData } = useStateContext();
+  
   const { 
-    playerData, setPlayerData,
-    goals, setGoals,
-    ourScore, setOurScore,
-    opponentScore, setOpponentScore,
-    timerControls
-  } = useStateContext();
+    playerData, 
+    isRunning,
+    goals, 
+    ourScore, 
+    opponentScore,
+    timerControls,
+    onFieldPlayers = playerData?.filter(p => p.isOnField) || [],
+    offFieldPlayers = playerData?.filter(p => !p.isOnField) || [],
+    getTotalPlayTime = (player) => player.totalPlayTime || 0,
+  } = props;
   
   const [showGoalModal, setShowGoalModal] = useState(false);
   const [showAddPlayerModal, setShowAddPlayerModal] = useState(false);
@@ -41,29 +48,22 @@ export default function GameManagementScreenView(): JSX.Element {
 
   // Wrapper functions to fix type mismatches
   const handleRemoveLastGoalWrapper = () => {
-    if (handleRemoveLastGoal && goals) {
-      handleRemoveLastGoal(goals, ourScore, opponentScore, setGoals, setOurScore, setOpponentScore);
+    if (handleRemoveLastGoal && goals && props.setGoals && props.setOurScore && props.setOpponentScore) {
+      handleRemoveLastGoal(goals, ourScore, opponentScore, props.setGoals, props.setOurScore, props.setOpponentScore);
     }
   };
 
   const handleIncreasePlayersWrapper = () => {
-    if (handleIncreasePlayers) {
+    if (handleIncreasePlayers && playerData) {
       handleIncreasePlayers(playerData, setPlayerData);
     }
   };
 
   const handleDecreasePlayersWrapper = () => {
-    if (handleDecreasePlayers) {
+    if (handleDecreasePlayers && playerData) {
       handleDecreasePlayers(playerData, setPlayerData);
     }
   };
-
-  // Calculate on-field and off-field players for passing to components
-  const onFieldPlayers = playerData.filter(player => player.isOnField);
-  const offFieldPlayers = playerData.filter(player => !player.isOnField);
-
-  // Simple function to get total play time for a player
-  const getTotalPlayTime = (player: any) => player.totalPlayTime || 0;
 
   return (
     <motion.div
@@ -82,7 +82,7 @@ export default function GameManagementScreenView(): JSX.Element {
       <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-6 shadow-lg mb-6">
         <GameManagementMainContent 
           playerData={playerData}
-          isRunning={timerControls.isRunning}
+          isRunning={isRunning}
           onFieldPlayers={onFieldPlayers}
           offFieldPlayers={offFieldPlayers}
           getTotalPlayTime={getTotalPlayTime}
@@ -95,11 +95,11 @@ export default function GameManagementScreenView(): JSX.Element {
       
       <GameManagementScreenViewContent
         playerData={playerData}
-        isRunning={timerControls.isRunning}
+        isRunning={isRunning}
         ourScore={ourScore}
         opponentScore={opponentScore}
-        getTimeElapsed={timerControls.getTimeElapsed}
-        toggleTimer={timerControls.toggleTimer}
+        getTimeElapsed={props.getTimeElapsed}
+        toggleTimer={props.toggleTimer}
         handleEndGame={handleEndGame}
         showEndGameConfirm={showConfirmEndModal}
         confirmEndGame={() => {
@@ -107,18 +107,17 @@ export default function GameManagementScreenView(): JSX.Element {
           handleEndGame();
         }}
         cancelEndGame={() => setShowConfirmEndModal(false)}
-        recordGoal={(team, scorer, time) => {
-          // Implement recordGoal functionality here or pass it from context
-          console.log('Recording goal', team, scorer, time);
-        }}
+        recordGoal={props.recordGoal}
         onFieldPlayers={onFieldPlayers}
         offFieldPlayers={offFieldPlayers}
         getTotalPlayTime={getTotalPlayTime}
         showGoalModal={showGoalModal}
         setShowGoalModal={setShowGoalModal}
-        handlePlayerClick={() => {
-          // Implement player click functionality if needed
-        }}
+        handlePlayerClick={props.handlePlayerClick}
+        goals={goals}
+        setGoals={props.setGoals}
+        setOurScore={props.setOurScore}
+        setOpponentScore={props.setOpponentScore}
         showAddPlayerModal={showAddPlayerModal}
         setShowAddPlayerModal={setShowAddPlayerModal}
         showConfirmEndModal={showConfirmEndModal}

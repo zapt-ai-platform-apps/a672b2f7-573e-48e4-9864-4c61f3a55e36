@@ -1,40 +1,21 @@
 import React from 'react';
-import SubstitutionPanel from '../../features/GameManagement/components/SubstitutionPanel';
-import PitchVisualization from '../../features/GameManagement/components/PitchVisualization';
-import { GameActions } from '../../features/GameManagement/components/GameActions';
-import { timeFormatter } from './utils/timeFormatter';
-import { Player, Goal } from '../../types/GameTypes';
-import AssignGoalkeeperModal from '../../features/GameManagement/modals/AssignGoalkeeperModal';
-import { useGameManagementLogic } from '../../features/GameManagement/hooks';
+import { Player } from '../../types/GameTypes';
 
-interface MainContentProps {
+interface GameManagementMainContentProps {
   playerData: Player[];
   isRunning: boolean;
   onFieldPlayers: Player[];
   offFieldPlayers: Player[];
   getTotalPlayTime: (player: Player) => number;
-  handlePlayerClick?: (player: Player) => void;
-  setShowGoalModal: (value: boolean) => void;
+  setShowGoalModal: (show: boolean) => void;
   timerControls: {
-    now: number;
-    startUITimer: () => void;
-    startTimer: () => void;
-    stopTimer: () => void;
-    resetTimer: () => void;
-    getTimeElapsed: () => number;
-    timeElapsed: number;
-    gameIntervals: Array<{ startTime: number; endTime?: number }>;
     isRunning: boolean;
-    startGame: () => void;
-    pauseGame: () => void;
+    timeElapsed: number;
     toggleTimer: () => boolean;
+    // Include other properties as needed
   };
   ourScore: number;
   opponentScore: number;
-  goals?: Goal[];
-  setGoals?: (goals: Goal[]) => void;
-  setOurScore?: (score: number) => void;
-  setOpponentScore?: (score: number) => void;
 }
 
 export default function GameManagementMainContent({
@@ -46,97 +27,55 @@ export default function GameManagementMainContent({
   setShowGoalModal,
   timerControls,
   ourScore,
-  opponentScore,
-  goals = [],
-  setGoals = () => {},
-  setOurScore = () => {},
-  setOpponentScore = () => {}
-}: MainContentProps): JSX.Element {
-  const {
-    selectedSubOffPlayer,
-    selectedSubOnPlayer,
-    showSubstitutionConfirmModal,
-    handleSubOffPlayerClick,
-    handleSubOnPlayerClick,
-    confirmSubstitution,
-    cancelSubstitution,
-    assignGoalkeeper,
-    handleRemoveLastGoal,
-    handleIncreasePlayers,
-    handleDecreasePlayers,
-    showAssignGkModal,
-    setShowAssignGkModal,
-    handleAssignGkConfirm,
-    currentGoalkeeper,
-    setShowAddPlayerModal
-  } = useGameManagementLogic();
-
-  // Only render players who are on the field for the pitch visualization
-  const playersOnField = playerData.filter(player => player.isOnField);
-
-  // Create a wrapper function that doesn't require parameters
-  const handleRemoveLastGoalWrapper = () => {
-    handleRemoveLastGoal(goals, ourScore, opponentScore, setGoals, setOurScore, setOpponentScore);
-  };
-
-  // Create wrapper functions for player operations
-  const handleIncreasePlayersWrapper = () => {
-    handleIncreasePlayers(playerData, (updatedPlayers) => {
-      // You might need to update this based on your app's state management
-    });
-  };
-
-  const handleDecreasePlayersWrapper = () => {
-    handleDecreasePlayers(playerData, (updatedPlayers) => {
-      // You might need to update this based on your app's state management
-    });
-  };
-
-  // Function to handle assigning goalkeeper that extracts the ID
-  const handleAssignGoalkeeperConfirm = (player: Player) => {
-    // Fixed: Pass player ID string instead of the whole player object
-    handleAssignGkConfirm(player.id as string);
-  };
-
+  opponentScore
+}: GameManagementMainContentProps): JSX.Element {
   return (
-    <div className="flex flex-col space-y-8 mt-8">
-      <PitchVisualization players={playersOnField} />
-
-      <h2 className="text-2xl font-bold mb-4 text-white">
-        Substitutions
-      </h2>
-      <SubstitutionPanel
-        onFieldPlayers={onFieldPlayers}
-        offFieldPlayers={offFieldPlayers}
-        timeFormatter={timeFormatter}
-        getTotalPlayTime={getTotalPlayTime}
-        selectedSubOffPlayer={selectedSubOffPlayer}
-        selectedSubOnPlayer={selectedSubOnPlayer}
-        handleSubOffPlayerClick={handleSubOffPlayerClick}
-        handleSubOnPlayerClick={handleSubOnPlayerClick}
-        confirmSubstitution={confirmSubstitution}
-        cancelSubstitution={cancelSubstitution}
-        showSubstitutionConfirmModal={showSubstitutionConfirmModal}
-        isRunning={isRunning}
-      />
-
-      <GameActions
-        assignGoalkeeper={assignGoalkeeper}
-        handleRemoveLastGoal={handleRemoveLastGoalWrapper}
-        setShowGoalModal={setShowGoalModal}
-        setShowAddPlayerModal={setShowAddPlayerModal}
-        handleIncreasePlayers={handleIncreasePlayersWrapper}
-        handleDecreasePlayers={handleDecreasePlayersWrapper}
-        isRunning={isRunning}
-      />
-
-      <AssignGoalkeeperModal
-        isOpen={showAssignGkModal}
-        onClose={() => setShowAssignGkModal(false)}
-        players={playerData}
-        onAssign={(playerId: string) => handleAssignGkConfirm(playerId)}
-        currentGoalkeeper={currentGoalkeeper}
-      />
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="bg-white/5 rounded-lg p-4 shadow">
+        <h2 className="text-xl font-semibold mb-3 text-white">Game Status</h2>
+        <div className="flex justify-between items-center mb-4">
+          <div className="text-center">
+            <p className="text-sm text-gray-300">Our Team</p>
+            <p className="text-3xl font-bold text-white">{ourScore}</p>
+          </div>
+          <div className="text-center">
+            <p className="text-sm text-gray-300">Time</p>
+            <p className="text-2xl font-bold text-white">
+              {Math.floor(timerControls.timeElapsed / 60)}:{(timerControls.timeElapsed % 60).toString().padStart(2, '0')}
+            </p>
+          </div>
+          <div className="text-center">
+            <p className="text-sm text-gray-300">Opponent</p>
+            <p className="text-3xl font-bold text-white">{opponentScore}</p>
+          </div>
+        </div>
+        <div className="flex justify-center">
+          <button
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded cursor-pointer transition"
+            onClick={() => timerControls.toggleTimer()}
+          >
+            {timerControls.isRunning ? 'Pause Game' : 'Resume Game'}
+          </button>
+        </div>
+      </div>
+      
+      <div className="bg-white/5 rounded-lg p-4 shadow">
+        <h2 className="text-xl font-semibold mb-3 text-white">Quick Actions</h2>
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded cursor-pointer transition"
+            onClick={() => setShowGoalModal(true)}
+          >
+            Record Goal
+          </button>
+          <button
+            className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 rounded cursor-pointer transition"
+            onClick={() => {/* Add substitution functionality */}}
+          >
+            Make Substitution
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

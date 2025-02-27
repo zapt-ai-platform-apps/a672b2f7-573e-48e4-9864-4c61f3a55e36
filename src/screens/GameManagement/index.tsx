@@ -60,6 +60,7 @@ export default function GameManagementScreen(): JSX.Element {
       setGoals={setGoals}
       setOurScore={setOurScore}
       setOpponentScore={setOpponentScore}
+      timerControls={timerControls}
     />
   );
 }
