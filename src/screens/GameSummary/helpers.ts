@@ -14,6 +14,8 @@ export function getPlayersWithDefaults(players: Player[]): Player[] {
     totalPlayTime: player.totalPlayTime || 0,
     playIntervals: player.playIntervals || [],
     position: player.position || { x: 0, y: 0 },
+    isInMatchSquad: player.isInMatchSquad || false,     // Added missing property
+    isInStartingLineup: player.isInStartingLineup || false, // Added missing property
     isStartingPlayer: player.isStartingPlayer || false
   }));
 }

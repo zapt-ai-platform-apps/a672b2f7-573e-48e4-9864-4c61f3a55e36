@@ -10,7 +10,10 @@ export function ensurePlayerProperties(player: any, index: number): Player {
       totalPlayTime: 0,
       isOnField: false,
       isGoalkeeper: false,
-      position: defaultPosition
+      position: defaultPosition,
+      isInMatchSquad: false,     // Added missing property
+      isInStartingLineup: false, // Added missing property
+      playIntervals: []          // Added missing property
     };
   }
   
@@ -21,6 +24,9 @@ export function ensurePlayerProperties(player: any, index: number): Player {
     isOnField: player.isOnField || false,
     isGoalkeeper: player.isGoalkeeper || false,
     position: player.position || defaultPosition,
+    isInMatchSquad: player.isInMatchSquad || false,     // Added missing property
+    isInStartingLineup: player.isInStartingLineup || false, // Added missing property
+    playIntervals: player.playIntervals || [],          // Added missing property
     ...player
   };
 }

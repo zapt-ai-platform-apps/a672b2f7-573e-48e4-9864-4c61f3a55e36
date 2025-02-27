@@ -93,10 +93,9 @@ const SquadManagementScreen: React.FC = () => {
       
       <SquadListView 
         squads={squads}
-        onAddSquad={handleAddSquad}
+        onAddNewSquad={handleAddSquad}  // Changed from onAddSquad to onAddNewSquad
         onEditSquad={handleEditSquad}
         onSelectSquad={handleSelectSquad}
-        // Remove the onCancel prop that's causing the type error
       />
     </div>
   );

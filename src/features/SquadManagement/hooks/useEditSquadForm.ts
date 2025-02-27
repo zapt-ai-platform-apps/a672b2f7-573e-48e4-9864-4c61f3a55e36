@@ -116,18 +116,11 @@ export function useEditSquadForm(squadId: number) {
       await updateSquad(apiSquad.id, apiSquad);
       
       // Pass the players array directly to the state context, not as a JSON string
-      setSelectedSquad((prev: any) => {
-        // If prev is an array of Player, we should return the updated players array
-        if (Array.isArray(prev)) {
-          return players;
-        }
-        // If prev is a Squad object, we need to return the full updated squad with players as array
-        return {
-          ...squad,
-          name: squadName,
-          players // Use the players array, not the JSON string
-        };
-      });
+      setSelectedSquad({
+        ...squad,
+        name: squadName,
+        players // Use the players array, not the JSON string
+      } as Squad); // Type assertion to clarify this is a Squad
       
       navigate('/squads');
     } catch (err) {
