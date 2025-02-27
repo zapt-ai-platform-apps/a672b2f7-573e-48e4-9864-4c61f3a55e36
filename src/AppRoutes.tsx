@@ -1,80 +1,71 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import LandingScreen from './screens/Landing';
-import { ProtectedRoute } from './components/ProtectedRoute';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute';
 import SignIn from './components/SignIn';
-import GameManagement from './screens/GameManagement';
-import SquadManagementScreen from './screens/SquadManagement';
-import GameSetupParticipantsScreen from './screens/GameSetup/SelectParticipants';
-import GameSummary from './screens/GameSummary';
-import GameSetupStepTwo from './screens/GameSetup/GameSetupStepTwo';
-import StartingLineup from './screens/GameSetup/ConfigureLineup/StartingLineup';
+import NavBar from './components/navigation/NavBar';
+import LoadingScreen from './components/Loading';
+import { AnimatePresence } from 'framer-motion';
 
-const AppRoutes = () => {
+// Lazy-loaded screens
+const Landing = React.lazy(() => import('./screens/Landing'));
+const SquadManagement = React.lazy(() => import('./screens/SquadManagement'));
+const GameSetupParticipants = React.lazy(() => import('./screens/GameSetup/SelectParticipants'));
+const GameSetupStepTwo = React.lazy(() => import('./screens/GameSetup/GameSetupStepTwo'));
+const GameManagement = React.lazy(() => import('./screens/GameManagement'));
+const GameSummary = React.lazy(() => import('./screens/GameSummary'));
+
+/**
+ * Main routing component for the application
+ */
+const AppRoutes: React.FC = () => {
+  const location = useLocation();
+
   return (
-    <Routes>
-      {/* Public routes */}
-      <Route path="/" element={<LandingScreen />} />
-      <Route path="/login" element={<SignIn />} />
-      
-      {/* Protected routes */}
-      <Route 
-        path="/squads" 
-        element={
-          <ProtectedRoute>
-            <SquadManagementScreen />
-          </ProtectedRoute>
-        } 
-      />
-      
-      <Route 
-        path="/setup/participants" 
-        element={
-          <ProtectedRoute>
-            <GameSetupParticipantsScreen />
-          </ProtectedRoute>
-        } 
-      />
-      
-      <Route 
-        path="/setup/lineup" 
-        element={
-          <ProtectedRoute>
-            <StartingLineup />
-          </ProtectedRoute>
-        } 
-      />
-      
-      <Route 
-        path="/setup/configuration" 
-        element={
-          <ProtectedRoute>
-            <GameSetupStepTwo />
-          </ProtectedRoute>
-        } 
-      />
-      
-      <Route 
-        path="/game-management" 
-        element={
-          <ProtectedRoute>
-            <GameManagement />
-          </ProtectedRoute>
-        } 
-      />
-      
-      <Route 
-        path="/game-summary" 
-        element={
-          <ProtectedRoute>
-            <GameSummary />
-          </ProtectedRoute>
-        } 
-      />
-      
-      {/* Fallback route */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <>
+      <NavBar />
+      <main className="container mx-auto px-4 pt-20 pb-16 h-full">
+        <React.Suspense fallback={<LoadingScreen />}>
+          <AnimatePresence mode="wait">
+            <Routes 
+              location={location} 
+              key={location.pathname}
+              future={{ v7_fetcherPersist: true, v7_normalizeFormMethod: true }}
+            >
+              {/* Public Routes */}
+              <Route path="/" element={<Landing />} />
+              <Route path="/sign-in" element={<SignIn />} />
+              
+              {/* Protected Routes */}
+              <Route path="/squads" element={
+                <ProtectedRoute>
+                  <SquadManagement />
+                </ProtectedRoute>
+              } />
+              <Route path="/game-setup" element={
+                <ProtectedRoute>
+                  <GameSetupParticipants />
+                </ProtectedRoute>
+              } />
+              <Route path="/game-setup/lineup" element={
+                <ProtectedRoute>
+                  <GameSetupStepTwo />
+                </ProtectedRoute>
+              } />
+              <Route path="/game-management" element={
+                <ProtectedRoute>
+                  <GameManagement />
+                </ProtectedRoute>
+              } />
+              <Route path="/game-summary" element={
+                <ProtectedRoute>
+                  <GameSummary />
+                </ProtectedRoute>
+              } />
+            </Routes>
+          </AnimatePresence>
+        </React.Suspense>
+      </main>
+    </>
   );
 };
 

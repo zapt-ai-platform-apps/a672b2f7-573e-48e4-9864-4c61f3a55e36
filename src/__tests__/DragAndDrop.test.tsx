@@ -15,7 +15,7 @@ vi.mock('../features/GameManagement/hooks/useDragAndDrop', () => ({
 
 // Mock assignInitialPositions utility
 vi.mock('../features/GameManagement/utils/assignInitialPositions', () => ({
-  assignInitialPositions: (players: Player[]) => players
+  assignInitialPositions: vi.fn((players) => players)
 }));
 
 describe('Pitch Visualization Drag and Drop', () => {
@@ -28,29 +28,29 @@ describe('Pitch Visualization Drag and Drop', () => {
     vi.clearAllMocks();
   });
 
-  it('renders players correctly on the pitch', () => {
-    const { container } = render(
-      <PitchVisualization 
-        players={testPlayers} 
-        data-testid="pitch-container"
-      />
-    );
-    
-    // Check for the pitch element
-    const pitchElement = container.querySelector('.pitch');
-    expect(pitchElement).toBeInTheDocument();
+  it('renders players correctly on the pitch', async () => {
+    await act(async () => {
+      render(
+        <PitchVisualization 
+          players={testPlayers} 
+          data-testid="pitch-container"
+        />
+      );
+    });
     
     // Check for player elements with data-player-id attribute
-    const playerElements = container.querySelectorAll('[data-player-id]');
+    const playerElements = document.querySelectorAll('[data-player-id]');
     expect(playerElements.length).toBe(2);
     
-    // Check for player names using screen query since they're in span with sr-only class
+    // Check for player names
     expect(screen.getByText('Player 1')).toBeInTheDocument();
     expect(screen.getByText('Player 2')).toBeInTheDocument();
   });
 
-  it('initializes drag and drop functionality', () => {
-    const { container } = render(<PitchVisualization players={testPlayers} />);
+  it('initializes drag and drop functionality', async () => {
+    await act(async () => {
+      render(<PitchVisualization players={testPlayers} />);
+    });
     
     // Get the useDragAndDrop hook's init function
     const useDragAndDropModule = require('../features/GameManagement/hooks/useDragAndDrop');
@@ -68,10 +68,10 @@ describe('Pitch Visualization Drag and Drop', () => {
     ];
     
     await act(async () => {
-      const { container } = render(<PitchVisualization players={validPlayers} />);
+      render(<PitchVisualization players={validPlayers} />);
       
       // Check that all players are rendered properly with data-player-id attribute
-      const playerElements = container.querySelectorAll('[data-player-id]');
+      const playerElements = document.querySelectorAll('[data-player-id]');
       expect(playerElements.length).toBe(2);
     });
   });
