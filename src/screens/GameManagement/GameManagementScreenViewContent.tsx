@@ -6,7 +6,8 @@ import { timeFormatter } from './utils/timeFormatter';
 import PitchVisualization from '../../features/GameManagement/components/PitchVisualization';
 import PlayersSection from './components/PlayersSection';
 import RecordGoalButton from './components/RecordGoalButton';
-import { GoalScoredModal } from '../../features/GameManagement/modals/GoalScoredModal';
+import GoalScoredModal from '../../features/GameManagement/modals/GoalScoredModal';
+import { GoalData } from '../../types/GameTypes';
 
 export default function GameManagementScreenViewContent({
   playerData,
@@ -81,14 +82,14 @@ export default function GameManagementScreenViewContent({
       </div>
 
       {/* Goal Modal */}
-      {showGoalModal && recordGoal && (
+      {showGoalModal && (
         <GoalScoredModal
           onClose={() => setShowGoalModal(false)}
-          onScoreGoal={(goal) => {
+          onScoreGoal={(goal: GoalData) => {
             if (recordGoal) {
               recordGoal(goal, setGoals, setOurScore, setOpponentScore);
+              setShowGoalModal(false);
             }
-            setShowGoalModal(false);
           }}
           playerList={playerData || []}
           currentGoals={goals || []}

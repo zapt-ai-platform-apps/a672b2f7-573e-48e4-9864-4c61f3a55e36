@@ -1,6 +1,15 @@
 import { DragState } from '../hooks/useDragAndDrop';
 
-export function pointerDown(e: PointerEvent, dragState: DragState, playerId?: string): void {
+// Create an interface that matches the actual structure used in this file
+interface DragHandlerState {
+  dragging: boolean;
+  target: HTMLElement | null;
+  offsetX: number;
+  offsetY: number;
+  playerId?: string;
+}
+
+export function pointerDown(e: PointerEvent, dragState: DragHandlerState, playerId?: string): void {
   // Identify the draggable target - should be a player element with data-player-id
   let target = e.target as HTMLElement;
   
@@ -52,7 +61,7 @@ export function pointerDown(e: PointerEvent, dragState: DragState, playerId?: st
   target.setPointerCapture(e.pointerId);
 }
 
-export function pointerMove(e: PointerEvent, dragState: DragState): void {
+export function pointerMove(e: PointerEvent, dragState: DragHandlerState): void {
   if (!dragState.dragging || !dragState.target) return;
   
   const target = dragState.target;
@@ -93,7 +102,7 @@ export function pointerMove(e: PointerEvent, dragState: DragState): void {
   pitchElement.dispatchEvent(updateEvent);
 }
 
-export function pointerUp(e: PointerEvent, dragState: DragState): void {
+export function pointerUp(e: PointerEvent, dragState: DragHandlerState): void {
   if (!dragState.dragging || !dragState.target) return;
   
   const target = dragState.target;

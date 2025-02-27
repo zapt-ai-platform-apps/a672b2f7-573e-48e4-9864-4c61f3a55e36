@@ -1,64 +1,108 @@
-export interface Position {
-  x: number;
-  y: number;
-}
-
-export interface Player {
-  id: string;
-  name: string;
-  number?: string;
-  totalPlayTime: number;
-  playTime?: number;
-  lastStart?: number;
-  isOnField: boolean;
-  isGoalkeeper: boolean;
-  isInMatchSquad?: boolean;
-  isStartingPlayer?: boolean;
-  isInStartingLineup?: boolean;
-  // Position is now a consistent object type
-  position: Position;
-  // Add missing properties needed by Game Summary
-  status?: string;
-  minutesPlayed?: number;
-  playIntervals?: Array<{ 
-    start: number; 
-    end?: number;
-    startTime?: number;
-    endTime?: number | null;
-    isGoalkeeper?: boolean;
-  }>;
-  // Adding the missing selected property to fix TypeScript errors
-  selected?: boolean;
-}
+import { Player } from '../shared/models/player';
 
 export interface Goal {
+  id: string;
+  minute: number;
+  scorer: string;
   team: 'our' | 'opponent';
-  scorerName: string;
-  time: number;
-  isOpponentGoal?: boolean;
+  scorerId?: string;
+}
+
+export interface GoalData {
+  id: string;
+  team: 'our' | 'opponent';
+  minute: number;
+  scorer: string;
+  timestamp: number;
+  scorerId?: string;
 }
 
 export interface GameState {
-  playerData: Player[];
+  isActive: boolean;
+  isPaused: boolean;
+  startTime: number;
+  elapsedTime: number;
   ourScore: number;
   opponentScore: number;
-  goals: Goal[];
-  includeGKPlaytime: boolean;
-  showAddSubPanel: boolean;
-  goalkeeper?: string;
-  selectedSquad?: Squad;
+  currentMinute: number;
+  players: Player[];
+  goals: GoalData[];
+  substitutions: Substitution[];
+  isGameStarted: boolean;
+  isGameFinished: boolean;
+  intervals: TimeInterval[];
+  currentInterval: TimeInterval | null;
 }
 
-export interface Squad {
+export interface Substitution {
+  id: string;
+  playerInId: string;
+  playerOutId: string;
+  minute: number;
+  timestamp: number;
+}
+
+export interface TimeInterval {
+  id: string;
+  startTime: number;
+  endTime: number | null;
+  duration: number;
+}
+
+export interface GameConfig {
+  matchLength: number;
+  numberOfPlayers: number;
+  rotationInterval: number;
+  goalkeeperId?: string;
+  manualRotation: boolean;
+  enableRotation: boolean;
+  enableGoalkeeper: boolean;
+  goalkeepersPlayAll: boolean;
+}
+
+export interface GameSetupState {
+  squad: Player[];
+  participants: Player[];
+  nonParticipants: Player[];
+  matchLength: number;
+  numberOfPlayers: number;
+  rotationInterval: number;
+  goalkeeperId?: string;
+  manualRotation: boolean;
+  enableRotation: boolean;
+  enableGoalkeeper: boolean;
+  goalkeepersPlayAll: boolean;
+}
+
+export interface TimerControls {
+  start: () => void;
+  pause: () => void;
+  reset: () => void;
+  addTime: (seconds: number) => void;
+  getElapsedSeconds: () => number;
+  isRunning: () => boolean;
+}
+
+export interface GameSummary {
+  duration: number;
+  ourScore: number;
+  opponentScore: number;
+  result: 'win' | 'loss' | 'draw';
+  players: PlayerSummary[];
+  goals: GoalData[];
+  substitutions: Substitution[];
+}
+
+export interface PlayerSummary {
   id: string;
   name: string;
-  players: Player[];
-  createdAt?: string;
-  updatedAt?: string;
-  userId?: string;
+  totalPlaytime: number;
+  playtimePercentage: number;
+  goals: number;
 }
 
-// Add StateProviderProps interface that was missing
-export interface StateProviderProps {
-  children: React.ReactNode;
+export interface TimerState {
+  isRunning: boolean;
+  startTime: number | null;
+  elapsedTime: number;
 }

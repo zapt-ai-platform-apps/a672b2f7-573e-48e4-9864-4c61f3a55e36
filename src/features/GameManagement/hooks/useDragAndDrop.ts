@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 
-interface DragState {
+// Export the interface so it can be imported by other files
+export interface DragState {
   isDragging: boolean;
   currentElement: HTMLElement | null;
   offsetX: number;
