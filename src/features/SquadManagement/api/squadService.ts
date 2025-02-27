@@ -130,16 +130,18 @@ export async function updateSquad(squadId: number, squadData: Partial<Squad>): P
         // Store as JSON string in the copy
         squadDataToSend.players = JSON.stringify(playerNames) as unknown as Player[];
       } else if (typeof squadData.players === 'string') {
+        // Create a local variable with the string type to help TypeScript
+        const playersString = squadData.players;
+        
         // Check if it's already a JSON string
-        const isJsonString = typeof squadData.players === 'string' && 
-                            squadData.players.trim().startsWith('[') && 
-                            squadData.players.trim().endsWith(']');
+        const isJsonString = playersString.trim().startsWith('[') && 
+                            playersString.trim().endsWith(']');
                             
         if (isJsonString) {
-          squadDataToSend.players = squadData.players as unknown as Player[];
+          squadDataToSend.players = playersString as unknown as Player[];
         } else {
           // If it's not a JSON string, convert comma/newline-separated string to JSON
-          const playerList = parsePlayers(squadData.players, 'updateSquad');
+          const playerList = parsePlayers(playersString, 'updateSquad');
           squadDataToSend.players = JSON.stringify(playerList) as unknown as Player[];
         }
       }
