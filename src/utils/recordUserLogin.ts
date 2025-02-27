@@ -21,9 +21,12 @@ export const recordUserLogin = async (email?: string, environment?: EnvironmentT
       environment = import.meta.env.VITE_PUBLIC_APP_ENV as EnvironmentType;
     }
 
+    // Compute effective environment - map 'staging' to 'production'
+    const effectiveEnv = environment === 'staging' ? 'production' : environment;
+
     if (!hasLoggedInRecently(email)) {
-      console.log(`Recording login for user: ${email} in environment: ${environment}`);
-      await recordLoginFromClient(email, environment);
+      console.log(`Recording login for user: ${email} in environment: ${environment} (effective: ${effectiveEnv})`);
+      await recordLoginFromClient(email, effectiveEnv);
     } else {
       console.log(`User ${email} already logged in recently, skipping login record`);
     }
