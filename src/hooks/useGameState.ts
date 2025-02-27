@@ -57,3 +57,5 @@ export function useGameState() {
     resetGame
   };
 }
+
+export default useGameState;

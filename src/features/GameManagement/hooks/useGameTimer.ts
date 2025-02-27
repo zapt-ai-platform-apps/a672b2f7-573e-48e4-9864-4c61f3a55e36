@@ -143,6 +143,13 @@ const useGameTimer = () => {
     }
   }, [startTimer, stopTimer]);
 
+  /**
+   * Returns the current time elapsed
+   */
+  const getTimeElapsed = useCallback(() => {
+    return timeElapsed;
+  }, [timeElapsed]);
+
   return {
     timeElapsed,
     gameIntervals,
@@ -150,7 +157,8 @@ const useGameTimer = () => {
     stopTimer,
     resetTimer,
     toggleTimer,
-    isRunning: timerRef.current.timerId !== null
+    isRunning: timerRef.current.timerId !== null,
+    getTimeElapsed
   };
 };
 

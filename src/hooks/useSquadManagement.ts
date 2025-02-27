@@ -22,3 +22,5 @@ export function useSquadManagement() {
 
   return { selectedSquad, setSelectedSquad, matchSquad, setMatchSquad };
 }
+
+export default useSquadManagement;
