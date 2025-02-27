@@ -7,7 +7,7 @@ export function handlePlayerAdjustment(
 ): Player[] {
   return players.map(player => {
     if (String(player.id) === String(playerId)) {
-      const newPlayerStatus = {
+      const newPlayerStatus: Player = {
         ...player,
         isOnField: isAdding,
       };

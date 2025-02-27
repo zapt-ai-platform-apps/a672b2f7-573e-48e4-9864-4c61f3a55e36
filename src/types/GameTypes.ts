@@ -1,11 +1,44 @@
-import { Player } from '../shared/models/player';
+// Define and export all core game types in one place
+
+export interface Position {
+  x: number;
+  y: number;
+}
+
+export interface PlayInterval {
+  start: number;
+  end?: number;
+  isGoalkeeper?: boolean;
+  startTime?: number; // For backward compatibility
+  endTime?: number;   // For backward compatibility
+}
+
+export interface Player {
+  id: string;
+  name: string;
+  position: Position;
+  isOnField: boolean;
+  isGoalkeeper: boolean;
+  isInMatchSquad: boolean;
+  isInStartingLineup: boolean;
+  isStartingPlayer?: boolean;
+  playTime?: number;
+  lastStart?: number;
+  totalPlayTime: number;
+  playIntervals: PlayInterval[];
+  selected?: boolean;
+  status?: string;
+}
 
 export interface Goal {
-  id: string;
-  minute: number;
-  scorer: string;
   team: 'our' | 'opponent';
+  scorerName: string | null;
+  time: number;
+  id?: string;
+  minute?: number;
+  scorer?: string;
   scorerId?: string;
+  timestamp?: number;
 }
 
 export interface GoalData {
@@ -15,6 +48,14 @@ export interface GoalData {
   scorer: string;
   timestamp: number;
   scorerId?: string;
+}
+
+export interface Squad {
+  id: string;
+  name: string;
+  players: Player[];
+  createdAt?: string;
+  userId?: string;
 }
 
 export interface GameState {
@@ -43,10 +84,12 @@ export interface Substitution {
 }
 
 export interface TimeInterval {
-  id: string;
+  id?: string;
   startTime: number;
   endTime: number | null;
-  duration: number;
+  duration?: number;
+  start?: number; // For backward compatibility
+  end?: number;   // For backward compatibility
 }
 
 export interface GameConfig {

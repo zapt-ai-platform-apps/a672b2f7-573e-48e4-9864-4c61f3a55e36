@@ -6,7 +6,7 @@ export function handlePlayerAdjustment(
   isAdding: boolean
 ): Player[] {
   return playerData.map(player => {
-    if (player.id === playerId) {
+    if (player.id === playerId.toString()) {
       if (isAdding) {
         return { ...player, totalPlayTime: (player.totalPlayTime || 0) + 1 };
       } else {

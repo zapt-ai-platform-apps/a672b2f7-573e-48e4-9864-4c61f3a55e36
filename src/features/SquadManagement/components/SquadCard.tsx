@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Squad } from '../../../types/GameTypes';
+import { Squad } from '../../../types/GameTypes';
 import { FiEdit2, FiCheckCircle } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 

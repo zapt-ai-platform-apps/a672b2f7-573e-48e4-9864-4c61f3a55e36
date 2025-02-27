@@ -33,7 +33,7 @@ export function getTotalPlayTime(player: Player | undefined, includeGKPlaytime: 
 
 export function handlePlayerAdjustment(players: Player[], playerId: string | number, isAdding: boolean): Player[] {
   if (isAdding) {
-    const exists = players.some(p => p.id === playerId);
+    const exists = players.some(p => p.id === playerId.toString());
     if (!exists) {
       const newPlayer: Player = { 
         id: playerId.toString(), 
@@ -44,7 +44,6 @@ export function handlePlayerAdjustment(players: Player[], playerId: string | num
         isOnField: true, 
         isGoalkeeper: false,
         isInMatchSquad: false,
-        isStartingPlayer: false,
         isInStartingLineup: false,
         playIntervals: []
       };
@@ -52,7 +51,7 @@ export function handlePlayerAdjustment(players: Player[], playerId: string | num
     }
     return players;
   } else {
-    return players.filter(p => p.id !== playerId);
+    return players.filter(p => p.id !== playerId.toString());
   }
 }
 

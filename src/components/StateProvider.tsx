@@ -1,51 +1,35 @@
-import React, { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import { StateContext } from '../context/StateContext';
 import { Player, Goal, Squad } from '../types/GameTypes';
 import useGameManagement from '../hooks/useGameManagement';
 import useGameTimer from '../hooks/useGameTimer';
 
-const StateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const navigate = useNavigate();
-  
-  // Squad management
+interface StateProviderProps {
+  children: React.ReactNode;
+}
+
+const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
   const [selectedSquad, setSelectedSquad] = useState<Player[] | Squad>([]);
   const [matchSquad, setMatchSquad] = useState<Player[]>([]);
+  const [goalkeeper, setGoalkeeper] = useState<Player | null>(null);
+  const [includeGKPlaytime, setIncludeGKPlaytime] = useState<boolean>(true);
   
-  // Game management
-  const gameManagement = useGameManagement();
+  // Get game management state and functions
+  const {
+    playerData,
+    setPlayerData,
+    ourScore,
+    setOurScore,
+    opponentScore,
+    setOpponentScore,
+    goals,
+    setGoals,
+    handleStartGame,
+    resetGame
+  } = useGameManagement();
   
-  // Use separate timer hook to get timer controls
+  // Set up timer controls
   const timerControls = useGameTimer();
-  
-  // Start a new game with selected players
-  const handleStartGame = useCallback((
-    players: Player[], 
-    goalkeeper: Player, 
-    includeGKPlaytime: boolean
-  ) => {
-    if (gameManagement.handleStartGame) {
-      gameManagement.handleStartGame(players, goalkeeper, includeGKPlaytime);
-      navigate('/game-management', {
-        state: {
-          players,
-          goalkeeper,
-          includeGKPlaytime
-        }
-      });
-    } else {
-      console.error('handleStartGame function not available');
-    }
-  }, [gameManagement, navigate]);
-  
-  // Reset game state
-  const resetGame = useCallback(() => {
-    if (gameManagement.resetGame) {
-      gameManagement.resetGame();
-    } else {
-      console.error('resetGame function not available');
-    }
-  }, [gameManagement]);
   
   return (
     <StateContext.Provider
@@ -53,28 +37,30 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         // Squad management
         selectedSquad,
         setSelectedSquad,
+        
+        // Match squad for the current game
         matchSquad,
         setMatchSquad,
         
-        // Game management
-        goalkeeper: gameManagement.goalkeeper,
-        setGoalkeeper: gameManagement.setGoalkeeper,
-        playerData: gameManagement.playerData,
-        setPlayerData: gameManagement.setPlayerData,
-        ourScore: gameManagement.ourScore,
-        setOurScore: gameManagement.setOurScore,
-        opponentScore: gameManagement.opponentScore,
-        setOpponentScore: gameManagement.setOpponentScore,
-        goals: gameManagement.goals,
-        setGoals: gameManagement.setGoals,
-        includeGKPlaytime: gameManagement.includeGKPlaytime,
+        // Goalkeeper settings
+        goalkeeper,
+        setGoalkeeper,
         
-        // Game functions
+        // Game management properties
+        playerData,
+        setPlayerData,
+        ourScore,
+        setOurScore,
+        opponentScore,
+        setOpponentScore,
+        goals,
+        setGoals,
+        includeGKPlaytime,
         resetGame,
         handleStartGame,
         
         // Timer controls
-        timerControls
+        timerControls,
       }}
     >
       {children}

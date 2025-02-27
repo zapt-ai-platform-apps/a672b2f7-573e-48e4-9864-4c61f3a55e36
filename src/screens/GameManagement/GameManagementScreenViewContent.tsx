@@ -7,7 +7,7 @@ import PitchVisualization from '../../features/GameManagement/components/PitchVi
 import PlayersSection from './components/PlayersSection';
 import RecordGoalButton from './components/RecordGoalButton';
 import GoalScoredModal from '../../features/GameManagement/modals/GoalScoredModal';
-import { GoalData } from '../../types/GameTypes';
+import { Goal, GoalData } from '../../types/GameTypes';
 
 export default function GameManagementScreenViewContent({
   playerData,
@@ -33,12 +33,21 @@ export default function GameManagementScreenViewContent({
 }: GameManagementScreenViewProps): JSX.Element {
   // Format time for display
   const formattedTimeElapsed = (): string => {
-    const seconds = getTimeElapsed();
+    const seconds = typeof getTimeElapsed() === 'number' 
+      ? getTimeElapsed() as number 
+      : parseInt(getTimeElapsed() as string, 10);
     return timeFormatter(seconds);
   };
 
   // Create a default no-op function for handleEndGame if it's undefined
   const safeHandleEndGame = handleEndGame || (() => {});
+
+  const handleRecordGoal = (goal: GoalData) => {
+    if (recordGoal && setGoals && setOurScore && setOpponentScore) {
+      recordGoal(goal, setGoals, setOurScore, setOpponentScore);
+      setShowGoalModal(false);
+    }
+  };
 
   return (
     <div className="w-full">
@@ -85,12 +94,7 @@ export default function GameManagementScreenViewContent({
       {showGoalModal && (
         <GoalScoredModal
           onClose={() => setShowGoalModal(false)}
-          onScoreGoal={(goal: GoalData) => {
-            if (recordGoal) {
-              recordGoal(goal, setGoals, setOurScore, setOpponentScore);
-              setShowGoalModal(false);
-            }
-          }}
+          onScoreGoal={handleRecordGoal}
           playerList={playerData || []}
           currentGoals={goals || []}
         />

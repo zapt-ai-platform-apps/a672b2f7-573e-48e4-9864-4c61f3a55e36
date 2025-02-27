@@ -1,9 +1,4 @@
-import type { Player } from '../../types/GameTypes';
-
-export interface TimeInterval {
-  start: number;
-  end: number | null;
-}
+import { Player, TimeInterval } from '../../types/GameTypes';
 
 export function calculateTotalPlayTime(player: Player, includeGKPlaytime: boolean, isRunning: boolean): number {
   if (!player.playIntervals || player.playIntervals.length === 0) {
@@ -33,8 +28,8 @@ export function calculateElapsedTime(intervals: TimeInterval[], isRunning: boole
   let total = 0;
   for (let i = 0; i < intervals.length; i++) {
     const interval = intervals[i];
-    const start = interval.start;
-    let end = interval.end;
+    const start = interval.startTime || (interval as any).start || 0;
+    let end = interval.endTime || (interval as any).end || null;
     if (i === intervals.length - 1 && end === null && isRunning) {
       end = Date.now();
     }
@@ -51,14 +46,17 @@ export function toggleTimer(
 ): { newIntervals: TimeInterval[], newIsRunning: boolean } {
   let newIntervals = [...gameIntervals];
   if (!isRunning) {
-    newIntervals.push({ start: Date.now(), end: null });
+    newIntervals.push({ 
+      startTime: Date.now(), 
+      endTime: null 
+    });
   } else {
     const lastIndex = newIntervals.length - 1;
-    if (lastIndex >= 0 && newIntervals[lastIndex].end === null) {
+    if (lastIndex >= 0 && newIntervals[lastIndex].endTime === null) {
       newIntervals = [...newIntervals];
       newIntervals[lastIndex] = {
         ...newIntervals[lastIndex],
-        end: Date.now()
+        endTime: Date.now()
       };
     }
   }

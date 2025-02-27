@@ -1,6 +1,4 @@
-export interface Goal {
-  team: 'our' | 'opponent';
-  scorerName: string | null;
-  time: number;
-  timestamp: number;
-}
+import { Goal } from '../../types/GameTypes';
+
+// Re-export the Goal type to avoid duplication
+export type { Goal };

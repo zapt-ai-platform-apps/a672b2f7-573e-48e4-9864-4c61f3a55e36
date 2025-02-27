@@ -1,4 +1,4 @@
-import type { Goal } from '../../types/GameTypes';
+import { Goal } from '../../types/GameTypes';
 
 interface RecordGoalResult {
   newGoals: Goal[];
