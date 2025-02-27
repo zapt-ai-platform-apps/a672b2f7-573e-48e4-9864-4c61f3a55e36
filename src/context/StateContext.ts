@@ -26,6 +26,22 @@ export interface StateContextType {
   includeGKPlaytime: boolean;
   resetGame: () => void;
   handleStartGame: (players: Player[], goalkeeper: Player, includeGKPlaytime: boolean) => void;
+  
+  // Timer controls
+  timerControls: {
+    now: number;
+    startUITimer: () => void;
+    startTimer: () => void;
+    stopTimer: () => void;
+    resetTimer: () => void;
+    getTimeElapsed: () => number;
+    timeElapsed: number;
+    gameIntervals: Array<{ startTime: number; endTime?: number }>;
+    isRunning: boolean;
+    startGame: () => void;
+    pauseGame: () => void;
+    toggleTimer: () => boolean;
+  };
 }
 
 // Default values to avoid null checks
@@ -50,6 +66,21 @@ const defaultContext: StateContextType = {
   includeGKPlaytime: false,
   resetGame: () => {},
   handleStartGame: () => {},
+  
+  timerControls: {
+    now: 0,
+    startUITimer: () => {},
+    startTimer: () => {},
+    stopTimer: () => {},
+    resetTimer: () => {},
+    getTimeElapsed: () => 0,
+    timeElapsed: 0,
+    gameIntervals: [],
+    isRunning: false,
+    startGame: () => {},
+    pauseGame: () => {},
+    toggleTimer: () => false
+  }
 };
 
 export const StateContext = createContext<StateContextType>(defaultContext);
