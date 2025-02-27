@@ -34,7 +34,12 @@ const PitchVisualization: React.FC<PitchVisualizationProps> = ({
   return (
     <div className="w-full h-full relative" data-testid={testId}>
       <div ref={pitchRef} className="pitch w-full h-full bg-green-800 relative rounded-lg overflow-hidden">
-        <Pitch />
+        <Pitch 
+          pitchRef={pitchRef} 
+          playerData={players} 
+          players={players} 
+          handlePointerDown={handlePointerDown} 
+        />
         {players.map(player => (
           <div
             key={player.id}

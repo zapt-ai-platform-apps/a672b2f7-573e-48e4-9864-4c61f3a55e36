@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
-import ProtectedRoute from './components/ProtectedRoute';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import SignIn from './components/SignIn';
 import NavBar from './components/navigation/NavBar';
 import LoadingScreen from './components/Loading';
@@ -29,7 +29,6 @@ const AppRoutes: React.FC = () => {
             <Routes 
               location={location} 
               key={location.pathname}
-              future={{ v7_fetcherPersist: true, v7_normalizeFormMethod: true }}
             >
               {/* Public Routes */}
               <Route path="/" element={<Landing />} />
