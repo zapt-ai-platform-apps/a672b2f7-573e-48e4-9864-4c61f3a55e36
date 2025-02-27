@@ -1,15 +1,26 @@
-import { EnvironmentType } from '../types/environment';
-import { recordLogin as recordLoginFromClient } from '../supabaseClient';
+import { supabase, recordLogin as recordLoginFromClient } from '../supabaseClient';
 import { hasLoggedInRecently } from '../lib/authRecording';
+import { EnvironmentType } from '../types/environment';
 
 /**
  * Records a user login event
- * @param email The email address of the user logging in
- * @param environment The current environment the app is running in
+ * @param email The email address of the user logging in (optional)
+ * @param environment The current environment the app is running in (optional)
  */
-export const recordUserLogin = async (email: string, environment: EnvironmentType): Promise<void> => {
+export const recordUserLogin = async (email?: string, environment?: EnvironmentType): Promise<void> => {
   try {
-    // Check if this user has logged in recently to avoid duplicate events
+    // If email is not provided, retrieve the current user via Supabase
+    if (!email) {
+      const { data: { user } } = await supabase.auth.getUser();
+      email = user?.email;
+      if (!email) return; // If no email available, do nothing
+    }
+
+    // Use VITE_PUBLIC_APP_ENV if environment is not provided
+    if (!environment) {
+      environment = import.meta.env.VITE_PUBLIC_APP_ENV as EnvironmentType;
+    }
+
     if (!hasLoggedInRecently(email)) {
       console.log(`Recording login for user: ${email} in environment: ${environment}`);
       await recordLoginFromClient(email, environment);

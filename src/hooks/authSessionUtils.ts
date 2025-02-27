@@ -171,3 +171,29 @@ export const useMagicLinkAuth = (callbackUrl: string) => {
   
   return { handleMagicLinkSignIn };
 };
+
+// New exports to support useAuthSession
+export const getInitialSessionUtil = async (
+  setSession: (session: Session | null) => void,
+  setIsLoading: (flag: boolean) => void
+) => {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    setSession(session);
+    setIsLoading(false);
+  } catch (error) {
+    setIsLoading(false);
+    throw error;
+  }
+};
+
+export const subscribeAuthStateChangeUtil = (
+  setSession: (session: Session | null) => void,
+  setIsLoading: (flag: boolean) => void
+) => {
+  const { data: { subscription } } = supabase.auth.onAuthStateChange((_, updatedSession) => {
+    setSession(updatedSession);
+    setIsLoading(false);
+  });
+  return { subscription };
+};

@@ -1,6 +1,6 @@
 import { recordLogin } from '../supabaseClient';
 import * as Sentry from '@sentry/browser';
-import { environmentType } from '../types/environment';
+import { EnvironmentType } from '../types/environment';
 
 /**
  * Processes the authentication session and updates user state.
@@ -15,8 +15,8 @@ export function processSession(session: any, setUser: (user: any) => void): void
     setUser(user);
     const recordedKey = `recordedLogin_${user.id}`;
     if (!sessionStorage.getItem(recordedKey) && user.email) {
-      // First cast env value to environmentType
-      const appEnv = import.meta.env.VITE_PUBLIC_APP_ENV as environmentType;
+      // First cast env value to EnvironmentType
+      const appEnv = import.meta.env.VITE_PUBLIC_APP_ENV as EnvironmentType;
       // Then compute effectiveEnv without further casting needed
       const effectiveEnv = appEnv === 'staging' ? 'production' : appEnv;
       
