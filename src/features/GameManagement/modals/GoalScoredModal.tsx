@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { GoalData } from '../../../types/GameTypes';
-import { Player } from '../../../shared/models/player';
+import { GoalData, Player } from '../../../types/GameTypes';
 
 interface GoalScoredModalProps {
   onClose: () => void;
@@ -21,7 +20,7 @@ export const GoalScoredModal: React.FC<GoalScoredModalProps> = ({
     Math.floor(Date.now() / 1000) // Default to current timestamp
   );
 
-  const availablePlayers = playerList.filter(player => player.isParticipating);
+  const availablePlayers = playerList.filter(player => player.isInMatchSquad);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +49,7 @@ export const GoalScoredModal: React.FC<GoalScoredModalProps> = ({
                 type="button"
                 className={`px-4 py-2 rounded ${
                   team === 'our' ? 'bg-blue-600' : 'bg-gray-600 hover:bg-gray-500'
-                } transition`}
+                } transition cursor-pointer`}
                 onClick={() => setTeam('our')}
               >
                 Our Team
@@ -59,7 +58,7 @@ export const GoalScoredModal: React.FC<GoalScoredModalProps> = ({
                 type="button"
                 className={`px-4 py-2 rounded ${
                   team === 'opponent' ? 'bg-blue-600' : 'bg-gray-600 hover:bg-gray-500'
-                } transition`}
+                } transition cursor-pointer`}
                 onClick={() => setTeam('opponent')}
               >
                 Opponent

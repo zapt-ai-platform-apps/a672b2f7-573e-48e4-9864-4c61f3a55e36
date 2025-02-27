@@ -15,16 +15,16 @@ export function ensurePlayerProperties(player: Partial<Player>): Player {
     isOnField: player.isOnField ?? false,
     isGoalkeeper: player.isGoalkeeper ?? false,
     position: player.position || defaultPosition,
+    isInMatchSquad: player.isInMatchSquad ?? false,
+    isInStartingLineup: player.isInStartingLineup ?? false,
+    playIntervals: player.playIntervals || [],
     // Optional properties with their original values or undefined
     number: player.number,
     playTime: player.playTime,
     lastStart: player.lastStart,
-    isInMatchSquad: player.isInMatchSquad,
     isStartingPlayer: player.isStartingPlayer,
-    isInStartingLineup: player.isInStartingLineup,
     status: player.status,
     minutesPlayed: player.minutesPlayed,
-    playIntervals: player.playIntervals,
     selected: player.selected
   };
 }

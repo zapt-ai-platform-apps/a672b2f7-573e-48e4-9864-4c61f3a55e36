@@ -38,7 +38,10 @@ export function handlePlayerAdjustment(players: Player[], playerId: number | str
       totalPlayTime: 0, 
       isOnField: true, 
       isGoalkeeper: false, 
-      position: { x: 0, y: 0 }  // Initialize with numeric values
+      position: { x: 0, y: 0 },
+      isInMatchSquad: true,
+      isInStartingLineup: false,
+      playIntervals: []
     };
     return [...players, newPlayer];
   } else {

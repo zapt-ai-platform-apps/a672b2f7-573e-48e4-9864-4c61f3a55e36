@@ -1,10 +1,8 @@
-import { Player } from '../../../types/GameTypes';
+import { Player, TimeInterval } from '../../../types/GameTypes';
 
-export interface Interval {
-  startTime?: number;
-  endTime?: number | null;
-  start?: number;
-  end?: number | null;
+export interface Interval extends TimeInterval {
+  start?: number; // For backward compatibility
+  end?: number | null; // For backward compatibility
 }
 
 export function getTotalPlayTime(player: Player, includeGKPlaytime: boolean, isRunning: boolean): number {

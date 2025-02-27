@@ -1,5 +1,8 @@
 import { Player } from '../../types/GameTypes';
 
+// Export the Player type for use in other modules
+export type { Player };
+
 /**
  * Creates a new player with the specified properties.
  * 

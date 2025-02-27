@@ -37,7 +37,10 @@ export function handlePlayerAdjustment(
           totalPlayTime: 0,
           isOnField: false,
           isGoalkeeper: false,
-          position: { x: 0, y: 0 }
+          position: { x: 0, y: 0 },
+          isInMatchSquad: true,
+          isInStartingLineup: false,
+          playIntervals: []
         }
       ];
     }
