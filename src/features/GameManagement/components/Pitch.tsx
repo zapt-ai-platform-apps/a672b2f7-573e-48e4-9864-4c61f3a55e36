@@ -48,6 +48,7 @@ function Pitch({ pitchRef, playerData, handlePointerDown, players }: PitchProps)
   return (
     <div 
       ref={pitchRef}
+      data-testid="pitch-container"
       className="pitch relative w-full h-96 md:h-[450px] bg-green-600 rounded-xl overflow-hidden shadow-lg"
       style={{
         backgroundImage: `

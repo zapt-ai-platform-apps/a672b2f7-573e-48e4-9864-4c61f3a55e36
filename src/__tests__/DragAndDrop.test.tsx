@@ -41,9 +41,10 @@ describe('Pitch Visualization Drag and Drop', () => {
       );
     });
     
-    // Check for player elements with data-player-id attribute
-    const playerElements = document.querySelectorAll('[data-player-id]');
-    expect(playerElements.length).toBe(2);
+    // Check for player elements with data-player-id attribute within the pitch container
+    const pitchContainer = document.querySelector('[data-testid="pitch-container"]');
+    const playerElements = pitchContainer?.querySelectorAll('[data-player-id]');
+    expect(playerElements?.length).toBe(2);
     
     // Check for player names
     expect(screen.getByText('Player 1')).toBeInTheDocument();
@@ -74,8 +75,9 @@ describe('Pitch Visualization Drag and Drop', () => {
       render(<PitchVisualization players={validPlayers} />);
       
       // Check that all players are rendered properly with data-player-id attribute
-      const playerElements = document.querySelectorAll('[data-player-id]');
-      expect(playerElements.length).toBe(2);
+      const pitchContainer = document.querySelector('[data-testid="pitch-visualization"]');
+      const playerElements = pitchContainer?.querySelectorAll('[data-player-id]');
+      expect(playerElements?.length).toBe(2);
     });
   });
 });
