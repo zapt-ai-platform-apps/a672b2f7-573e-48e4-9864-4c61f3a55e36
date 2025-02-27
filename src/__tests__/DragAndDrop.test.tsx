@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import PitchVisualization from '../features/GameManagement/components/PitchVisualization';
+import PitchVisualization from '@/features/GameManagement/components/PitchVisualization';
 import { act } from '@testing-library/react';
-import { Player } from '../types/GameTypes';
+import { Player } from '@/types/GameTypes';
 
 // Mock useDragAndDrop hook with correct export structure
-vi.mock('../features/GameManagement/hooks/useDragAndDrop', async () => {
-  const actual = await vi.importActual('../features/GameManagement/hooks/useDragAndDrop');
+vi.mock('@/features/GameManagement/hooks/useDragAndDrop', async () => {
+  const actual = await vi.importActual('@/features/GameManagement/hooks/useDragAndDrop');
   return {
     __esModule: true,
     default: () => ({
@@ -17,7 +17,7 @@ vi.mock('../features/GameManagement/hooks/useDragAndDrop', async () => {
 });
 
 // Mock assignInitialPositions utility
-vi.mock('../features/GameManagement/utils/assignInitialPositions', () => ({
+vi.mock('@/features/GameManagement/utils/assignInitialPositions', () => ({
   assignInitialPositions: vi.fn((players) => players)
 }));
 
@@ -56,7 +56,7 @@ describe('Pitch Visualization Drag and Drop', () => {
     });
     
     // Get the useDragAndDrop hook's init function
-    const useDragAndDropModule = require('../features/GameManagement/hooks/useDragAndDrop');
+    const useDragAndDropModule = require('@/features/GameManagement/hooks/useDragAndDrop');
     const { init } = useDragAndDropModule.default();
     
     // Verify init was called with pitch element

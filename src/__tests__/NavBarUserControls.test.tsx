@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { vi, beforeEach, describe, test, expect } from 'vitest';
-import NavBarUserControls from '../components/navigation/NavBarUserControls';
+import NavBarUserControls from '@/components/navigation/NavBarUserControls';
 import { act } from '@testing-library/react';
 
 // Mock navigate
@@ -10,8 +10,8 @@ const mockNavigate = vi.fn();
 const mockSignOut = vi.fn();
 
 // Mock useAuthSession hook
-vi.mock('../hooks/useAuthSession', async () => {
-  const actual = await vi.importActual('../hooks/useAuthSession');
+vi.mock('@/hooks/useAuthSession', async () => {
+  const actual = await vi.importActual('@/hooks/useAuthSession');
   return {
     __esModule: true,
     default: () => ({
@@ -36,7 +36,7 @@ describe('NavBarUserControls - Signed In', () => {
     mockNavigate.mockClear();
     
     // Configure mock for signed-in user
-    vi.mocked(require('../hooks/useAuthSession').default).mockReturnValue({
+    vi.mocked(require('@/hooks/useAuthSession').default).mockReturnValue({
       session: { user: { email: 'test@example.com' } },
       signOut: mockSignOut
     });
@@ -79,7 +79,7 @@ describe('NavBarUserControls - Signed Out', () => {
     mockNavigate.mockClear();
     
     // Configure mock for signed-out user
-    vi.mocked(require('../hooks/useAuthSession').default).mockReturnValue({
+    vi.mocked(require('@/hooks/useAuthSession').default).mockReturnValue({
       session: null,
       signOut: mockSignOut
     });

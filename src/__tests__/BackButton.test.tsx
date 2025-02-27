@@ -1,13 +1,10 @@
-import React from 'react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { vi } from 'vitest';
-import StartingLineup from '../screens/GameSetup/ConfigureLineup/StartingLineup';
+import BackButton from '@/screens/GameManagement/BackButton';
 
-// Mock the navigate function
+// Mock useNavigate
 const mockNavigate = vi.fn();
-
-// Mock react-router-dom with the correct approach
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
@@ -16,55 +13,48 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-// Mock the useStartingLineup hook
-vi.mock('../screens/GameSetup/ConfigureLineup/StartingLineup/useStartingLineup', () => ({
-  __esModule: true,
-  default: () => ({
-    startingPlayers: [
-      { id: '1', name: 'Player 1', selected: true },
-      { id: '2', name: 'Player 2', selected: false }
-    ],
-    selectedPlayers: [{ id: '1', name: 'Player 1', selected: true }],
-    toggleStartingPlayer: vi.fn(),
-    clearSelectedPlayers: vi.fn()
-  })
-}));
-
-// Mock the useStateContext hook
-vi.mock('../hooks/useStateContext', () => ({
-  useStateContext: () => ({
-    matchSquad: [
-      { id: '1', name: 'Player 1' },
-      { id: '2', name: 'Player 2' }
-    ],
-    setMatchSquad: vi.fn()
-  })
-}));
-
-// Mock the GoalkeeperSelect component
-vi.mock('../screens/GameSetup/ConfigureLineup/GoalkeeperSelect', () => ({
-  __esModule: true,
-  default: () => <div data-testid="goalkeeper-select">Goalkeeper Select</div>
-}));
-
-describe('Back Button Functionality', () => {
+describe('BackButton Component', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     mockNavigate.mockClear();
   });
 
-  test('back button calls navigate(-1)', () => {
+  it('renders the button correctly', () => {
     render(
       <BrowserRouter>
-        <StartingLineup />
+        <BackButton />
       </BrowserRouter>
     );
     
-    const backButton = screen.getByText('← Back');
-    console.log('Found back button:', backButton);
+    const button = screen.getByRole('button');
+    expect(button).toBeInTheDocument();
+    expect(button.textContent).toContain('Back');
+  });
+
+  it('navigates back when clicked', () => {
+    render(
+      <BrowserRouter>
+        <BackButton />
+      </BrowserRouter>
+    );
     
-    fireEvent.click(backButton);
+    const button = screen.getByRole('button');
+    fireEvent.click(button);
     expect(mockNavigate).toHaveBeenCalledWith(-1);
-    expect(mockNavigate).toHaveBeenCalledTimes(1);
+  });
+
+  it('supports custom onClick handler', () => {
+    const customOnClick = vi.fn();
+    
+    render(
+      <BrowserRouter>
+        <BackButton onClick={customOnClick} />
+      </BrowserRouter>
+    );
+    
+    const button = screen.getByRole('button');
+    fireEvent.click(button);
+    expect(customOnClick).toHaveBeenCalled();
+    // Should not call navigate when custom handler is provided
+    expect(mockNavigate).not.toHaveBeenCalled();
   });
 });

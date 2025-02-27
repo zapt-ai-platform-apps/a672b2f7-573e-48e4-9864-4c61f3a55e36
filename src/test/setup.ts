@@ -106,3 +106,14 @@ Element.prototype.releasePointerCapture = Element.prototype.releasePointerCaptur
 
 // Global mocks
 global.fetch = vi.fn();
+
+// Mock modules with path aliases for consistent imports in tests
+vi.mock('@/features/GameManagement/hooks/useDragAndDrop', async () => {
+  return {
+    __esModule: true,
+    default: () => ({
+      handlePointerDown: vi.fn(),
+      init: vi.fn(() => () => {})
+    })
+  };
+});

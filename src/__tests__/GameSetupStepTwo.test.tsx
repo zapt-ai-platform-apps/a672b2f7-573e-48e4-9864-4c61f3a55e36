@@ -1,92 +1,77 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
-import GameSetupStepTwo from '../screens/GameSetup/GameSetupStepTwo';
-import { useStateContext } from '../hooks/useStateContext';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
+import GameSetupStepTwo from '@/screens/GameSetup/GameSetupStepTwo';
+import { Player } from '@/types/GameTypes';
 
-// Mock the context hook
-vi.mock('../hooks/useStateContext');
-
-// Mock navigate function
-const mockNavigate = vi.fn();
-
-// Mock react-router-dom with proper import technique
+// Mock useLocation
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
     ...(actual as any),
-    useNavigate: () => mockNavigate,
+    useLocation: () => ({
+      state: {
+        players: [
+          {
+            id: '1',
+            name: 'Player 1',
+            position: { x: 0, y: 0 },
+            isOnField: true,
+            isGoalkeeper: false,
+            totalPlayTime: 0,
+            isInMatchSquad: true
+          },
+          {
+            id: '2',
+            name: 'Player 2',
+            position: { x: 0, y: 0 },
+            isOnField: false,
+            isGoalkeeper: false,
+            totalPlayTime: 0,
+            isInMatchSquad: true
+          }
+        ]
+      }
+    }),
+    useNavigate: () => vi.fn()
   };
 });
 
-describe('GameSetupStepTwo', () => {
-  const mockSetState = vi.fn();
-  
+// Mock hooks
+vi.mock('@/hooks/useAuthSession', () => ({
+  __esModule: true,
+  default: () => ({
+    session: { user: { id: 'test-user-id' } }
+  })
+}));
+
+describe('GameSetupStepTwo Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockNavigate.mockClear();
-    
-    // Setup mock returns
-    (useStateContext as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      state: {
-        selectedPlayers: [
-          { id: '1', name: 'Player 1', selected: true },
-          { id: '2', name: 'Player 2', selected: true }
-        ],
-        startingLineup: [],
-        substitutes: [],
-        goalkeeper: null
-      },
-      setState: mockSetState,
-      matchSquad: [
-        { id: '1', name: 'Player 1', selected: true },
-        { id: '2', name: 'Player 2', selected: true }
-      ],
-      setMatchSquad: vi.fn(),
-      setPlayerData: vi.fn()
-    });
   });
 
   it('renders the component with players', () => {
-    render(<GameSetupStepTwo />);
-    // Updated to match actual text in component
-    expect(screen.getByText(/Game Setup: Configuration/i)).toBeInTheDocument();
+    render(
+      <BrowserRouter>
+        <GameSetupStepTwo />
+      </BrowserRouter>
+    );
+    
+    // Check for important elements
+    expect(screen.getByText(/Configure Lineup/i)).toBeInTheDocument();
+    expect(screen.getByText(/Starting Lineup/i)).toBeInTheDocument();
+    expect(screen.getByText(/Goalkeeper/i)).toBeInTheDocument();
   });
 
-  it('allows selecting a goalkeeper', async () => {
-    // This test is no longer relevant as the component auto-navigates
-    // We'll just check the navigation
-    render(<GameSetupStepTwo />);
+  it('displays players from location state', () => {
+    render(
+      <BrowserRouter>
+        <GameSetupStepTwo />
+      </BrowserRouter>
+    );
     
-    // Wait for navigation which should happen automatically
-    await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalled();
-    });
-  });
-
-  it('navigates to game management when form is submitted', async () => {
-    // Setup state with all required fields
-    (useStateContext as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      state: {
-        selectedPlayers: [
-          { id: '1', name: 'Player 1', selected: true }
-        ],
-        startingLineup: [{ id: '1', name: 'Player 1', selected: true }],
-        substitutes: [],
-        goalkeeper: { id: '1', name: 'Player 1' }
-      },
-      setState: mockSetState,
-      matchSquad: [
-        { id: '1', name: 'Player 1', selected: true, isGoalkeeper: true, isStartingPlayer: true }
-      ],
-      setMatchSquad: vi.fn(),
-      setPlayerData: vi.fn()
-    });
-
-    render(<GameSetupStepTwo />);
-    
-    // Verify navigation occurred
-    await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/game-management');
-    });
+    // Players from mocked location state should be displayed
+    expect(screen.getByText('Player 1')).toBeInTheDocument();
+    expect(screen.getByText('Player 2')).toBeInTheDocument();
   });
 });

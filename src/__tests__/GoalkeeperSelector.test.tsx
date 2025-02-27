@@ -1,118 +1,122 @@
-import React from 'react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { vi } from 'vitest';
-import GoalkeeperSelector from '../screens/GameSetup/ConfigureLineup/GoalkeeperSelector';
-import { Player } from '../screens/GameSetup/ConfigureLineup/GoalkeeperTypes';
+import GoalkeeperSelector from '@/screens/GameSetup/ConfigureLineup/GoalkeeperSelector';
+import { Player } from '@/types/GameTypes';
 
-describe('GoalkeeperSelector', () => {
-  const mockSetGoalkeeper = vi.fn();
-  const mockSetConfirmedGoalkeeper = vi.fn();
-  
-  const startingPlayers: Player[] = [
-    { id: '1', name: 'Player 1' },
-    { id: '2', name: 'Player 2' },
-    { id: '3', name: 'Player 3' }
-  ];
-  
+describe('GoalkeeperSelector Component', () => {
+  let mockOnSelectGoalkeeper: any;
+  let mockOnUpdateIncludeGKPlaytime: any;
+  let mockPlayers: Player[];
+  let mockSelectedGoalkeeper: string | undefined;
+  let mockIncludeGKPlaytime: boolean;
+
   beforeEach(() => {
-    vi.clearAllMocks();
+    mockOnSelectGoalkeeper = vi.fn();
+    mockOnUpdateIncludeGKPlaytime = vi.fn();
+    mockSelectedGoalkeeper = undefined;
+    mockIncludeGKPlaytime = true;
+    mockPlayers = [
+      {
+        id: '1',
+        name: 'Player 1',
+        position: { x: 0, y: 0 },
+        isOnField: true,
+        isGoalkeeper: false,
+        totalPlayTime: 0
+      },
+      {
+        id: '2',
+        name: 'Player 2',
+        position: { x: 0, y: 0 },
+        isOnField: true,
+        isGoalkeeper: false,
+        totalPlayTime: 0
+      }
+    ];
   });
-  
-  test('renders without goalkeeper selected', () => {
+
+  it('renders the component with players', () => {
     render(
       <GoalkeeperSelector 
-        startingPlayers={startingPlayers}
-        goalkeeper={null}
-        setGoalkeeper={mockSetGoalkeeper}
-        confirmedGoalkeeper={null}
-        setConfirmedGoalkeeper={mockSetConfirmedGoalkeeper}
+        players={mockPlayers}
+        selectedGoalkeeper={mockSelectedGoalkeeper}
+        includeGKPlaytime={mockIncludeGKPlaytime}
+        onSelectGoalkeeper={mockOnSelectGoalkeeper}
+        onUpdateIncludeGKPlaytime={mockOnUpdateIncludeGKPlaytime}
       />
     );
     
-    expect(screen.getByText('Select Goalkeeper')).toBeInTheDocument();
-    expect(screen.getByText('Select a player')).toBeInTheDocument();
-    expect(screen.getByText('No goalkeeper confirmed yet')).toBeInTheDocument();
-  });
-  
-  test('displays all available players in dropdown', () => {
-    render(
-      <GoalkeeperSelector 
-        startingPlayers={startingPlayers}
-        goalkeeper={null}
-        setGoalkeeper={mockSetGoalkeeper}
-        confirmedGoalkeeper={null}
-        setConfirmedGoalkeeper={mockSetConfirmedGoalkeeper}
-      />
-    );
+    // Check for component title
+    expect(screen.getByText(/Goalkeeper/i)).toBeInTheDocument();
     
-    const select = screen.getByRole('combobox');
-    fireEvent.click(select);
+    // Check that both players are in the dropdown options
+    const selectElement = screen.getByLabelText(/Select a goalkeeper/i);
+    expect(selectElement).toBeInTheDocument();
+    
+    // Open dropdown to check options
+    fireEvent.mouseDown(selectElement);
     
     expect(screen.getByText('Player 1')).toBeInTheDocument();
     expect(screen.getByText('Player 2')).toBeInTheDocument();
-    expect(screen.getByText('Player 3')).toBeInTheDocument();
   });
-  
-  test('calls setGoalkeeper when player is selected', () => {
+
+  it('calls onSelectGoalkeeper when a goalkeeper is selected', () => {
     render(
       <GoalkeeperSelector 
-        startingPlayers={startingPlayers}
-        goalkeeper={null}
-        setGoalkeeper={mockSetGoalkeeper}
-        confirmedGoalkeeper={null}
-        setConfirmedGoalkeeper={mockSetConfirmedGoalkeeper}
+        players={mockPlayers}
+        selectedGoalkeeper={mockSelectedGoalkeeper}
+        includeGKPlaytime={mockIncludeGKPlaytime}
+        onSelectGoalkeeper={mockOnSelectGoalkeeper}
+        onUpdateIncludeGKPlaytime={mockOnUpdateIncludeGKPlaytime}
       />
     );
     
-    const select = screen.getByRole('combobox');
-    fireEvent.change(select, { target: { value: '2' } });
+    // Open dropdown
+    const selectElement = screen.getByLabelText(/Select a goalkeeper/i);
+    fireEvent.mouseDown(selectElement);
     
-    expect(mockSetGoalkeeper).toHaveBeenCalledWith(startingPlayers[1]);
+    // Select Player 1
+    const option = screen.getByText('Player 1');
+    fireEvent.click(option);
+    
+    expect(mockOnSelectGoalkeeper).toHaveBeenCalledWith('1');
   });
-  
-  test('shows confirm button when goalkeeper is selected but not confirmed', () => {
+
+  it('calls onUpdateIncludeGKPlaytime when toggle is clicked', () => {
     render(
       <GoalkeeperSelector 
-        startingPlayers={startingPlayers}
-        goalkeeper={startingPlayers[0]}
-        setGoalkeeper={mockSetGoalkeeper}
-        confirmedGoalkeeper={null}
-        setConfirmedGoalkeeper={mockSetConfirmedGoalkeeper}
+        players={mockPlayers}
+        selectedGoalkeeper={mockSelectedGoalkeeper}
+        includeGKPlaytime={mockIncludeGKPlaytime}
+        onSelectGoalkeeper={mockOnSelectGoalkeeper}
+        onUpdateIncludeGKPlaytime={mockOnUpdateIncludeGKPlaytime}
       />
     );
     
-    expect(screen.getByText('Confirm Goalkeeper')).toBeInTheDocument();
+    // Toggle switch should be rendered
+    const toggleSwitch = screen.getByRole('checkbox');
+    expect(toggleSwitch).toBeInTheDocument();
+    
+    // Click toggle
+    fireEvent.click(toggleSwitch);
+    
+    expect(mockOnUpdateIncludeGKPlaytime).toHaveBeenCalledWith(false);
   });
-  
-  test('calls setConfirmedGoalkeeper when confirm button is clicked', () => {
+
+  it('displays selected goalkeeper when provided', () => {
+    mockSelectedGoalkeeper = '2';  // Player 2 is selected as goalkeeper
+    
     render(
       <GoalkeeperSelector 
-        startingPlayers={startingPlayers}
-        goalkeeper={startingPlayers[0]}
-        setGoalkeeper={mockSetGoalkeeper}
-        confirmedGoalkeeper={null}
-        setConfirmedGoalkeeper={mockSetConfirmedGoalkeeper}
+        players={mockPlayers}
+        selectedGoalkeeper={mockSelectedGoalkeeper}
+        includeGKPlaytime={mockIncludeGKPlaytime}
+        onSelectGoalkeeper={mockOnSelectGoalkeeper}
+        onUpdateIncludeGKPlaytime={mockOnUpdateIncludeGKPlaytime}
       />
     );
     
-    const confirmButton = screen.getByText('Confirm Goalkeeper');
-    fireEvent.click(confirmButton);
-    
-    expect(mockSetConfirmedGoalkeeper).toHaveBeenCalledWith(startingPlayers[0]);
-  });
-  
-  test('shows confirmation message when goalkeeper is confirmed', () => {
-    render(
-      <GoalkeeperSelector 
-        startingPlayers={startingPlayers}
-        goalkeeper={startingPlayers[0]}
-        setGoalkeeper={mockSetGoalkeeper}
-        confirmedGoalkeeper={startingPlayers[0]}
-        setConfirmedGoalkeeper={mockSetConfirmedGoalkeeper}
-      />
-    );
-    
-    expect(screen.getByText('Goalkeeper confirmed: Player 1')).toBeInTheDocument();
-    expect(screen.queryByText('Confirm Goalkeeper')).not.toBeInTheDocument();
+    // The selected value should show Player 2
+    expect(screen.getByLabelText(/Select a goalkeeper/i)).toHaveTextContent('Player 2');
   });
 });
