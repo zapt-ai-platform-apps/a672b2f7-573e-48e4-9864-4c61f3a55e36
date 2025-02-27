@@ -1,35 +1,42 @@
 import { Player } from '../../../types/GameTypes';
 
 /**
- * Assigns initial positions to players that don't have valid positions
- * @param players - Array of players to assign positions to
- * @returns Array of players with assigned positions
+ * Assigns initial positions to players if they don't have positions yet
+ * Players are arranged in a standard football formation pattern
  */
 export function assignInitialPositions(players: Player[]): Player[] {
-  if (!players || !Array.isArray(players)) {
-    console.warn('Invalid players array provided to assignInitialPositions');
-    return [];
-  }
+  if (!players || players.length === 0) return [];
 
-  return players.map(player => {
-    // Check if player has a valid position
-    const hasValidPosition = player.position && 
-      typeof player.position === 'object' &&
-      typeof player.position.x === 'number' && 
-      typeof player.position.y === 'number';
-    
-    // If player already has valid position, use it
-    if (hasValidPosition) {
+  // Define formation positions (4-4-2 formation as an example)
+  const defaultPositions = [
+    // Goalkeeper
+    { x: 10, y: 50 },
+    // Defenders
+    { x: 25, y: 20 }, { x: 25, y: 40 }, { x: 25, y: 60 }, { x: 25, y: 80 },
+    // Midfielders
+    { x: 50, y: 20 }, { x: 50, y: 40 }, { x: 50, y: 60 }, { x: 50, y: 80 },
+    // Forwards
+    { x: 75, y: 35 }, { x: 75, y: 65 },
+    // Extra positions for more players
+    { x: 60, y: 50 }, { x: 40, y: 50 }, { x: 60, y: 30 }, { x: 60, y: 70 },
+    { x: 40, y: 30 }, { x: 40, y: 70 }, { x: 80, y: 50 }, { x: 20, y: 50 },
+  ];
+
+  return players.map((player, index) => {
+    // If player already has a valid position, keep it
+    if (player.position && 
+        typeof player.position.x === 'number' && 
+        typeof player.position.y === 'number' &&
+        !isNaN(player.position.x) && 
+        !isNaN(player.position.y)) {
       return player;
     }
     
-    // Otherwise, assign random position within the pitch
+    // Otherwise, assign a default position
+    const positionIndex = Math.min(index, defaultPositions.length - 1);
     return {
       ...player,
-      position: {
-        x: Math.random() * 80 + 10, // 10-90% of width
-        y: Math.random() * 80 + 10  // 10-90% of height
-      }
+      position: defaultPositions[positionIndex]
     };
   });
 }

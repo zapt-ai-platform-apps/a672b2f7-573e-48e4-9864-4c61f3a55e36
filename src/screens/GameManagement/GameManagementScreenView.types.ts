@@ -11,7 +11,9 @@ export interface GameManagementScreenViewProps {
   showEndGameConfirm: boolean;
   confirmEndGame: () => void;
   cancelEndGame: () => void;
-  recordGoal?: (team: 'our' | 'opponent', scorer: string, time: number) => void;
+  
+  // Optional props that might not be provided in all usages
+  recordGoal?: (goal: Goal, setGoals: React.Dispatch<React.SetStateAction<Goal[]>>, setOurScore: React.Dispatch<React.SetStateAction<number>>, setOpponentScore: React.Dispatch<React.SetStateAction<number>>) => void;
   onFieldPlayers?: Player[];
   offFieldPlayers?: Player[];
   getTotalPlayTime?: (player: Player) => number;
@@ -23,7 +25,7 @@ export interface GameManagementScreenViewProps {
   setOurScore?: React.Dispatch<React.SetStateAction<number>>;
   setOpponentScore?: React.Dispatch<React.SetStateAction<number>>;
   
-  // Additional props for GameManagementScreenViewContent
+  // Additional props needed for the GameManagementScreenViewContent
   showAddPlayerModal?: boolean;
   setShowAddPlayerModal?: (show: boolean) => void;
   showConfirmEndModal?: boolean;
@@ -36,8 +38,6 @@ export interface GameManagementScreenViewProps {
   setSelectedGoalkeeper?: (id: string | null) => void;
   handleIncreasePlayers?: () => void;
   handleDecreasePlayers?: () => void;
-  
-  // Timer controls with all required properties
   timerControls?: {
     isRunning: boolean;
     timeElapsed: number;

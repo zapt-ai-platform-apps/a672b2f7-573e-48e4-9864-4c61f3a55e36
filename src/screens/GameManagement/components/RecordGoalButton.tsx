@@ -1,16 +1,32 @@
 import React from 'react';
 
-type RecordGoalButtonProps = {
-  setShowGoalModal: (value: boolean) => void;
-};
+interface RecordGoalButtonProps {
+  onClick: () => void;
+}
 
-export default function RecordGoalButton({ setShowGoalModal }: RecordGoalButtonProps): JSX.Element {
+const RecordGoalButton: React.FC<RecordGoalButtonProps> = ({ onClick }) => {
   return (
     <button
-      onClick={() => setShowGoalModal(true)}
-      className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-xl font-medium transition-colors cursor-pointer shadow-lg"
+      className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full shadow-lg cursor-pointer transition flex items-center space-x-2"
+      onClick={onClick}
     >
-      Record Goal
+      <svg 
+        xmlns="http://www.w3.org/2000/svg" 
+        className="h-5 w-5" 
+        fill="none" 
+        viewBox="0 0 24 24" 
+        stroke="currentColor"
+      >
+        <path 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
+          strokeWidth={2} 
+          d="M12 4v16m8-8H4" 
+        />
+      </svg>
+      <span>Record Goal</span>
     </button>
   );
-}
+};
+
+export default RecordGoalButton;

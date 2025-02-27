@@ -7,6 +7,7 @@ export default function GameManagementScreen(): JSX.Element {
   // Use state context to get game management data
   const { 
     playerData, 
+    setPlayerData,
     timerControls, 
     ourScore, 
     opponentScore, 
@@ -25,6 +26,11 @@ export default function GameManagementScreen(): JSX.Element {
     if (playerData) {
       setOnFieldPlayers(playerData.filter(player => player.isOnField));
       setOffFieldPlayers(playerData.filter(player => !player.isOnField));
+      
+      // Log player data for debugging
+      console.log("Current player data:", playerData);
+      console.log("On field players:", playerData.filter(player => player.isOnField));
+      console.log("Off field players:", playerData.filter(player => !player.isOnField));
     }
   }, [playerData]);
 
@@ -36,6 +42,24 @@ export default function GameManagementScreen(): JSX.Element {
   // Handle player click for any player interactions
   const handlePlayerClick = (player: Player): void => {
     console.log("Player clicked:", player);
+  };
+  
+  // Record a goal scored
+  const recordGoal = (
+    goal: Goal, 
+    setGoals: React.Dispatch<React.SetStateAction<Goal[]>>,
+    setOurScore: React.Dispatch<React.SetStateAction<number>>,
+    setOpponentScore: React.Dispatch<React.SetStateAction<number>>
+  ): void => {
+    // Add the goal to the goals array
+    setGoals(prevGoals => [...prevGoals, goal]);
+    
+    // Update the appropriate score
+    if (goal.team === 'our') {
+      setOurScore(prevScore => prevScore + 1);
+    } else {
+      setOpponentScore(prevScore => prevScore + 1);
+    }
   };
 
   return (
@@ -60,6 +84,7 @@ export default function GameManagementScreen(): JSX.Element {
       setGoals={setGoals}
       setOurScore={setOurScore}
       setOpponentScore={setOpponentScore}
+      recordGoal={recordGoal}
       timerControls={timerControls}
     />
   );
