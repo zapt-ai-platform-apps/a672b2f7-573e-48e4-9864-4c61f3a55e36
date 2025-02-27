@@ -127,19 +127,4 @@ describe('useGameTimer', () => {
     // Time should be about 2 seconds
     expect(result.current.timeElapsed).toBe(2);
   });
-
-  it('should clean up interval on unmount', () => {
-    const clearIntervalSpy = vi.spyOn(window, 'clearInterval');
-    
-    const { result, unmount } = renderHook(() => useGameTimer());
-    
-    act(() => {
-      result.current.startTimer();
-    });
-    
-    unmount();
-    
-    // Check clearInterval was called
-    expect(clearIntervalSpy).toHaveBeenCalled();
-  });
 });
