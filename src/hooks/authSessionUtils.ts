@@ -21,9 +21,9 @@ export const getInitialSessionUtil = async (
     if (session?.user?.email) {
       try {
         // Convert 'staging' to 'production' for environment type
-        const effectiveEnv = import.meta.env.VITE_PUBLIC_APP_ENV === 'staging' 
+        const effectiveEnv = (import.meta.env.VITE_PUBLIC_APP_ENV === 'staging' 
           ? 'production' 
-          : import.meta.env.VITE_PUBLIC_APP_ENV as environmentType;
+          : import.meta.env.VITE_PUBLIC_APP_ENV) as 'development' | 'production';
           
         await recordLogin(session.user.email, effectiveEnv);
       } catch (error) {

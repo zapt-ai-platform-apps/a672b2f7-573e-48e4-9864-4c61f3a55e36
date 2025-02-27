@@ -11,9 +11,9 @@ async function recordUserLogin(email: string, getLoginRecorded: () => boolean, r
   
   try {
     // Get the environment value
-    const environment = import.meta.env.VITE_PUBLIC_APP_ENV as unknown as environmentType;
+    const environment = import.meta.env.VITE_PUBLIC_APP_ENV as environmentType;
     // Convert 'staging' to 'production' for recordLogin
-    const effectiveEnv = (environment === 'staging') ? 'production' : environment;
+    const effectiveEnv = (environment === 'staging' ? 'production' : environment) as 'development' | 'production';
     await recordLogin(email, effectiveEnv);
     setLoginRecorded(true);
   } catch (error) {
