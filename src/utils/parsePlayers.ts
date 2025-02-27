@@ -47,9 +47,9 @@ export default function parsePlayers(input: string | any[]): Player[] {
   // Log for debugging
   console.log('Parsing players from string:', text);
   
-  // First check if it's a JSON string
-  try {
-    if (text.startsWith('[') && text.endsWith(']')) {
+  // Check if it's definitely a JSON string (must start with '[' and end with ']')
+  if (text.startsWith('[') && text.endsWith(']')) {
+    try {
       const parsed = JSON.parse(text);
       if (Array.isArray(parsed)) {
         return parsed.map((name, index) => ({
@@ -65,17 +65,18 @@ export default function parsePlayers(input: string | any[]): Player[] {
           playIntervals: []
         }));
       }
+    } catch (e) {
+      console.warn('Failed to parse as JSON, falling back to delimiter-based parsing');
+      // Continue to delimiter-based parsing
     }
-  } catch (e) {
-    console.log('Not valid JSON, trying other formats');
   }
   
-  // Determine if we should split by commas or newlines
+  // If not a valid JSON array or JSON parsing failed, split by delimiter
   const hasNewlines = text.includes('\n');
   const hasCommas = text.includes(',');
   
-  // If there are commas but no newlines, split by commas
-  const delimiter = (hasCommas) ? ',' : '\n';
+  // Prefer comma delimiter if present
+  const delimiter = hasCommas ? ',' : (hasNewlines ? '\n' : ',');
   
   // Split the string and create player objects
   const playerNames = text
@@ -97,4 +98,24 @@ export default function parsePlayers(input: string | any[]): Player[] {
     isInStartingLineup: false,
     playIntervals: []
   }));
+}
+
+/**
+ * Gets the count of players in a squad, handling different data formats
+ */
+export function getPlayerCount(squadData: any): number {
+  if (!squadData || !squadData.players) return 0;
+  
+  const { players } = squadData;
+  
+  if (Array.isArray(players)) {
+    return players.length;
+  }
+  
+  if (typeof players === 'string') {
+    // Parse the string to get the actual player count
+    return parsePlayers(players).length;
+  }
+  
+  return 0;
 }
