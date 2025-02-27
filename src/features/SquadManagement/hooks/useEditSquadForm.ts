@@ -115,12 +115,14 @@ export function useEditSquadForm(squadId: number) {
       
       await updateSquad(apiSquad.id, apiSquad);
       
-      // Make sure we're passing an array of players, not a string
-      setSelectedSquad({
+      // Ensure we pass the Squad with players as an array of Player objects, not a string
+      const updatedSquad: Squad = {
         ...squad,
         name: squadName,
-        players // This needs to be Player[], not a string
-      });
+        players: players // This is now correctly an array of Player objects
+      };
+      
+      setSelectedSquad(updatedSquad);
       
       navigate('/squads');
     } catch (err) {

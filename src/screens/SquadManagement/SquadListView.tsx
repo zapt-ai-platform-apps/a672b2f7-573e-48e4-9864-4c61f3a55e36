@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Squad } from '../../types/GameTypes';
 import SquadCard from '../../features/SquadManagement/components/SquadCard';
 
@@ -6,7 +6,7 @@ export interface SquadListViewProps {
   squads: Squad[];
   onAddNewSquad: () => void;
   onSelectSquad: (squad: Squad) => void;
-  onEdit: (squadId: number) => void; // Changed from onEditSquad to onEdit
+  onEdit: (squadId: number) => void; // Expects a number
 }
 
 const SquadListView: React.FC<SquadListViewProps> = ({
@@ -15,6 +15,13 @@ const SquadListView: React.FC<SquadListViewProps> = ({
   onSelectSquad,
   onEdit
 }) => {
+  const [selectedSquadId, setSelectedSquadId] = useState<string | null>(null);
+
+  const handleSelectSquad = (squad: Squad) => {
+    setSelectedSquadId(squad.id);
+    onSelectSquad(squad);
+  };
+
   return (
     <div>
       {/* Add New Squad Button */}
@@ -48,8 +55,9 @@ const SquadListView: React.FC<SquadListViewProps> = ({
             <SquadCard
               key={squad.id}
               squad={squad}
-              onSelect={() => onSelectSquad(squad)}
-              onEdit={() => onEdit(squad.id)}
+              isSelected={selectedSquadId === squad.id} // Added isSelected prop
+              onSelect={() => handleSelectSquad(squad)}
+              onEdit={() => onEdit(parseInt(squad.id, 10))} // Convert string ID to number
             />
           ))}
         </div>
