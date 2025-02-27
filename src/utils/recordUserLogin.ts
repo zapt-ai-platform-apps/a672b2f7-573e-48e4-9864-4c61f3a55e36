@@ -1,5 +1,6 @@
 import { createEvent, recordLogin as zapt_recordLogin } from '../supabaseClient';
 import * as Sentry from "@sentry/browser";
+import { environmentType } from '../types/environment';
 
 /**
  * Record a user login event
@@ -9,7 +10,7 @@ import * as Sentry from "@sentry/browser";
 export const recordLogin = async (email: string): Promise<void> => {
   try {
     console.log('Recording login for:', email);
-    await zapt_recordLogin(email, import.meta.env.VITE_PUBLIC_APP_ENV);
+    await zapt_recordLogin(email, import.meta.env.VITE_PUBLIC_APP_ENV as environmentType);
     console.log('Login recorded successfully');
     
     // Also create a login event

@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from 'react';
 import Pitch from './Pitch';
-import Player from './Player';
 import useDragAndDrop from '../hooks/useDragAndDrop';
 import { Player as PlayerType } from '@/types/GameTypes';
 import { assignInitialPositions } from '../utils/assignInitialPositions';
@@ -35,18 +34,13 @@ const PitchVisualization: React.FC<PitchVisualizationProps> = ({
   const onFieldPlayers = playersWithPositions.filter(player => player.isOnField);
   
   return (
-    <div className="relative" ref={pitchRef} data-testid={dataTestId}>
-      <Pitch>
-        {onFieldPlayers.map((player) => (
-          <Player
-            key={player.id}
-            player={player}
-            onPointerDown={(e) => handlePointerDown(e, player.id)}
-            data-testid={`player-on-field-${player.id}`}
-            data-player-id={player.id}
-          />
-        ))}
-      </Pitch>
+    <div className="relative" data-testid={dataTestId}>
+      <Pitch
+        pitchRef={pitchRef}
+        playerData={playersWithPositions}
+        players={onFieldPlayers}
+        handlePointerDown={(e, playerId) => handlePointerDown(e, playerId)}
+      />
     </div>
   );
 };

@@ -6,6 +6,7 @@ interface PlayerProps {
   onPointerDown: (e: React.PointerEvent<HTMLDivElement>) => void;
   'data-testid'?: string;
   'data-player-id'?: string;
+  showStatus?: boolean; // Added optional showStatus prop
 }
 
 /**
@@ -15,7 +16,8 @@ const Player: React.FC<PlayerProps> = ({
   player, 
   onPointerDown,
   'data-testid': dataTestId,
-  'data-player-id': dataPlayerId
+  'data-player-id': dataPlayerId,
+  showStatus
 }) => {
   const { name, position, isGoalkeeper } = player;
   
@@ -39,6 +41,11 @@ const Player: React.FC<PlayerProps> = ({
       >
         <span className="pointer-events-none">{name}</span>
       </div>
+      {showStatus && (
+        <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-800/70 text-xs text-white px-2 py-1 rounded-full">
+          {isGoalkeeper ? 'GK' : ''}
+        </div>
+      )}
     </div>
   );
 };
