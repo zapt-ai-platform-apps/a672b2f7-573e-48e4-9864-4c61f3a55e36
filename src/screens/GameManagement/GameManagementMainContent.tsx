@@ -12,7 +12,15 @@ interface GameManagementMainContentProps {
     isRunning: boolean;
     timeElapsed: number;
     toggleTimer: () => boolean;
-    // Include other properties as needed
+    startTimer?: () => void;
+    stopTimer?: () => void;
+    resetTimer?: () => void;
+    getTimeElapsed?: () => number;
+    gameIntervals?: Array<{ startTime: number; endTime?: number }>;
+    startGame?: () => void;
+    pauseGame?: () => void;
+    now?: number;
+    startUITimer?: () => void;
   };
   ourScore: number;
   opponentScore: number;

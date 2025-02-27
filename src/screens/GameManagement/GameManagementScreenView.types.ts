@@ -7,7 +7,7 @@ export interface GameManagementScreenViewProps {
   opponentScore: number;
   getTimeElapsed: () => number;
   toggleTimer: () => boolean;
-  handleEndGame: () => void;
+  handleEndGame?: () => void;
   showEndGameConfirm: boolean;
   confirmEndGame: () => void;
   cancelEndGame: () => void;
@@ -37,19 +37,19 @@ export interface GameManagementScreenViewProps {
   handleIncreasePlayers?: () => void;
   handleDecreasePlayers?: () => void;
   
-  // Updated timerControls type to include all properties returned by useGameTimer
+  // Timer controls with all required properties
   timerControls?: {
     isRunning: boolean;
     timeElapsed: number;
     toggleTimer: () => boolean;
-    startTimer: () => void;
-    stopTimer: () => void;
-    resetTimer: () => void;
-    getTimeElapsed: () => number;
-    gameIntervals: Array<{ startTime: number; endTime?: number }>;
-    startGame: () => void;
-    pauseGame: () => void;
-    now: number;
-    startUITimer: () => void;
+    startTimer?: () => void;
+    stopTimer?: () => void;
+    resetTimer?: () => void;
+    getTimeElapsed?: () => number;
+    gameIntervals?: Array<{ startTime: number; endTime?: number }>;
+    startGame?: () => void;
+    pauseGame?: () => void;
+    now?: number;
+    startUITimer?: () => void;
   };
 }

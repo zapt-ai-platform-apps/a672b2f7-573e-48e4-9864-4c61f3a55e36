@@ -1,6 +1,6 @@
 interface Interval {
   startTime: number;
-  endTime: number | null;
+  endTime?: number | null;
 }
 
 /**
@@ -15,7 +15,7 @@ export function getTimeElapsed(
 ): number {
   let total = 0;
   gameIntervals.forEach(interval => {
-    if (interval.endTime !== null) {
+    if (interval.endTime !== null && interval.endTime !== undefined) {
       total += interval.endTime - interval.startTime;
     } else if (isRunning) {
       total += Date.now() - interval.startTime;
@@ -45,7 +45,7 @@ export function toggleTimer(
     // End current interval
     if (newIntervals.length > 0) {
       const lastIndex = newIntervals.length - 1;
-      if (newIntervals[lastIndex].endTime === null) {
+      if (newIntervals[lastIndex].endTime === null || newIntervals[lastIndex].endTime === undefined) {
         newIntervals[lastIndex] = {
           ...newIntervals[lastIndex],
           endTime: now

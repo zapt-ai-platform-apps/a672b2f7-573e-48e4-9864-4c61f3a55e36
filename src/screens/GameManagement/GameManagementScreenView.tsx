@@ -87,7 +87,11 @@ export default function GameManagementScreenView(props: GameManagementScreenView
           offFieldPlayers={offFieldPlayers}
           getTotalPlayTime={getTotalPlayTime}
           setShowGoalModal={setShowGoalModal}
-          timerControls={timerControls}
+          timerControls={timerControls || {
+            isRunning: false,
+            timeElapsed: 0,
+            toggleTimer: () => false
+          }}
           ourScore={ourScore}
           opponentScore={opponentScore}
         />
@@ -130,6 +134,7 @@ export default function GameManagementScreenView(props: GameManagementScreenView
         setSelectedGoalkeeper={setSelectedGoalkeeper}
         handleIncreasePlayers={handleIncreasePlayersWrapper}
         handleDecreasePlayers={handleDecreasePlayersWrapper}
+        timerControls={timerControls}
       />
     </motion.div>
   );
