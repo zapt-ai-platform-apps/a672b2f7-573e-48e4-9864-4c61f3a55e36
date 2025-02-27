@@ -1,8 +1,9 @@
 import { createPlayer } from '../../../shared/models/player';
+import type { Player } from '../../../types/GameTypes';
 
 export function addPlayer(
   playerName: string,
-  setStartingPlayers: (update: (prev: any[]) => any[]) => void,
+  setStartingPlayers: (update: (prev: Player[]) => Player[]) => void,
   setPlayerName: (name: string) => void
 ): void {
   if (playerName.trim() !== '') {
@@ -11,7 +12,8 @@ export function addPlayer(
       const newPlayer = {
         ...player,
         isStartingPlayer: true,
-        isInMatchSquad: true
+        isInMatchSquad: true,
+        isInStartingLineup: false // Add missing property
       };
       return [...prev, newPlayer];
     });

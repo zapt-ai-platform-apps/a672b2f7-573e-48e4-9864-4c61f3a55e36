@@ -44,7 +44,29 @@ export default function GameManagementScreenViewContent({
 
   const handleRecordGoal = (goal: GoalData) => {
     if (recordGoal && setGoals && setOurScore && setOpponentScore) {
-      recordGoal(goal, setGoals, setOurScore, setOpponentScore);
+      // Convert GoalData to Goal type for compatibility
+      const convertedGoal: Goal = {
+        team: goal.team,
+        scorerName: goal.scorer,
+        time: goal.minute,
+        id: goal.id,
+        minute: goal.minute,
+        scorer: goal.scorer,
+        scorerId: goal.scorerId,
+        timestamp: goal.timestamp
+      };
+      
+      // Create a new array to avoid direct mutation
+      const updatedGoals = goals ? [...goals] : [];
+      
+      recordGoal(goal, 
+        // Properly typed callback for setGoals
+        (newGoals: Goal[]) => {
+          if (setGoals) setGoals(newGoals);
+        },
+        setOurScore,
+        setOpponentScore
+      );
       setShowGoalModal(false);
     }
   };

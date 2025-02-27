@@ -28,6 +28,7 @@ export interface Player {
   playIntervals: PlayInterval[];
   selected?: boolean;
   status?: string;
+  number?: string | number; // Added number property
 }
 
 export interface Goal {

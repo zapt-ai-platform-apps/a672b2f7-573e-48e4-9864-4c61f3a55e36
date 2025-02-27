@@ -18,8 +18,9 @@ export function ensurePlayerProperties(player: Partial<Player>): Player {
     isInMatchSquad: player.isInMatchSquad ?? false,
     isInStartingLineup: player.isInStartingLineup ?? false,
     playIntervals: player.playIntervals || [],
-    // Optional properties with their original values or undefined
+    // Include number property (now part of Player interface)
     number: player.number,
+    // Optional properties with their original values or undefined
     playTime: player.playTime,
     lastStart: player.lastStart,
     isStartingPlayer: player.isStartingPlayer,

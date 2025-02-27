@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useStateContext } from '../../../hooks/useStateContext';
 import { ExtendedPlayer } from '../types/ExtendedPlayer';
 import { initializeMatchSquadPlayers } from '../utils/matchSquadUtils';
-import { Player, Squad } from '../../../types/GameTypes';
+import { Player, Squad, Position } from '../../../types/GameTypes';
 
 /**
  * Type guard to check if an object is a Squad
@@ -94,15 +94,23 @@ export default function useMatchSquad() {
     setMatchSquadPlayers(updatedPlayers);
     
     // Convert ExtendedPlayer[] to Player[] before setting matchSquad
-    // Fix: Ensure isInStartingLineup property is always included
     const selectedPlayers = updatedPlayers
       .filter((player: ExtendedPlayer) => player.isInMatchSquad)
-      .map((player: ExtendedPlayer): Player => ({
-        ...player,
-        isInMatchSquad: player.isInMatchSquad,
-        isInStartingLineup: player.isInStartingLineup || false, // Fix: Ensure this property exists
-        position: player.position
-      }));
+      .map((player: ExtendedPlayer): Player => {
+        const defaultPosition: Position = { x: 0, y: 0 };
+        return {
+          id: player.id,
+          name: player.name,
+          position: player.position || defaultPosition,
+          isOnField: player.isOnField || false,
+          isGoalkeeper: player.isGoalkeeper || false,
+          isInMatchSquad: player.isInMatchSquad,
+          isInStartingLineup: player.isInStartingLineup || false,
+          totalPlayTime: player.totalPlayTime || 0,
+          playIntervals: player.playIntervals || [],
+          number: player.number
+        };
+      });
     
     setMatchSquad(selectedPlayers);
     console.log('Toggled player. Selected players:', selectedPlayers);
