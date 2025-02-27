@@ -1,6 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { pointerDown, pointerMove, pointerUp } from '../utils/dragHandlers';
 import * as Sentry from '@sentry/browser';
+import React from 'react';
 
 export interface DragState {
   dragging: boolean;
@@ -24,7 +25,7 @@ const useDragAndDrop = () => {
     playerId: undefined
   });
 
-  const handlePointerDown = useCallback((e: PointerEvent, playerId?: string): void => {
+  const handlePointerDown = useCallback((e: React.PointerEvent<Element>, playerId?: string): void => {
     try {
       // Ensure we're finding the correct player element and working with it
       if (playerId) {
@@ -33,13 +34,13 @@ const useDragAndDrop = () => {
           console.log('Player element found for drag, ID:', playerId);
           e.preventDefault(); // Prevent default to ensure drag works properly
           e.stopPropagation(); // Stop event from bubbling up
-          pointerDown(e, dragStateRef.current, playerId);
+          pointerDown(e.nativeEvent, dragStateRef.current, playerId);
         } else {
           console.error('Player element not found for ID:', playerId);
         }
       } else {
         // Handle case when no playerId is provided (clicked on the pitch itself)
-        pointerDown(e, dragStateRef.current);
+        pointerDown(e.nativeEvent, dragStateRef.current);
       }
     } catch (error) {
       console.error('Error in handlePointerDown:', error);

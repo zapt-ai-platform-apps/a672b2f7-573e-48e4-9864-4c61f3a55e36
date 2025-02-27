@@ -53,7 +53,7 @@ const PitchVisualization: React.FC<PitchVisualizationProps> = ({
               top: `${player.position.y}%`,
               transform: 'translate(-50%, -50%)'
             }}
-            onPointerDown={(e) => handlePointerDown(e.nativeEvent, player.id)}
+            onPointerDown={(e) => handlePointerDown(e, player.id)}
           >
             <span className="text-white font-bold">{player.name.charAt(0)}</span>
             <span className="sr-only">{player.name}</span>
