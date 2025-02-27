@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import SignIn from './components/SignIn';
 import LoadingScreen from './components/Loading';
@@ -41,6 +41,12 @@ const AppRoutes: React.FC = () => {
               <Route path="/game-setup" element={
                 <ProtectedRoute>
                   <GameSetupParticipants />
+                </ProtectedRoute>
+              } />
+              {/* Add this route to handle /setup/participants redirects */}
+              <Route path="/setup/participants" element={
+                <ProtectedRoute>
+                  <Navigate to="/game-setup" replace />
                 </ProtectedRoute>
               } />
               <Route path="/game-setup/lineup" element={

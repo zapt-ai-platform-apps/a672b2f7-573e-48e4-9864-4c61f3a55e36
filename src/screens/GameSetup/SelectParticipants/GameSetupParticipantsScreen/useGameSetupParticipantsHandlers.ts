@@ -14,7 +14,7 @@ export default function useGameSetupParticipantsHandlers(
       return;
     }
     setSelectedSquad(selectedMatchPlayers);
-    navigate('/next');
+    navigate('/game-setup/lineup');
   }, [selectedMatchPlayers, setSelectedSquad, navigate, setErrorMessage]);
 
   const handleBack = useCallback(() => {

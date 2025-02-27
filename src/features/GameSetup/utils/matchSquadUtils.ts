@@ -16,13 +16,20 @@ export const initializeMatchSquadPlayers = (
     return [];
   }
 
+  console.log('Initializing match squad players from:', selectedSquad.players);
+
   return selectedSquad.players.map(player => {
+    if (!player || !player.id) {
+      console.warn('Invalid player in squad:', player);
+      return null;
+    }
+    
     // Check if player exists in the current match squad
     const existingPlayer = existingMatchSquad?.find(p => p.id === player.id);
     
-    return {
+    const extendedPlayer: ExtendedPlayer = {
       id: player.id,
-      name: player.name,
+      name: player.name || 'Unnamed Player',
       number: player.number || '',
       isInMatchSquad: existingPlayer ? existingPlayer.isInMatchSquad : false,
       totalPlayTime: player.totalPlayTime || 0,
@@ -31,5 +38,7 @@ export const initializeMatchSquadPlayers = (
       position: player.position || { x: 0, y: 0 },
       playIntervals: player.playIntervals || []
     };
-  });
+    
+    return extendedPlayer;
+  }).filter(Boolean) as ExtendedPlayer[];
 };

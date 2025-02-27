@@ -17,7 +17,7 @@ export function GameSetupStepTwo(): JSX.Element {
         
         if (!matchSquad || matchSquad.length === 0) {
           console.error('No match squad available');
-          navigate('/setup/participants');
+          navigate('/game-setup');
           return;
         }
         
@@ -26,7 +26,7 @@ export function GameSetupStepTwo(): JSX.Element {
         
         if (!hasGoalkeeper) {
           console.error('No goalkeeper selected');
-          navigate('/setup/lineup');
+          navigate('/game-setup/lineup');
           return;
         }
         

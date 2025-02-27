@@ -49,7 +49,7 @@ export default function useMatchSquad() {
       
       if (isSquad(processedSquad)) {
         // It's a Squad object with players property
-        playersToUse = processedSquad.players;
+        playersToUse = processedSquad.players || [];
       } else if (Array.isArray(processedSquad)) {
         // It's an array of players directly
         playersToUse = processedSquad;
@@ -57,10 +57,18 @@ export default function useMatchSquad() {
         processedSquad && 
         typeof processedSquad === 'object' && 
         'players' in processedSquad && 
-        Array.isArray(processedSquad.players)
+        Array.isArray((processedSquad as any).players)
       ) {
         // It has a players property that's an array
-        playersToUse = processedSquad.players;
+        playersToUse = (processedSquad as any).players;
+      }
+      
+      console.log('Players to use:', playersToUse);
+      
+      if (!playersToUse || playersToUse.length === 0) {
+        console.warn('No players found in selected squad');
+        setMatchSquadPlayers([]);
+        return;
       }
       
       // Create a temporary squad object to pass to initializer
@@ -71,6 +79,7 @@ export default function useMatchSquad() {
       };
       
       const initialPlayers = initializeMatchSquadPlayers(squad, matchSquad as ExtendedPlayer[]);
+      console.log('Initialized match squad players:', initialPlayers);
       setMatchSquadPlayers(initialPlayers);
     } catch (error) {
       console.error('Error processing selectedSquad:', error);
