@@ -30,7 +30,8 @@ export const initializeMatchSquadPlayers = (
     const extendedPlayer: ExtendedPlayer = {
       id: player.id,
       name: player.name || 'Unnamed Player',
-      number: player.number || '',
+      // Convert number to string if it's a number type
+      number: player.number !== undefined ? String(player.number) : '',
       isInMatchSquad: existingPlayer ? existingPlayer.isInMatchSquad : false,
       totalPlayTime: player.totalPlayTime || 0,
       isOnField: player.isOnField || false,

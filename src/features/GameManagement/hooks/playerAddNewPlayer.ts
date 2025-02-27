@@ -49,7 +49,8 @@ export function createAddNewPlayer({
   setShowAddPlayerModal
 }: AddNewPlayerParams): (playerNameOptional?: string) => void {
   return (playerNameOptional?: string): void => {
-    const name = playerNameOptional ? playerNameOptional : newPlayerName.trim();
+    // Ensure name is always a string, defaulting to empty if undefined
+    const name = playerNameOptional ? playerNameOptional.trim() : newPlayerName.trim();
     if (name !== "") {
       // Calculate default play time based on existing players or use 0
       const defaultPlayTime = props.playerData.length > 0 
@@ -59,7 +60,7 @@ export function createAddNewPlayer({
       const defaultPosition: Position = { x: 0, y: 0 };
       
       const newPlayer: PlayerWithIntervals = {
-        ...createPlayer({ name }),
+        ...createPlayer({ name }), // name is guaranteed to be a string here
         id: Date.now().toString(),
         playIntervals: [] as PlayInterval[],
         isOnField: false,

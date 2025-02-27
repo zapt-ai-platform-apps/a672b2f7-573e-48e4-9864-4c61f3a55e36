@@ -3,7 +3,7 @@ import { Interval } from '../../../shared/models/timeUtils';
 // Calculate playtimes from a list of intervals
 export const calculatePlaytimes = (intervals: Interval[]): number => {
   return intervals.reduce((total, interval) => {
-    if (interval.end === null || interval.end === undefined) return total;
+    if (interval.end === undefined) return total;
     return total + (interval.end - interval.start);
   }, 0);
 };
@@ -12,7 +12,7 @@ export const calculatePlaytimes = (intervals: Interval[]): number => {
 export const formatPlaytimeIntervals = (intervals: Interval[]): Interval[] => {
   return intervals.map(interval => ({
     start: interval.start || 0,
-    end: interval.end || null
+    end: interval.end // Keep as undefined if not set, don't use null
   }));
 };
 
@@ -21,7 +21,7 @@ export const getActiveInterval = (intervals: Interval[]): Interval | null => {
   if (intervals.length === 0) return null;
   
   const lastInterval = intervals[intervals.length - 1];
-  if (lastInterval.end === null || lastInterval.end === undefined) {
+  if (lastInterval.end === undefined) {
     return lastInterval;
   }
   

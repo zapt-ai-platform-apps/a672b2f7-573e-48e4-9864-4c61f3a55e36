@@ -10,7 +10,6 @@ function createPlayer(name: string): Player {
     totalPlayTime: 0,
     position: { x: 0, y: 0 },
     isStartingPlayer: true,
-    // Added missing required properties
     isInMatchSquad: true,
     isInStartingLineup: true
   };
