@@ -28,7 +28,7 @@ export const getInitialSessionUtil = async (
     // Record login if we have a session
     if (session?.user?.email) {
       try {
-        await recordLogin(session.user.email);
+        await recordLogin(session.user.email, import.meta.env.VITE_PUBLIC_APP_ENV);
       } catch (error) {
         console.error('Failed to record login:', error);
         Sentry.captureException(error);
@@ -62,7 +62,7 @@ export const subscribeAuthStateChangeUtil = (
         // Record login on sign in event
         if (event === 'SIGNED_IN' && session?.user?.email) {
           try {
-            await recordLogin(session.user.email);
+            await recordLogin(session.user.email, import.meta.env.VITE_PUBLIC_APP_ENV);
           } catch (error) {
             console.error('Failed to record login on state change:', error);
             Sentry.captureException(error);

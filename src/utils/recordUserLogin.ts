@@ -23,8 +23,12 @@ export const recordUserLogin = async (): Promise<void> => {
     }
     
     try {
-      // Record the login with the user's email
-      const appEnv = import.meta.env.VITE_PUBLIC_APP_ENV as environmentType;
+      // Get the raw environment value
+      const rawEnv = import.meta.env.VITE_PUBLIC_APP_ENV as string;
+      // Convert 'staging' to 'production' to match the expected types
+      const appEnv = rawEnv === 'staging' ? 'production' : rawEnv;
+      
+      // Record the login with the user's email and properly converted environment
       await zapt_recordLogin(user.email, appEnv);
       console.log('Login recorded successfully');
       
