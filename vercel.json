@@ -11,7 +11,7 @@
   ],
   "functions": {
     "api/*.ts": {
-      "includeFiles": "../drizzle/schema.ts,../src/utils/playerParsingUtils.js,../src/models/squadModel.js"
+      "includeFiles": "../drizzle/schema.ts,../src/utils/playerParsingUtils.ts,../src/models/squadModel.ts"
     }
   }
 }

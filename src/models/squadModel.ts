@@ -1,4 +1,4 @@
-import { parsePlayers } from '../utils/playerParsingUtils';
+import { parsePlayers } from '../utils/playerParsingUtils.js';
 import * as Sentry from "@sentry/browser";
 import { Player } from '../types/GameTypes';
 
