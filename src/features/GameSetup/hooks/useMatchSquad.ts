@@ -16,17 +16,36 @@ export default function useMatchSquad() {
   useEffect(() => {
     console.log('selectedSquad in useMatchSquad:', selectedSquad);
     if (selectedSquad) {
-      // If selectedSquad is a Squad, use it directly, otherwise create a temporary Squad object
-      const squad: Squad = isSquad(selectedSquad) 
-        ? selectedSquad 
-        : {
-            id: 'temp-squad-id',
-            name: 'Temporary Squad',
-            players: selectedSquad as Player[]
-          };
-          
-      const initialPlayers = initializeMatchSquadPlayers(squad, matchSquad as ExtendedPlayer[]);
-      setMatchSquadPlayers(initialPlayers);
+      try {
+        // Handle case where selectedSquad might be stored as a string
+        let processedSquad = selectedSquad;
+        if (typeof selectedSquad === 'string') {
+          try {
+            processedSquad = JSON.parse(selectedSquad);
+          } catch (e) {
+            console.error('Failed to parse selectedSquad as JSON:', e);
+          }
+        }
+        
+        // Determine if we have a Squad object or an array of Players
+        const squad: Squad = isSquad(processedSquad) 
+          ? processedSquad 
+          : {
+              id: 'temp-squad-id',
+              name: 'Temporary Squad',
+              players: Array.isArray(processedSquad) 
+                ? processedSquad 
+                : (processedSquad && typeof processedSquad === 'object' && 'players' in processedSquad 
+                  ? processedSquad.players 
+                  : [])
+            };
+        
+        const initialPlayers = initializeMatchSquadPlayers(squad, matchSquad as ExtendedPlayer[]);
+        setMatchSquadPlayers(initialPlayers);
+      } catch (error) {
+        console.error('Error processing selectedSquad:', error);
+        setMatchSquadPlayers([]);
+      }
     } else {
       // Ensure we always have an empty array if no squad is selected
       setMatchSquadPlayers([]);
