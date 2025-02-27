@@ -22,13 +22,16 @@ export default function GameManagementScreenViewContent({
     return timeFormatter(seconds);
   };
 
+  // Create a default no-op function for handleEndGame if it's undefined
+  const safeHandleEndGame = handleEndGame || (() => {});
+
   return (
     <div className="w-full">
       <Header
         isRunning={isRunning}
         toggleTimer={toggleTimer}
         getTimeElapsed={formattedTimeElapsed}
-        handleEndGame={handleEndGame}
+        handleEndGame={safeHandleEndGame}
         ourScore={ourScore}
         opponentScore={opponentScore}
       />
