@@ -2,7 +2,6 @@ import React from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import SignIn from './components/SignIn';
-import NavBar from './components/navigation/NavBar';
 import LoadingScreen from './components/Loading';
 import { AnimatePresence } from 'framer-motion';
 
@@ -22,8 +21,7 @@ const AppRoutes: React.FC = () => {
 
   return (
     <>
-      <NavBar />
-      <main className="container mx-auto px-4 pt-20 pb-16 h-full">
+      <main className="container mx-auto px-4 pb-16 h-full">
         <React.Suspense fallback={<LoadingScreen />}>
           <AnimatePresence mode="wait">
             <Routes 

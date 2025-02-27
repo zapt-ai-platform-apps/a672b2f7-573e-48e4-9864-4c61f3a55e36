@@ -20,14 +20,6 @@ export default function SignIn(): JSX.Element {
       <div className="relative z-10 w-full max-w-md">
         <SignInCard navigate={navigate} />
       </div>
-      <a 
-        href="https://www.zapt.ai" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="fixed bottom-4 right-4 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium text-white hover:bg-white/20 transition-all duration-300 border border-white/20 z-20"
-      >
-        Made on ZAPT
-      </a>
     </div>
   );
 }

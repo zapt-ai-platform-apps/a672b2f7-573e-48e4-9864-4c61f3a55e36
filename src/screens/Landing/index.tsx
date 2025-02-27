@@ -33,7 +33,7 @@ export default function LandingScreen(): JSX.Element {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
       >
-        <header className="container mx-auto px-6 py-6 flex justify-between items-center">
+        <header className="w-full px-6 py-6 flex justify-between items-center">
           <motion.div 
             className="flex items-center"
             initial={{ x: -20, opacity: 0 }}
@@ -63,7 +63,7 @@ export default function LandingScreen(): JSX.Element {
           </motion.button>
         </header>
       
-        <div className="container mx-auto px-4 py-8 md:py-16 flex flex-col items-center flex-grow">
+        <div className="w-full px-4 py-8 md:py-16 flex flex-col items-center flex-grow">
           <HeroSection onGetStarted={handleGetStarted} />
           
           <motion.div
@@ -98,7 +98,7 @@ export default function LandingScreen(): JSX.Element {
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
-        <div className="container mx-auto px-6">
+        <div className="w-full px-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-8 md:mb-0">
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">Ready to transform your game management?</h3>
@@ -118,7 +118,7 @@ export default function LandingScreen(): JSX.Element {
       </motion.div>
       
       <footer className="bg-indigo-950 text-white py-8 relative z-10">
-        <div className="container mx-auto px-6">
+        <div className="w-full px-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <motion.div 
               className="flex items-center mb-6 md:mb-0"
