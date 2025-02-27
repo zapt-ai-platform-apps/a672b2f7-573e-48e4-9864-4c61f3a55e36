@@ -127,6 +127,10 @@ const useGameTimer = () => {
     getTimeElapsed,
     timeElapsed,
     gameIntervals,
+    isRunning, // Expose isRunning state to fix TypeScript error
+    // Add aliases to match the method names expected in tests
+    startGame: startTimer,
+    pauseGame: stopTimer,
     toggleTimer: () => {
       if (isRunning) {
         stopTimer();
