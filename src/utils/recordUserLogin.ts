@@ -1,4 +1,4 @@
-import { supabase, recordLogin as recordLoginFromClient, createEvent } from '../supabaseClient';
+import { supabase, recordLogin as recordLoginFromClient } from '../supabaseClient';
 import { hasLoggedInRecently } from '../lib/authRecording';
 import { EnvironmentType } from '../types/environment';
 import * as Sentry from "@sentry/browser";
@@ -32,7 +32,6 @@ export const recordUserLogin = async (email?: string, environment?: EnvironmentT
     if (!hasLoggedInRecently(email)) {
       console.log(`Recording login for user: ${email} in environment: ${environment} (effective: ${effectiveEnv})`);
       await recordLoginFromClient(email, effectiveEnv);
-      await createEvent('user_login', { email, environment: effectiveEnv }); // Fixed: Added event type and data object
     } else {
       console.log(`User ${email} already logged in recently, skipping login record`);
     }
