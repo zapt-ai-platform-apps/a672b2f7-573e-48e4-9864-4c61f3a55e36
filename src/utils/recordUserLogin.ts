@@ -32,7 +32,7 @@ export const recordUserLogin = async (email?: string, environment?: EnvironmentT
     if (!hasLoggedInRecently(email)) {
       console.log(`Recording login for user: ${email} in environment: ${environment} (effective: ${effectiveEnv})`);
       await recordLoginFromClient(email, effectiveEnv);
-      await createEvent(); // Call createEvent after successfully recording login
+      await createEvent('user_login', { email, environment: effectiveEnv }); // Fixed: Added event type and data object
     } else {
       console.log(`User ${email} already logged in recently, skipping login record`);
     }
