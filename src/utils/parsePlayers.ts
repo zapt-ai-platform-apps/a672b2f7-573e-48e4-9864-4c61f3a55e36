@@ -1,5 +1,5 @@
 import { Player, Position } from '../types/GameTypes';
-import { parsePlayers as parsePlayersToArray } from '../features/SquadManagement/utils/playerParsing';
+import { parsePlayers as parsePlayersToArray } from '../utils/playerParsingUtils';
 
 /**
  * Parses player data from various formats into structured Player objects

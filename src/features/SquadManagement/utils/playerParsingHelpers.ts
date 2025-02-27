@@ -1,52 +1,58 @@
 import * as Sentry from "@sentry/browser";
 
 /**
- * Parses a comma-separated string of player names
+ * Parses a JSON array string into an array of player names
+ * 
+ * @param jsonString - JSON array string to parse
+ * @param errorContext - Context identifier for error logging
+ * @returns Array of player names as strings
  */
-export function parseCommaSeparated(input: string): string[] {
-  return input
+export function parseJsonArray(jsonString: string, errorContext: string): string[] {
+  try {
+    const parsed = JSON.parse(jsonString);
+    if (!Array.isArray(parsed)) {
+      console.warn(`JSON parsing did not result in an array in ${errorContext}`);
+      return [jsonString];
+    }
+    
+    // Map to strings and filter out empty names
+    return parsed
+      .map(item => {
+        if (item && typeof item === 'object' && 'name' in item) {
+          return String(item.name);
+        }
+        return String(item);
+      })
+      .filter(Boolean);
+  } catch (error) {
+    console.error(`Failed to parse JSON in ${errorContext}:`, error);
+    Sentry.captureException(error);
+    return [jsonString.trim()];
+  }
+}
+
+/**
+ * Parses a comma-separated string into an array of player names
+ * 
+ * @param csvString - Comma-separated string to parse
+ * @returns Array of player names as strings
+ */
+export function parseCommaSeparated(csvString: string): string[] {
+  return csvString
     .split(',')
     .map(name => name.trim())
     .filter(Boolean);
 }
 
 /**
- * Parses a newline-separated string of player names
+ * Parses a newline-separated string into an array of player names
+ * 
+ * @param multilineString - Newline-separated string to parse
+ * @returns Array of player names as strings
  */
-export function parseNewlineSeparated(input: string): string[] {
-  return input
+export function parseNewlineSeparated(multilineString: string): string[] {
+  return multilineString
     .split(/\r?\n/)
     .map(name => name.trim())
     .filter(Boolean);
-}
-
-/**
- * Parses a JSON array string into an array of player names
- */
-export function parseJsonArray(jsonString: string, errorContext: string): string[] {
-  try {
-    const parsed = JSON.parse(jsonString);
-    
-    if (!Array.isArray(parsed)) {
-      console.warn(`JSON parse result is not an array in ${errorContext}`);
-      return [jsonString];
-    }
-    
-    // Handle array of objects or strings
-    return parsed.map(item => {
-      if (typeof item === 'string') {
-        return item;
-      } else if (item && typeof item === 'object' && 'name' in item) {
-        return String(item.name);
-      } else {
-        return String(item);
-      }
-    }).filter(Boolean);
-  } catch (error) {
-    console.error(`Failed to parse JSON in ${errorContext}:`, jsonString, error);
-    Sentry.captureException(error);
-    
-    // Fallback to treating as a single string
-    return [jsonString];
-  }
 }

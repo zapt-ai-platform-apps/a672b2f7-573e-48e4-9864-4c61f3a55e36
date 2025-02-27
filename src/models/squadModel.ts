@@ -1,4 +1,4 @@
-import { parsePlayers } from '../features/SquadManagement/utils/playerParsing';
+import { parsePlayers } from '../utils/playerParsingUtils';
 import * as Sentry from "@sentry/browser";
 import { Player } from '../types/GameTypes';
 
