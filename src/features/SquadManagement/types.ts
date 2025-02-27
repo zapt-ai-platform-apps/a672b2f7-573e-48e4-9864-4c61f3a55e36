@@ -1,10 +1,9 @@
-// Define the Squad interface with a number ID
+import { Player } from '../../types/GameTypes';
+
 export interface Squad {
   id: number;
   name: string;
-  players: any[];
+  players: Player[] | string;
   createdAt?: string;
+  userId?: string;
 }
-
-// Type for squad operations
-export type SquadOperationFn = (id: number) => void;

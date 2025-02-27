@@ -1,6 +1,6 @@
 import React from 'react';
 import SquadList from './SquadList';
-import type { Squad } from '../../../types/GameTypes';
+import type { Squad } from '../types';
 import { FiUsers, FiArrowRight } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 
@@ -45,9 +45,15 @@ export default function SquadListSection({
             <>
               <SquadList
                 squads={squads}
-                onSelect={handleSelectSquad}
-                onEdit={handleEditSquad}
-                selectedSquad={selectedSquad}
+                onEditSquad={(id) => {
+                  const squad = squads.find(s => s.id === id);
+                  if (squad) handleEditSquad(squad);
+                }}
+                onDeleteSquad={() => {}} // This would need implementation if required
+                onSelectSquad={(id) => {
+                  const squad = squads.find(s => s.id === id);
+                  if (squad) handleSelectSquad(squad);
+                }}
               />
               
               {selectedSquad && (

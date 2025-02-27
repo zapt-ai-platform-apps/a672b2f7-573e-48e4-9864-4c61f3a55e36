@@ -115,3 +115,9 @@ export async function fetchSquadByIdFromApi(id: number): Promise<Squad> {
     throw error;
   }
 }
+
+// Export aliases for backwards compatibility
+export const fetchSquads = fetchSquadsFromApi;
+export const fetchSquadById = fetchSquadByIdFromApi;
+export const updateSquad = updateSquadViaApi;
+export const deleteSquad = deleteSquadViaApi;

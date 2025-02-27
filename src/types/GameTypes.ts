@@ -52,7 +52,7 @@ export interface GoalData {
 }
 
 export interface Squad {
-  id: string;
+  id: number; // Changed from string to number to match rest of codebase
   name: string;
   players: Player[];
   createdAt?: string;
