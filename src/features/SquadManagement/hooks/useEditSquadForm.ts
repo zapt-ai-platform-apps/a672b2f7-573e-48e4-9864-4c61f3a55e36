@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Player, Squad } from '../../../types/GameTypes';
-import { useStateContext } from '../../../state';
+import { useStateContext } from '../../../hooks/useStateContext';
 import { fetchSquadById, updateSquad, deleteSquad } from '../api/squadApi';
 import * as Sentry from '@sentry/browser';
 import parsePlayers from '../../../utils/parsePlayers';
@@ -32,8 +32,16 @@ export function useEditSquadForm(squadId: number) {
           return;
         }
         
-        setSquad(fetchedSquad);
-        setSquadName(fetchedSquad.name);
+        // Create a properly typed Squad with players as Player[]
+        const typedSquad: Squad = {
+          ...fetchedSquad,
+          players: typeof fetchedSquad.players === 'string' 
+            ? parsePlayers(fetchedSquad.players)
+            : fetchedSquad.players
+        };
+        
+        setSquad(typedSquad);
+        setSquadName(typedSquad.name);
         
         // Parse players using the improved parsePlayers function
         try {
@@ -115,13 +123,13 @@ export function useEditSquadForm(squadId: number) {
       }
       
       // Create an API-compatible object - KEEP players as an array, not a JSON string
-      const apiSquad: Partial<Squad> = {
-        ...squad,
+      const apiSquad = {
+        id: squad.id,
         name: squadName,
         players: players // Keep players as an array
       };
       
-      await updateSquad(apiSquad.id!, apiSquad);
+      await updateSquad(apiSquad);
       
       // Updated Squad with players as an array of Player objects for local state
       const updatedSquad: Squad = {

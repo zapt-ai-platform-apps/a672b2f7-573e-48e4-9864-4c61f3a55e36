@@ -73,7 +73,9 @@ export default function useMatchSquad() {
       
       // Create a temporary squad object to pass to initializer
       const squad: Squad = {
-        id: 'temp-squad-id',
+        id: typeof processedSquad === 'object' && processedSquad !== null && 'id' in processedSquad 
+          ? Number((processedSquad as any).id) 
+          : 0,
         name: 'Temporary Squad',
         players: playersToUse
       };
@@ -121,7 +123,8 @@ export default function useMatchSquad() {
           isInStartingLineup: player.isInStartingLineup || false,
           totalPlayTime: player.totalPlayTime || 0,
           playIntervals: safePlayIntervals,
-          number: player.number
+          // Ensure number is passed as-is without trying to convert it
+          ...(player.number !== undefined ? { number: player.number } : {})
         };
       });
     

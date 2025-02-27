@@ -5,8 +5,10 @@ export interface CreateSquadParams {
   players: { name: string; number?: string }[];
 }
 
-export interface UpdateSquadParams extends CreateSquadParams {
+export interface UpdateSquadParams {
   id: number;
+  name: string;
+  players: any[]; // Allow any player format here to accommodate both string and Player[]
 }
 
 // API functions for working with squads
