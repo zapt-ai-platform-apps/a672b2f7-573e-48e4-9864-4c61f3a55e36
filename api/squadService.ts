@@ -1,104 +1,43 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import { eq } from 'drizzle-orm';
-import { authenticateUser } from './_apiUtils.js';
-import { transformSquadFromDB } from '../src/models/squadModel.js';
+import { eq, desc } from 'drizzle-orm';
+import { squads } from '../drizzle/schema.ts';
 import * as Sentry from '@sentry/node';
 
-// Import schema locally to ensure it's available during deployment
-import { squads } from './schema.js';
+// Get database client
+const getDbClient = () => {
+  const connectionString = process.env.COCKROACH_DB_URL;
+  if (!connectionString) {
+    throw new Error('Database connection string not provided');
+  }
+  return postgres(connectionString);
+};
 
-export default async function handler(req, res) {
+export async function getSquads(userId = null) {
   try {
-    // Check if ID is provided
-    const { id } = req.query;
-    
-    if (!id) {
-      return res.status(400).json({ error: 'Squad ID is required' });
-    }
-    
-    // Authenticate the user
-    const user = await authenticateUser(req);
-    
-    // Initialize database connection
-    const client = postgres(process.env.COCKROACH_DB_URL);
+    const client = getDbClient();
     const db = drizzle(client);
     
-    // Convert ID to number
-    const squadId = parseInt(id);
+    let query = db.select().from(squads).orderBy(desc(squads.createdAt));
     
-    if (isNaN(squadId)) {
-      return res.status(400).json({ error: 'Invalid squad ID' });
-    }
-    
-    if (req.method === 'GET') {
-      // Fetch a specific squad
-      const result = await db.select()
-        .from(squads)
-        .where(eq(squads.id, squadId));
-      
-      if (result.length === 0) {
-        return res.status(404).json({ error: 'Squad not found' });
-      }
-      
-      // Transform the result to ensure players are correctly parsed
-      const transformedSquad = transformSquadFromDB(result[0]);
-      
-      console.log('API - Fetched and transformed squad:', { 
-        id: transformedSquad.id, 
-        name: transformedSquad.name, 
-        playersType: typeof transformedSquad.players,
-        playersArray: Array.isArray(transformedSquad.players),
-        playersLength: Array.isArray(transformedSquad.players) ? transformedSquad.players.length : 'n/a'
-      });
-      
-      res.status(200).json(transformedSquad);
-    } else if (req.method === 'PUT') {
-      // Update a squad
-      const { name, players } = req.body;
-      
-      if (!name && !players) {
-        return res.status(400).json({ error: 'At least one field to update is required' });
-      }
-      
-      // Prepare update data
-      const updateData = {};
-      if (name) updateData.name = name;
-      if (players) {
-        updateData.players = typeof players === 'string' ? players : JSON.stringify(players);
-        console.log('API - Updating squad players:', updateData.players);
-      }
-      
-      const result = await db.update(squads)
-        .set(updateData)
-        .where(eq(squads.id, squadId))
-        .returning();
-      
-      if (result.length === 0) {
-        return res.status(404).json({ error: 'Squad not found' });
-      }
-      
-      // Transform the result for the response
-      const transformedSquad = transformSquadFromDB(result[0]);
-      
-      res.status(200).json(transformedSquad);
-    } else if (req.method === 'DELETE') {
-      // Delete a squad
-      const result = await db.delete(squads)
-        .where(eq(squads.id, squadId))
-        .returning();
-      
-      if (result.length === 0) {
-        return res.status(404).json({ error: 'Squad not found' });
-      }
-      
-      res.status(200).json({ message: 'Squad deleted successfully' });
+    // If userId is provided, filter by user_id
+    if (userId) {
+      query = query.where(eq(squads.userId, userId));
     } else {
-      res.status(405).json({ error: 'Method not allowed' });
+      // If no userId, only return public squads or apply appropriate public/private logic
+      // This is a placeholder - implement according to your business logic
+      // For example, you might have a `public` field in your squads table
+      // query = query.where(eq(squads.public, true));
     }
+    
+    const result = await query;
+    client.end();
+    return result;
   } catch (error) {
-    console.error('API Error:', error);
     Sentry.captureException(error);
-    res.status(500).json({ error: error.message || 'Internal server error' });
+    console.error('Database error in getSquads:', error);
+    throw new Error(`Failed to retrieve squads: ${error.message}`);
   }
 }
+
+// Add other squad-related database functions here
