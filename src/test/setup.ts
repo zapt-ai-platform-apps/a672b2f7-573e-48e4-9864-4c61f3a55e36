@@ -148,3 +148,13 @@ Element.prototype.releasePointerCapture = Element.prototype.releasePointerCaptur
 
 // Global mocks
 global.fetch = vi.fn();
+
+// Clear all timers after each test to prevent hanging
+afterEach(() => {
+  vi.clearAllTimers();
+});
+
+// Reset to real timers after all tests
+afterAll(() => {
+  vi.useRealTimers();
+});
