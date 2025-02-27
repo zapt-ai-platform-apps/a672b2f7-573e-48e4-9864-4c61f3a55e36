@@ -1,13 +1,7 @@
 import { supabase } from '../../../supabaseClient';
 import { parsePlayers } from '../utils/playerParsing';
 import * as Sentry from '@sentry/browser';
-
-export interface Squad {
-  id: number;
-  name: string;
-  players: string | any[];
-  createdAt?: string;
-}
+import { Squad } from '../types';
 
 /**
  * Fetches all squads for the current user
@@ -33,7 +27,7 @@ export async function fetchSquads(): Promise<Squad[]> {
     const squads = await response.json();
     
     // Process each squad to ensure players are properly parsed
-    return squads.map(squad => ({
+    return squads.map((squad: Record<string, unknown>) => ({
       ...squad,
       // Parse players if they're stored as a string
       players: typeof squad.players === 'string' 
