@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, fireEvent, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import PitchVisualization from '../features/GameManagement/components/PitchVisualization';
-import { createEvent } from '@testing-library/dom';
 import { act } from '@testing-library/react';
 
 // Mock useDragAndDrop hook with correct export structure
@@ -15,7 +14,7 @@ vi.mock('../features/GameManagement/hooks/useDragAndDrop', () => ({
 
 // Mock assignInitialPositions utility
 vi.mock('../features/GameManagement/utils/assignInitialPositions', () => ({
-  assignInitialPositions: vi.fn()
+  assignInitialPositions: (players) => players
 }));
 
 describe('Pitch Visualization Drag and Drop', () => {

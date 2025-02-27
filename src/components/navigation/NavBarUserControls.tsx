@@ -1,42 +1,40 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuthSession from '../../hooks/useAuthSession';
+import * as Sentry from '@sentry/browser';
 
 const NavBarUserControls: React.FC = () => {
-  const navigate = useNavigate();
   const { session, signOut } = useAuthSession();
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      // The navigation is handled inside the signOut function
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
+  const navigate = useNavigate();
 
   const handleSignIn = () => {
     navigate('/sign-in');
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
+      Sentry.captureException(error);
+    }
+  };
+
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center space-x-2">
       {session ? (
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-800 dark:text-gray-100">
-            {session.user?.email}
-          </span>
-          <button
-            onClick={handleSignOut}
-            className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white cursor-pointer"
-          >
-            Sign Out
-          </button>
-        </div>
+        <button
+          onClick={handleSignOut}
+          className="cursor-pointer bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition-colors"
+          data-testid="sign-out-button"
+        >
+          Sign Out
+        </button>
       ) : (
         <button
           onClick={handleSignIn}
-          className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white cursor-pointer"
+          className="cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition-colors"
+          data-testid="sign-in-button"
         >
           Sign In
         </button>

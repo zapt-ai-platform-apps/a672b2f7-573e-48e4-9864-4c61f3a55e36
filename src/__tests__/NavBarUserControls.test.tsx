@@ -9,7 +9,7 @@ import { act } from '@testing-library/react';
 const mockNavigate = vi.fn();
 const mockSignOut = vi.fn();
 
-// Mock useAuthSession hook with relative path
+// Mock useAuthSession hook
 vi.mock('../hooks/useAuthSession', () => ({
   __esModule: true,
   default: () => ({
@@ -18,7 +18,7 @@ vi.mock('../hooks/useAuthSession', () => ({
   })
 }));
 
-// Mock router with correct import
+// Mock router
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom');
   return {
@@ -33,7 +33,7 @@ describe('NavBarUserControls - Signed In', () => {
     mockNavigate.mockClear();
     
     // Configure mock for signed-in user
-    require('../hooks/useAuthSession').default.mockReturnValue({
+    vi.mocked(require('../hooks/useAuthSession').default).mockReturnValue({
       session: { user: { email: 'test@example.com' } },
       signOut: mockSignOut
     });
@@ -76,7 +76,7 @@ describe('NavBarUserControls - Signed Out', () => {
     mockNavigate.mockClear();
     
     // Configure mock for signed-out user
-    require('../hooks/useAuthSession').default.mockReturnValue({
+    vi.mocked(require('../hooks/useAuthSession').default).mockReturnValue({
       session: null,
       signOut: mockSignOut
     });

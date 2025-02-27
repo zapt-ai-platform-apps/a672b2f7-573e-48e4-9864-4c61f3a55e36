@@ -1,44 +1,50 @@
 import React from 'react';
-import type { Player as PlayerType } from '../../../types/GameTypes';
+import { Player as PlayerType } from '../../../types/GameTypes';
 
-export interface PlayerProps {
+interface PlayerProps {
   player: PlayerType;
-  showStatus?: boolean;
-  onPointerDown?: (event: React.PointerEvent<Element>, playerId?: string) => void;
-  onDragStart?: (playerId: string) => void;
+  onDragStart: (playerId: string) => void;
 }
 
-function Player({ player, showStatus = true, onPointerDown, onDragStart }: PlayerProps): JSX.Element {
-  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (onPointerDown) {
-      onPointerDown(event, player.id?.toString());
-    }
-    
-    // Call onDragStart if it exists
-    if (onDragStart && player.id) {
-      onDragStart(player.id.toString());
-    }
+const Player: React.FC<PlayerProps> = ({ player, onDragStart }) => {
+  const handleDragStart = () => {
+    onDragStart(player.id);
   };
 
   return (
     <div
-      className="player-token w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold cursor-move shadow-md"
+      className="player-token"
       style={{
-        backgroundColor: player.isGoalkeeper ? '#ffcc00' : '#3b82f6',
-        color: player.isGoalkeeper ? '#000' : '#fff'
+        position: 'absolute',
+        left: `${player.position.x}%`,
+        top: `${player.position.y}%`,
+        width: '40px',
+        height: '40px',
+        borderRadius: '50%',
+        backgroundColor: player.isGoalkeeper ? '#ffcc00' : '#ffffff',
+        color: '#000000',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
+        transform: 'translate(-50%, -50%)',
+        zIndex: 2,
+        userSelect: 'none',
+        touchAction: 'none'
       }}
-      onPointerDown={handlePointerDown}
-      data-player-id={player.id}
-      data-testid={`player-token-${player.id}`}
+      onPointerDown={handleDragStart}
+      data-player-id={player.id.toString()}
     >
-      {/* Display player name for test case, otherwise show number or fallback */}
       <span className="sr-only">{player.name}</span>
-      {player.number || '?'}
-      {showStatus && player.status && (
-        <div className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-red-500"></div>
-      )}
+      <span style={{
+        fontSize: '12px',
+        fontWeight: 'bold'
+      }}>
+        {player.name.slice(0, 2)}
+      </span>
     </div>
   );
-}
+};
 
 export default Player;

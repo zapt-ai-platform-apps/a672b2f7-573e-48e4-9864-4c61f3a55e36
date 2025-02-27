@@ -1,16 +1,29 @@
 import { Player } from '../../../types/GameTypes';
 
-// Function to randomly assign initial positions to players
+/**
+ * Assigns initial positions to players that don't have valid positions
+ * @param players - Array of players to assign positions to
+ * @returns Array of players with assigned positions
+ */
 export function assignInitialPositions(players: Player[]): Player[] {
+  if (!players || !Array.isArray(players)) {
+    console.warn('Invalid players array provided to assignInitialPositions');
+    return [];
+  }
+
   return players.map(player => {
-    const validPosition = typeof player.position === 'object' && player.position !== null;
+    // Check if player has a valid position
+    const hasValidPosition = player.position && 
+      typeof player.position === 'object' &&
+      typeof player.position.x === 'number' && 
+      typeof player.position.y === 'number';
     
     // If player already has valid position, use it
-    if (validPosition && typeof player.position.x === 'number' && typeof player.position.y === 'number') {
+    if (hasValidPosition) {
       return player;
     }
     
-    // Otherwise, assign random position
+    // Otherwise, assign random position within the pitch
     return {
       ...player,
       position: {
