@@ -44,29 +44,8 @@ export default function GameManagementScreenViewContent({
 
   const handleRecordGoal = (goal: GoalData) => {
     if (recordGoal && setGoals && setOurScore && setOpponentScore) {
-      // Convert GoalData to Goal type for compatibility
-      // Ensure the id is always a string to match the Goal type
-      const convertedGoal: Goal = {
-        team: goal.team,
-        scorerName: goal.scorer,
-        time: goal.minute,
-        id: goal.id ? String(goal.id) : String(Date.now()), // Ensure id is always a string
-        minute: goal.minute,
-        scorer: goal.scorer,
-        scorerId: goal.scorerId || '', // Ensure scorerId is always defined
-        timestamp: goal.timestamp || Date.now() // Ensure timestamp is always defined
-      };
-      
-      // Type-safe implementation to handle the callback correctly
-      const updatedGoalsHandler = (newGoalsOrCallback: Goal[] | ((prevGoals: Goal[]) => Goal[])) => {
-        if (typeof newGoalsOrCallback === 'function') {
-          setGoals(prevGoals => newGoalsOrCallback(prevGoals));
-        } else {
-          setGoals(newGoalsOrCallback);
-        }
-      };
-      
-      recordGoal(goal, updatedGoalsHandler, setOurScore, setOpponentScore);
+      // We're using GoalData directly without conversion to avoid type mismatches
+      recordGoal(goal, setGoals, setOurScore, setOpponentScore);
       setShowGoalModal(false);
     }
   };

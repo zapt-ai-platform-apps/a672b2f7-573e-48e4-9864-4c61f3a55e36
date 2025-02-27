@@ -115,11 +115,11 @@ export function useEditSquadForm(squadId: number) {
       
       await updateSquad(apiSquad.id, apiSquad);
       
-      // Ensure we pass the Squad with players as an array of Player objects, not a string
+      // Updated Squad with players as an array of Player objects for local state
       const updatedSquad: Squad = {
         ...squad,
         name: squadName,
-        players: players // This is now correctly an array of Player objects
+        players // Pass the players array directly, not as a JSON string
       };
       
       setSelectedSquad(updatedSquad);
