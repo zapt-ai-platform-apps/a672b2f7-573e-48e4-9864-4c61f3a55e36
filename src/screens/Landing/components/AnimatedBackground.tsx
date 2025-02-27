@@ -41,10 +41,10 @@ const AnimatedBackground = () => {
 
   return (
     <div className="absolute inset-0 overflow-hidden z-0">
-      {/* Enhanced gradient background */}
-      <div className="absolute inset-0 bg-gradient-radial from-transparent to-black/50 z-0"></div>
+      {/* Refined gradient background with better visual balance */}
+      <div className="absolute inset-0 bg-gradient-radial from-transparent to-black/40 z-0"></div>
       
-      {/* Animated shapes */}
+      {/* Refined animated shapes with subtle movements */}
       {shapes.map(shape => (
         <motion.div 
           key={`shape-${shape.id}`}
@@ -54,25 +54,25 @@ const AnimatedBackground = () => {
             left: shape.left,
             width: `${shape.size}rem`,
             height: `${shape.size}rem`,
-            opacity: shape.opacity,
+            opacity: shape.opacity * 0.8, // Slightly reduced opacity for subtlety
             filter: `blur(${shape.blur})`,
             borderRadius: shape.type === 'circle' ? '50%' : '25%',
             transform: 'translate(-50%, -50%)',
           }}
           animate={{
-            x: [0, shape.move.x, 0],
-            y: [0, shape.move.y, 0],
+            x: [0, shape.move.x * 0.8, 0], // Reduced movement for subtlety
+            y: [0, shape.move.y * 0.8, 0],
             rotate: [0, shape.type === 'circle' ? 0 : 45, 0]
           }}
           transition={{
-            duration: shape.move.duration,
+            duration: shape.move.duration * 1.2, // Slower, more subtle movement
             repeat: Infinity,
             ease: "easeInOut"
           }}
         />
       ))}
       
-      {/* Stars with enhanced animations */}
+      {/* Refined star animations */}
       {stars.map(star => (
         <motion.div 
           key={`star-${star.id}`}
@@ -84,79 +84,79 @@ const AnimatedBackground = () => {
             height: `${star.size}px`,
           }}
           animate={{
-            opacity: [star.opacity * 0.7, star.opacity, star.opacity * 0.7],
-            scale: [1, star.pulse ? 1.3 : 1, 1],
+            opacity: [star.opacity * 0.7, star.opacity * 0.9, star.opacity * 0.7],
+            scale: [1, star.pulse ? 1.2 : 1, 1], // Reduced pulsing for subtlety
             boxShadow: [
-              '0 0 2px rgba(255, 255, 255, 0.5)',
-              '0 0 8px rgba(255, 255, 255, 0.8)',
-              '0 0 2px rgba(255, 255, 255, 0.5)'
+              '0 0 2px rgba(255, 255, 255, 0.4)',
+              '0 0 6px rgba(255, 255, 255, 0.6)',
+              '0 0 2px rgba(255, 255, 255, 0.4)'
             ]
           }}
           transition={{
-            duration: star.duration,
+            duration: star.duration * 1.3, // Slower, more refined pulsing
             repeat: Infinity,
             ease: "easeInOut"
           }}
         />
       ))}
       
-      {/* Larger glowing orbs */}
+      {/* Refined larger glowing orbs with better positioning and subtlety */}
       <motion.div 
-        className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-blue-500/20 filter blur-[100px]"
+        className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-blue-500/15 filter blur-[120px]"
         animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.2, 0.3, 0.2],
-          x: [0, 20, 0],
-          y: [0, -20, 0]
+          scale: [1, 1.15, 1],
+          opacity: [0.12, 0.18, 0.12],
+          x: [0, 15, 0],
+          y: [0, -15, 0]
         }}
         transition={{
-          duration: 8,
+          duration: 10, // Slower for more subtlety
           repeat: Infinity,
           ease: "easeInOut"
         }}
       />
       
       <motion.div 
-        className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-purple-500/20 filter blur-[100px]" 
+        className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-purple-500/15 filter blur-[120px]" 
         animate={{
           scale: [1, 1.1, 1],
-          opacity: [0.2, 0.25, 0.2],
-          x: [0, -30, 0],
-          y: [0, 30, 0]
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 2
-        }}
-      />
-      
-      {/* New indigo orb */}
-      <motion.div 
-        className="absolute top-2/3 left-1/3 w-80 h-80 rounded-full bg-indigo-600/20 filter blur-[90px]" 
-        animate={{
-          scale: [1, 1.15, 1],
-          opacity: [0.15, 0.25, 0.15],
-          x: [0, 40, 0],
+          opacity: [0.12, 0.16, 0.12],
+          x: [0, -20, 0],
           y: [0, 20, 0]
         }}
         transition={{
           duration: 12,
           repeat: Infinity,
           ease: "easeInOut",
+          delay: 2
+        }}
+      />
+      
+      {/* Refined indigo orb */}
+      <motion.div 
+        className="absolute top-2/3 left-1/3 w-80 h-80 rounded-full bg-indigo-600/15 filter blur-[100px]" 
+        animate={{
+          scale: [1, 1.12, 1],
+          opacity: [0.1, 0.15, 0.1],
+          x: [0, 25, 0],
+          y: [0, 15, 0]
+        }}
+        transition={{
+          duration: 14,
+          repeat: Infinity,
+          ease: "easeInOut",
           delay: 1
         }}
       />
       
-      {/* Moving nebula effect */}
+      {/* Refined subtle nebula effect */}
       <motion.div
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full opacity-20"
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full opacity-15"
         animate={{
           backgroundPosition: ['0% 0%', '100% 100%'],
         }}
         transition={{
-          duration: 30,
+          duration: 40, // Slower for more subtlety
           repeat: Infinity,
           ease: "linear",
           repeatType: "mirror"

@@ -12,7 +12,7 @@ export async function runGetStarted(
       throw error;
     }
     if (!session || !session.user) {
-      navigate('/login');
+      navigate('/sign-in');
     } else {
       const user = session.user;
       if (user.email && !sessionStorage.getItem('recordLoginCalled')) {

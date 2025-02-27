@@ -13,10 +13,10 @@ function CTAButton({ onClick }: CTAButtonProps): JSX.Element {
     >
       <button
         onClick={onClick}
-        className="group relative overflow-hidden px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-xl font-medium rounded-xl shadow-xl hover:shadow-blue-500/30 transition-all duration-500 transform cursor-pointer"
+        className="group relative overflow-hidden px-9 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-xl font-medium rounded-xl shadow-xl hover:shadow-blue-500/40 transition-all duration-300 transform cursor-pointer"
         aria-label="Get Started"
       >
-        {/* Background particles for visual interest */}
+        {/* Enhanced background particles for visual interest */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div 
             className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/20 rounded-full"
@@ -38,18 +38,19 @@ function CTAButton({ onClick }: CTAButtonProps): JSX.Element {
           />
         </div>
         
-        {/* Inner glow effect */}
-        <span className="absolute inset-0 w-full h-full bg-gradient-to-tr from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+        {/* Inner glow effect with subtle hover enhancement */}
+        <span className="absolute inset-0 w-full h-full bg-gradient-to-tr from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
         
-        {/* Button content */}
+        {/* Button content with improved hover animation */}
         <span className="relative z-10 flex items-center justify-center">
           <span className="mr-2">Get Started</span>
           <motion.svg 
             xmlns="http://www.w3.org/2000/svg" 
-            className="h-5 w-5 transition-transform duration-300 transform group-hover:translate-x-1" 
+            className="h-5 w-5 transition-transform duration-300 transform" 
             viewBox="0 0 20 20" 
             fill="currentColor"
-            whileHover={{ x: 2 }}
+            animate={{ x: 0 }}
+            whileHover={{ x: 3 }}
           >
             <path 
               fillRule="evenodd" 
@@ -59,10 +60,10 @@ function CTAButton({ onClick }: CTAButtonProps): JSX.Element {
           </motion.svg>
         </span>
         
-        {/* Shine effect on hover */}
+        {/* Enhanced shine effect on hover */}
         <span className="absolute top-0 -inset-full h-full w-1/3 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-20 group-hover:animate-shine"></span>
         
-        {/* Pulse effect */}
+        {/* Improved pulse effect */}
         <span className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100">
           <motion.span 
             className="absolute inset-0 rounded-xl bg-blue-500/20"

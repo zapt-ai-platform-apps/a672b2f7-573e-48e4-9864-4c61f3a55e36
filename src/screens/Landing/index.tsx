@@ -20,7 +20,7 @@ export default function LandingScreen(): JSX.Element {
   const handleGetStarted = () => {
     if (isLoading) return;
     setIsLoading(true);
-    navigate('/login');
+    navigate('/sign-in');
   };
 
   return (
@@ -141,7 +141,7 @@ export default function LandingScreen(): JSX.Element {
                 Features
               </motion.a>
               <motion.a 
-                href="/login" 
+                href="/sign-in" 
                 className="text-blue-200 hover:text-white transition-colors"
                 whileHover={{ x: 2 }}
               >

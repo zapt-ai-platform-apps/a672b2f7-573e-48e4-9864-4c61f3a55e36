@@ -21,7 +21,7 @@ export default function FeatureCard({ feature }: FeatureCardProps): JSX.Element 
     }
   };
 
-  // Enhanced hover states
+  // Enhanced hover states with improved transitions
   const hoverState = {
     rest: { 
       scale: 1,
@@ -36,19 +36,20 @@ export default function FeatureCard({ feature }: FeatureCardProps): JSX.Element 
 
   return (
     <motion.div
-      className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 shadow-xl relative"
+      className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 shadow-xl relative h-full"
       variants={item}
       initial="rest"
       whileHover="hover"
       animate="rest"
       whileTap={{ scale: 0.98 }}
     >
-      {/* Decorative elements */}
+      {/* Enhanced decorative elements */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-400/30 to-transparent"></div>
       <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/10 rounded-full filter blur-[40px]"></div>
+      <div className="absolute -bottom-20 -left-10 w-32 h-32 bg-indigo-500/10 rounded-full filter blur-[35px]"></div>
       
-      <div className="p-6">
-        <div className="flex items-center justify-center w-14 h-14 mb-6 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 rounded-xl backdrop-blur-sm">
+      <div className="p-7">
+        <div className="flex items-center justify-center w-16 h-16 mb-6 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 rounded-xl backdrop-blur-sm">
           <motion.div
             initial={{ rotate: 0 }}
             whileHover={{ rotate: [0, -5, 5, -5, 0], scale: 1.1 }}
@@ -59,24 +60,25 @@ export default function FeatureCard({ feature }: FeatureCardProps): JSX.Element 
         </div>
         
         <motion.h3 
-          className="text-xl font-bold mb-3 text-white group-hover:text-blue-200 transition-colors duration-300"
+          className="text-xl font-bold mb-3.5 text-white group-hover:text-blue-200 transition-colors duration-300"
           whileHover={{ scale: 1.02 }}
         >
           {feature.title}
         </motion.h3>
         
         <motion.p 
-          className="text-blue-100/90 leading-relaxed"
+          className="text-blue-50/90 leading-relaxed"
           initial={{ opacity: 0.8 }}
           whileHover={{ opacity: 1 }}
         >
           {feature.description}
         </motion.p>
         
-        {/* Added visual detail */}
+        {/* Enhanced visual detail with better hover animation */}
         <motion.div 
           className="mt-6 flex items-center text-blue-300/80 text-sm font-medium"
-          whileHover={{ x: 3 }}
+          whileHover={{ x: 5, color: "rgba(191, 219, 254, 0.9)" }}
+          transition={{ type: "spring", stiffness: 400, damping: 10 }}
         >
           Learn more
           <svg className="ml-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -85,7 +87,7 @@ export default function FeatureCard({ feature }: FeatureCardProps): JSX.Element 
         </motion.div>
       </div>
       
-      {/* Bottom decorative gradient */}
+      {/* Enhanced bottom decorative gradient */}
       <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-indigo-400/30 to-transparent"></div>
     </motion.div>
   );
