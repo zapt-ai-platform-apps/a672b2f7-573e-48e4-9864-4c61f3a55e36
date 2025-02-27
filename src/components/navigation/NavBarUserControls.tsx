@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import useAuthSession from '../../hooks/useAuthSession';
-import * as Sentry from '@sentry/browser';
+import { useAuthSession } from '../../hooks';
 
 const NavBarUserControls: React.FC = () => {
   const { session, signOut } = useAuthSession();
@@ -16,25 +15,24 @@ const NavBarUserControls: React.FC = () => {
       await signOut();
     } catch (error) {
       console.error('Error signing out:', error);
-      Sentry.captureException(error);
     }
   };
 
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center">
       {session ? (
         <button
           onClick={handleSignOut}
-          className="cursor-pointer bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition-colors"
-          data-testid="sign-out-button"
+          className="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700 transition-colors duration-200 cursor-pointer"
+          aria-label="Sign out"
         >
           Sign Out
         </button>
       ) : (
         <button
           onClick={handleSignIn}
-          className="cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition-colors"
-          data-testid="sign-in-button"
+          className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors duration-200 cursor-pointer"
+          aria-label="Sign in"
         >
           Sign In
         </button>

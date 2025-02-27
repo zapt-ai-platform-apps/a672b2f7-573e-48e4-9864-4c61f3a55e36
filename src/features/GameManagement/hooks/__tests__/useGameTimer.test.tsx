@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import useGameTimer from '../useGameTimer';
 
 describe('useGameTimer', () => {
@@ -17,6 +17,8 @@ describe('useGameTimer', () => {
     
     expect(result.current.timeElapsed).toBe(0);
     expect(result.current.gameIntervals).toEqual([]);
+    // Check that timerId is null initially, instead of undefined
+    expect(result.current.isRunning).toBe(false);
   });
 
   it('should start the timer when startTimer is called', () => {

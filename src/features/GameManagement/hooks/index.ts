@@ -1,19 +1,7 @@
-// Re-exports for GameManagement hooks to simplify imports
-
-import useDragAndDrop from './useDragAndDrop';
-import useAvailablePlayers from './useAvailablePlayers';
-import useEndGameManager from './useEndGameManager';
-import { useGameManagementLogic } from './useGameManagementLogic';
-import useGameTimer from './useGameTimer';
-import usePlayerManagement from './usePlayerManagement';
-import useSquadSetup from './useSquadSetup';
-
-export {
-  useDragAndDrop,
-  useAvailablePlayers,
-  useEndGameManager,
-  useGameManagementLogic,
-  useGameTimer,
-  usePlayerManagement,
-  useSquadSetup
-};
+export { default as useDragAndDrop } from './useDragAndDrop';
+export { default as useGameTimer } from './useGameTimer';
+export { default as useGameManagementLogic } from './useGameManagementLogic';
+export { default as usePlayerManagement } from './usePlayerManagement';
+export { default as useSquadSetup } from './useSquadSetup';
+export { default as useEndGameManager } from './useEndGameManager';
+export { default as useAvailablePlayers } from './useAvailablePlayers';

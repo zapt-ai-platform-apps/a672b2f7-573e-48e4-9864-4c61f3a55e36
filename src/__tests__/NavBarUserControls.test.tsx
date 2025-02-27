@@ -9,10 +9,9 @@ import { act } from '@testing-library/react';
 const mockNavigate = vi.fn();
 const mockSignOut = vi.fn();
 
-// Mock useAuthSession hook
-vi.mock('../hooks/useAuthSession', () => ({
-  __esModule: true,
-  default: () => ({
+// Mock useAuthSession hook using the index.ts export path to ensure proper resolution
+vi.mock('../hooks', () => ({
+  useAuthSession: () => ({
     session: null,
     signOut: mockSignOut
   })
@@ -33,7 +32,7 @@ describe('NavBarUserControls - Signed In', () => {
     mockNavigate.mockClear();
     
     // Configure mock for signed-in user
-    vi.mocked(require('../hooks/useAuthSession').default).mockReturnValue({
+    vi.mocked(require('../hooks').useAuthSession).mockReturnValue({
       session: { user: { email: 'test@example.com' } },
       signOut: mockSignOut
     });
@@ -76,7 +75,7 @@ describe('NavBarUserControls - Signed Out', () => {
     mockNavigate.mockClear();
     
     // Configure mock for signed-out user
-    vi.mocked(require('../hooks/useAuthSession').default).mockReturnValue({
+    vi.mocked(require('../hooks').useAuthSession).mockReturnValue({
       session: null,
       signOut: mockSignOut
     });

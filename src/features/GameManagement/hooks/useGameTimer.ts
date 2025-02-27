@@ -1,139 +1,157 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import * as Sentry from '@sentry/browser';
 
-export interface GameInterval {
+export interface TimeInterval {
   startTime: number;
-  endTime: number | null;
-}
-
-interface GameTimerParams {
-  isRunning?: boolean;
-  initialIntervals?: GameInterval[];
+  endTime?: number;
 }
 
 /**
- * Hook to manage game timer functionality
- * @param params Object containing isRunning state and initial game intervals
- * @returns Timer-related functions and state
+ * Custom hook for managing the game timer
  */
-function useGameTimer({ isRunning: initialIsRunning = false, initialIntervals = [] }: GameTimerParams = {}) {
-  const [now, setNow] = useState<number>(Date.now());
-  const [gameIntervals, setGameIntervals] = useState<GameInterval[]>(initialIntervals);
-  const [timeElapsed, setTimeElapsed] = useState<number>(0);
-  const [internalIsRunning, setInternalIsRunning] = useState<boolean>(initialIsRunning);
+const useGameTimer = () => {
+  const [timeElapsed, setTimeElapsed] = useState(0);
+  const [gameIntervals, setGameIntervals] = useState<TimeInterval[]>([]);
+  
+  // Use a ref to track timer state across renders without triggering re-renders
+  const timerRef = useRef<{
+    timerId: number | null;
+    lastStartTime: number | null;
+  }>({
+    timerId: null,
+    lastStartTime: null
+  });
 
-  // Update UI every second
+  // Clean up interval on unmount
   useEffect(() => {
-    const uiTimer = setInterval(() => {
-      setNow(Date.now());
-    }, 1000);
-    return () => clearInterval(uiTimer);
+    return () => {
+      if (timerRef.current.timerId !== null) {
+        clearInterval(timerRef.current.timerId);
+      }
+    };
   }, []);
 
-  // Calculate time elapsed whenever intervals change or timer is running
-  useEffect(() => {
-    // Update the elapsed time if the timer is running
-    if (internalIsRunning) {
-      const intervalId = setInterval(() => {
-        setTimeElapsed(getTimeElapsed());
-      }, 1000);
-      
-      return () => clearInterval(intervalId);
-    }
-    
-    // Still update once if the timer is stopped
-    setTimeElapsed(getTimeElapsed());
-  }, [internalIsRunning, gameIntervals]);
-
   /**
-   * Calculate the total time elapsed in the game
-   * @returns Total time elapsed in seconds
-   */
-  const getTimeElapsed = useCallback((): number => {
-    let total = 0;
-    
-    gameIntervals.forEach((interval) => {
-      if (interval.endTime) {
-        total += interval.endTime - interval.startTime;
-      } else if (internalIsRunning) {
-        total += Date.now() - interval.startTime;
-      }
-    });
-    
-    return Math.floor(total / 1000);
-  }, [gameIntervals, internalIsRunning]);
-
-  /**
-   * Start the game timer
+   * Starts the game timer
    */
   const startTimer = useCallback(() => {
-    // Only add a new interval if the timer isn't already running
-    if (!internalIsRunning) {
-      setGameIntervals(intervals => [
-        ...intervals,
-        { startTime: Date.now(), endTime: null }
+    try {
+      // If timer is already running, do nothing
+      if (timerRef.current.timerId !== null) {
+        console.log('Timer already running');
+        return;
+      }
+
+      const now = Date.now();
+      timerRef.current.lastStartTime = now;
+      
+      // Add a new interval to the gameIntervals array
+      setGameIntervals(prevIntervals => [
+        ...prevIntervals, 
+        { startTime: now } // endTime is undefined initially
       ]);
-      setInternalIsRunning(true);
-    }
-  }, [internalIsRunning]);
 
-  /**
-   * Stop the game timer
-   */
-  const stopTimer = useCallback(() => {
-    if (internalIsRunning) {
-      setGameIntervals(intervals => {
-        const updatedIntervals = [...intervals];
-        // Find the last interval that's still open
-        const lastOpenIntervalIndex = updatedIntervals.findIndex(
-          interval => interval.endTime === null
-        );
-        
-        if (lastOpenIntervalIndex !== -1) {
-          // Close the last open interval
-          updatedIntervals[lastOpenIntervalIndex] = {
-            ...updatedIntervals[lastOpenIntervalIndex],
-            endTime: Date.now()
-          };
-        }
-        
-        return updatedIntervals;
-      });
-      setInternalIsRunning(false);
-    }
-  }, [internalIsRunning]);
+      // Start the timer using setInterval
+      const timerId = window.setInterval(() => {
+        setTimeElapsed(prevTime => {
+          const newTime = prevTime + 1; // Increment by 1 second
+          return newTime;
+        });
+      }, 1000);
 
-  /**
-   * Reset the game timer
-   */
-  const resetTimer = useCallback(() => {
-    setGameIntervals([]);
-    setTimeElapsed(0);
-    setInternalIsRunning(false);
+      timerRef.current.timerId = timerId;
+      console.log('Timer started');
+    } catch (error) {
+      console.error('Error starting timer:', error);
+      Sentry.captureException(error);
+    }
   }, []);
 
   /**
-   * Toggle the timer running state
+   * Stops the game timer
+   */
+  const stopTimer = useCallback(() => {
+    try {
+      // If timer is not running, do nothing
+      if (timerRef.current.timerId === null) {
+        console.log('Timer not running');
+        return;
+      }
+
+      // Clear the interval
+      clearInterval(timerRef.current.timerId);
+      timerRef.current.timerId = null;
+
+      const now = Date.now();
+      
+      // Update the last interval with an end time
+      setGameIntervals(prevIntervals => {
+        const updatedIntervals = [...prevIntervals];
+        if (updatedIntervals.length > 0) {
+          const lastInterval = updatedIntervals[updatedIntervals.length - 1];
+          updatedIntervals[updatedIntervals.length - 1] = {
+            ...lastInterval,
+            endTime: now
+          };
+        }
+        return updatedIntervals;
+      });
+
+      console.log('Timer stopped');
+    } catch (error) {
+      console.error('Error stopping timer:', error);
+      Sentry.captureException(error);
+    }
+  }, []);
+
+  /**
+   * Resets the game timer
+   */
+  const resetTimer = useCallback(() => {
+    try {
+      // Clear the interval if it's running
+      if (timerRef.current.timerId !== null) {
+        clearInterval(timerRef.current.timerId);
+        timerRef.current.timerId = null;
+      }
+
+      // Reset state
+      setTimeElapsed(0);
+      setGameIntervals([]);
+      timerRef.current.lastStartTime = null;
+      
+      console.log('Timer reset');
+    } catch (error) {
+      console.error('Error resetting timer:', error);
+      Sentry.captureException(error);
+    }
+  }, []);
+
+  /**
+   * Toggles the timer between running and stopped states
    */
   const toggleTimer = useCallback(() => {
-    if (internalIsRunning) {
-      stopTimer();
-    } else {
-      startTimer();
+    try {
+      if (timerRef.current.timerId === null) {
+        startTimer();
+      } else {
+        stopTimer();
+      }
+    } catch (error) {
+      console.error('Error toggling timer:', error);
+      Sentry.captureException(error);
     }
-    return !internalIsRunning;
-  }, [internalIsRunning, startTimer, stopTimer]);
+  }, [startTimer, stopTimer]);
 
   return {
-    now,
-    startUITimer: () => {}, // Kept for backward compatibility
-    getTimeElapsed,
-    toggleTimer,
     timeElapsed,
+    gameIntervals,
     startTimer,
     stopTimer,
     resetTimer,
-    gameIntervals
+    toggleTimer,
+    isRunning: timerRef.current.timerId !== null
   };
-}
+};
 
 export default useGameTimer;
