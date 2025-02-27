@@ -1,14 +1,11 @@
-export interface Player {
-  id: string | number;
-  name: string;
-}
+import { Player } from "../../../types/GameTypes";
 
 export interface GoalkeeperSettingsProps {
   startingPlayers: Player[];
   goalkeeper: Player | null;
-  setGoalkeeper: (g: Player | null) => void;
+  setGoalkeeper: (player: Player | null) => void;
   includeGKPlaytime: boolean;
-  setIncludeGKPlaytime: (value: boolean) => void;
-  confirmedGoalkeeper: Player | null;
-  setConfirmedGoalkeeper: (g: Player | null) => void;
+  setIncludeGKPlaytime: (include: boolean) => void;
+  confirmedGoalkeeper: boolean;
+  setConfirmedGoalkeeper: (confirmed: boolean) => void;
 }

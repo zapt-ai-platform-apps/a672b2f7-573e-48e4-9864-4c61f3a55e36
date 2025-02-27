@@ -8,40 +8,35 @@ interface PlayerCardProps {
   'data-testid'?: string;
 }
 
-const PlayerCard: React.FC<PlayerCardProps> = ({ 
-  player, 
-  selected, 
-  onClick,
-  'data-testid': dataTestId = 'player-card' 
-}) => {
-  if (!player) {
-    console.error('PlayerCard received null player');
-    return null;
-  }
-
+const PlayerCard: React.FC<PlayerCardProps> = ({ player, selected, onClick, ...props }) => {
   return (
-    <div 
-      className={`
-        p-4 rounded-lg border shadow-sm transition-all cursor-pointer
-        ${selected 
-          ? 'bg-blue-100 border-blue-500 shadow-md' 
-          : 'bg-white border-gray-200 hover:border-blue-300 hover:shadow'}
-      `}
+    <div
+      className={`p-4 rounded-lg transition-all transform cursor-pointer ${
+        selected
+          ? 'bg-blue-600 shadow-lg scale-105'
+          : 'bg-white/10 hover:bg-white/20'
+      }`}
       onClick={onClick}
-      data-testid={dataTestId}
-      data-player-id={player.id}
+      {...props}
     >
       <div className="flex items-center">
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${
-          selected ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600'
+        <div className={`relative w-8 h-8 flex items-center justify-center rounded-full mr-3 ${
+          selected ? 'bg-white' : 'bg-gray-300/30'
         }`}>
-          {player.number || 
-           (player.name && player.name.charAt(0).toUpperCase())}
+          {selected ? (
+            <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+            </svg>
+          ) : (
+            <span className="text-white text-sm">{player.number || "?"}</span>
+          )}
         </div>
-        <div className="flex-grow">
-          <h3 className="font-medium text-gray-800">{player.name}</h3>
+        <div>
+          <h3 className={`font-medium ${selected ? 'text-white' : 'text-gray-200'}`}>
+            {player.name}
+          </h3>
           {player.isGoalkeeper && (
-            <span className="text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
+            <span className="inline-block px-2 py-1 mt-1 text-xs bg-yellow-400/30 text-yellow-100 rounded">
               Goalkeeper
             </span>
           )}

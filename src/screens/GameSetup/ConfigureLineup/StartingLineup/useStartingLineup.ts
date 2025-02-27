@@ -1,53 +1,57 @@
 import { useState, useEffect } from 'react';
-import { useStateContext } from '../../../../hooks/useStateContext';
 import { Player } from '../../../../types/GameTypes';
+import { useStateContext } from '../../../../hooks/useStateContext';
 
-interface StartingLineupHook {
-  startingPlayers: Player[];
-  selectedPlayers: Player[];
-  toggleStartingPlayer: (id: string) => void;
-  clearSelectedPlayers: () => void;
-}
-
-export default function useStartingLineup(): StartingLineupHook {
+/**
+ * Hook to manage starting lineup state and operations
+ */
+export default function useStartingLineup() {
   const { matchSquad } = useStateContext();
   const [startingPlayers, setStartingPlayers] = useState<Player[]>([]);
+  const [selectedPlayers, setSelectedPlayers] = useState<string[]>([]);
 
   useEffect(() => {
     if (matchSquad && matchSquad.length > 0) {
-      console.log("Setting starting players from matchSquad:", matchSquad);
-      // Initialize with existing selection state if available
-      setStartingPlayers(matchSquad.map((player: Player) => ({
-        ...player,
-        selected: player.isStartingPlayer || player.selected || false
-      })));
+      // Initialize starting players from match squad
+      setStartingPlayers(
+        matchSquad.map(player => ({
+          ...player,
+          isStartingPlayer: false
+        }))
+      );
     }
   }, [matchSquad]);
 
-  const toggleStartingPlayer = (id: string): void => {
-    console.log(`Toggling player with id: ${id}`);
-    setStartingPlayers(prev =>
-      prev.map(player => 
-        player.id === id 
-          ? { ...player, selected: !player.selected } 
-          : player
-      )
+  /**
+   * Toggle a player's starting status
+   */
+  const toggleStartingPlayer = (playerId: string) => {
+    // Update the starting players list
+    setStartingPlayers(prev => 
+      prev.map(player => {
+        if (player.id === playerId) {
+          return {
+            ...player,
+            isStartingPlayer: !player.isStartingPlayer
+          };
+        }
+        return player;
+      })
     );
+
+    // Update the selected players list
+    setSelectedPlayers(prev => {
+      if (prev.includes(playerId)) {
+        return prev.filter(id => id !== playerId);
+      } else {
+        return [...prev, playerId];
+      }
+    });
   };
 
-  const clearSelectedPlayers = (): void => {
-    setStartingPlayers(prev =>
-      prev.map(player => ({ ...player, selected: false }))
-    );
-  };
-
-  // Derived state for selected players
-  const selectedPlayers = startingPlayers.filter(player => player.selected);
-
-  return { 
-    startingPlayers, 
-    selectedPlayers, 
-    toggleStartingPlayer, 
-    clearSelectedPlayers 
+  return {
+    startingPlayers,
+    selectedPlayers,
+    toggleStartingPlayer
   };
 }
