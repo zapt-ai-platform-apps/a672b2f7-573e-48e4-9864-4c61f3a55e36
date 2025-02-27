@@ -17,8 +17,8 @@ function SubstitutionConfirmationModal({
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white dark:bg-gray-700 p-6 rounded shadow-lg">
-        <h2 className="text-2xl font-bold mb-4">Confirm Substitution</h2>
-        <p>
+        <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Confirm Substitution</h2>
+        <p className="text-gray-700 dark:text-gray-200">
           Are you sure you want to substitute{' '}
           {selectedSubOffPlayer ? selectedSubOffPlayer.name : 'Unknown Player'} with{' '}
           {selectedSubOnPlayer ? selectedSubOnPlayer.name : 'Unknown Player'}?
@@ -26,13 +26,13 @@ function SubstitutionConfirmationModal({
         <div className="mt-4 flex justify-end space-x-4">
           <button
             onClick={cancelSubstitution}
-            className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded"
+            className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded text-gray-800 dark:text-white cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={confirmSubstitution}
-            className="px-4 py-2 bg-blue-500 text-white rounded"
+            className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
           >
             Confirm
           </button>

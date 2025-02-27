@@ -1,115 +1,149 @@
-import { useCallback, useRef } from 'react';
-import { pointerDown, pointerMove, pointerUp } from '../utils/dragHandlers';
+import { useCallback } from 'react';
 import * as Sentry from '@sentry/browser';
-import React from 'react';
-
-export interface DragState {
-  dragging: boolean;
-  target: HTMLElement | null;
-  offsetX: number;
-  offsetY: number;
-  playerId?: string;
-}
 
 /**
- * Hook for managing player drag and drop on the pitch
- * @returns Object with handlePointerDown and init functions
+ * Custom hook for handling drag and drop functionality
  */
 const useDragAndDrop = () => {
-  // Use a ref to maintain state between renders but not trigger re-renders
-  const dragStateRef = useRef<DragState>({
-    dragging: false,
-    target: null,
-    offsetX: 0,
-    offsetY: 0,
-    playerId: undefined
-  });
+  let activePlayer: HTMLElement | null = null;
+  let initialX = 0;
+  let initialY = 0;
+  let offsetX = 0;
+  let offsetY = 0;
+  let pitchRect: DOMRect | null = null;
 
-  const handlePointerDown = useCallback((e: React.PointerEvent<Element>, playerId?: string): void => {
-    try {
-      // Ensure we're finding the correct player element and working with it
-      if (playerId) {
-        const playerElement = document.querySelector(`[data-player-id="${playerId}"]`) as HTMLElement;
-        if (playerElement) {
-          console.log('Player element found for drag, ID:', playerId);
-          e.preventDefault(); // Prevent default to ensure drag works properly
-          e.stopPropagation(); // Stop event from bubbling up
-          pointerDown(e.nativeEvent, dragStateRef.current, playerId);
-        } else {
-          console.error('Player element not found for ID:', playerId);
-        }
-      } else {
-        // Handle case when no playerId is provided (clicked on the pitch itself)
-        pointerDown(e.nativeEvent, dragStateRef.current);
-      }
-    } catch (error) {
-      console.error('Error in handlePointerDown:', error);
-      Sentry.captureException(error);
-    }
-  }, []);
-
-  const handlePointerMove = useCallback((e: PointerEvent): void => {
-    try {
-      if (dragStateRef.current.dragging && dragStateRef.current.target) {
-        e.preventDefault(); // Prevent default to ensure drag works properly
-        pointerMove(e, dragStateRef.current);
-      }
-    } catch (error) {
-      console.error('Error in handlePointerMove:', error);
-      Sentry.captureException(error);
-    }
-  }, []);
-
-  const handlePointerUp = useCallback((e: PointerEvent): void => {
-    try {
-      if (dragStateRef.current.dragging) {
-        e.preventDefault(); // Prevent default to ensure drag works properly
-        pointerUp(e, dragStateRef.current);
-        
-        // Log for debugging
-        console.log('Drag ended, updating player position:', dragStateRef.current.playerId);
-      }
-    } catch (error) {
-      console.error('Error in handlePointerUp:', error);
-      Sentry.captureException(error);
-    }
-  }, []);
-
+  /**
+   * Initialize drag events for the pitch element
+   */
   const init = useCallback((pitchElement: HTMLElement) => {
-    console.log('Initializing drag and drop on pitch element');
+    if (!pitchElement) return () => {}; // Return empty cleanup if no element
     
-    try {
-      // Add event listeners to the document to catch events even if they leave the pitch
-      document.addEventListener('pointermove', handlePointerMove);
-      document.addEventListener('pointerup', handlePointerUp);
+    // Create handler for pointer up events (document-wide)
+    const handlePointerUp = (e: PointerEvent) => {
+      if (!activePlayer) return;
       
-      // Set pointer capture on pointerdown to ensure we get all events
-      pitchElement.addEventListener('pointerdown', (e: PointerEvent) => {
-        const target = e.target as HTMLElement;
-        // Check if we're clicking on a player or a player container
-        const playerElement = target.closest('[data-player-id]');
+      const playerId = activePlayer.getAttribute('data-player-id');
+      console.log(`Drag ended for player ${playerId}`);
+      
+      // Calculate final position
+      if (pitchRect) {
+        // Get position as percentage of pitch size
+        const x = ((e.clientX - pitchRect.left - offsetX) / pitchRect.width) * 100;
+        const y = ((e.clientY - pitchRect.top - offsetY) / pitchRect.height) * 100;
         
-        if (playerElement) {
-          console.log('Pointer down on player element:', playerElement.getAttribute('data-player-id'));
-          playerElement.setPointerCapture(e.pointerId);
-        } else if (target) {
-          console.log('Pointer down on pitch element');
-          target.setPointerCapture(e.pointerId);
+        // Constrain to pitch bounds
+        const constrainedX = Math.max(0, Math.min(100, x));
+        const constrainedY = Math.max(0, Math.min(100, y));
+        
+        // Dispatch custom event for position update
+        const positionEvent = new CustomEvent('playerPositionFinal', {
+          detail: {
+            playerId,
+            x: constrainedX,
+            y: constrainedY
+          }
+        });
+        
+        pitchElement.dispatchEvent(positionEvent);
+        
+        // Update player position
+        activePlayer.style.left = `${constrainedX}%`;
+        activePlayer.style.top = `${constrainedY}%`;
+      }
+      
+      // Reset active player reference
+      activePlayer = null;
+      
+      // Remove move and up listeners to clean up
+      document.removeEventListener('pointermove', handlePointerMove);
+      document.removeEventListener('pointerup', handlePointerUp);
+    };
+    
+    // Create handler for pointer move events (document-wide)
+    const handlePointerMove = (e: PointerEvent) => {
+      if (!activePlayer || !pitchRect) return;
+      
+      // Calculate position within pitch
+      const x = ((e.clientX - pitchRect.left - offsetX) / pitchRect.width) * 100;
+      const y = ((e.clientY - pitchRect.top - offsetY) / pitchRect.height) * 100;
+      
+      // Constrain to pitch bounds
+      const constrainedX = Math.max(0, Math.min(100, x));
+      const constrainedY = Math.max(0, Math.min(100, y));
+      
+      // Update player position
+      activePlayer.style.left = `${constrainedX}%`;
+      activePlayer.style.top = `${constrainedY}%`;
+      
+      // Dispatch event for real-time position updates (optional)
+      const positionEvent = new CustomEvent('playerPositionUpdate', {
+        detail: {
+          playerId: activePlayer.getAttribute('data-player-id'),
+          x: constrainedX,
+          y: constrainedY
         }
       });
-
-      return () => {
-        document.removeEventListener('pointermove', handlePointerMove);
-        document.removeEventListener('pointerup', handlePointerUp);
-      };
+      
+      pitchElement.dispatchEvent(positionEvent);
+    };
+    
+    // Return cleanup function
+    return () => {
+      document.removeEventListener('pointermove', handlePointerMove);
+      document.removeEventListener('pointerup', handlePointerUp);
+    };
+  }, []);
+  
+  /**
+   * Handle the start of a drag operation
+   */
+  const handlePointerDown = useCallback((e: React.PointerEvent, playerId?: string) => {
+    try {
+      // Find the draggable element
+      let target = e.currentTarget as HTMLElement;
+      
+      // Get the parent node that has the data-player-id attribute
+      while (target && !target.hasAttribute('data-player-id')) {
+        const parent = target.parentElement;
+        if (!parent) break;
+        target = parent;
+      }
+      
+      if (!target) {
+        console.error('No draggable parent found');
+        return;
+      }
+      
+      // Prevent default behavior
+      e.preventDefault();
+      
+      // Set active element
+      activePlayer = target;
+      
+      // Store initial event position
+      initialX = e.clientX;
+      initialY = e.clientY;
+      
+      // Calculate offset for centering
+      const bounds = target.getBoundingClientRect();
+      offsetX = initialX - bounds.left - (bounds.width / 2);
+      offsetY = initialY - bounds.top - (bounds.height / 2);
+      
+      // Store pitch bounds
+      const pitch = target.closest('.pitch') as HTMLElement;
+      if (pitch) {
+        pitchRect = pitch.getBoundingClientRect();
+      }
+      
+      // Add event listeners for move and up events
+      document.addEventListener('pointermove', handlePointerMove as any);
+      document.addEventListener('pointerup', handlePointerUp as any);
     } catch (error) {
-      console.error('Error initializing drag and drop:', error);
+      console.error('Error starting drag:', error);
       Sentry.captureException(error);
-      // Return an empty cleanup function
-      return () => {};
     }
-  }, [handlePointerMove, handlePointerUp]);
-
+  }, []);
+  
   return {
     handlePointerDown,
     init

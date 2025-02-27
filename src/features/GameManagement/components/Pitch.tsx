@@ -63,6 +63,10 @@ function Pitch({ pitchRef, playerData, handlePointerDown, players }: PitchProps)
       <div className="absolute inset-x-0 top-0 h-[20%] border-b-2 border-white"></div> {/* Penalty area 1 */}
       <div className="absolute inset-x-0 bottom-0 h-[20%] border-t-2 border-white"></div> {/* Penalty area 2 */}
       
+      {/* Add goal areas */}
+      <div className="absolute left-0 top-1/3 bottom-1/3 w-[2%] border-2 border-white bg-white/20 rounded-r-lg"></div> {/* Left goal */}
+      <div className="absolute right-0 top-1/3 bottom-1/3 w-[2%] border-2 border-white bg-white/20 rounded-l-lg"></div> {/* Right goal */}
+      
       {/* Render players */}
       {players.map((player, index) => (
         <div 
