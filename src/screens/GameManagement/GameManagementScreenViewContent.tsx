@@ -50,7 +50,7 @@ export default function GameManagementScreenViewContent({
         team: goal.team,
         scorerName: goal.scorer,
         time: goal.minute,
-        id: goal.id || String(Date.now()), // Ensure id is always defined as string
+        id: goal.id ? String(goal.id) : String(Date.now()), // Ensure id is always a string
         minute: goal.minute,
         scorer: goal.scorer,
         scorerId: goal.scorerId || '', // Ensure scorerId is always defined

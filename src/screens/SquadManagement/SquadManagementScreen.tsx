@@ -93,8 +93,8 @@ const SquadManagementScreen: React.FC = () => {
       
       <SquadListView 
         squads={squads}
-        onAddNewSquad={handleAddSquad}  // Changed from onAddSquad to onAddNewSquad
-        onEditSquad={handleEditSquad}
+        onAddNewSquad={handleAddSquad}
+        onEdit={handleEditSquad} // Changed from onEditSquad to onEdit to match the component prop
         onSelectSquad={handleSelectSquad}
       />
     </div>

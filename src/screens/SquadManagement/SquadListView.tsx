@@ -1,56 +1,61 @@
 import React from 'react';
-import SquadListSection from '../../features/SquadManagement/components/SquadListSection';
-import { FiPlus } from 'react-icons/fi';
-import { motion } from 'framer-motion';
+import { Squad } from '../../types/GameTypes';
+import SquadCard from '../../features/SquadManagement/components/SquadCard';
 
-interface SquadListViewProps {
-  squads: any[];
-  loading: boolean;
-  selectedSquad: any;
-  handleSelectSquad: (squad: any) => void;
-  handleEditSquad: (squad: any) => void;
-  handleProceedToSetup: () => void;
+export interface SquadListViewProps {
+  squads: Squad[];
   onAddNewSquad: () => void;
+  onSelectSquad: (squad: Squad) => void;
+  onEdit: (squadId: number) => void; // Changed from onEditSquad to onEdit
 }
 
-export default function SquadListView({
+const SquadListView: React.FC<SquadListViewProps> = ({
   squads,
-  loading,
-  selectedSquad,
-  handleSelectSquad,
-  handleEditSquad,
-  handleProceedToSetup,
   onAddNewSquad,
-}: SquadListViewProps): JSX.Element {
+  onSelectSquad,
+  onEdit
+}) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-        <h2 className="text-2xl md:text-3xl font-bold text-white">Manage Your Squads</h2>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+    <div>
+      {/* Add New Squad Button */}
+      <div className="flex justify-center mb-8">
+        <button 
           onClick={onAddNewSquad}
-          className="px-5 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-lg shadow-md transition-all duration-200 cursor-pointer flex items-center"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg cursor-pointer flex items-center justify-center text-lg transition-colors duration-300"
         >
-          <FiPlus className="mr-2" /> Create New Squad
-        </motion.button>
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            className="h-6 w-6 mr-2" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          Create New Squad
+        </button>
       </div>
-      
-      <div className="bg-gradient-to-br from-black/30 to-purple-900/30 backdrop-blur-md rounded-2xl p-6 sm:p-8 shadow-xl border border-white/10">
-        <SquadListSection
-          squads={squads}
-          loading={loading}
-          handleSelectSquad={handleSelectSquad}
-          handleEditSquad={handleEditSquad}
-          selectedSquad={selectedSquad}
-          handleProceedToSetup={handleProceedToSetup}
-          onAddNewSquad={onAddNewSquad}
-        />
-      </div>
-    </motion.div>
+
+      {/* Squads List */}
+      {squads.length === 0 ? (
+        <div className="text-center p-8 bg-white/5 rounded-lg">
+          <p className="text-xl text-white mb-4">No squads available</p>
+          <p className="text-gray-300">Create a new squad to get started</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {squads.map(squad => (
+            <SquadCard
+              key={squad.id}
+              squad={squad}
+              onSelect={() => onSelectSquad(squad)}
+              onEdit={() => onEdit(squad.id)}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   );
-}
+};
+
+export default SquadListView;

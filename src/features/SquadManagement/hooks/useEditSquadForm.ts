@@ -115,12 +115,12 @@ export function useEditSquadForm(squadId: number) {
       
       await updateSquad(apiSquad.id, apiSquad);
       
-      // Pass the players array directly to the state context, not as a JSON string
+      // Make sure we're passing an array of players, not a string
       setSelectedSquad({
         ...squad,
         name: squadName,
-        players // Use the players array, not the JSON string
-      } as Squad); // Type assertion to clarify this is a Squad
+        players // This needs to be Player[], not a string
+      });
       
       navigate('/squads');
     } catch (err) {
