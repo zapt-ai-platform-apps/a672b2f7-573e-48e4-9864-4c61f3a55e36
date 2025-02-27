@@ -45,15 +45,16 @@ export default function GameManagementScreenViewContent({
   const handleRecordGoal = (goal: GoalData) => {
     if (recordGoal && setGoals && setOurScore && setOpponentScore) {
       // Convert GoalData to Goal type for compatibility
+      // Ensure the id is always a string to match the Goal type
       const convertedGoal: Goal = {
         team: goal.team,
         scorerName: goal.scorer,
         time: goal.minute,
-        id: goal.id,
+        id: goal.id || String(Date.now()), // Ensure id is always defined
         minute: goal.minute,
         scorer: goal.scorer,
-        scorerId: goal.scorerId,
-        timestamp: goal.timestamp
+        scorerId: goal.scorerId || '', // Ensure scorerId is always defined
+        timestamp: goal.timestamp || Date.now() // Ensure timestamp is always defined
       };
       
       // Type-safe implementation to handle the callback correctly

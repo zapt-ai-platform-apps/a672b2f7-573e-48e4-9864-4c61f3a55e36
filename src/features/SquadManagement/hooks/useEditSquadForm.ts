@@ -106,24 +106,26 @@ export function useEditSquadForm(squadId: number) {
         return;
       }
       
-      const updatedSquad = {
+      // Create an API-compatible object with JSON string for players
+      const apiSquad = {
         ...squad,
         name: squadName,
         players: JSON.stringify(players)
       };
       
-      const result = await updateSquad(updatedSquad.id, updatedSquad);
+      await updateSquad(apiSquad.id, apiSquad);
       
-      // Type guard for selectedSquad to ensure players is passed as an array, not a string
+      // Pass the players array directly to the state context, not as a JSON string
       setSelectedSquad((prev: any) => {
         // If prev is an array of Player, we should return the updated players array
         if (Array.isArray(prev)) {
           return players;
         }
-        // If prev is a Squad object, we need to return the full updated squad
+        // If prev is a Squad object, we need to return the full updated squad with players as array
         return {
-          ...updatedSquad,
-          players: players // Use the players array, not the JSON string
+          ...squad,
+          name: squadName,
+          players // Use the players array, not the JSON string
         };
       });
       

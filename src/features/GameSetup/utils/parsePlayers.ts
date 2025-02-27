@@ -12,7 +12,11 @@ function parsePlayers(text: string): Player[] {
         totalPlayTime: 0,
         isOnField: false,
         isGoalkeeper: false,
-        position: { x: 0, y: 0 }
+        position: { x: 0, y: 0 },
+        // Add missing properties required by the Player type
+        isInMatchSquad: false,
+        isInStartingLineup: false,
+        playIntervals: []
       };
       acc.push(player);
     }
