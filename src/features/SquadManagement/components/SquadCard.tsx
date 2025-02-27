@@ -1,63 +1,62 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getSquadPlayerCount, formatPlayersForDisplay } from '../utils/squadUtils';
+import { Squad } from '../types';
 
 interface SquadCardProps {
-  squad: {
-    id: number;
-    name: string;
-    players: any;
-    createdAt?: string;
-  };
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
+  squad: Squad;
+  onEdit: () => void;
+  onDelete: () => void;
+  onSelect: () => void;
 }
 
-export default function SquadCard({ squad, onEdit, onDelete }: SquadCardProps): JSX.Element {
-  const navigate = useNavigate();
-  const playerCount = getSquadPlayerCount(squad);
-  const formattedPlayers = formatPlayersForDisplay(squad.players);
-
-  const handleUseSquad = () => {
-    navigate('/game-setup', { state: { squad } });
-  };
-
+const SquadCard: React.FC<SquadCardProps> = ({
+  squad,
+  onEdit,
+  onDelete,
+  onSelect,
+}) => {
   return (
-    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/10">
-      <div className="flex justify-between items-start">
-        <h3 className="text-xl font-bold text-white mb-2">{squad.name}</h3>
-        <div className="bg-blue-500/30 text-blue-100 px-2 py-1 rounded-full text-xs font-medium">
-          {playerCount} {playerCount === 1 ? 'player' : 'players'}
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+      <div className="p-4">
+        <div className="flex justify-between items-center mb-2">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{squad.name}</h3>
+          <div className="flex gap-2">
+            <button
+              onClick={onEdit}
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer"
+              aria-label="Edit squad"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+              </svg>
+            </button>
+            <button
+              onClick={onDelete}
+              className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 cursor-pointer"
+              aria-label="Delete squad"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </button>
+          </div>
         </div>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+          {squad.players.length} player{squad.players.length !== 1 ? 's' : ''}
+        </p>
+        {squad.createdAt && (
+          <p className="text-xs text-gray-500 dark:text-gray-500">
+            Created: {new Date(squad.createdAt).toLocaleDateString()}
+          </p>
+        )}
       </div>
-      
-      <p className="text-gray-300 mb-4 text-sm line-clamp-2" title={formattedPlayers}>
-        {formattedPlayers || 'No players added yet'}
-      </p>
-      
-      <div className="mt-4 flex justify-between items-center">
-        <div className="space-x-2">
-          <button 
-            className="px-3 py-1.5 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors cursor-pointer"
-            onClick={() => onEdit(squad.id)}
-          >
-            Edit
-          </button>
-          <button 
-            className="px-3 py-1.5 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors cursor-pointer"
-            onClick={() => onDelete(squad.id)}
-          >
-            Delete
-          </button>
-        </div>
-        
-        <button 
-          className="px-3 py-1.5 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors cursor-pointer"
-          onClick={handleUseSquad}
-        >
-          Use Squad
-        </button>
-      </div>
+      <button
+        onClick={onSelect}
+        className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 transition-colors duration-200 cursor-pointer"
+      >
+        Select Squad
+      </button>
     </div>
   );
-}
+};
+
+export default SquadCard;

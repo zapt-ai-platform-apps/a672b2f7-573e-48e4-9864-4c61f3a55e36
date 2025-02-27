@@ -1,19 +1,10 @@
+// Define the Squad interface with a number ID
 export interface Squad {
-  id?: string | number;
+  id: number;
   name: string;
-  players?: any[];
+  players: any[];
+  createdAt?: string;
 }
 
-export interface SquadListProps {
-  squads: Squad[];
-  loading: boolean;
-  handleSelectSquad: (squad: Squad) => void;
-  handleEditSquad: (squad: Squad) => void;
-}
-
-export interface SquadCardProps {
-  squad: Squad;
-  index: number;
-  onSelectSquad: (squad: Squad) => void;
-  handleEditSquad: (squad: Squad) => void;
-}
+// Type for squad operations
+export type SquadOperationFn = (id: number) => void;

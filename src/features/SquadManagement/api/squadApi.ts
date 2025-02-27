@@ -1,44 +1,40 @@
-import { supabase } from '../../../supabaseClient';
-import { Squad } from '../../../types/GameTypes';
-import * as Sentry from "@sentry/browser";
+import { Squad } from '../types';
 
-export const fetchSquads = async (): Promise<Squad[]> => {
+export interface CreateSquadParams {
+  name: string;
+  players: { name: string; number?: string }[];
+}
+
+export interface UpdateSquadParams extends CreateSquadParams {
+  id: number;
+}
+
+// API functions for working with squads
+export async function fetchSquadsFromApi(): Promise<Squad[]> {
   try {
-    const { data: sessionData } = await supabase.auth.getSession();
-    if (!sessionData.session) {
-      return [];
-    }
-
-    const response = await fetch('/api/squads', {
-      headers: {
-        Authorization: `Bearer ${sessionData.session.access_token}`,
-      },
-    });
-
+    const response = await fetch('/api/squads');
     if (!response.ok) {
       throw new Error('Failed to fetch squads');
     }
-
-    return await response.json();
+    const data = await response.json();
+    
+    // Ensure IDs are numbers
+    return data.map((squad: any) => ({
+      ...squad,
+      id: typeof squad.id === 'string' ? parseInt(squad.id, 10) : squad.id
+    }));
   } catch (error) {
     console.error('Error fetching squads:', error);
-    Sentry.captureException(error);
-    return [];
+    throw error;
   }
-};
+}
 
-export const createSquad = async (squadData: Partial<Squad>): Promise<Squad | null> => {
+export async function createSquadViaApi(squadData: CreateSquadParams): Promise<Squad> {
   try {
-    const { data: sessionData } = await supabase.auth.getSession();
-    if (!sessionData.session) {
-      throw new Error('User not authenticated');
-    }
-
     const response = await fetch('/api/squads', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${sessionData.session.access_token}`,
       },
       body: JSON.stringify(squadData),
     });
@@ -46,27 +42,25 @@ export const createSquad = async (squadData: Partial<Squad>): Promise<Squad | nu
     if (!response.ok) {
       throw new Error('Failed to create squad');
     }
-
-    return await response.json();
+    
+    const data = await response.json();
+    // Ensure ID is a number
+    return {
+      ...data,
+      id: typeof data.id === 'string' ? parseInt(data.id, 10) : data.id
+    };
   } catch (error) {
     console.error('Error creating squad:', error);
-    Sentry.captureException(error);
-    return null;
+    throw error;
   }
-};
+}
 
-export const updateSquad = async (id: number | string, squadData: Partial<Squad>): Promise<Squad | null> => {
+export async function updateSquadViaApi(squadData: UpdateSquadParams): Promise<Squad> {
   try {
-    const { data: sessionData } = await supabase.auth.getSession();
-    if (!sessionData.session) {
-      throw new Error('User not authenticated');
-    }
-
-    const response = await fetch(`/api/squadService?id=${id}`, {
+    const response = await fetch(`/api/squads/${squadData.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${sessionData.session.access_token}`,
       },
       body: JSON.stringify(squadData),
     });
@@ -74,62 +68,50 @@ export const updateSquad = async (id: number | string, squadData: Partial<Squad>
     if (!response.ok) {
       throw new Error('Failed to update squad');
     }
-
-    return await response.json();
+    
+    const data = await response.json();
+    // Ensure ID is a number
+    return {
+      ...data,
+      id: typeof data.id === 'string' ? parseInt(data.id, 10) : data.id
+    };
   } catch (error) {
     console.error('Error updating squad:', error);
-    Sentry.captureException(error);
-    return null;
+    throw error;
   }
-};
+}
 
-export const deleteSquad = async (id: number | string): Promise<boolean> => {
+export async function deleteSquadViaApi(id: number): Promise<void> {
   try {
-    const { data: sessionData } = await supabase.auth.getSession();
-    if (!sessionData.session) {
-      throw new Error('User not authenticated');
-    }
-
-    const response = await fetch(`/api/squadService?id=${id}`, {
+    const response = await fetch(`/api/squads/${id}`, {
       method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${sessionData.session.access_token}`,
-      },
     });
 
     if (!response.ok) {
       throw new Error('Failed to delete squad');
     }
-
-    return true;
   } catch (error) {
     console.error('Error deleting squad:', error);
-    Sentry.captureException(error);
-    return false;
+    throw error;
   }
-};
+}
 
-export const fetchSquadById = async (id: number | string): Promise<Squad | null> => {
+export async function fetchSquadByIdFromApi(id: number): Promise<Squad> {
   try {
-    const { data: sessionData } = await supabase.auth.getSession();
-    if (!sessionData.session) {
-      throw new Error('User not authenticated');
-    }
-
-    const response = await fetch(`/api/squadService?id=${id}`, {
-      headers: {
-        Authorization: `Bearer ${sessionData.session.access_token}`,
-      },
-    });
-
+    const response = await fetch(`/api/squads/${id}`);
+    
     if (!response.ok) {
       throw new Error('Failed to fetch squad');
     }
-
-    return await response.json();
+    
+    const data = await response.json();
+    // Ensure ID is a number
+    return {
+      ...data,
+      id: typeof data.id === 'string' ? parseInt(data.id, 10) : data.id
+    };
   } catch (error) {
-    console.error('Error fetching squad:', error);
-    Sentry.captureException(error);
-    return null;
+    console.error(`Error fetching squad with id ${id}:`, error);
+    throw error;
   }
-};
+}
