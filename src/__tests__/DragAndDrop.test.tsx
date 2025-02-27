@@ -15,7 +15,7 @@ vi.mock('../features/GameManagement/hooks/useDragAndDrop', () => ({
 
 // Mock assignInitialPositions utility
 vi.mock('../features/GameManagement/utils/assignInitialPositions', () => ({
-  assignInitialPositions: (players) => players
+  assignInitialPositions: (players: Player[]) => players
 }));
 
 describe('Pitch Visualization Drag and Drop', () => {

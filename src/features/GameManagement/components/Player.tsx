@@ -3,13 +3,16 @@ import { Player as PlayerType } from '../../../types/GameTypes';
 
 interface PlayerProps {
   player: PlayerType;
-  onDragStart: (playerId: string) => void;
+  onDragStart?: (playerId: string) => void;
   onPointerDown?: (event: React.PointerEvent<HTMLDivElement>) => void;
+  showStatus?: boolean;
 }
 
-const Player: React.FC<PlayerProps> = ({ player, onDragStart, onPointerDown }) => {
+const Player: React.FC<PlayerProps> = ({ player, onDragStart, onPointerDown, showStatus }) => {
   const handleDragStart = () => {
-    onDragStart(player.id);
+    if (onDragStart) {
+      onDragStart(player.id);
+    }
   };
 
   return (
@@ -44,6 +47,11 @@ const Player: React.FC<PlayerProps> = ({ player, onDragStart, onPointerDown }) =
       }}>
         {player.name.slice(0, 2)}
       </span>
+      {showStatus && player.status && (
+        <div className="absolute -bottom-5 text-xs font-medium bg-white px-1 rounded">
+          {player.status}
+        </div>
+      )}
     </div>
   );
 };

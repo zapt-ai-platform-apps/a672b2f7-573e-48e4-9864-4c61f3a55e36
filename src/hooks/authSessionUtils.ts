@@ -20,7 +20,12 @@ export const getInitialSessionUtil = async (
     // Record login if user exists
     if (session?.user?.email) {
       try {
-        await recordLogin(session.user.email, import.meta.env.VITE_PUBLIC_APP_ENV as unknown as environmentType);
+        // Convert 'staging' to 'production' for environment type
+        const effectiveEnv = import.meta.env.VITE_PUBLIC_APP_ENV === 'staging' 
+          ? 'production' 
+          : import.meta.env.VITE_PUBLIC_APP_ENV as environmentType;
+          
+        await recordLogin(session.user.email, effectiveEnv);
       } catch (error) {
         console.error('Failed to record login:', error);
         Sentry.captureException(error);
