@@ -15,10 +15,10 @@ export function processSession(session: any, setUser: (user: any) => void): void
     setUser(user);
     const recordedKey = `recordedLogin_${user.id}`;
     if (!sessionStorage.getItem(recordedKey) && user.email) {
-      // First cast env value to EnvironmentType
-      const appEnv = import.meta.env.VITE_PUBLIC_APP_ENV as EnvironmentType;
-      // Then compute effectiveEnv without further casting needed
-      const effectiveEnv = appEnv === 'staging' ? 'production' : appEnv;
+      // Cast env value to string
+      const appEnv = import.meta.env.VITE_PUBLIC_APP_ENV as string;
+      // Compute effectiveEnv - only 'development' remains as is, everything else becomes 'production'
+      const effectiveEnv = appEnv === 'development' ? 'development' : 'production';
       
       recordLogin(user.email, effectiveEnv)
         .catch((error: any) => {

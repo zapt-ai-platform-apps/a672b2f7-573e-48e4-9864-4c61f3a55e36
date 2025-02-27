@@ -12,10 +12,15 @@ export const recordUserLogin = async (email?: string, environment?: EnvironmentT
   try {
     // If email is not provided, retrieve the current user via Supabase
     if (!email) {
-      const response = await supabase.auth.getUser();
+      const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        console.error('Error getting user:', error);
+        return; // Exit early if there's an error getting the user
+      }
+      
       // Check if user exists and has an email
-      if (response.data?.user?.email) {
-        email = response.data.user.email;
+      if (data?.user?.email) {
+        email = data.user.email;
       } else {
         return; // If no email available, do nothing
       }
@@ -26,11 +31,11 @@ export const recordUserLogin = async (email?: string, environment?: EnvironmentT
       environment = import.meta.env.VITE_PUBLIC_APP_ENV as EnvironmentType;
     }
 
-    // Compute effective environment - map 'staging' to 'production'
-    const effectiveEnv = environment === 'staging' ? 'production' : environment;
+    // Compute effective environment - anything not 'development' is treated as 'production'
+    const effectiveEnv = environment === 'development' ? 'development' : 'production';
 
     if (!hasLoggedInRecently(email)) {
-      console.log(`Recording login for user: ${email} in environment: ${environment} (effective: ${effectiveEnv})`);
+      console.log(`Recording login for user: ${email} in environment: ${effectiveEnv}`);
       await recordLoginFromClient(email, effectiveEnv);
     } else {
       console.log(`User ${email} already logged in recently, skipping login record`);
