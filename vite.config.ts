@@ -18,16 +18,6 @@ export default defineConfig({
       '@': resolve(__dirname, './src'),
     },
   },
-  // Configure Vitest
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
-    // Ensure path aliases work in tests
-    alias: {
-      '@': resolve(__dirname, './src'),
-    },
-  },
   build: {
     sourcemap: true,
   },
