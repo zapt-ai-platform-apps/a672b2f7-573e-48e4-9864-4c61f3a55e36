@@ -16,9 +16,17 @@ Sentry.init({
 
 export default async function handler(req, res) {
   try {
-    // Use optional authentication to support both authenticated and non-authenticated users
+    console.log("Received request to /api/squads with headers:", JSON.stringify({
+      // Log only needed headers to protect sensitive information
+      authorization: req.headers.authorization ? "Bearer [redacted]" : "none",
+      'content-type': req.headers['content-type']
+    }));
+    
+    // Try to authenticate user but don't require auth
     const user = await tryAuthenticateUser(req);
     const userId = user?.id || null;
+    
+    console.log("Authentication result:", userId ? "User authenticated" : "Anonymous request");
     
     // Get squads (the service should handle retrieving public squads if userId is null)
     const squads = await getSquads(userId);
