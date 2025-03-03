@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { useStateContext } from '@/state';
-import useGameIntervalsManager from '@/features/GameManagement/hooks/useGameIntervalsManager';
-import useEndGameManager from '@/features/GameManagement/hooks/useEndGameManager';
-import useGameTimer from '@/features/GameManagement/hooks/useGameTimer';
-import usePlayerManagement from '@/features/GameManagement/hooks/usePlayerManagement';
+import { useAppContext } from '@/app/context/AppProvider';
+import useGameIntervalsManager from '@/modules/game/hooks/useGameIntervalsManager';
+import useEndGameManager from '@/modules/game/hooks/useEndGameManager';
+import useGameTimer from '@/modules/game/hooks/useGameTimer';
+import usePlayerManagement from '@/modules/game/hooks/usePlayerManagement';
 
 function useGameManagementLogic() {
-  const { playerData, setPlayerData, goalkeeper, setGoalkeeper, ourScore, setOurScore, opponentScore, setOpponentScore, goals, setGoals, includeGKPlaytime } = useStateContext();
+  const { playerData, setPlayerData, goalkeeper, setGoalkeeper, ourScore, setOurScore, opponentScore, setOpponentScore, goals, setGoals, includeGKPlaytime } = useAppContext();
 
   const [isRunning, setIsRunning] = useState(false);
   const [gameIntervals, setGameIntervals] = useState([]);

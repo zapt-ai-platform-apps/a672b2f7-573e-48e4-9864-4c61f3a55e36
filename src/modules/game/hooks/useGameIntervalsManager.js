@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
-import { useStateContext } from '../../../state';
+import { useAppContext } from '@/app/context/AppProvider';
 
 export default function useGameIntervalsManager({ isRunning, setIsRunning, gameIntervals, setGameIntervals, playerData, setPlayerData }) {
-  const toggleTimer = () => {
+  const toggleTimer = useCallback(() => {
     if (!isRunning) {
       setIsRunning(true);
       setGameIntervals((prev) => [...prev, { startTime: Date.now(), endTime: null }]);
@@ -44,7 +44,7 @@ export default function useGameIntervalsManager({ isRunning, setIsRunning, gameI
         })
       );
     }
-  };
+  }, [isRunning, playerData, setIsRunning, setGameIntervals, setPlayerData]);
 
   return { toggleTimer };
 }

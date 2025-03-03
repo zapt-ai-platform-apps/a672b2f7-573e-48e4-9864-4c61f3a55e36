@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { createGameGoalHandlers } from '@/features/GameManagement/hooks/gameGoals.js';
-import { createPlayerHandlers } from '@/features/GameManagement/hooks/playerManagement.js';
+import { createGameGoalHandlers } from '@/modules/game/hooks/gameGoals';
+import { createPlayerHandlers } from '@/modules/game/hooks/playerManagement';
 
 function createGameManagementStore(props) {
   const [showGoalModal, setShowGoalModal] = useState(false);

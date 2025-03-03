@@ -1,13 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useStateContext } from '@/state';
+import { useAppContext } from '@/app/context/AppProvider';
 import GoalsList from '@/modules/game/ui/GoalsList';
 import PlayerPlaytimes from '@/modules/game/ui/PlayerPlaytimes';
 import FinalScore from '@/modules/game/ui/FinalScore';
 import ShareSummaryButton from '@/modules/game/ui/ShareSummaryButton';
 
 function GameSummaryScreen() {
-  const { playerData, goals, ourScore, opponentScore, includeGKPlaytime, resetGame } = useStateContext();
+  const { playerData, goals, ourScore, opponentScore, includeGKPlaytime, resetGame } = useAppContext();
   const navigate = useNavigate();
 
   const getTotalPlayTime = (player) => {

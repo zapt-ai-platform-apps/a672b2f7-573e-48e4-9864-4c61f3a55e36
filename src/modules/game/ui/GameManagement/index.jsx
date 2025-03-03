@@ -1,11 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import useGameManagementLogic from '@/features/GameManagement/hooks/useGameManagementLogic';
-import GameManagementContent from '@/features/GameManagement/GameManagementContent';
+import useGameManagementLogic from '@/modules/game/hooks/useGameManagementLogic';
+import Content from './Content.jsx';
 
 function GameManagementScreen() {
   const navigate = useNavigate();
-
   const {
     playerData,
     setPlayerData,
@@ -29,7 +28,8 @@ function GameManagementScreen() {
     handleEndGame,
     confirmEndGame,
     cancelEndGame,
-    toggleTimer
+    toggleTimer,
+    recordGoal
   } = useGameManagementLogic();
 
   const confirmEndGameHandler = () => {
@@ -38,7 +38,7 @@ function GameManagementScreen() {
   };
 
   return (
-    <GameManagementContent
+    <Content
       isRunning={isRunning}
       toggleTimer={toggleTimer}
       getTimeElapsed={getTimeElapsed}
@@ -61,6 +61,7 @@ function GameManagementScreen() {
       setGoals={setGoals}
       goalkeeper={goalkeeper}
       setGoalkeeper={setGoalkeeper}
+      recordGoal={recordGoal}
     />
   );
 }

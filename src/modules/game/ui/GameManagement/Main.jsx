@@ -4,10 +4,10 @@ import SubstitutionPanel from '@/modules/game/ui/SubstitutionPanel.jsx';
 import GameActions from '@/modules/game/ui/GameActions.jsx';
 import EndGameConfirmationModal from '@/modules/game/ui/EndGameConfirmationModal.jsx';
 import PitchVisualization from '@/modules/game/ui/PitchVisualization.jsx';
-import GameManagementModals from '@/features/GameManagement/GameManagementModals.jsx';
-import createGameManagementStore from '@/hooks/useGameManagement';
+import Modals from './Modals.jsx';
+import createGameManagementStore from '@/modules/game/hooks/useGameManagement';
 
-function GameManagementMain(props) {
+function Main(props) {
   const store = createGameManagementStore(props);
   const [showPitch, setShowPitch] = useState(false);
 
@@ -40,19 +40,9 @@ function GameManagementMain(props) {
 
       <SubstitutionPanel {...props} />
 
-      <GameActions
-        assignGoalkeeper={store.assignGoalkeeper}
-        handleRemoveLastGoal={store.handleRemoveLastGoal}
-        setShowGoalModal={store.setShowGoalModal}
-        setShowAddPlayerModal={store.setShowAddPlayerModal}
-        handleIncreasePlayers={store.handleIncreasePlayers}
-        handleDecreasePlayers={store.handleDecreasePlayers}
-        isRunning={props.isRunning}
-      />
-
-      <GameManagementModals {...props} {...store} />
+      <Modals {...props} {...store} />
     </div>
   );
 }
 
-export default GameManagementMain;
+export default Main;

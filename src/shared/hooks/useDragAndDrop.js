@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
-import { useStateContext } from '@/state';
+import { useAppContext } from '@/app/context/AppProvider';
 
 export default function useDragAndDrop() {
   let pitchRefLocal = null;
-  const { playerData, setPlayerData } = useStateContext();
+  const { playerData, setPlayerData } = useAppContext();
 
   const handlePointerDown = useCallback((e, player) => {
     e.preventDefault();
