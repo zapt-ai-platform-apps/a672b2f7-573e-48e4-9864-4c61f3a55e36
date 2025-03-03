@@ -1,5 +1,5 @@
 import React from 'react';
-import Player from './Player';
+import Player from '@/modules/players/ui/Player.jsx';
 
 function Pitch({ pitchRef, playerData, handlePointerDown }) {
   return (
