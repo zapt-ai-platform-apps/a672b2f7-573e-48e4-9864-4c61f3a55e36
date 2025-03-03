@@ -2,23 +2,29 @@ import { z } from 'zod';
 import * as Sentry from '@sentry/browser';
 
 /**
- * Validation schemas for data crossing module boundaries
+ * Utility to create a validator that captures Zod errors and reports them to Sentry.
+ * The error message clearly states what caused the validation error by including each error's path and message.
  */
 export const createValidator = (schema) => {
   return (data) => {
     try {
       return schema.parse(data);
     } catch (error) {
-      // Capture the Zod validation error with Sentry
-      Sentry.captureException(error);
-      console.error('Validation error:', error);
+      const errorDetails = error.errors
+        ?.map(err => `${err.path.join('.')} : ${err.message}`)
+        .join(', ') || error.message;
       
-      // Format the error message for better readability
-      const formattedMessage = error.errors?.map(err => 
-        `${err.path.join('.')}: ${err.message}`
-      ).join(', ') || error.message;
+      // Capture the detailed Zod validation error with Sentry including extra context
+      Sentry.captureException(new Error(`ZodValidationError: ${errorDetails}`), {
+        extra: {
+          schema: schema.toString(),
+          data,
+          errorDetails: error.errors
+        }
+      });
       
-      throw new Error(`Validation failed: ${formattedMessage}`);
+      console.error('Zod validation error:', errorDetails);
+      throw new Error(`Validation failed: ${errorDetails}`);
     }
   };
 };
