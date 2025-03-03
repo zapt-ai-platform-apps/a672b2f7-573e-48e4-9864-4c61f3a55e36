@@ -9,6 +9,7 @@ import LogRocket from 'logrocket';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AppProvider } from '@/app/context/AppProvider';
+import { AuthProvider } from '@/modules/auth/context/AuthProvider';
 
 LogRocket.init('p29zbk/zapt');
 
@@ -54,10 +55,12 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <Router>
-      <AppProvider>
-        <App />
-        <ToastContainer />
-      </AppProvider>
+      <AuthProvider>
+        <AppProvider>
+          <App />
+          <ToastContainer />
+        </AppProvider>
+      </AuthProvider>
     </Router>
   </React.StrictMode>
 );
