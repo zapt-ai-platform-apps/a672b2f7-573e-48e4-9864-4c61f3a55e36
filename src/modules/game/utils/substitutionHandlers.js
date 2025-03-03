@@ -13,8 +13,8 @@ export function makeSubstitution({
 
   const currentTime = Date.now();
   
-  setPlayerData(
-    playerData.map((player) => {
+  setPlayerData(prev =>
+    prev.map((player) => {
       // Player coming off the field
       if (player.name === selectedSubOffPlayer.name) {
         const updatedIntervals = [...player.playIntervals];
