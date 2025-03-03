@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import TeamSelection from './TeamSelection';
-import ScorerSelection from './ScorerSelection';
+import ScorerSelection from '@/modules/players/ui/ScorerSelection.jsx';
 import OpponentGoalConfirmation from './OpponentGoalConfirmation';
 
 function GoalScoredModal({ showGoalModal, setShowGoalModal, players, recordGoal }) {
