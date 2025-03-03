@@ -1,6 +1,6 @@
 import React from 'react';
-import PlayerList from './PlayerList';
-import ConfirmSubstitutionModal from './ConfirmSubstitutionModal';
+import PlayerList from '../../players/ui/PlayerList.jsx';
+import ConfirmSubstitutionModal from './ConfirmSubstitutionModal.jsx';
 import { useSubstitutionLogic } from './substitutionLogic';
 
 function SubstitutionControls(props) {

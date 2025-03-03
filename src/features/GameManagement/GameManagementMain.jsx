@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import Header from '@/components/Header';
-import SubstitutionPanel from '@/components/SubstitutionPanel';
-import GameActions from '@/components/GameActions';
-import EndGameConfirmationModal from '@/components/EndGameConfirmationModal';
-import PitchVisualization from '@/components/PitchVisualization';
+import Header from '@/modules/game/ui/Header.jsx';
+import SubstitutionPanel from '@/modules/game/ui/SubstitutionPanel.jsx';
+import GameActions from '@/modules/game/ui/GameActions.jsx';
+import EndGameConfirmationModal from '@/modules/game/ui/EndGameConfirmationModal.jsx';
+import PitchVisualization from '@/modules/game/ui/PitchVisualization.jsx';
 import GameManagementModals from '@/features/GameManagement/GameManagementModals.jsx';
 import createGameManagementStore from '@/hooks/useGameManagement';
 

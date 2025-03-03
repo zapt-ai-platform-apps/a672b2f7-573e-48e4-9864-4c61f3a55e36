@@ -1,7 +1,7 @@
 import React from 'react';
 import { toast } from 'react-toastify';
-import AddPlayerForm from '@/components/AddPlayerForm.jsx';
-import StartingLineupSelector from '@/components/StartingLineupSelector.jsx';
+import AddPlayerForm from '@/modules/players/ui/AddPlayerForm.jsx';
+import StartingLineupSelector from '@/modules/players/ui/StartingLineupSelector.jsx';
 
 function PlayerManager({ playerName, setPlayerName, players, addPlayer, deletePlayer, toggleStartingPlayer, startingPlayersCount }) {
   const handleAddPlayer = () => {

@@ -10,13 +10,13 @@ function EndGameConfirmationModal({ showEndGameConfirm, confirmEndGame, cancelEn
         <p className="mb-4 text-lg">Are you sure you want to end the game?</p>
         <div className="flex justify-end space-x-4">
           <button
-            className="px-6 py-3 bg-red-500 text-white text-lg rounded-md cursor-pointer hover:bg-red-600 transition-all duration-300 ease-in-out-custom focus:outline-none focus:ring-2 focus:ring-red-400"
+            className="px-6 py-3 bg-red-500 text-white text-lg rounded-md cursor-pointer hover:bg-red-600 transition-all duration-300 ease-in-out"
             onClick={confirmEndGame}
           >
             Yes
           </button>
           <button
-            className="px-6 py-3 bg-gray-500 text-white text-lg rounded-md cursor-pointer hover:bg-gray-600 transition-all duration-300 ease-in-out-custom focus:outline-none focus:ring-2 focus:ring-gray-400"
+            className="px-6 py-3 bg-gray-500 text-white text-lg rounded-md cursor-pointer hover:bg-gray-600 transition-all duration-300 ease-in-out"
             onClick={cancelEndGame}
           >
             No

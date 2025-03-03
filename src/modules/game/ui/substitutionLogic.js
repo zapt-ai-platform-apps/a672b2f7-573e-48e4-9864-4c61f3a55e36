@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { makeSubstitution } from '../utils/substitutionHandlers';
+import { makeSubstitution } from '../../utils/substitutionHandlers';
 import { toast } from 'react-toastify';
 
 export function useSubstitutionLogic(props) {
@@ -55,3 +55,5 @@ export function useSubstitutionLogic(props) {
     handleSubOnPlayerClick,
   };
 }
+
+export default useSubstitutionLogic;
