@@ -4,7 +4,7 @@ import LandingPage from '@/app/screens/Landing/LandingPage.jsx';
 import GameSetup from '@/app/screens/GameSetup/index.jsx';
 import GameManagementScreen from '@/modules/game/ui/GameManagement/index.jsx';
 import GameSummaryScreen from '@/modules/game/ui/GameSummaryScreen.jsx';
-import NavBar from '@/shared/components/NavBar.jsx';
+import NavBar from '@/app/components/NavBar.jsx';
 
 function App() {
   return (

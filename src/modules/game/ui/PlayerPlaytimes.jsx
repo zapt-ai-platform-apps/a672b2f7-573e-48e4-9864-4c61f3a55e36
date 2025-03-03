@@ -1,6 +1,7 @@
 import React from 'react';
+import { formatTime } from '@/modules/game/utils/timeFormatter';
 
-function PlayerPlaytimes({ playerData, includeGKPlaytime, getTotalPlayTime, formatTime }) {
+function PlayerPlaytimes({ playerData, includeGKPlaytime, getTotalPlayTime }) {
   const dataArray = Array.isArray(playerData) ? playerData : [];
   const sortedPlayerData = dataArray.sort((a, b) => getTotalPlayTime(b) - getTotalPlayTime(a));
 

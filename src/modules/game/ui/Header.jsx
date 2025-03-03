@@ -1,12 +1,7 @@
 import React from 'react';
+import { formatTime } from '@/modules/game/utils/timeFormatter';
 
 function Header({ isRunning, toggleTimer, getTimeElapsed, handleEndGame, ourScore, opponentScore }) {
-  const formatTime = (timeInSeconds) => {
-    const minutes = Math.floor(timeInSeconds / 60);
-    const seconds = ('0' + (timeInSeconds % 60)).slice(-2);
-    return `${minutes}:${seconds}`;
-  };
-
   return (
     <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8">
       <div className="mb-4 md:mb-0">

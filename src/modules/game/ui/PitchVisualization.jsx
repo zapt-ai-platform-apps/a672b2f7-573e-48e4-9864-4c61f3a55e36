@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { useAppContext } from '@/app/context/AppProvider';
 import Pitch from './Pitch';
-import useDragAndDrop from '@/shared/hooks/useDragAndDrop';
-import assignInitialPositions from '@/shared/utils/assignInitialPositions';
+import useDragAndDrop from '@/modules/game/hooks/useDragAndDrop';
+import assignInitialPositions from '@/modules/game/utils/assignInitialPositions';
 
 function PitchVisualization() {
   const { playerData } = useAppContext();
