@@ -1,2 +1,3 @@
-// This file is replaced by the module-based state management
-// in src/app/context/AppProvider.jsx
+import { useAppContext } from './app/context/AppProvider.jsx';
+
+export const useStateContext = useAppContext;
