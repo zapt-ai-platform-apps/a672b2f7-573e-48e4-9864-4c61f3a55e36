@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import * as Sentry from '@sentry/browser';
 
 /**
  * Validation schemas for data crossing module boundaries
@@ -8,8 +9,16 @@ export const createValidator = (schema) => {
     try {
       return schema.parse(data);
     } catch (error) {
+      // Capture the Zod validation error with Sentry
+      Sentry.captureException(error);
       console.error('Validation error:', error);
-      throw new Error(`Validation failed: ${error.message}`);
+      
+      // Format the error message for better readability
+      const formattedMessage = error.errors?.map(err => 
+        `${err.path.join('.')}: ${err.message}`
+      ).join(', ') || error.message;
+      
+      throw new Error(`Validation failed: ${formattedMessage}`);
     }
   };
 };
