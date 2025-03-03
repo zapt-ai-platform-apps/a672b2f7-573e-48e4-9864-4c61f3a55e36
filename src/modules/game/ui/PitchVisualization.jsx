@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { useStateContext } from '../../state';
+import { useAppContext } from '@/app/context/AppProvider';
 import Pitch from './Pitch';
-import useDragAndDrop from '../../../hooks/useDragAndDrop';
-import assignInitialPositions from '../../../utils/assignInitialPositions';
+import useDragAndDrop from '@/shared/hooks/useDragAndDrop';
+import assignInitialPositions from '@/shared/utils/assignInitialPositions';
 
 function PitchVisualization() {
-  const { playerData } = useStateContext();
+  const { playerData } = useAppContext();
   const pitchRef = useRef(null);
   const { handlePointerDown, init, cleanup } = useDragAndDrop();
 
