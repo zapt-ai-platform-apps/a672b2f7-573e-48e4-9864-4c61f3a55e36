@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuthContext } from '@/modules/auth/context/AuthProvider';
+import { supabase } from '@/supabaseClient';
+import * as Sentry from '@sentry/browser';
 
 export function useSquads() {
   const { user } = useAuthContext();
@@ -26,6 +28,7 @@ export function useSquads() {
       setSquads(data);
     } catch (err) {
       console.error('Error fetching squads:', err);
+      Sentry.captureException(err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -60,6 +63,7 @@ export function useSquads() {
       return newSquad;
     } catch (err) {
       console.error('Error creating squad:', err);
+      Sentry.captureException(err);
       setError(err.message);
       throw err;
     }
@@ -80,6 +84,7 @@ export function useSquads() {
       return await response.json();
     } catch (err) {
       console.error('Error fetching squad players:', err);
+      Sentry.captureException(err);
       setError(err.message);
       throw err;
     }
@@ -103,6 +108,7 @@ export function useSquads() {
       return await response.json();
     } catch (err) {
       console.error('Error adding player to squad:', err);
+      Sentry.captureException(err);
       setError(err.message);
       throw err;
     }
@@ -124,6 +130,7 @@ export function useSquads() {
       return true;
     } catch (err) {
       console.error('Error removing player from squad:', err);
+      Sentry.captureException(err);
       setError(err.message);
       throw err;
     }
@@ -131,8 +138,14 @@ export function useSquads() {
 
   // Helper function to get auth token
   const getAuthToken = async () => {
-    const { data } = await supabase.auth.getSession();
-    return data.session?.access_token;
+    try {
+      const { data } = await supabase.auth.getSession();
+      return data.session?.access_token;
+    } catch (err) {
+      console.error('Error getting auth token:', err);
+      Sentry.captureException(err);
+      throw err;
+    }
   };
 
   return {
