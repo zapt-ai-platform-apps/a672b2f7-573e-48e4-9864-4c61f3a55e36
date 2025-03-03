@@ -6,37 +6,65 @@ export function makeSubstitution({
   isRunning,
   updatePlayerLists
 }) {
-  if (selectedSubOffPlayer && selectedSubOnPlayer) {
-    const offPlayerName = selectedSubOffPlayer.name;
-    const onPlayerName = selectedSubOnPlayer.name;
-
-    setPlayerData(
-      playerData.map((player) => {
-        if (player.name === offPlayerName) {
-          if (player.playIntervals.length > 0 && !player.playIntervals[player.playIntervals.length - 1].endTime) {
-            player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();
-          }
-          return { ...player, isOnField: false };
-        }
-        if (player.name === onPlayerName) {
-          if (isRunning) {
-            return {
-              ...player,
-              isOnField: true,
-              playIntervals: [
-                ...player.playIntervals,
-                { startTime: Date.now(), endTime: null, isGoalkeeper: player.isGoalkeeper }
-              ]
-            };
-          } else {
-            return { ...player, isOnField: true };
-          }
-        }
-        return player;
-      })
-    );
-    updatePlayerLists();
-  } else {
-    alert('Please select a player to sub off and a player to sub on.');
+  if (!selectedSubOffPlayer || !selectedSubOnPlayer) {
+    console.error("Cannot make substitution: missing player(s)");
+    return false;
   }
+
+  const currentTime = Date.now();
+  
+  setPlayerData(
+    playerData.map((player) => {
+      // Player coming off the field
+      if (player.name === selectedSubOffPlayer.name) {
+        const updatedIntervals = [...player.playIntervals];
+        
+        // Close the current interval if the player is coming off and the game is running
+        if (isRunning && updatedIntervals.length > 0) {
+          const lastInterval = updatedIntervals[updatedIntervals.length - 1];
+          if (!lastInterval.endTime) {
+            updatedIntervals[updatedIntervals.length - 1] = {
+              ...lastInterval,
+              endTime: currentTime
+            };
+          }
+        }
+        
+        return { 
+          ...player, 
+          isOnField: false,
+          playIntervals: updatedIntervals
+        };
+      }
+      
+      // Player coming on the field
+      if (player.name === selectedSubOnPlayer.name) {
+        let updatedIntervals = [...player.playIntervals];
+        
+        // Start a new interval if the game is running
+        if (isRunning) {
+          updatedIntervals.push({
+            startTime: currentTime,
+            endTime: null,
+            isGoalkeeper: player.isGoalkeeper
+          });
+        }
+        
+        return { 
+          ...player, 
+          isOnField: true,
+          playIntervals: updatedIntervals
+        };
+      }
+      
+      return player;
+    })
+  );
+  
+  // Update player lists to reflect the changes
+  if (typeof updatePlayerLists === 'function') {
+    updatePlayerLists();
+  }
+  
+  return true;
 }

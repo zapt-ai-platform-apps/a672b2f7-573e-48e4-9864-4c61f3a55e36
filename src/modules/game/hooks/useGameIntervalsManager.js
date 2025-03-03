@@ -1,21 +1,30 @@
 import { useCallback } from 'react';
-import { useAppContext } from '@/app/context/AppProvider';
 
 export default function useGameIntervalsManager({ isRunning, setIsRunning, gameIntervals, setGameIntervals, playerData, setPlayerData }) {
   const toggleTimer = useCallback(() => {
+    const currentTime = Date.now();
+    
     if (!isRunning) {
+      // Start the timer
       setIsRunning(true);
-      setGameIntervals((prev) => [...prev, { startTime: Date.now(), endTime: null }]);
+      
+      // Add a new game interval
+      setGameIntervals((prev) => [...prev, { startTime: currentTime, endTime: null }]);
 
+      // Update on-field players to start new play intervals
       setPlayerData((prevPlayers) =>
         prevPlayers.map((player) => {
           if (player.isOnField) {
-            if (player.playIntervals.length === 0 || player.playIntervals[player.playIntervals.length - 1].endTime) {
+            const intervals = player.playIntervals || [];
+            const lastInterval = intervals.length > 0 ? intervals[intervals.length - 1] : null;
+            
+            // Only add a new interval if the player doesn't have an active one
+            if (!lastInterval || lastInterval.endTime !== null) {
               return {
                 ...player,
                 playIntervals: [
-                  ...player.playIntervals,
-                  { startTime: Date.now(), endTime: null, isGoalkeeper: player.isGoalkeeper }
+                  ...intervals,
+                  { startTime: currentTime, endTime: null, isGoalkeeper: player.isGoalkeeper }
                 ]
               };
             }
@@ -24,23 +33,30 @@ export default function useGameIntervalsManager({ isRunning, setIsRunning, gameI
         })
       );
     } else {
+      // Pause the timer
       setIsRunning(false);
+      
+      // End the current game interval
       setGameIntervals((prev) =>
         prev.map((interval, idx) =>
           idx === prev.length - 1 && !interval.endTime
-            ? { ...interval, endTime: Date.now() }
+            ? { ...interval, endTime: currentTime }
             : interval
         )
       );
 
+      // Update on-field players to end their current play intervals
       setPlayerData((prevPlayers) =>
         prevPlayers.map((player) => {
           if (player.isOnField) {
-            if (player.playIntervals.length > 0 && !player.playIntervals[player.playIntervals.length - 1].endTime) {
+            const intervals = player.playIntervals || [];
+            
+            // End the current interval if it exists and is not already ended
+            if (intervals.length > 0 && !intervals[intervals.length - 1].endTime) {
               return {
                 ...player,
-                playIntervals: player.playIntervals.map((interval, index) =>
-                  index === player.playIntervals.length - 1 ? { ...interval, endTime: Date.now() } : interval
+                playIntervals: intervals.map((interval, index) =>
+                  index === intervals.length - 1 ? { ...interval, endTime: currentTime } : interval
                 )
               };
             }

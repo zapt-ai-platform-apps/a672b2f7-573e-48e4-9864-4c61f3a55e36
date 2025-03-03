@@ -5,37 +5,82 @@ export function createGoalkeeperHandlers(props, setShowGKModal, setShowGKConfirm
 
   const confirmGoalkeeper = (playerName) => {
     const previousGoalkeeperName = props.goalkeeper;
+    const currentTime = Date.now();
+    
     props.setPlayerData((prevPlayers) =>
       prevPlayers.map((player) => {
+        // Handle new goalkeeper
         if (player.name === playerName) {
+          let updatedIntervals = [...(player.playIntervals || [])];
+          
+          // If the game is running and the player is on field, end current interval and start a new one as GK
           if (props.isRunning && player.isOnField) {
-            if (player.playIntervals.length > 0 && !player.playIntervals[player.playIntervals.length - 1].endTime) {
-              player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();
+            // End current interval if exists
+            if (updatedIntervals.length > 0 && !updatedIntervals[updatedIntervals.length - 1].endTime) {
+              updatedIntervals[updatedIntervals.length - 1] = {
+                ...updatedIntervals[updatedIntervals.length - 1],
+                endTime: currentTime
+              };
             }
-            player.playIntervals.push({ startTime: Date.now(), endTime: null, isGoalkeeper: true });
+            
+            // Start new interval as goalkeeper
+            updatedIntervals.push({ 
+              startTime: currentTime, 
+              endTime: null, 
+              isGoalkeeper: true 
+            });
           }
-          return { ...player, isGoalkeeper: true };
-        } else if (player.name === previousGoalkeeperName) {
+          
+          return { 
+            ...player, 
+            isGoalkeeper: true,
+            playIntervals: updatedIntervals
+          };
+        } 
+        // Handle previous goalkeeper
+        else if (player.name === previousGoalkeeperName) {
+          let updatedIntervals = [...(player.playIntervals || [])];
+          
+          // If the game is running and the player is on field, end current interval and start a new one as field player
           if (props.isRunning && player.isOnField) {
-            if (player.playIntervals.length > 0 && !player.playIntervals[player.playIntervals.length - 1].endTime) {
-              player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();
+            // End current interval if exists
+            if (updatedIntervals.length > 0 && !updatedIntervals[updatedIntervals.length - 1].endTime) {
+              updatedIntervals[updatedIntervals.length - 1] = {
+                ...updatedIntervals[updatedIntervals.length - 1],
+                endTime: currentTime
+              };
             }
-            player.playIntervals.push({ startTime: Date.now(), endTime: null, isGoalkeeper: false });
+            
+            // Start new interval as field player
+            updatedIntervals.push({ 
+              startTime: currentTime, 
+              endTime: null, 
+              isGoalkeeper: false 
+            });
           }
-          return { ...player, isGoalkeeper: false };
-        } else {
-          return player;
-        }
+          
+          return { 
+            ...player, 
+            isGoalkeeper: false,
+            playIntervals: updatedIntervals
+          };
+        } 
+        
+        return player;
       })
     );
 
     props.setGoalkeeper(playerName);
     setShowGKConfirmModal(false);
     setShowGKModal(false);
-    props.updatePlayerLists();
+    
+    if (typeof props.updatePlayerLists === 'function') {
+      props.updatePlayerLists();
+    }
   };
 
   const availableGoalkeepers = () => {
+    if (!Array.isArray(props.onFieldPlayers)) return [];
     return props.onFieldPlayers.filter((player) => player.name !== props.goalkeeper);
   };
 
