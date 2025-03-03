@@ -11,15 +11,23 @@ export function useGame(playerService) {
   return {
     // Game status
     isRunning: state.isRunning,
+    setIsRunning: state.setIsRunning,
+    gameIntervals: state.gameIntervals,
+    setGameIntervals: state.setGameIntervals,
     
     // Score and goals
     ourScore: state.ourScore,
+    setOurScore: state.setOurScore,
     opponentScore: state.opponentScore,
+    setOpponentScore: state.setOpponentScore,
     goals: state.goals,
+    setGoals: state.setGoals,
     
     // Goalkeeper settings
     goalkeeper: state.goalkeeper,
+    setGoalkeeper: state.setGoalkeeper,
     includeGKPlaytime: state.includeGKPlaytime,
+    setIncludeGKPlaytime: state.setIncludeGKPlaytime,
     
     // Game actions
     toggleTimer: () => services.toggleTimer(playerService),

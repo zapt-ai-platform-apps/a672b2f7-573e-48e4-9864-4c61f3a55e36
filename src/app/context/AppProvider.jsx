@@ -41,11 +41,19 @@ export function AppProvider({ children }) {
     
     // Game module
     isRunning: gameService.isRunning,
+    setIsRunning: gameService.setIsRunning,
+    gameIntervals: gameService.gameIntervals,
+    setGameIntervals: gameService.setGameIntervals,
     ourScore: gameService.ourScore,
+    setOurScore: gameService.setOurScore,
     opponentScore: gameService.opponentScore,
+    setOpponentScore: gameService.setOpponentScore,
     goals: gameService.goals,
+    setGoals: gameService.setGoals,
     goalkeeper: gameService.goalkeeper,
+    setGoalkeeper: gameService.setGoalkeeper,
     includeGKPlaytime: gameService.includeGKPlaytime,
+    setIncludeGKPlaytime: gameService.setIncludeGKPlaytime,
     toggleTimer: gameService.toggleTimer,
     endGame: gameService.endGame,
     getTimeElapsed: gameService.getTimeElapsed,
@@ -58,7 +66,6 @@ export function AppProvider({ children }) {
     
     // Event system
     eventBus
-    
   }), [playerService, gameService]);
   
   return (
