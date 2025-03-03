@@ -24,7 +24,7 @@ function Main(props) {
       )}
 
       <button
-        className="mb-4 px-4 py-2 bg-brand-500 text-white rounded-md hover:bg-brand-600 transition-all duration-300 ease-in-out-custom"
+        className="mb-4 px-4 py-2 bg-brand-500 text-white rounded-md hover:bg-brand-600 transition-all duration-300 ease-in-out-custom cursor-pointer"
         onClick={() => setShowPitch(!showPitch)}
       >
         {showPitch ? 'Hide Pitch' : 'Show Pitch'}
@@ -39,6 +39,17 @@ function Main(props) {
       />
 
       <SubstitutionPanel {...props} />
+
+      {/* Add GameActions component to display action buttons */}
+      <GameActions
+        assignGoalkeeper={store.assignGoalkeeper}
+        handleRemoveLastGoal={store.handleRemoveLastGoal}
+        setShowGoalModal={store.setShowGoalModal}
+        setShowAddPlayerModal={store.setShowAddPlayerModal}
+        handleIncreasePlayers={store.handleIncreasePlayers}
+        handleDecreasePlayers={store.handleDecreasePlayers}
+        isRunning={props.isRunning}
+      />
 
       <Modals {...props} {...store} />
     </div>

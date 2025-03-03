@@ -5,6 +5,7 @@ import StartGameButton from './StartGameButton.jsx';
 import GoalkeeperSettings from '@/modules/players/ui/GoalkeeperSettings.jsx';
 import ErrorMessage from '@/shared/components/ErrorMessage.jsx';
 import useGameSetup from '@/app/hooks/useGameSetup';
+import { useAppContext } from '@/app/context/AppProvider';
 
 function GameSetup() {
   const {
@@ -22,6 +23,9 @@ function GameSetup() {
     deletePlayer,
     toggleStartingPlayer,
   } = useGameSetup();
+
+  // Get the handleStartGame function from the AppContext to properly initialize players
+  const { handleStartGame } = useAppContext();
 
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-800 dark:text-white p-8">
@@ -49,9 +53,7 @@ function GameSetup() {
         goalkeeper={goalkeeper}
         includeGKPlaytime={includeGKPlaytime}
         setErrorMessage={setErrorMessage}
-        onStartGame={(players, goalkeeper, includeGKPlaytime) => {
-          console.log("Game started", { players, goalkeeper, includeGKPlaytime });
-        }}
+        onStartGame={handleStartGame} // Use the proper handleStartGame function
       />
     </div>
   );
