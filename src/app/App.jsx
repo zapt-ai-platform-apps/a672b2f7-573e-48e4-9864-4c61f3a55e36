@@ -1,10 +1,10 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import LandingPage from '@/app/screens/Landing/LandingPage.jsx';
-import GameSetup from '@/app/screens/GameSetup/index.jsx';
+import LandingPage from '@/modules/ui/screens/Landing/LandingPage.jsx';
+import GameSetup from '@/modules/game/ui/GameSetup/index.jsx';
 import GameManagementScreen from '@/modules/game/ui/GameManagement/index.jsx';
 import GameSummaryScreen from '@/modules/game/ui/GameSummaryScreen.jsx';
-import NavBar from '@/app/components/NavBar.jsx';
+import NavBar from '@/modules/ui/components/NavBar.jsx';
 
 function App() {
   return (
