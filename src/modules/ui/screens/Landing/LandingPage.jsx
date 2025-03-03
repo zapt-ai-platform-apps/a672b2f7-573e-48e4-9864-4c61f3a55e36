@@ -1,12 +1,18 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/modules/ui/components/Button';
+import { useAuthContext } from '@/modules/auth/context/AuthProvider';
 
 function LandingPage() {
   const navigate = useNavigate();
+  const { user } = useAuthContext();
 
   const handleGetStarted = () => {
-    navigate('/setup');
+    if (user) {
+      navigate('/squads');
+    } else {
+      navigate('/login');
+    }
   };
 
   return (
@@ -21,14 +27,27 @@ function LandingPage() {
         <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 text-center max-w-xl">
           Manage your team's substitutions effortlessly and ensure fair playtime for all players.
         </p>
-        <Button 
-          variant="success" 
-          size="large" 
-          onClick={handleGetStarted}
-          className="px-12 py-6 text-2xl"
-        >
-          Get Started
-        </Button>
+        <div className="space-y-4 md:space-y-0 md:space-x-4 flex flex-col md:flex-row">
+          <Button 
+            variant="success" 
+            size="large" 
+            onClick={handleGetStarted}
+            className="px-12 py-6 text-2xl"
+          >
+            {user ? 'My Squads' : 'Get Started'}
+          </Button>
+          
+          {!user && (
+            <Button 
+              variant="outline" 
+              size="large" 
+              onClick={() => navigate('/login')}
+              className="px-12 py-6 text-2xl"
+            >
+              Sign In
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );

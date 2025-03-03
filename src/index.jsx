@@ -53,11 +53,11 @@ const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
   <React.StrictMode>
-    <AppProvider>
-      <Router>
+    <Router>
+      <AppProvider>
         <App />
         <ToastContainer />
-      </Router>
-    </AppProvider>
+      </AppProvider>
+    </Router>
   </React.StrictMode>
 );
