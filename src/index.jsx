@@ -1,14 +1,14 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
-import App from './App';
+import App from './app/App';
 import './index.css';
 import * as Sentry from '@sentry/browser';
 import { inject } from '@vercel/analytics';
 import LogRocket from 'logrocket';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { StateProvider } from './state.jsx';
+import { AppProvider } from './app/context/AppProvider';
 
 LogRocket.init('p29zbk/zapt');
 
@@ -53,11 +53,11 @@ const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
   <React.StrictMode>
-    <StateProvider>
+    <AppProvider>
       <Router>
         <App />
         <ToastContainer />
       </Router>
-    </StateProvider>
+    </AppProvider>
   </React.StrictMode>
 );
