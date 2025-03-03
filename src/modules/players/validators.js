@@ -18,7 +18,7 @@ export const schemas = {
     position: z.object({
       x: z.number().nullable(),
       y: z.number().nullable()
-    })
+    }).default({ x: null, y: null })
   }),
   
   setupPlayer: z.object({
