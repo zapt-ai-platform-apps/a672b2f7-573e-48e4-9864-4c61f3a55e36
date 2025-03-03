@@ -17,8 +17,8 @@ export function createPlayerAdjustHandlers({
           ? Math.min(...props.playerData.map((p) => p.totalPlayTime || 0))
           : 0;
 
-      props.setPlayerData([
-        ...props.playerData,
+      props.setPlayerData((prevPlayers) => [
+        ...prevPlayers,
         {
           name: newPlayerName.trim(),
           playIntervals: [],
@@ -45,8 +45,8 @@ export function createPlayerAdjustHandlers({
 
   const confirmAdjustment = () => {
     if (adjustType === 'increase' && selectedPlayer) {
-      props.setPlayerData(
-        props.playerData.map((player) => {
+      props.setPlayerData((prevPlayers) =>
+        prevPlayers.map((player) => {
           if (player.name === selectedPlayer.name) {
             if (props.isRunning) {
               return {
@@ -66,11 +66,17 @@ export function createPlayerAdjustHandlers({
       );
       props.updatePlayerLists();
     } else if (adjustType === 'decrease' && selectedPlayer) {
-      props.setPlayerData(
-        props.playerData.map((player) => {
+      props.setPlayerData((prevPlayers) =>
+        prevPlayers.map((player) => {
           if (player.name === selectedPlayer.name) {
             if (player.playIntervals.length > 0 && !player.playIntervals[player.playIntervals.length - 1].endTime) {
-              player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();
+              return {
+                ...player,
+                isOnField: false,
+                playIntervals: player.playIntervals.map((interval, index) =>
+                  index === player.playIntervals.length - 1 ? { ...interval, endTime: Date.now() } : interval
+                )
+              };
             }
             return { ...player, isOnField: false };
           }

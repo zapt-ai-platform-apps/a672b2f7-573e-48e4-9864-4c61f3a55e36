@@ -29,6 +29,7 @@ export function AppProvider({ children }) {
   const contextValue = useMemo(() => ({
     // Player module
     playerData: playerService.getAllPlayers(),
+    setPlayerData: playerService.setPlayerData,
     getOnFieldPlayers: playerService.getOnFieldPlayers,
     getOffFieldPlayers: playerService.getOffFieldPlayers,
     addPlayer: playerService.addPlayer,
@@ -85,3 +86,5 @@ export function useAppContext() {
   }
   return context;
 }
+
+export default AppProvider;

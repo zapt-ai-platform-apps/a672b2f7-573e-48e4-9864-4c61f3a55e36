@@ -28,6 +28,7 @@ export function usePlayers() {
     
     // Setup
     initializePlayers: services.initializePlayers,
-    validateSetupPlayers
+    validateSetupPlayers,
+    setPlayerData: state.setPlayers
   };
 }

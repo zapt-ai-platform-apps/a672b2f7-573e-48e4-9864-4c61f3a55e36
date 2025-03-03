@@ -7,8 +7,8 @@ export default function useGameIntervalsManager({ isRunning, setIsRunning, gameI
       setIsRunning(true);
       setGameIntervals((prev) => [...prev, { startTime: Date.now(), endTime: null }]);
 
-      setPlayerData(
-        playerData.map((player) => {
+      setPlayerData((prevPlayers) =>
+        prevPlayers.map((player) => {
           if (player.isOnField) {
             if (player.playIntervals.length === 0 || player.playIntervals[player.playIntervals.length - 1].endTime) {
               return {
@@ -33,18 +33,23 @@ export default function useGameIntervalsManager({ isRunning, setIsRunning, gameI
         )
       );
 
-      setPlayerData(
-        playerData.map((player) => {
+      setPlayerData((prevPlayers) =>
+        prevPlayers.map((player) => {
           if (player.isOnField) {
             if (player.playIntervals.length > 0 && !player.playIntervals[player.playIntervals.length - 1].endTime) {
-              player.playIntervals[player.playIntervals.length - 1].endTime = Date.now();
+              return {
+                ...player,
+                playIntervals: player.playIntervals.map((interval, index) =>
+                  index === player.playIntervals.length - 1 ? { ...interval, endTime: Date.now() } : interval
+                )
+              };
             }
           }
           return player;
         })
       );
     }
-  }, [isRunning, playerData, setIsRunning, setGameIntervals, setPlayerData]);
+  }, [isRunning, setIsRunning, setGameIntervals, setPlayerData]);
 
   return { toggleTimer };
 }

@@ -5,8 +5,8 @@ export function createGoalkeeperHandlers(props, setShowGKModal, setShowGKConfirm
 
   const confirmGoalkeeper = (playerName) => {
     const previousGoalkeeperName = props.goalkeeper;
-    props.setPlayerData(
-      props.playerData.map((player) => {
+    props.setPlayerData((prevPlayers) =>
+      prevPlayers.map((player) => {
         if (player.name === playerName) {
           if (props.isRunning && player.isOnField) {
             if (player.playIntervals.length > 0 && !player.playIntervals[player.playIntervals.length - 1].endTime) {
