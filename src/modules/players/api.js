@@ -1,6 +1,6 @@
-import { usePlayersState } from './internal/state';
-import { createPlayerServices } from './internal/services';
-import { validateSetupPlayers } from './validators';
+import { usePlayersState } from '@/modules/players/internal/state';
+import { createPlayerServices } from '@/modules/players/internal/services';
+import { validateSetupPlayers } from '@/modules/players/validators';
 
 /**
  * Public API for the players module

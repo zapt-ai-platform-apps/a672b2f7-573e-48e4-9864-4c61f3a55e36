@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createValidator, commonSchemas } from '../core/validators';
+import { createValidator } from '@/modules/core/validators';
 
 /**
  * Schemas for validating player data
@@ -7,11 +7,18 @@ import { createValidator, commonSchemas } from '../core/validators';
 export const schemas = {
   player: z.object({
     name: z.string().min(1),
-    playIntervals: z.array(commonSchemas.interval),
+    playIntervals: z.array(z.object({
+      startTime: z.number().positive(),
+      endTime: z.number().positive().nullable(),
+      isGoalkeeper: z.boolean()
+    })),
     isOnField: z.boolean(),
     isGoalkeeper: z.boolean(),
     totalPlayTime: z.number(),
-    position: commonSchemas.position
+    position: z.object({
+      x: z.number().nullable(),
+      y: z.number().nullable()
+    })
   }),
   
   setupPlayer: z.object({

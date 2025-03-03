@@ -1,14 +1,14 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
-import App from './app/App';
-import './index.css';
+import App from '@/app/App';
+import '@/index.css';
 import * as Sentry from '@sentry/browser';
 import { inject } from '@vercel/analytics';
 import LogRocket from 'logrocket';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { AppProvider } from './app/context/AppProvider';
+import { AppProvider } from '@/app/context/AppProvider';
 
 LogRocket.init('p29zbk/zapt');
 

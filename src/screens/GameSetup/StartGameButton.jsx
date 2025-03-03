@@ -27,7 +27,7 @@ function StartGameButton({ players, startingPlayersCount, goalkeeper, includeGKP
 
   return (
     <button
-      className="px-8 py-4 bg-green-500 text-white text-lg rounded-lg cursor-pointer hover:bg-green-600 hover:scale-105 transition duration-300 ease-in-out"
+      className="px-8 py-4 bg-green-500 text-white text-lg rounded-lg cursor-pointer hover:bg-green-600 hover:scale-105 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400"
       onClick={handleStartGame}
     >
       Start Game

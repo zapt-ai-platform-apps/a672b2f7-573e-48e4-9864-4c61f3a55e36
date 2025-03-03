@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { useStateContext } from '../../../state';
-import useGameIntervalsManager from './useGameIntervalsManager';
-import useEndGameManager from './useEndGameManager';
-import useGameTimer from './useGameTimer';
-import usePlayerManagement from './usePlayerManagement';
+import { useStateContext } from '@/state';
+import useGameIntervalsManager from '@/features/GameManagement/hooks/useGameIntervalsManager';
+import useEndGameManager from '@/features/GameManagement/hooks/useEndGameManager';
+import useGameTimer from '@/features/GameManagement/hooks/useGameTimer';
+import usePlayerManagement from '@/features/GameManagement/hooks/usePlayerManagement';
 
-function createGameManagementStore(props) {
+function useGameManagementLogic() {
   const { playerData, setPlayerData, goalkeeper, setGoalkeeper, ourScore, setOurScore, opponentScore, setOpponentScore, goals, setGoals, includeGKPlaytime } = useStateContext();
 
   const [isRunning, setIsRunning] = useState(false);
@@ -31,7 +31,7 @@ function createGameManagementStore(props) {
     setShowEndGameConfirm
   });
 
-  const { now, startUITimer, getTimeElapsed } = useGameTimer({ isRunning, gameIntervals });
+  const { now, getTimeElapsed } = useGameTimer({ isRunning, gameIntervals });
   const { onFieldPlayers, offFieldPlayers, updatePlayerLists, getTotalPlayTime } = usePlayerManagement({
     playerData,
     setPlayerData,
@@ -67,4 +67,4 @@ function createGameManagementStore(props) {
   };
 }
 
-export default createGameManagementStore;
+export default useGameManagementLogic;

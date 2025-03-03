@@ -1,10 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useStateContext } from '../../state';
-import GoalsList from '../../components/GoalsList';
-import PlayerPlaytimes from '../../components/PlayerPlaytimes';
-import FinalScore from '../../components/FinalScore';
-import ShareSummaryButton from '../../components/ShareSummaryButton';
+import { useStateContext } from '@/state';
+import GoalsList from '@/components/GoalsList';
+import PlayerPlaytimes from '@/components/PlayerPlaytimes';
+import FinalScore from '@/components/FinalScore';
+import ShareSummaryButton from '@/components/ShareSummaryButton';
 
 function GameSummaryScreen() {
   const { playerData, goals, ourScore, opponentScore, includeGKPlaytime, resetGame } = useStateContext();

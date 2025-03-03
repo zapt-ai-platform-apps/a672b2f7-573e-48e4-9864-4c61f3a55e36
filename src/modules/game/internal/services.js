@@ -1,6 +1,6 @@
-import { eventBus } from '../../core/events';
-import { events } from '../events';
-import { validateGoalData } from '../../players/validators';
+import { eventBus } from '@/modules/core/events';
+import { events } from '@/modules/game/events';
+import { validateGoalData } from '@/modules/players/validators';
 
 /**
  * Core game management services

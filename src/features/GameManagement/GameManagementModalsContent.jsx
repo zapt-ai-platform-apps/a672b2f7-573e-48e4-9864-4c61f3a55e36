@@ -1,6 +1,6 @@
 import React from 'react';
-import GoalAndGKModals from './GoalAndGKModals.jsx';
-import PlayerModals from './PlayerModals.jsx';
+import GoalAndGKModals from '@/features/GameManagement/GoalAndGKModals.jsx';
+import PlayerModals from '@/features/GameManagement/PlayerModals.jsx';
 
 function GameManagementModalsContent(props) {
   return (

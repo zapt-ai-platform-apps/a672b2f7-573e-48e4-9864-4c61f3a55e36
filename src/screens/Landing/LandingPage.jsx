@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@/modules/ui/components/Button';
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -21,12 +22,14 @@ function LandingPage() {
         <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 text-center max-w-xl">
           Manage your team's substitutions effortlessly and ensure fair playtime for all players.
         </p>
-        <button
-          className="px-12 py-6 bg-green-500 text-white text-2xl rounded-lg cursor-pointer hover:bg-green-600 hover:scale-105 transition duration-300 ease-in-out"
+        <Button 
+          variant="success" 
+          size="large" 
           onClick={handleGetStarted}
+          className="px-12 py-6 text-2xl"
         >
           Get Started
-        </button>
+        </Button>
       </div>
     </div>
   );

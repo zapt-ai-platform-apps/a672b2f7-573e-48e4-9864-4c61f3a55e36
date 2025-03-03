@@ -1,5 +1,5 @@
-import { useGameState } from './internal/state';
-import { createGameServices } from './internal/services';
+import { useGameState } from '@/modules/game/internal/state';
+import { createGameServices } from '@/modules/game/internal/services';
 
 /**
  * Public API for the game module

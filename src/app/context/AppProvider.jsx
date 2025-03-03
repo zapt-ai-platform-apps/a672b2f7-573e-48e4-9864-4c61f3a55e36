@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useMemo } from 'react';
-import { usePlayers } from '../../modules/players/api';
-import { useGame } from '../../modules/game/api';
-import { eventBus } from '../../modules/core/events';
+import { usePlayers } from '@/modules/players/api';
+import { useGame } from '@/modules/game/api';
+import { eventBus } from '@/modules/core/events';
 
 // Create a unified context for app state
 const AppContext = createContext(null);
@@ -52,7 +52,7 @@ export function AppProvider({ children }) {
     recordGoal: gameService.recordGoal,
     removeLastGoal: gameService.removeLastGoal,
     
-    // Cross-module functions
+    // Setup and reset
     handleStartGame,
     resetGame: gameService.resetGame,
     

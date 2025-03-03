@@ -1,5 +1,5 @@
-import { eventBus } from '../../core/events';
-import { events } from '../events';
+import { eventBus } from '@/modules/core/events';
+import { events } from '@/modules/players/events';
 
 /**
  * Core player management services
@@ -87,11 +87,9 @@ export function createPlayerServices(state) {
     if (currentGoalkeeper) {
       let updatedIntervals = [...currentGoalkeeper.playIntervals];
       if (isRunning && currentGoalkeeper.isOnField) {
-        // End current interval
         if (updatedIntervals.length > 0 && !updatedIntervals[updatedIntervals.length - 1].endTime) {
           updatedIntervals[updatedIntervals.length - 1].endTime = Date.now();
         }
-        // Add new interval as field player
         updatedIntervals.push({
           startTime: Date.now(),
           endTime: null,
@@ -109,11 +107,9 @@ export function createPlayerServices(state) {
     if (newGoalkeeper) {
       let updatedIntervals = [...newGoalkeeper.playIntervals];
       if (isRunning && newGoalkeeper.isOnField) {
-        // End current interval
         if (updatedIntervals.length > 0 && !updatedIntervals[updatedIntervals.length - 1].endTime) {
           updatedIntervals[updatedIntervals.length - 1].endTime = Date.now();
         }
-        // Add new interval as goalkeeper
         updatedIntervals.push({
           startTime: Date.now(),
           endTime: null,
@@ -127,7 +123,6 @@ export function createPlayerServices(state) {
       });
     }
     
-    // Publish event
     eventBus.publish(events.GOALKEEPER_CHANGED, {
       previousGoalkeeper: currentGoalkeeperName,
       newGoalkeeper: newGoalkeeperName,
@@ -144,7 +139,6 @@ export function createPlayerServices(state) {
     
     state.updatePlayer(playerName, { position });
     
-    // Publish event
     eventBus.publish(events.PLAYER_POSITION_CHANGED, {
       playerName,
       position,

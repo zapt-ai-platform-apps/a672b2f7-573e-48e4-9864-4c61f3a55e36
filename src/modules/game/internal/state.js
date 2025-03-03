@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
-import { validateGameIntervals } from '../validators';
-import { eventBus } from '../../core/events';
-import { events } from '../events';
+import { validateGameIntervals } from '@/modules/game/validators';
+import { eventBus } from '@/modules/core/events';
+import { events } from '@/modules/game/events';
 
 /**
  * Internal state management for game module

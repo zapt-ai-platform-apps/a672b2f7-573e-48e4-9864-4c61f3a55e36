@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from './Button';
+import { Button } from '@/modules/ui/components/Button';
 
 /**
  * Reusable modal component with consistent styling

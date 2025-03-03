@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
-import { validatePlayer, validatePlayers } from '../validators';
-import { eventBus } from '../../core/events';
-import { events } from '../events';
+import { validatePlayer, validatePlayers } from '@/modules/players/validators';
+import { eventBus } from '@/modules/core/events';
+import { events } from '@/modules/players/events';
 
 /**
  * Internal state management for players module
