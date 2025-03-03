@@ -30,7 +30,7 @@ function useGameSetup() {
       Sentry.captureException(error, {
         extra: {
           action: 'loadSavedPlayers',
-          location: 'app/hooks/useGameSetup.js:useEffect'
+          location: 'modules/game/hooks/useGameSetup.js:useEffect'
         }
       });
       // Continue with empty players array on error
@@ -55,7 +55,7 @@ function useGameSetup() {
           extra: {
             action: 'addPlayer',
             playerName,
-            location: 'app/hooks/useGameSetup.js:addPlayer'
+            location: 'modules/game/hooks/useGameSetup.js:addPlayer'
           }
         });
         return false;
@@ -79,7 +79,7 @@ function useGameSetup() {
         extra: {
           action: 'deletePlayer',
           playerNameToDelete,
-          location: 'app/hooks/useGameSetup.js:deletePlayer'
+          location: 'modules/game/hooks/useGameSetup.js:deletePlayer'
         }
       });
     }
@@ -104,7 +104,7 @@ function useGameSetup() {
         extra: {
           action: 'toggleStartingPlayer',
           playerNameToToggle,
-          location: 'app/hooks/useGameSetup.js:toggleStartingPlayer'
+          location: 'modules/game/hooks/useGameSetup.js:toggleStartingPlayer'
         }
       });
     }

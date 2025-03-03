@@ -4,7 +4,7 @@ import PlayerManager from './PlayerManager.jsx';
 import StartGameButton from './StartGameButton.jsx';
 import GoalkeeperSettings from '@/modules/players/ui/GoalkeeperSettings.jsx';
 import ErrorMessage from '@/shared/components/ErrorMessage.jsx';
-import useGameSetup from '@/app/hooks/useGameSetup';
+import useGameSetup from '@/modules/game/hooks/useGameSetup';
 import { useAppContext } from '@/app/context/AppProvider';
 
 function GameSetup() {
