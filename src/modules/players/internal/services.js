@@ -1,5 +1,6 @@
 import { eventBus } from '@/modules/core/events';
 import { events } from '@/modules/players/events';
+import { validatePlayer, validateSetupPlayers } from '@/modules/players/validators';
 
 /**
  * Core player management services
@@ -37,6 +38,23 @@ export function createPlayerServices(state) {
     if (!subOffPlayer || !subOnPlayer) {
       throw new Error('Both substitution players must be specified');
     }
+    
+    // Validate players before substitution
+    validatePlayer(subOffPlayer, {
+      actionName: 'makeSubstitution',
+      location: 'players/internal/services.js:makeSubstitution',
+      direction: 'internal',
+      moduleFrom: 'players',
+      moduleTo: 'players'
+    });
+    
+    validatePlayer(subOnPlayer, {
+      actionName: 'makeSubstitution',
+      location: 'players/internal/services.js:makeSubstitution',
+      direction: 'internal',
+      moduleFrom: 'players',
+      moduleTo: 'players'
+    });
     
     // Update player going off field
     state.updatePlayer(subOffPlayer.name, {
@@ -150,6 +168,15 @@ export function createPlayerServices(state) {
   
   // Initialize players from setup
   const initializePlayers = (setupPlayers, goalkeeper, includeGKPlaytime) => {
+    // Validate setup players
+    validateSetupPlayers(setupPlayers, {
+      actionName: 'initializePlayers',
+      location: 'players/internal/services.js:initializePlayers',
+      direction: 'incoming',
+      moduleFrom: 'ui',
+      moduleTo: 'players'
+    });
+    
     const initializedPlayers = setupPlayers.map((player) => {
       const isStarting = player.isStartingPlayer;
       const isGoalkeeperPlayer = player.name === goalkeeper;

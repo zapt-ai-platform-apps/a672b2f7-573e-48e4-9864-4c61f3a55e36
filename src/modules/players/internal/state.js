@@ -1,82 +1,75 @@
-import { useState, useCallback } from 'react';
-import { validatePlayer, validatePlayers } from '@/modules/players/validators';
-import { eventBus } from '@/modules/core/events';
-import { events } from '@/modules/players/events';
+import { useState } from 'react';
+import { validatePlayer } from '@/modules/players/validators';
 
 /**
- * Internal state management for players module
+ * State management for players module
  */
 export function usePlayersState() {
   const [players, setPlayers] = useState([]);
-
-  // Update players with validation
-  const updatePlayers = useCallback((newPlayers) => {
-    try {
-      const validatedPlayers = validatePlayers(newPlayers);
-      setPlayers(validatedPlayers);
-      return validatedPlayers;
-    } catch (error) {
-      console.error('Player validation error:', error);
-      return players;
-    }
-  }, [players]);
-
-  // Update a single player
-  const updatePlayer = useCallback((playerName, updates) => {
-    return updatePlayers(
-      players.map(player => {
-        if (player.name === playerName) {
-          const updatedPlayer = { ...player, ...updates };
-          try {
-            const validatedPlayer = validatePlayer(updatedPlayer);
-            eventBus.publish(events.PLAYER_UPDATED, validatedPlayer);
-            return validatedPlayer;
-          } catch (error) {
-            console.error(`Invalid player update for ${playerName}:`, error);
-            return player;
-          }
-        }
-        return player;
-      })
-    );
-  }, [players, updatePlayers]);
   
-  // Get players by filter
-  const getFilteredPlayers = useCallback((filterFn) => {
+  // Get a filtered list of players based on the provided filter function
+  const getFilteredPlayers = (filterFn) => {
     return players.filter(filterFn);
-  }, [players]);
+  };
   
   // Add a new player
-  const addPlayer = useCallback((playerData) => {
+  const addPlayer = (playerData) => {
     try {
-      const validatedPlayer = validatePlayer(playerData);
-      const newPlayers = [...players, validatedPlayer];
-      setPlayers(newPlayers);
-      eventBus.publish(events.PLAYER_ADDED, validatedPlayer);
+      validatePlayer(playerData, {
+        actionName: 'addPlayer',
+        location: 'players/internal/state.js:addPlayer',
+        direction: 'incoming',
+        moduleFrom: 'ui',
+        moduleTo: 'players'
+      });
+      
+      setPlayers(prevPlayers => [...prevPlayers, playerData]);
       return true;
     } catch (error) {
       console.error('Failed to add player:', error);
       return false;
     }
-  }, [players]);
+  };
   
-  // Remove a player
-  const removePlayer = useCallback((playerName) => {
-    const playerToRemove = players.find(p => p.name === playerName);
-    if (!playerToRemove) return false;
-    
-    const newPlayers = players.filter(p => p.name !== playerName);
-    setPlayers(newPlayers);
-    eventBus.publish(events.PLAYER_REMOVED, playerToRemove);
+  // Remove a player by name
+  const removePlayer = (playerName) => {
+    setPlayers(prevPlayers => prevPlayers.filter(p => p.name !== playerName));
     return true;
-  }, [players]);
-
+  };
+  
+  // Update a specific player's data
+  const updatePlayer = (playerName, updates) => {
+    setPlayers(prevPlayers => {
+      const updatedPlayers = prevPlayers.map(player => {
+        if (player.name === playerName) {
+          const updatedPlayer = { ...player, ...updates };
+          try {
+            validatePlayer(updatedPlayer, {
+              actionName: 'updatePlayer',
+              location: 'players/internal/state.js:updatePlayer',
+              direction: 'internal',
+              moduleFrom: 'players',
+              moduleTo: 'players'
+            });
+            return updatedPlayer;
+          } catch (error) {
+            console.error(`Failed to update player ${playerName}:`, error);
+            return player; // Return original if validation fails
+          }
+        }
+        return player;
+      });
+      return updatedPlayers;
+    });
+    return true;
+  };
+  
   return {
     players,
-    setPlayers: updatePlayers,
-    updatePlayer,
+    setPlayers,
     getFilteredPlayers,
     addPlayer,
-    removePlayer
+    removePlayer,
+    updatePlayer
   };
 }

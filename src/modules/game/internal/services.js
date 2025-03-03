@@ -1,6 +1,7 @@
 import { eventBus } from '@/modules/core/events';
 import { events } from '@/modules/game/events';
 import { validateGoalData } from '@/modules/players/validators';
+import { validateGameIntervals } from '@/modules/game/validators';
 
 /**
  * Core game management services
@@ -13,7 +14,20 @@ export function createGameServices(state) {
     if (!wasRunning) {
       // Start the timer
       state.setIsRunning(true);
-      state.setGameIntervals([...state.gameIntervals, { startTime: Date.now(), endTime: null }]);
+      
+      const newInterval = { startTime: Date.now(), endTime: null };
+      const updatedIntervals = [...state.gameIntervals, newInterval];
+      
+      // Validate the updated intervals
+      validateGameIntervals(updatedIntervals, {
+        actionName: 'startTimer',
+        location: 'game/internal/services.js:toggleTimer',
+        direction: 'internal',
+        moduleFrom: 'game',
+        moduleTo: 'game'
+      });
+      
+      state.setGameIntervals(updatedIntervals);
       
       // Update on-field player intervals
       const onFieldPlayers = playerService.getOnFieldPlayers();
@@ -35,6 +49,16 @@ export function createGameServices(state) {
       const currentIntervals = [...state.gameIntervals];
       if (currentIntervals.length > 0 && !currentIntervals[currentIntervals.length - 1].endTime) {
         currentIntervals[currentIntervals.length - 1].endTime = Date.now();
+        
+        // Validate the updated intervals
+        validateGameIntervals(currentIntervals, {
+          actionName: 'pauseTimer',
+          location: 'game/internal/services.js:toggleTimer',
+          direction: 'internal',
+          moduleFrom: 'game',
+          moduleTo: 'game'
+        });
+        
         state.setGameIntervals(currentIntervals);
       }
       
@@ -67,6 +91,16 @@ export function createGameServices(state) {
       const currentIntervals = [...state.gameIntervals];
       if (currentIntervals.length > 0 && !currentIntervals[currentIntervals.length - 1].endTime) {
         currentIntervals[currentIntervals.length - 1].endTime = Date.now();
+        
+        // Validate the updated intervals
+        validateGameIntervals(currentIntervals, {
+          actionName: 'endGame',
+          location: 'game/internal/services.js:endGame',
+          direction: 'internal',
+          moduleFrom: 'game',
+          moduleTo: 'game'
+        });
+        
         state.setGameIntervals(currentIntervals);
       }
       
@@ -117,7 +151,13 @@ export function createGameServices(state) {
     const goalData = { team, scorerName, time };
     
     try {
-      validateGoalData(goalData);
+      validateGoalData(goalData, {
+        actionName: 'recordGoal',
+        location: 'game/internal/services.js:recordGoal',
+        direction: 'incoming',
+        moduleFrom: 'ui',
+        moduleTo: 'game'
+      });
       
       if (team === 'our') {
         state.setOurScore(state.ourScore + 1);

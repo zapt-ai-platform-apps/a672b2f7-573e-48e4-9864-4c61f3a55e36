@@ -1,6 +1,6 @@
 import { usePlayersState } from '@/modules/players/internal/state';
 import { createPlayerServices } from '@/modules/players/internal/services';
-import { validateSetupPlayers } from '@/modules/players/validators';
+import { validateSetupPlayers, validatePlayers } from '@/modules/players/validators';
 
 /**
  * Public API for the players module
@@ -8,6 +8,20 @@ import { validateSetupPlayers } from '@/modules/players/validators';
 export function usePlayers() {
   const state = usePlayersState();
   const services = createPlayerServices(state);
+  
+  // Validate initial state
+  try {
+    validatePlayers(state.players, {
+      actionName: 'initializePlayersModule',
+      location: 'players/api.js:usePlayers',
+      direction: 'internal', 
+      moduleFrom: 'players',
+      moduleTo: 'players'
+    });
+  } catch (error) {
+    console.error('Player state validation error:', error);
+    // Continue with default state if validation fails
+  }
   
   return {
     // State access
@@ -28,7 +42,14 @@ export function usePlayers() {
     
     // Setup
     initializePlayers: services.initializePlayers,
-    validateSetupPlayers,
+    validateSetupPlayers: (players, metadata = {}) => validateSetupPlayers(players, {
+      actionName: 'validateSetupPlayers',
+      location: 'players/api.js:validateSetupPlayers',
+      direction: 'incoming',
+      moduleFrom: 'ui',
+      moduleTo: 'players',
+      ...metadata
+    }),
     setPlayerData: state.setPlayers
   };
 }

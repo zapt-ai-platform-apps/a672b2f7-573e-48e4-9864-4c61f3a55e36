@@ -1,5 +1,6 @@
 import { useGameState } from '@/modules/game/internal/state';
 import { createGameServices } from '@/modules/game/internal/services';
+import { validateGameState } from '@/modules/game/validators';
 
 /**
  * Public API for the game module
@@ -7,6 +8,27 @@ import { createGameServices } from '@/modules/game/internal/services';
 export function useGame(playerService) {
   const state = useGameState();
   const services = createGameServices(state);
+  
+  // Validate initial state
+  try {
+    validateGameState({
+      isRunning: state.isRunning,
+      gameIntervals: state.gameIntervals,
+      ourScore: state.ourScore,
+      opponentScore: state.opponentScore,
+      includeGKPlaytime: state.includeGKPlaytime,
+      goalkeeper: state.goalkeeper
+    }, {
+      actionName: 'initializeGameModule',
+      location: 'game/api.js:useGame',
+      direction: 'internal',
+      moduleFrom: 'game',
+      moduleTo: 'game'
+    });
+  } catch (error) {
+    console.error('Game state validation error:', error);
+    // Continue with default state if validation fails
+  }
   
   return {
     // Game status
