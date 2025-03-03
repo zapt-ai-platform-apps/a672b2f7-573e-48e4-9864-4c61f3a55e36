@@ -4,15 +4,19 @@ import { createValidator } from '../core/validators';
 /**
  * Schemas for validating game data
  */
+// Define the game interval schema first
+const gameIntervalSchema = z.object({
+  startTime: z.number().positive(),
+  endTime: z.number().positive().nullable()
+});
+
+// Then use it in other schemas
 export const schemas = {
-  gameInterval: z.object({
-    startTime: z.number().positive(),
-    endTime: z.number().positive().nullable()
-  }),
+  gameInterval: gameIntervalSchema,
   
   gameState: z.object({
     isRunning: z.boolean(),
-    gameIntervals: z.array(schemas.gameInterval),
+    gameIntervals: z.array(gameIntervalSchema), // Use the separately defined schema
     ourScore: z.number().min(0),
     opponentScore: z.number().min(0),
     includeGKPlaytime: z.boolean(),
