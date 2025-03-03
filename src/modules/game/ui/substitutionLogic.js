@@ -1,45 +1,46 @@
 import { useState } from 'react';
-import { makeSubstitution } from '../utils/substitutionHandlers';
-import { toast } from 'react-toastify';
+import { makeSubstitution } from '@/modules/game/utils/substitutionHandlers';
 
-export function useSubstitutionLogic(props) {
+export function useSubstitutionLogic({ playerData, setPlayerData, isRunning, updatePlayerLists }) {
   const [selectedSubOffPlayer, setSelectedSubOffPlayer] = useState(null);
   const [selectedSubOnPlayer, setSelectedSubOnPlayer] = useState(null);
   const [showSubstitutionConfirmModal, setShowSubstitutionConfirmModal] = useState(false);
 
   const handleSubOffPlayerClick = (player) => {
     setSelectedSubOffPlayer(player);
-    if (selectedSubOnPlayer !== null) {
+    if (selectedSubOnPlayer) {
       setShowSubstitutionConfirmModal(true);
     }
   };
 
   const handleSubOnPlayerClick = (player) => {
     setSelectedSubOnPlayer(player);
-    if (selectedSubOffPlayer !== null) {
+    if (selectedSubOffPlayer) {
       setShowSubstitutionConfirmModal(true);
     }
   };
 
   const confirmSubstitution = () => {
-    makeSubstitution({
-      playerData: props.playerData,
-      setPlayerData: props.setPlayerData,
-      selectedSubOffPlayer: selectedSubOffPlayer,
-      selectedSubOnPlayer: selectedSubOnPlayer,
-      isRunning: props.isRunning,
-      updatePlayerLists: props.updatePlayerLists,
-    });
-    toast.success(`Substituted ${selectedSubOffPlayer.name} with ${selectedSubOnPlayer.name}!`);
-    setShowSubstitutionConfirmModal(false);
-    setSelectedSubOffPlayer(null);
-    setSelectedSubOnPlayer(null);
+    if (selectedSubOffPlayer && selectedSubOnPlayer) {
+      makeSubstitution({
+        playerData,
+        setPlayerData,
+        selectedSubOffPlayer,
+        selectedSubOnPlayer,
+        isRunning,
+        updatePlayerLists
+      });
+      
+      setSelectedSubOffPlayer(null);
+      setSelectedSubOnPlayer(null);
+      setShowSubstitutionConfirmModal(false);
+    }
   };
 
   const cancelSubstitution = () => {
-    setShowSubstitutionConfirmModal(false);
     setSelectedSubOffPlayer(null);
     setSelectedSubOnPlayer(null);
+    setShowSubstitutionConfirmModal(false);
   };
 
   return {
@@ -55,5 +56,3 @@ export function useSubstitutionLogic(props) {
     handleSubOnPlayerClick,
   };
 }
-
-export default useSubstitutionLogic;

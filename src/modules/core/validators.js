@@ -2,29 +2,47 @@ import { z } from 'zod';
 import * as Sentry from '@sentry/browser';
 
 /**
- * Utility to create a validator that captures Zod errors and reports them to Sentry.
- * The error message clearly states what caused the validation error by including each error's path and message.
+ * Creates a validator function for the given schema
+ * @param {z.ZodType} schema - Zod schema to validate against
+ * @param {string} [contextName] - Name of what's being validated (e.g., 'User', 'Order')
+ * @returns {function} - Validator function that throws descriptive errors
  */
-export const createValidator = (schema) => {
+export const createValidator = (schema, contextName = 'data') => {
   return (data) => {
     try {
       return schema.parse(data);
     } catch (error) {
-      const errorDetails = error.errors
-        ?.map(err => `${err.path.join('.')} : ${err.message}`)
-        .join(', ') || error.message;
+      // Include the actual data in the error context (excluding sensitive fields)
+      const safeData = typeof data === 'object' ? 
+        JSON.stringify(data, (key, value) => 
+          ['password', 'token', 'secret'].includes(key) ? '[REDACTED]' : value
+        ) : String(data);
       
-      // Capture the detailed Zod validation error with Sentry including extra context
-      Sentry.captureException(new Error(`ZodValidationError: ${errorDetails}`), {
+      // Format the error message with path information
+      const formattedErrors = error.errors?.map(err => 
+        `${err.path.join('.')}: ${err.message}`
+      ).join('\n') || error.message;
+      
+      // Create a descriptive error message
+      const errorMessage = `Validation failed for ${contextName}:\n${formattedErrors}`;
+      
+      // Capture with Sentry including context
+      Sentry.captureException(error, {
         extra: {
-          schema: schema.toString(),
-          data,
-          errorDetails: error.errors
+          validationContext: contextName,
+          receivedData: safeData,
+          formattedErrors
+        },
+        tags: {
+          validationType: contextName,
+          moduleArea: 'validation'
         }
       });
       
-      console.error('Zod validation error:', errorDetails);
-      throw new Error(`Validation failed: ${errorDetails}`);
+      console.error(errorMessage, '\nReceived:', safeData);
+      
+      // Throw with improved message
+      throw new Error(errorMessage);
     }
   };
 };

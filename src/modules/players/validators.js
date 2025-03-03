@@ -34,8 +34,8 @@ export const schemas = {
 };
 
 // Validators
-export const validatePlayer = createValidator(schemas.player);
-export const validateSetupPlayer = createValidator(schemas.setupPlayer);
-export const validateGoalData = createValidator(schemas.goalData);
-export const validatePlayers = createValidator(z.array(schemas.player));
-export const validateSetupPlayers = createValidator(z.array(schemas.setupPlayer));
+export const validatePlayer = createValidator(schemas.player, 'Player');
+export const validateSetupPlayer = createValidator(schemas.setupPlayer, 'SetupPlayer');
+export const validateGoalData = createValidator(schemas.goalData, 'GoalData');
+export const validatePlayers = createValidator(z.array(schemas.player), 'Players');
+export const validateSetupPlayers = createValidator(z.array(schemas.setupPlayer), 'SetupPlayers');

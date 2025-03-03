@@ -25,6 +25,6 @@ export const schemas = {
 };
 
 // Validators
-export const validateGameInterval = createValidator(schemas.gameInterval);
-export const validateGameState = createValidator(schemas.gameState);
-export const validateGameIntervals = createValidator(z.array(schemas.gameInterval));
+export const validateGameInterval = createValidator(schemas.gameInterval, 'GameInterval');
+export const validateGameState = createValidator(schemas.gameState, 'GameState');
+export const validateGameIntervals = createValidator(z.array(schemas.gameInterval), 'GameIntervals');
