@@ -1,72 +1,66 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useAuthContext } from '@/modules/auth/context/AuthProvider';
 import { supabase } from '@/supabaseClient';
+import { useAuthContext } from '@/modules/auth/context/AuthProvider';
 import * as Sentry from '@sentry/browser';
 
 export function useSquads() {
-  const { user } = useAuthContext();
+  const { user, session } = useAuthContext();
   const [squads, setSquads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const fetchSquads = useCallback(async () => {
-    if (!user) return;
-    
-    setLoading(true);
-    try {
-      console.log('Fetching squads for user:', user.id);
-      const response = await fetch('/api/squads', {
-        headers: {
-          Authorization: `Bearer ${await getAuthToken()}`,
-        },
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch squads');
+  
+  // Fetch squads when the component mounts
+  useEffect(() => {
+    const fetchSquads = async () => {
+      if (!user) {
+        setSquads([]);
+        setLoading(false);
+        return;
       }
       
-      const data = await response.json();
-      console.log('Fetched squads:', data.length);
-      setSquads(data);
-    } catch (err) {
-      console.error('Error fetching squads:', err);
-      Sentry.captureException(err);
-      setError(err.message);
-    } finally {
-      setLoading(false);
+      try {
+        setLoading(true);
+        
+        const response = await fetch('/api/squads', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch squads');
+        }
+        
+        const data = await response.json();
+        setSquads(data);
+      } catch (err) {
+        console.error('Error fetching squads:', err);
+        Sentry.captureException(err);
+        setError('Failed to load squads');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchSquads();
+  }, [user, session]);
+  
+  // Create a new squad
+  const createSquad = useCallback(async (name) => {
+    if (!user || !name.trim()) {
+      throw new Error('Authentication or squad name required');
     }
-  }, [user]);
-
-  useEffect(() => {
-    if (user) {
-      fetchSquads();
-    } else {
-      setSquads([]);
-    }
-  }, [user, fetchSquads]);
-
-  // Helper function to get auth token
-  const getAuthToken = async () => {
+    
     try {
-      const { data } = await supabase.auth.getSession();
-      return data.session?.access_token;
-    } catch (err) {
-      console.error('Error getting auth token:', err);
-      Sentry.captureException(err);
-      throw err;
-    }
-  };
-
-  const createSquad = useCallback(async (squadName) => {
-    try {
-      console.log('Creating new squad:', squadName);
       const response = await fetch('/api/squads', {
         method: 'POST',
         headers: {
+          Authorization: `Bearer ${session?.access_token}`,
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${await getAuthToken()}`,
         },
-        body: JSON.stringify({ name: squadName }),
+        body: JSON.stringify({ name: name.trim() }),
       });
       
       if (!response.ok) {
@@ -74,26 +68,27 @@ export function useSquads() {
       }
       
       const newSquad = await response.json();
-      console.log('New squad created:', newSquad);
       setSquads(prev => [...prev, newSquad]);
       return newSquad;
     } catch (err) {
       console.error('Error creating squad:', err);
       Sentry.captureException(err);
-      setError(err.message);
       throw err;
     }
-  }, []);
-
-  // Fixed-path API with POST request for getting squad players
+  }, [user, session]);
+  
+  // Get players for a specific squad
   const getSquadPlayers = useCallback(async (squadId) => {
+    if (!user || !squadId) {
+      throw new Error('Authentication and squad ID required');
+    }
+    
     try {
-      console.log('Fetching players for squad:', squadId);
       const response = await fetch('/api/squads-players', {
         method: 'POST',
         headers: {
+          Authorization: `Bearer ${session?.access_token}`,
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${await getAuthToken()}`,
         },
         body: JSON.stringify({ 
           action: 'getPlayers',
@@ -105,31 +100,31 @@ export function useSquads() {
         throw new Error('Failed to fetch squad players');
       }
       
-      const players = await response.json();
-      console.log('Fetched players:', players.length);
-      return players;
+      return await response.json();
     } catch (err) {
       console.error('Error fetching squad players:', err);
       Sentry.captureException(err);
-      setError(err.message);
       throw err;
     }
-  }, []);
-
-  // Fixed-path API with POST request for adding a player to squad
-  const addPlayerToSquad = useCallback(async (squadId, playerName) => {
+  }, [user, session]);
+  
+  // Add a player to a squad
+  const addPlayerToSquad = useCallback(async (squadId, name) => {
+    if (!user || !squadId || !name.trim()) {
+      throw new Error('Authentication, squad ID, and player name required');
+    }
+    
     try {
-      console.log(`Adding player "${playerName}" to squad:`, squadId);
       const response = await fetch('/api/squads-players', {
         method: 'POST',
         headers: {
+          Authorization: `Bearer ${session?.access_token}`,
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${await getAuthToken()}`,
         },
         body: JSON.stringify({ 
           action: 'addPlayer',
           squadId,
-          name: playerName 
+          name: name.trim() 
         }),
       });
       
@@ -137,26 +132,26 @@ export function useSquads() {
         throw new Error('Failed to add player to squad');
       }
       
-      const newPlayer = await response.json();
-      console.log('Player added successfully:', newPlayer);
-      return newPlayer;
+      return await response.json();
     } catch (err) {
       console.error('Error adding player to squad:', err);
       Sentry.captureException(err);
-      setError(err.message);
       throw err;
     }
-  }, []);
-
-  // Fixed-path API with POST request for removing a player from squad
+  }, [user, session]);
+  
+  // Remove a player from a squad
   const removePlayerFromSquad = useCallback(async (squadId, playerId) => {
+    if (!user || !squadId || !playerId) {
+      throw new Error('Authentication, squad ID, and player ID required');
+    }
+    
     try {
-      console.log(`Removing player ${playerId} from squad:`, squadId);
       const response = await fetch('/api/squads-players', {
         method: 'POST',
         headers: {
+          Authorization: `Bearer ${session?.access_token}`,
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${await getAuthToken()}`,
         },
         body: JSON.stringify({ 
           action: 'removePlayer',
@@ -169,24 +164,21 @@ export function useSquads() {
         throw new Error('Failed to remove player from squad');
       }
       
-      console.log(`Player ${playerId} removed successfully`);
-      return true;
+      return await response.json();
     } catch (err) {
       console.error('Error removing player from squad:', err);
       Sentry.captureException(err);
-      setError(err.message);
       throw err;
     }
-  }, []);
-
+  }, [user, session]);
+  
   return {
     squads,
     loading,
     error,
-    refreshSquads: fetchSquads,
     createSquad,
     getSquadPlayers,
     addPlayerToSquad,
-    removePlayerFromSquad,
+    removePlayerFromSquad
   };
 }

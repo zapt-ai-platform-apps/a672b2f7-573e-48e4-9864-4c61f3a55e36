@@ -114,6 +114,11 @@ function SquadPlayersScreen() {
     
     // Save selected players to localStorage for the game setup
     localStorage.setItem('players', JSON.stringify(selectedPlayers));
+    
+    // Also save the current squad ID for player lookups
+    localStorage.setItem('current_squad_id', squadId);
+    console.log('Saved squad ID to localStorage:', squadId);
+    
     navigate('/setup');
   };
   
