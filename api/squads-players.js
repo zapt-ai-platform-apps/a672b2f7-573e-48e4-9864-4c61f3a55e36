@@ -58,7 +58,7 @@ export default async function handler(req, res) {
     const squadRecord = await db.select()
       .from(squads)
       .where(and(
-        eq(squads.id, parseInt(squadId)),
+        eq(squads.id, BigInt(squadId)),
         eq(squads.userId, user.id)
       ));
 
