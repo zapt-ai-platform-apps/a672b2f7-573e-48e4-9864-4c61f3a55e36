@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GameIntro from './GameIntro.jsx';
 import PlayerManager from '@/modules/players/ui/PlayerManager.jsx';
@@ -8,6 +8,7 @@ import ErrorMessage from '@/modules/ui/components/ErrorMessage.jsx';
 import useGameSetup from '@/modules/game/hooks/useGameSetup';
 import { useAppContext } from '@/app/context/AppProvider';
 import { Button } from '@/modules/ui/components/Button';
+import AddPlayerModal from '@/modules/players/ui/AddPlayerModal.jsx';
 
 function GameSetup() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ function GameSetup() {
     playerName,
     setPlayerName,
     players,
+    setPlayers,
     startingPlayersCount,
     errorMessage,
     setErrorMessage,
@@ -28,11 +30,25 @@ function GameSetup() {
     toggleStartingPlayer,
   } = useGameSetup();
 
+  const [isAddPlayerModalOpen, setIsAddPlayerModalOpen] = useState(false);
+
   // Get the handleStartGame function from the AppContext to properly initialize players
   const { handleStartGame } = useAppContext();
 
   const handleGoToSquads = () => {
     navigate('/squads');
+  };
+
+  const handleAddPlayerFromModal = (playerName) => {
+    if (playerName) {
+      const newPlayer = {
+        name: playerName.trim(),
+        isStartingPlayer: false
+      };
+      setPlayers([...players, newPlayer]);
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -71,15 +87,28 @@ function GameSetup() {
         </div>
       )}
       
+      <div className="bg-white dark:bg-gray-800 p-8 rounded-md shadow mb-8">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-brand-500">Add Players</h2>
+          <Button
+            onClick={() => setIsAddPlayerModalOpen(true)}
+            variant="primary"
+          >
+            Add Player
+          </Button>
+        </div>
+        <p className="text-gray-600 dark:text-gray-300 mb-4">
+          Add players to your match squad. You can add players manually or select from your squad.
+        </p>
+      </div>
+      
       <PlayerManager
-        playerName={playerName}
-        setPlayerName={setPlayerName}
         players={players}
-        addPlayer={addPlayer}
         deletePlayer={deletePlayer}
         toggleStartingPlayer={toggleStartingPlayer}
         startingPlayersCount={startingPlayersCount}
       />
+      
       <GoalkeeperSettings
         startingPlayers={players.filter((p) => p.isStartingPlayer)}
         goalkeeper={goalkeeper}
@@ -87,6 +116,7 @@ function GameSetup() {
         includeGKPlaytime={includeGKPlaytime}
         setIncludeGKPlaytime={setIncludeGKPlaytime}
       />
+      
       <StartGameButton
         players={players}
         startingPlayersCount={startingPlayersCount}
@@ -94,6 +124,12 @@ function GameSetup() {
         includeGKPlaytime={includeGKPlaytime}
         setErrorMessage={setErrorMessage}
         onStartGame={handleStartGame} // Use the proper handleStartGame function
+      />
+      
+      <AddPlayerModal
+        isOpen={isAddPlayerModalOpen}
+        onClose={() => setIsAddPlayerModalOpen(false)}
+        onAddPlayer={handleAddPlayerFromModal}
       />
     </div>
   );

@@ -11,16 +11,14 @@ function SquadSelectForMatchScreen() {
   const { players: squadPlayers = [], squadName = 'Squad' } = location.state || {};
 
   const [selectedPlayers, setSelectedPlayers] = useState([]);
-  const [startingPlayers, setStartingPlayers] = useState([]);
   const [goalkeeper, setGoalkeeper] = useState('');
   const [includeGKPlaytime, setIncludeGKPlaytime] = useState(true);
 
   useEffect(() => {
-    // Initialize players with selection state
+    // Initialize players with selection state - remove starting player flag
     const initializedPlayers = squadPlayers.map(player => ({
       ...player,
-      isSelected: false,
-      isStartingPlayer: false
+      isSelected: false
     }));
     setSelectedPlayers(initializedPlayers);
   }, [squadPlayers]);
@@ -29,27 +27,9 @@ function SquadSelectForMatchScreen() {
     setSelectedPlayers(prev => 
       prev.map(player => {
         if (player.id === playerId) {
-          const newIsSelected = !player.isSelected;
-          // If deselecting, also remove from starting players
           return {
             ...player,
-            isSelected: newIsSelected,
-            isStartingPlayer: newIsSelected ? player.isStartingPlayer : false
-          };
-        }
-        return player;
-      })
-    );
-  };
-
-  const toggleStartingPlayer = (playerId) => {
-    setSelectedPlayers(prev => 
-      prev.map(player => {
-        if (player.id === playerId) {
-          // Can only set as starting player if they are selected
-          return {
-            ...player,
-            isStartingPlayer: player.isSelected ? !player.isStartingPlayer : false
+            isSelected: !player.isSelected
           };
         }
         return player;
@@ -71,26 +51,22 @@ function SquadSelectForMatchScreen() {
         return;
       }
 
-      const startingLineup = matchPlayers.filter(player => player.isStartingPlayer);
-      
-      if (startingLineup.length === 0) {
-        toast.error('Please select at least one starting player');
-        return;
-      }
-
       if (goalkeeper && !matchPlayers.some(p => p.name === goalkeeper)) {
         toast.error('Selected goalkeeper must be in the match squad');
         return;
       }
 
-      // Format players for game setup
+      // Format players for game setup - no longer setting starting lineup here
       const formattedPlayers = matchPlayers.map(player => ({
         name: player.name,
-        isStartingPlayer: player.isStartingPlayer
+        isStartingPlayer: false // Default all to false, will be set in setup screen
       }));
 
       // Save selected players to localStorage for the game setup
       localStorage.setItem('players', JSON.stringify(formattedPlayers));
+      
+      // Store the squad ID in localStorage for later use
+      localStorage.setItem('current_squad_id', squadId);
       
       // Navigate to game setup with selected goalkeeper and GK playtime preference
       navigate('/setup', { 
@@ -113,9 +89,8 @@ function SquadSelectForMatchScreen() {
     navigate(`/squads/${squadId}/players`);
   };
 
-  // Get counts
+  // Get count of selected players
   const selectedCount = selectedPlayers.filter(p => p.isSelected).length;
-  const startingCount = selectedPlayers.filter(p => p.isStartingPlayer).length;
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-white p-8">
@@ -128,10 +103,10 @@ function SquadSelectForMatchScreen() {
         <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md mb-8">
           <h2 className="text-2xl font-bold mb-4 text-brand-500">Match Squad Selection</h2>
           <p className="mb-4 text-gray-600 dark:text-gray-300">
-            Select which players will be available for this match.
+            Select which players will be available for this match. You'll choose your starting lineup in the next step.
           </p>
           <p className="mb-6 text-sm text-brand-500">
-            Selected: {selectedCount} players | Starting: {startingCount} players
+            Selected: {selectedCount} players
           </p>
 
           <div className="space-y-4">
@@ -146,20 +121,6 @@ function SquadSelectForMatchScreen() {
                   />
                   <span className="text-lg">{player.name}</span>
                 </div>
-                
-                {player.isSelected && (
-                  <div className="flex items-center">
-                    <label className="mr-4 text-gray-600 dark:text-gray-300">
-                      Starting:
-                    </label>
-                    <input
-                      type="checkbox"
-                      checked={player.isStartingPlayer}
-                      onChange={() => toggleStartingPlayer(player.id)}
-                      className="h-5 w-5 cursor-pointer"
-                    />
-                  </div>
-                )}
               </div>
             ))}
           </div>
@@ -205,7 +166,7 @@ function SquadSelectForMatchScreen() {
             onClick={handleProceedToMatch}
             variant="success"
             size="large"
-            disabled={selectedCount === 0 || startingCount === 0}
+            disabled={selectedCount === 0}
           >
             Proceed to Match Setup
           </Button>
