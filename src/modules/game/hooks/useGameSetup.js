@@ -1,14 +1,21 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import * as Sentry from '@sentry/browser';
 
 function useGameSetup() {
+  const location = useLocation();
+  const { preSelectedGoalkeeper, includeGKPlaytime: presetIncludeGKPlaytime, fromSquad } = location.state || {};
+
   const [playerName, setPlayerName] = useState('');
   const [players, setPlayers] = useState([]);
   const [startingPlayersCount, setStartingPlayersCount] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
   const [startingPlayers, setStartingPlayers] = useState([]);
-  const [goalkeeper, setGoalkeeper] = useState('');
-  const [includeGKPlaytime, setIncludeGKPlaytime] = useState(true);
+  const [goalkeeper, setGoalkeeper] = useState(preSelectedGoalkeeper || '');
+  const [includeGKPlaytime, setIncludeGKPlaytime] = useState(
+    presetIncludeGKPlaytime !== undefined ? presetIncludeGKPlaytime : true
+  );
+  const [loadedFromSquad, setLoadedFromSquad] = useState(fromSquad || false);
 
   useEffect(() => {
     try {
@@ -19,11 +26,21 @@ function useGameSetup() {
           throw new Error('Saved players is not an array');
         }
         
-        const updatedPlayers = loadedPlayers.map((player) => ({
-          ...player,
-          isStartingPlayer: false
-        }));
-        setPlayers(updatedPlayers);
+        // Filter out any undefined or null players
+        const validPlayers = loadedPlayers.filter(p => p && p.name);
+        
+        // Count starting players
+        const startingCount = validPlayers.filter(p => p.isStartingPlayer).length;
+        setStartingPlayersCount(startingCount);
+        
+        // Set starting players list
+        setStartingPlayers(validPlayers.filter(p => p.isStartingPlayer));
+        
+        // Set players
+        setPlayers(validPlayers);
+        
+        console.log('Loaded players from storage:', validPlayers);
+        console.log('Starting player count:', startingCount);
       }
     } catch (error) {
       console.error('Error loading saved players:', error);
@@ -37,6 +54,13 @@ function useGameSetup() {
       setPlayers([]);
     }
   }, []);
+
+  // Update goalkeeper from location state if available
+  useEffect(() => {
+    if (preSelectedGoalkeeper) {
+      setGoalkeeper(preSelectedGoalkeeper);
+    }
+  }, [preSelectedGoalkeeper]);
 
   const addPlayer = () => {
     if (playerName.trim() !== '') {
@@ -71,6 +95,19 @@ function useGameSetup() {
         const updatedPlayers = players.filter((player) => player.name !== playerNameToDelete);
         setPlayers(updatedPlayers);
         localStorage.setItem('players', JSON.stringify(updatedPlayers));
+        
+        // Update starting players count
+        const startingCount = updatedPlayers.filter(p => p.isStartingPlayer).length;
+        setStartingPlayersCount(startingCount);
+        
+        // Update starting players list
+        setStartingPlayers(updatedPlayers.filter(p => p.isStartingPlayer));
+        
+        // Clear goalkeeper if deleted
+        if (goalkeeper === playerNameToDelete) {
+          setGoalkeeper('');
+        }
+        
         return true;
       }
     } catch (error) {
@@ -94,9 +131,17 @@ function useGameSetup() {
         }
         return player;
       });
+      
       setPlayers(updatedPlayers);
+      
+      // Save to localStorage
+      localStorage.setItem('players', JSON.stringify(updatedPlayers));
+      
+      // Update starting players count
       const count = updatedPlayers.filter((p) => p.isStartingPlayer).length;
       setStartingPlayersCount(count);
+      
+      // Update starting players list
       setStartingPlayers(updatedPlayers.filter((p) => p.isStartingPlayer));
     } catch (error) {
       console.error('Error toggling starting player:', error);
@@ -125,6 +170,7 @@ function useGameSetup() {
     setGoalkeeper,
     includeGKPlaytime,
     setIncludeGKPlaytime,
+    loadedFromSquad,
     addPlayer,
     deletePlayer,
     toggleStartingPlayer

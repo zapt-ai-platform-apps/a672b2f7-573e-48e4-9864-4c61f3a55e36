@@ -150,6 +150,18 @@ function SquadPlayersScreen() {
     }
   };
 
+  const handleUseSquadForMatch = () => {
+    if (players.length === 0) {
+      toast.error('Please add players to your squad first');
+      return;
+    }
+
+    // Navigate to squad selection for match
+    navigate(`/squads/${squadId}/select-for-match`, { 
+      state: { players, squadName } 
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-white p-8">
@@ -194,7 +206,7 @@ function SquadPlayersScreen() {
           </form>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+        <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md mb-8">
           <h2 className="text-2xl font-bold mb-4 text-brand-500">Squad Players</h2>
           {players.length === 0 ? (
             <p className="text-gray-500 dark:text-gray-400">No players added yet. Add your first player above.</p>
@@ -215,6 +227,23 @@ function SquadPlayersScreen() {
             </ul>
           )}
         </div>
+
+        {players.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold mb-4 text-brand-500">Use Squad for Match</h2>
+            <p className="mb-4 text-gray-600 dark:text-gray-300">
+              Select which players from this squad will play in your match and set up your starting lineup.
+            </p>
+            <Button 
+              onClick={handleUseSquadForMatch}
+              variant="success"
+              size="large"
+              fullWidth
+            >
+              Select Players for Match
+            </Button>
+          </div>
+        )}
       </div>
       
       {/* "Made on ZAPT" badge */}

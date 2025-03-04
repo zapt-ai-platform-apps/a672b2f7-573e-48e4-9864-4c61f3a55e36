@@ -8,6 +8,7 @@ import NavBar from '@/modules/ui/components/NavBar.jsx';
 import AuthScreen from '@/modules/auth/ui/AuthScreen.jsx';
 import SquadsScreen from '@/modules/squads/ui/SquadsScreen.jsx';
 import SquadPlayersScreen from '@/modules/squads/ui/SquadPlayersScreen.jsx';
+import SquadSelectForMatchScreen from '@/modules/squads/ui/SquadSelectForMatchScreen.jsx';
 import { ProtectedRoute, PublicRoute } from '@/modules/auth/context/AuthProvider';
 
 function App() {
@@ -25,6 +26,11 @@ function App() {
         <Route path="/squads/:squadId/players" element={
           <ProtectedRoute>
             <SquadPlayersScreen />
+          </ProtectedRoute>
+        } />
+        <Route path="/squads/:squadId/select-for-match" element={
+          <ProtectedRoute>
+            <SquadSelectForMatchScreen />
           </ProtectedRoute>
         } />
         <Route path="/setup" element={
