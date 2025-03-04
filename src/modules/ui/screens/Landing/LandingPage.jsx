@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/modules/ui/components/Button';
 import { useAuthContext } from '@/modules/auth/context/AuthProvider';
@@ -6,6 +6,13 @@ import { useAuthContext } from '@/modules/auth/context/AuthProvider';
 function LandingPage() {
   const navigate = useNavigate();
   const { user } = useAuthContext();
+
+  // Automatically redirect authenticated users to squads
+  useEffect(() => {
+    if (user) {
+      navigate('/squads');
+    }
+  }, [user, navigate]);
 
   const handleGetStarted = () => {
     if (user) {

@@ -156,10 +156,26 @@ function SquadPlayersScreen() {
       return;
     }
 
-    // Navigate to squad selection for match
-    navigate(`/squads/${squadId}/select-for-match`, { 
-      state: { players, squadName } 
+    // Format players for game setup - no need for selection screen
+    const formattedPlayers = players.map(player => ({
+      name: player.name,
+      isStartingPlayer: false // Default all to false, will be set in setup screen
+    }));
+
+    // Save selected players to localStorage for the game setup
+    localStorage.setItem('players', JSON.stringify(formattedPlayers));
+    
+    // Store the squad ID in localStorage for later use
+    localStorage.setItem('current_squad_id', squadId);
+    
+    // Navigate directly to setup screen, bypassing the selection screen
+    navigate('/setup', { 
+      state: {
+        fromSquad: true
+      }
     });
+    
+    toast.success('Squad loaded for match!');
   };
 
   if (isLoading) {
@@ -232,7 +248,7 @@ function SquadPlayersScreen() {
           <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
             <h2 className="text-2xl font-bold mb-4 text-brand-500">Use Squad for Match</h2>
             <p className="mb-4 text-gray-600 dark:text-gray-300">
-              Select which players from this squad will play in your match and set up your starting lineup.
+              Set up your starting lineup and goalie for your match.
             </p>
             <Button 
               onClick={handleUseSquadForMatch}
@@ -240,7 +256,7 @@ function SquadPlayersScreen() {
               size="large"
               fullWidth
             >
-              Select Players for Match
+              Set Up Match with This Squad
             </Button>
           </div>
         )}
