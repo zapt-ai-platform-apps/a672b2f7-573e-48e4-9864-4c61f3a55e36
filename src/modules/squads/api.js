@@ -81,7 +81,7 @@ export function useSquads() {
     }
   }, []);
 
-  // Updated to use fixed-path API with POST request
+  // Fixed-path API with POST request for getting squad players
   const getSquadPlayers = useCallback(async (squadId) => {
     try {
       console.log('Fetching players for squad:', squadId);
@@ -112,7 +112,7 @@ export function useSquads() {
     }
   }, []);
 
-  // Updated to use fixed-path API with POST request
+  // Fixed-path API with POST request for adding a player to squad
   const addPlayerToSquad = useCallback(async (squadId, playerName) => {
     try {
       const response = await fetch('/api/squads-players', {
@@ -141,7 +141,7 @@ export function useSquads() {
     }
   }, []);
 
-  // Updated to use fixed-path API with POST request
+  // Fixed-path API with POST request for removing a player from squad
   const removePlayerFromSquad = useCallback(async (squadId, playerId) => {
     try {
       const response = await fetch('/api/squads-players', {
