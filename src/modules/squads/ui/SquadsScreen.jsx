@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSquads } from '@/modules/squads/api';
 import { Button } from '@/modules/ui/components/Button';
 import { Card } from '@/modules/ui/components/Card';
 import { useAuthContext } from '@/modules/auth/context/AuthProvider';
+import * as Sentry from '@sentry/browser';
 
 function SquadItem({ squad, onSelect }) {
   return (
@@ -15,7 +16,7 @@ function SquadItem({ squad, onSelect }) {
             Created on {new Date(squad.createdAt).toLocaleDateString()}
           </p>
         </div>
-        <Button variant="outline">Select</Button>
+        <Button variant="outline" className="cursor-pointer">Select</Button>
       </div>
     </Card>
   );
@@ -23,13 +24,22 @@ function SquadItem({ squad, onSelect }) {
 
 function CreateSquadForm({ onCreate, isOpen, setIsOpen }) {
   const [squadName, setSquadName] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (squadName.trim()) {
-      await onCreate(squadName);
-      setSquadName('');
-      setIsOpen(false);
+    if (squadName.trim() && !isSubmitting) {
+      try {
+        setIsSubmitting(true);
+        await onCreate(squadName);
+        setSquadName('');
+      } catch (err) {
+        console.error('Error creating squad:', err);
+        Sentry.captureException(err);
+      } finally {
+        setIsSubmitting(false);
+        setIsOpen(false);
+      }
     }
   };
 
@@ -54,11 +64,20 @@ function CreateSquadForm({ onCreate, isOpen, setIsOpen }) {
           />
         </div>
         <div className="flex justify-end space-x-2">
-          <Button variant="outline" onClick={() => setIsOpen(false)}>
+          <Button 
+            variant="outline" 
+            onClick={() => setIsOpen(false)}
+            className="cursor-pointer"
+          >
             Cancel
           </Button>
-          <Button variant="success" type="submit">
-            Create Squad
+          <Button 
+            variant="success" 
+            type="submit" 
+            disabled={!squadName.trim() || isSubmitting}
+            className="cursor-pointer"
+          >
+            {isSubmitting ? 'Creating...' : 'Create Squad'}
           </Button>
         </div>
       </form>
@@ -78,6 +97,8 @@ function SquadsScreen() {
       navigate(`/squads/${newSquad.id}/players`);
     } catch (err) {
       console.error('Failed to create squad:', err);
+      Sentry.captureException(err);
+      throw err;
     }
   };
 
@@ -104,10 +125,10 @@ function SquadsScreen() {
             </p>
           </div>
           <div className="flex space-x-2">
-            <Button onClick={() => setIsFormOpen(!isFormOpen)}>
+            <Button onClick={() => setIsFormOpen(!isFormOpen)} className="cursor-pointer">
               {isFormOpen ? 'Cancel' : 'Create Squad'}
             </Button>
-            <Button variant="outline" onClick={signOut}>
+            <Button variant="outline" onClick={signOut} className="cursor-pointer">
               Sign Out
             </Button>
           </div>
@@ -137,6 +158,7 @@ function SquadsScreen() {
               variant="success"
               size="large"
               onClick={() => setIsFormOpen(true)}
+              className="cursor-pointer"
             >
               Create Your First Squad
             </Button>

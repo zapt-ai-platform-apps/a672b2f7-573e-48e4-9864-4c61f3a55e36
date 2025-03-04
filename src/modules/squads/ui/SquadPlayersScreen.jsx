@@ -18,7 +18,7 @@ function SquadPlayersScreen() {
   const [activeWeekPlayers, setActiveWeekPlayers] = useState([]);
   
   useEffect(() => {
-    const squad = squads.find(s => s.id === parseInt(squadId));
+    const squad = squads.find(s => s.id === squadId);
     if (squad) {
       setSquadName(squad.name);
     }
@@ -37,6 +37,7 @@ function SquadPlayersScreen() {
           setActiveWeekPlayers(savedActivePlayerIds);
         } catch (e) {
           console.error('Error loading active players from localStorage:', e);
+          Sentry.captureException(e);
           setActiveWeekPlayers([]);
         }
       } catch (err) {
@@ -63,6 +64,7 @@ function SquadPlayersScreen() {
       setPlayerName('');
     } catch (err) {
       console.error('Error adding player:', err);
+      Sentry.captureException(err);
       setError('Failed to add player. Please try again.');
     }
   };
@@ -79,6 +81,7 @@ function SquadPlayersScreen() {
       setActiveWeekPlayers(prev => prev.filter(id => id !== playerId));
     } catch (err) {
       console.error('Error removing player:', err);
+      Sentry.captureException(err);
       setError('Failed to remove player. Please try again.');
     }
   };
@@ -156,7 +159,7 @@ function SquadPlayersScreen() {
                 placeholder="Enter player name"
                 className="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white box-border"
               />
-              <Button type="submit" disabled={!playerName.trim()}>
+              <Button type="submit" disabled={!playerName.trim()} className="cursor-pointer">
                 Add Player
               </Button>
             </form>
@@ -212,6 +215,7 @@ function SquadPlayersScreen() {
             size="large" 
             onClick={handleContinueToGameSetup}
             disabled={activeWeekPlayers.length === 0}
+            className="cursor-pointer"
           >
             Continue to Game Setup
           </Button>

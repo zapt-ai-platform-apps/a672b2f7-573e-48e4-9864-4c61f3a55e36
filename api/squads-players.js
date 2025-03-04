@@ -58,7 +58,7 @@ export default async function handler(req, res) {
     const squadRecord = await db.select()
       .from(squads)
       .where(and(
-        eq(squads.id, BigInt(squadId)),
+        eq(squads.id, squadId),
         eq(squads.userId, user.id)
       ));
 
@@ -77,7 +77,7 @@ export default async function handler(req, res) {
         // Get all players for the squad
         const players = await db.select()
           .from(squadPlayers)
-          .where(eq(squadPlayers.squadId, parseInt(squadId)));
+          .where(eq(squadPlayers.squadId, squadId));
 
         console.log(`Found ${players.length} players for squadId: ${squadId}`);
         console.log('Returning players:', JSON.stringify(players, null, 2));
@@ -97,7 +97,7 @@ export default async function handler(req, res) {
         const [result] = await db.insert(squadPlayers)
           .values({
             name,
-            squadId: parseInt(squadId)
+            squadId
           })
           .returning();
 
@@ -117,8 +117,8 @@ export default async function handler(req, res) {
         console.log('Deleting player from database...');
         await db.delete(squadPlayers)
           .where(and(
-            eq(squadPlayers.id, parseInt(playerId)),
-            eq(squadPlayers.squadId, parseInt(squadId))
+            eq(squadPlayers.id, playerId),
+            eq(squadPlayers.squadId, squadId)
           ));
 
         console.log(`Player ${playerId} removed successfully from squad ${squadId}`);

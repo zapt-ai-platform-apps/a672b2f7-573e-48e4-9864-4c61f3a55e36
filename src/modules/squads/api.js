@@ -14,6 +14,7 @@ export function useSquads() {
     
     setLoading(true);
     try {
+      console.log('Fetching squads for user:', user.id);
       const response = await fetch('/api/squads', {
         headers: {
           Authorization: `Bearer ${await getAuthToken()}`,
@@ -25,6 +26,7 @@ export function useSquads() {
       }
       
       const data = await response.json();
+      console.log('Fetched squads:', data.length);
       setSquads(data);
     } catch (err) {
       console.error('Error fetching squads:', err);
@@ -57,6 +59,7 @@ export function useSquads() {
 
   const createSquad = useCallback(async (squadName) => {
     try {
+      console.log('Creating new squad:', squadName);
       const response = await fetch('/api/squads', {
         method: 'POST',
         headers: {
@@ -71,6 +74,7 @@ export function useSquads() {
       }
       
       const newSquad = await response.json();
+      console.log('New squad created:', newSquad);
       setSquads(prev => [...prev, newSquad]);
       return newSquad;
     } catch (err) {
@@ -115,6 +119,7 @@ export function useSquads() {
   // Fixed-path API with POST request for adding a player to squad
   const addPlayerToSquad = useCallback(async (squadId, playerName) => {
     try {
+      console.log(`Adding player "${playerName}" to squad:`, squadId);
       const response = await fetch('/api/squads-players', {
         method: 'POST',
         headers: {
@@ -132,7 +137,9 @@ export function useSquads() {
         throw new Error('Failed to add player to squad');
       }
       
-      return await response.json();
+      const newPlayer = await response.json();
+      console.log('Player added successfully:', newPlayer);
+      return newPlayer;
     } catch (err) {
       console.error('Error adding player to squad:', err);
       Sentry.captureException(err);
@@ -144,6 +151,7 @@ export function useSquads() {
   // Fixed-path API with POST request for removing a player from squad
   const removePlayerFromSquad = useCallback(async (squadId, playerId) => {
     try {
+      console.log(`Removing player ${playerId} from squad:`, squadId);
       const response = await fetch('/api/squads-players', {
         method: 'POST',
         headers: {
@@ -161,6 +169,7 @@ export function useSquads() {
         throw new Error('Failed to remove player from squad');
       }
       
+      console.log(`Player ${playerId} removed successfully`);
       return true;
     } catch (err) {
       console.error('Error removing player from squad:', err);
