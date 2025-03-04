@@ -43,7 +43,19 @@ export function useSquads() {
     }
   }, [user, fetchSquads]);
 
-  const createSquad = async (squadName) => {
+  // Helper function to get auth token
+  const getAuthToken = async () => {
+    try {
+      const { data } = await supabase.auth.getSession();
+      return data.session?.access_token;
+    } catch (err) {
+      console.error('Error getting auth token:', err);
+      Sentry.captureException(err);
+      throw err;
+    }
+  };
+
+  const createSquad = useCallback(async (squadName) => {
     try {
       const response = await fetch('/api/squads', {
         method: 'POST',
@@ -67,38 +79,53 @@ export function useSquads() {
       setError(err.message);
       throw err;
     }
-  };
+  }, []);
 
-  const getSquadPlayers = async (squadId) => {
+  // Updated to use fixed-path API with POST request
+  const getSquadPlayers = useCallback(async (squadId) => {
     try {
-      const response = await fetch(`/api/squads/${squadId}/players`, {
+      console.log('Fetching players for squad:', squadId);
+      const response = await fetch('/api/squads-players', {
+        method: 'POST',
         headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${await getAuthToken()}`,
         },
+        body: JSON.stringify({ 
+          action: 'getPlayers',
+          squadId 
+        }),
       });
       
       if (!response.ok) {
         throw new Error('Failed to fetch squad players');
       }
       
-      return await response.json();
+      const players = await response.json();
+      console.log('Fetched players:', players.length);
+      return players;
     } catch (err) {
       console.error('Error fetching squad players:', err);
       Sentry.captureException(err);
       setError(err.message);
       throw err;
     }
-  };
+  }, []);
 
-  const addPlayerToSquad = async (squadId, playerName) => {
+  // Updated to use fixed-path API with POST request
+  const addPlayerToSquad = useCallback(async (squadId, playerName) => {
     try {
-      const response = await fetch(`/api/squads/${squadId}/players`, {
+      const response = await fetch('/api/squads-players', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${await getAuthToken()}`,
         },
-        body: JSON.stringify({ name: playerName }),
+        body: JSON.stringify({ 
+          action: 'addPlayer',
+          squadId,
+          name: playerName 
+        }),
       });
       
       if (!response.ok) {
@@ -112,15 +139,22 @@ export function useSquads() {
       setError(err.message);
       throw err;
     }
-  };
+  }, []);
 
-  const removePlayerFromSquad = async (squadId, playerId) => {
+  // Updated to use fixed-path API with POST request
+  const removePlayerFromSquad = useCallback(async (squadId, playerId) => {
     try {
-      const response = await fetch(`/api/squads/${squadId}/players/${playerId}`, {
-        method: 'DELETE',
+      const response = await fetch('/api/squads-players', {
+        method: 'POST',
         headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${await getAuthToken()}`,
         },
+        body: JSON.stringify({ 
+          action: 'removePlayer',
+          squadId,
+          playerId 
+        }),
       });
       
       if (!response.ok) {
@@ -134,19 +168,7 @@ export function useSquads() {
       setError(err.message);
       throw err;
     }
-  };
-
-  // Helper function to get auth token
-  const getAuthToken = async () => {
-    try {
-      const { data } = await supabase.auth.getSession();
-      return data.session?.access_token;
-    } catch (err) {
-      console.error('Error getting auth token:', err);
-      Sentry.captureException(err);
-      throw err;
-    }
-  };
+  }, []);
 
   return {
     squads,
