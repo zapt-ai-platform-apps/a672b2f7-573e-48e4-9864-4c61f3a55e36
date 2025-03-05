@@ -13,6 +13,7 @@ function AddPlayerModal({ isOpen, onClose, onAddPlayer }) {
   const [playerName, setPlayerName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [addMode, setAddMode] = useState('select'); // 'select' or 'manual'
   
   // Get squad ID from localStorage (saved when navigating from SquadPlayersScreen)
   const squadId = localStorage.getItem('current_squad_id');
@@ -25,6 +26,7 @@ function AddPlayerModal({ isOpen, onClose, onAddPlayer }) {
       
       if (!squadId) {
         setError('No squad selected. You can manually enter a player name below.');
+        setAddMode('manual');
         return;
       }
       
@@ -47,11 +49,13 @@ function AddPlayerModal({ isOpen, onClose, onAddPlayer }) {
         
         if (filteredPlayers.length === 0) {
           setError('All squad players are already in the match. You can manually enter a new player below.');
+          setAddMode('manual');
         }
       } catch (error) {
         console.error('Failed to fetch available players:', error);
         Sentry.captureException(error);
         setError('Failed to load squad players. You can manually enter a player name below.');
+        setAddMode('manual');
       } finally {
         setLoading(false);
       }
@@ -65,8 +69,8 @@ function AddPlayerModal({ isOpen, onClose, onAddPlayer }) {
   }, [isOpen, squadId, playerData, getSquadPlayers]);
   
   const handleAddPlayer = () => {
-    // If a player is selected from dropdown, use that, otherwise use manually entered name
-    const nameToAdd = selectedPlayer || playerName.trim();
+    // If in select mode, use the selected player, otherwise use the manually entered name
+    const nameToAdd = addMode === 'select' ? selectedPlayer : playerName.trim();
     
     if (nameToAdd) {
       onAddPlayer(nameToAdd);
@@ -76,12 +80,8 @@ function AddPlayerModal({ isOpen, onClose, onAddPlayer }) {
     }
   };
   
-  // When a player is selected from dropdown, update the text field too
-  useEffect(() => {
-    if (selectedPlayer) {
-      setPlayerName(selectedPlayer);
-    }
-  }, [selectedPlayer]);
+  const isAddButtonDisabled = (addMode === 'select' && !selectedPlayer) || 
+                            (addMode === 'manual' && !playerName.trim());
 
   return (
     <Modal
@@ -98,7 +98,7 @@ function AddPlayerModal({ isOpen, onClose, onAddPlayer }) {
           </button>
           <button
             onClick={handleAddPlayer}
-            disabled={!playerName.trim() && !selectedPlayer}
+            disabled={isAddButtonDisabled}
             className="px-4 py-2 bg-brand-500 text-white rounded hover:bg-brand-600 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Add
@@ -113,7 +113,40 @@ function AddPlayerModal({ isOpen, onClose, onAddPlayer }) {
           </div>
         ) : (
           <>
+            {/* Option tabs for selecting method */}
             {availablePlayers.length > 0 && (
+              <div className="flex border-b border-gray-200 dark:border-gray-700 mb-4">
+                <button
+                  onClick={() => setAddMode('select')}
+                  className={`py-2 px-4 font-medium text-sm focus:outline-none ${
+                    addMode === 'select' 
+                      ? 'border-b-2 border-brand-500 text-brand-500' 
+                      : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+                  }`}
+                >
+                  Select Existing Player
+                </button>
+                <button
+                  onClick={() => setAddMode('manual')}
+                  className={`py-2 px-4 font-medium text-sm focus:outline-none ${
+                    addMode === 'manual' 
+                      ? 'border-b-2 border-brand-500 text-brand-500' 
+                      : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+                  }`}
+                >
+                  Add New Player
+                </button>
+              </div>
+            )}
+            
+            {error && (
+              <div className="text-amber-600 dark:text-amber-400 text-sm mt-2 mb-2">
+                {error}
+              </div>
+            )}
+            
+            {/* Existing Player Selection */}
+            {addMode === 'select' && availablePlayers.length > 0 && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Select from squad players not in the match:
@@ -133,24 +166,21 @@ function AddPlayerModal({ isOpen, onClose, onAddPlayer }) {
               </div>
             )}
             
-            {error && (
-              <div className="text-amber-600 dark:text-amber-400 text-sm mt-2 mb-2">
-                {error}
+            {/* Manual Entry */}
+            {addMode === 'manual' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  {availablePlayers.length > 0 ? 'Enter new player name:' : 'Enter player name:'}
+                </label>
+                <input
+                  type="text"
+                  className="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-brand-400 box-border"
+                  placeholder="Player Name"
+                  value={playerName}
+                  onChange={(e) => setPlayerName(e.target.value)}
+                />
               </div>
             )}
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {availablePlayers.length > 0 ? 'Or manually enter player name:' : 'Enter player name:'}
-              </label>
-              <input
-                type="text"
-                className="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-brand-400 box-border"
-                placeholder="Player Name"
-                value={playerName}
-                onChange={(e) => setPlayerName(e.target.value)}
-              />
-            </div>
           </>
         )}
       </div>
