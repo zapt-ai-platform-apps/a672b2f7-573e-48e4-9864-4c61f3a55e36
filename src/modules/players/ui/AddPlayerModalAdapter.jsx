@@ -11,8 +11,25 @@ function AddPlayerModalAdapter({
   addNewPlayer
 }) {
   const handleAddPlayer = (name) => {
+    // First update the name in the parent state
     setNewPlayerName(name);
-    return addNewPlayer();
+    
+    // We need to create an improved version of addNewPlayer that uses the name directly
+    // Instead of relying on state which might not have updated yet
+    if (name.trim() !== '') {
+      // Create a new player directly using the provided name
+      const playerToAdd = {
+        name: name.trim(),
+        playIntervals: [],
+        isOnField: false,
+        isGoalkeeper: false
+      };
+      
+      // We can now call the parent component's setPlayerData directly with this new player
+      // This ensures the player is added immediately without waiting for state updates
+      return addNewPlayer(playerToAdd);
+    }
+    return false;
   };
 
   return (

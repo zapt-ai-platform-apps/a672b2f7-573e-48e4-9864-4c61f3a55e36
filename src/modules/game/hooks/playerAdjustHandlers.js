@@ -10,7 +10,37 @@ export function createPlayerAdjustHandlers({
   setShowConfirmModal,
   setSelectedPlayer
 }) {
-  const addNewPlayer = () => {
+  const addNewPlayer = (playerData) => {
+    // If a player object is provided directly, use it
+    if (playerData && typeof playerData === 'object' && playerData.name) {
+      const minPlayTime =
+        props.playerData.length > 0
+          ? Math.min(...props.playerData.map((p) => p.totalPlayTime || 0))
+          : 0;
+
+      // Add the player with the provided data
+      props.setPlayerData((prevPlayers) => [
+        ...prevPlayers,
+        {
+          ...playerData,
+          totalPlayTime: minPlayTime
+        }
+      ]);
+      
+      // Update UI state
+      setNewPlayerName('');
+      
+      // This is the critical step - make sure player lists are updated
+      // after the player data has been updated
+      setTimeout(() => {
+        props.updatePlayerLists();
+      }, 0);
+      
+      setShowAddPlayerModal(false);
+      return true;
+    }
+    
+    // Fallback to the original behavior using state variable
     if (newPlayerName.trim() !== '') {
       const minPlayTime =
         props.playerData.length > 0
@@ -27,10 +57,19 @@ export function createPlayerAdjustHandlers({
           totalPlayTime: minPlayTime
         }
       ]);
+      
       setNewPlayerName('');
-      props.updatePlayerLists();
+      
+      // Use setTimeout to ensure this runs after state updates
+      setTimeout(() => {
+        props.updatePlayerLists();
+      }, 0);
+      
       setShowAddPlayerModal(false);
+      return true;
     }
+    
+    return false;
   };
 
   const handleIncreasePlayers = () => {
