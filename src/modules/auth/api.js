@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase, recordLogin } from '@/supabaseClient';
 import { eventBus } from '@/modules/core/events';
 import { events } from './events';
@@ -7,6 +7,13 @@ export function useAuth() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [hasRecordedLogin, setHasRecordedLogin] = useState(false);
+  const hasSessionRef = useRef(false);
+  
+  // Use this function to update session so we also update our ref
+  const updateSession = (newSession) => {
+    setSession(newSession);
+    hasSessionRef.current = newSession !== null;
+  };
   
   useEffect(() => {
     // Check active session on initial mount
@@ -14,7 +21,12 @@ export function useAuth() {
       try {
         const { data, error } = await supabase.auth.getSession();
         if (error) throw error;
-        setSession(data.session);
+        
+        // Set initial session
+        updateSession(data.session);
+        if (data.session) {
+          hasSessionRef.current = true;
+        }
         setLoading(false);
       } catch (error) {
         console.error('Error checking session:', error);
@@ -26,27 +38,27 @@ export function useAuth() {
     
     // Set up auth state change listener
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, newSession) => {
-      console.log('Auth event:', event);
+      console.log('Auth event:', event, 'Has session:', hasSessionRef.current);
       
-      // For SIGNED_IN, only update session if it doesn't exist
+      // For SIGNED_IN, only update session if we don't have one
       if (event === 'SIGNED_IN') {
-        if (session === null) {
-          console.log('updating session')
-          
-          setSession(newSession);
+        if (!hasSessionRef.current) {
+          updateSession(newSession);
           if (newSession?.user?.email) {
             eventBus.publish(events.USER_SIGNED_IN, { user: newSession.user });
             setHasRecordedLogin(false);
           }
+        } else {
+          console.log('Already have session, ignoring SIGNED_IN event');
         }
       }
       // For TOKEN_REFRESHED, always update the session
       else if (event === 'TOKEN_REFRESHED') {
-        setSession(newSession);
+        updateSession(newSession);
       }
       // For SIGNED_OUT, clear the session
       else if (event === 'SIGNED_OUT') {
-        setSession(null);
+        updateSession(null);
         eventBus.publish(events.USER_SIGNED_OUT, {});
         setHasRecordedLogin(false);
       }
@@ -55,7 +67,7 @@ export function useAuth() {
     return () => {
       authListener?.subscription.unsubscribe();
     };
-  }, []); // Remove all dependencies to prevent re-running this effect
+  }, []); // No dependencies to prevent re-creating the listener
   
   useEffect(() => {
     if (session?.user?.email && !hasRecordedLogin) {
