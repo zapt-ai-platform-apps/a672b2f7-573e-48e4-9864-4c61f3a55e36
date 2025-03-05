@@ -1,12 +1,12 @@
 import React from 'react';
-import AddPlayerModal from '@/modules/players/ui/AddPlayerModal.jsx';
+import AddPlayerModalAdapter from '@/modules/players/ui/AddPlayerModalAdapter.jsx';
 import AdjustPlayersModal from '@/modules/players/ui/AdjustPlayersModal.jsx';
 import ConfirmAdjustPlayersModal from '@/modules/players/ui/ConfirmAdjustPlayersModal.jsx';
 
 function PlayerModals(props) {
   return (
     <>
-      <AddPlayerModal
+      <AddPlayerModalAdapter
         showAddPlayerModal={props.showAddPlayerModal}
         setShowAddPlayerModal={props.setShowAddPlayerModal}
         newPlayerName={props.newPlayerName}
