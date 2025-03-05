@@ -62,6 +62,13 @@ function useGameSetup() {
     }
   }, [preSelectedGoalkeeper]);
 
+  // Update starting players count when players change
+  useEffect(() => {
+    const startingCount = players.filter(p => p.isStartingPlayer).length;
+    setStartingPlayersCount(startingCount);
+    setStartingPlayers(players.filter(p => p.isStartingPlayer));
+  }, [players]);
+
   const addPlayer = () => {
     if (playerName.trim() !== '') {
       try {
@@ -95,13 +102,6 @@ function useGameSetup() {
         const updatedPlayers = players.filter((player) => player.name !== playerNameToDelete);
         setPlayers(updatedPlayers);
         localStorage.setItem('players', JSON.stringify(updatedPlayers));
-        
-        // Update starting players count
-        const startingCount = updatedPlayers.filter(p => p.isStartingPlayer).length;
-        setStartingPlayersCount(startingCount);
-        
-        // Update starting players list
-        setStartingPlayers(updatedPlayers.filter(p => p.isStartingPlayer));
         
         // Clear goalkeeper if deleted
         if (goalkeeper === playerNameToDelete) {
@@ -137,12 +137,7 @@ function useGameSetup() {
       // Save to localStorage
       localStorage.setItem('players', JSON.stringify(updatedPlayers));
       
-      // Update starting players count
-      const count = updatedPlayers.filter((p) => p.isStartingPlayer).length;
-      setStartingPlayersCount(count);
-      
-      // Update starting players list
-      setStartingPlayers(updatedPlayers.filter((p) => p.isStartingPlayer));
+      return true;
     } catch (error) {
       console.error('Error toggling starting player:', error);
       Sentry.captureException(error, {
@@ -152,6 +147,7 @@ function useGameSetup() {
           location: 'modules/game/hooks/useGameSetup.js:toggleStartingPlayer'
         }
       });
+      return false;
     }
   };
 
