@@ -30,11 +30,8 @@ export function createPlayerAdjustHandlers({
       // Update UI state
       setNewPlayerName('');
       
-      // This is the critical step - make sure player lists are updated
-      // after the player data has been updated
-      setTimeout(() => {
-        props.updatePlayerLists();
-      }, 0);
+      // Immediately update player lists
+      props.updatePlayerLists();
       
       setShowAddPlayerModal(false);
       return true;
@@ -60,10 +57,8 @@ export function createPlayerAdjustHandlers({
       
       setNewPlayerName('');
       
-      // Use setTimeout to ensure this runs after state updates
-      setTimeout(() => {
-        props.updatePlayerLists();
-      }, 0);
+      // Immediately update player lists
+      props.updatePlayerLists();
       
       setShowAddPlayerModal(false);
       return true;
