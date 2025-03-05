@@ -18,7 +18,7 @@ export function useAuth() {
         
         if (data.session?.user?.email) {
           try {
-            await recordLogin(data.session.user.email, import.meta.env.VITE_PUBLIC_APP_ENV);
+            // await recordLogin(data.session.user.email, import.meta.env.VITE_PUBLIC_APP_ENV);
           } catch (error) {
             console.error('Failed to record login:', error);
           }
@@ -38,7 +38,7 @@ export function useAuth() {
       
       if (event === 'SIGNED_IN' && session?.user?.email) {
         try {
-          await recordLogin(session.user.email, import.meta.env.VITE_PUBLIC_APP_ENV);
+          // await recordLogin(session.user.email, import.meta.env.VITE_PUBLIC_APP_ENV);
         } catch (error) {
           console.error('Failed to record login:', error);
         }
