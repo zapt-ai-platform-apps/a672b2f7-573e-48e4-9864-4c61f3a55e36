@@ -88,7 +88,7 @@ function CreateSquadForm({ onCreate, isOpen, setIsOpen }) {
 function SquadsScreen() {
   const { squads, loading, error, createSquad } = useSquads();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const { user, signOut } = useAuthContext();
+  const { user } = useAuthContext();
   const navigate = useNavigate();
 
   const handleCreateSquad = async (name) => {
@@ -127,9 +127,6 @@ function SquadsScreen() {
           <div className="flex space-x-2">
             <Button onClick={() => setIsFormOpen(!isFormOpen)} className="cursor-pointer">
               {isFormOpen ? 'Cancel' : 'Create Squad'}
-            </Button>
-            <Button variant="outline" onClick={signOut} className="cursor-pointer">
-              Sign Out
             </Button>
           </div>
         </div>
