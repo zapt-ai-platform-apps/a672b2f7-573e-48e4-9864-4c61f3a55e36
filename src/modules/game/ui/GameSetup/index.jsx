@@ -196,6 +196,13 @@ function GameSetup() {
             setIncludeGKPlaytime={setIncludeGKPlaytime}
           />
           
+          {!goalkeeper && players.filter(p => p.isStartingPlayer).length > 0 && (
+            <div className="bg-yellow-100 dark:bg-yellow-900 border border-yellow-400 dark:border-yellow-700 text-yellow-700 dark:text-yellow-300 px-4 py-3 rounded mb-4">
+              <p className="font-bold">Please select a goalkeeper</p>
+              <p className="text-sm">You must select a goalkeeper before starting the game.</p>
+            </div>
+          )}
+          
           <StartGameButton
             players={players}
             startingPlayersCount={startingPlayersCount}
