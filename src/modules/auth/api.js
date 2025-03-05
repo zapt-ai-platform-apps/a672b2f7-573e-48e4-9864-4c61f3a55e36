@@ -31,6 +31,8 @@ export function useAuth() {
       // For SIGNED_IN, only update session if it doesn't exist
       if (event === 'SIGNED_IN') {
         if (session === null) {
+          console.log('updating session')
+          
           setSession(newSession);
           if (newSession?.user?.email) {
             eventBus.publish(events.USER_SIGNED_IN, { user: newSession.user });
