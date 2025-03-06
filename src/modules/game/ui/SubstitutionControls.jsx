@@ -24,7 +24,7 @@ function SubstitutionControls(props) {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+      <div className="md:grid md:grid-cols-2 md:gap-8 mb-6 md:mb-8">
         <PlayerList
           players={props.onFieldPlayers}
           title="Players on Field"

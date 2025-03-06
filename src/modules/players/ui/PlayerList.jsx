@@ -8,25 +8,28 @@ function PlayerList({ players, title, selectedPlayer, handlePlayerClick, getTota
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md h-full">
-      <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">{title}</h2>
-      <p className="mb-2 text-gray-600 dark:text-gray-300 text-sm">{message}</p>
-      <ul>
+    <div className="bg-white dark:bg-gray-800 p-3 md:p-4 rounded-lg shadow-md h-full mb-4 md:mb-0">
+      <h2 className="text-xl md:text-2xl font-bold mb-2 text-gray-800 dark:text-white">{title}</h2>
+      <p className="mb-2 text-gray-600 dark:text-gray-300 text-xs md:text-sm">{message}</p>
+      <ul className="space-y-2">
         {players.map((player, index) => (
           <li
             key={index}
-            className={`flex justify-between items-center mb-2 p-4 rounded-lg cursor-pointer ${
+            className={`flex justify-between items-center p-3 rounded-lg cursor-pointer ${
               selectedPlayer && selectedPlayer.name === player.name
                 ? 'bg-blue-200 dark:bg-blue-700'
                 : 'hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
             onClick={() => handlePlayerClick && handlePlayerClick(player)}
           >
-            <div className="font-medium text-lg text-gray-800 dark:text-white">
-              {player.name} {player.isGoalkeeper && <span className="text-yellow-500 font-semibold">(GK)</span>}
+            <div className="font-medium text-sm md:text-lg text-gray-800 dark:text-white flex items-center">
+              {player.name} 
+              {player.isGoalkeeper && (
+                <span className="text-yellow-500 font-semibold ml-1 text-xs md:text-sm">(GK)</span>
+              )}
             </div>
             <div>
-              <span className="text-sm text-gray-600 dark:text-gray-300">
+              <span className="text-xs md:text-sm text-gray-600 dark:text-gray-300">
                 {formatTime(getTotalPlayTime(player))}
               </span>
             </div>

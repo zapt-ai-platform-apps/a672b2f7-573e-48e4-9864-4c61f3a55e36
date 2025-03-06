@@ -25,12 +25,12 @@ function PitchVisualization() {
   }, [init, cleanup]);
 
   return (
-    <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-4 text-green-600 dark:text-green-400">
+    <div className="mb-6 md:mb-8">
+      <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-green-600 dark:text-green-400">
         Player Positions
       </h2>
       <Pitch pitchRef={pitchRef} playerData={playerData} handlePointerDown={handlePointerDown} />
-      <p className="mt-4 text-gray-700 dark:text-gray-300">
+      <p className="mt-3 text-xs md:text-sm text-gray-700 dark:text-gray-300 text-center">
         Drag and drop players to set their positions.
       </p>
     </div>

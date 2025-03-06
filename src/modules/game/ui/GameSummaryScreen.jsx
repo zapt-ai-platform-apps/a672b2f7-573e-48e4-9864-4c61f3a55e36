@@ -36,8 +36,8 @@ function GameSummaryScreen() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-800 dark:text-white">
-      <div className="p-8 flex-grow">
-        <h1 className="text-4xl font-bold mb-8 text-brand-500 dark:text-brand-400">Game Summary</h1>
+      <div className="p-4 md:p-8 flex-grow">
+        <h1 className="text-3xl md:text-4xl font-bold mb-6 md:mb-8 text-brand-500 dark:text-brand-400">Game Summary</h1>
         <FinalScore ourScore={ourScore} opponentScore={opponentScore} />
         <GoalsList goals={goals} />
         <PlayerPlaytimes
@@ -46,9 +46,9 @@ function GameSummaryScreen() {
           getTotalPlayTime={getTotalPlayTime}
           formatTime={formatTime}
         />
-        <div className="flex space-x-4 mt-8">
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mt-6 md:mt-8">
           <button
-            className="px-8 py-4 bg-brand-500 text-white text-lg rounded-md cursor-pointer hover:bg-brand-600 hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-400"
+            className="px-6 py-3 md:px-8 md:py-4 bg-brand-500 text-white text-base md:text-lg rounded-md cursor-pointer hover:bg-brand-600 hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-400 w-full md:w-auto"
             onClick={handleBackToHome}
           >
             Back to Home

@@ -47,7 +47,13 @@ function ShareSummaryButton({ ourScore, opponentScore, playerData, goals, includ
           text: summaryText,
         });
       } else {
-        alert('Sharing not supported on this browser.');
+        // Fallback for devices without native sharing
+        try {
+          await navigator.clipboard.writeText(summaryText);
+          alert('Summary copied to clipboard!');
+        } catch (err) {
+          alert('Sharing not supported on this browser. Summary shown below:\n\n' + summaryText);
+        }
       }
     } catch (error) {
       if (error.name !== 'AbortError') {
@@ -62,9 +68,9 @@ function ShareSummaryButton({ ourScore, opponentScore, playerData, goals, includ
 
   return (
     <button
-      className={`px-8 py-4 bg-blue-500 text-white text-lg rounded-lg ${
+      className={`px-6 py-3 md:px-8 md:py-4 bg-blue-500 text-white text-base md:text-lg rounded-md ${
         isSharing ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-blue-600 hover:scale-105'
-      } transition duration-300 ease-in-out`}
+      } transition duration-300 ease-in-out w-full md:w-auto`}
       onClick={handleShareSummary}
       disabled={isSharing}
     >

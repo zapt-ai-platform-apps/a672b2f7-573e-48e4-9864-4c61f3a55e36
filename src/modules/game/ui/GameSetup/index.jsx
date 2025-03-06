@@ -106,20 +106,21 @@ function GameSetup() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-800 dark:text-white p-8">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-800 dark:text-white p-4 md:p-8">
       <GameIntro />
       <ErrorMessage errorMessage={errorMessage} />
       
       {loadedFromSquad && (
-        <div className="bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-700 text-green-700 dark:text-green-300 px-4 py-3 rounded mb-6 flex items-center justify-between">
-          <div>
+        <div className="bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-700 text-green-700 dark:text-green-300 px-4 py-3 rounded mb-4 md:mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
+          <div className="mb-3 md:mb-0">
             <p className="font-bold">Squad Players Loaded</p>
-            <p className="text-sm">Select players for this match and set your starting lineup below.</p>
+            <p className="text-xs md:text-sm">Select players for this match and set your starting lineup below.</p>
           </div>
           <Button 
             variant="secondary"
             size="small"
             onClick={handleGoToSquads}
+            className="self-start md:self-auto"
           >
             Choose Different Squad
           </Button>
@@ -127,14 +128,15 @@ function GameSetup() {
       )}
       
       {!squadId && (
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-8">
-          <h2 className="text-xl font-bold mb-3 text-brand-500">Load from Saved Squad</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
+        <div className="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-md mb-6 md:mb-8">
+          <h2 className="text-lg md:text-xl font-bold mb-3 text-brand-500">Load from Saved Squad</h2>
+          <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 mb-4">
             You can select players from your saved squads instead of adding them manually.
           </p>
           <Button
             onClick={handleGoToSquads}
             variant="primary"
+            className="w-full md:w-auto"
           >
             View My Squads
           </Button>
@@ -142,20 +144,20 @@ function GameSetup() {
       )}
       
       {squadId && (
-        <div className="bg-white dark:bg-gray-800 p-8 rounded-md shadow mb-8">
+        <div className="bg-white dark:bg-gray-800 p-4 md:p-8 rounded-md shadow mb-6 md:mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold text-brand-500">Select Team for Match</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-brand-500">Select Team for Match</h2>
           </div>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
+          <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 mb-4">
             Choose the players from your squad who will participate in this match.
           </p>
           
           {isLoading ? (
-            <div className="flex justify-center py-8">
-              <div className="animate-spin h-8 w-8 border-4 border-brand-500 rounded-full border-t-transparent"></div>
+            <div className="flex justify-center py-6 md:py-8">
+              <div className="animate-spin h-6 w-6 md:h-8 md:w-8 border-4 border-brand-500 rounded-full border-t-transparent"></div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mt-4">
               {squadPlayers.map(player => (
                 <Card 
                   key={player.id}
@@ -166,10 +168,10 @@ function GameSetup() {
                   }`}
                   onClick={() => handleToggleTeamPlayer(player)}
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="text-lg font-medium">{player.name}</span>
+                  <div className="flex items-center justify-between p-2 md:p-3">
+                    <span className="text-base md:text-lg font-medium">{player.name}</span>
                     {selectedTeamPlayers.some(p => p.id === player.id) && (
-                      <span className="text-green-500 text-2xl">✓</span>
+                      <span className="text-green-500 text-xl md:text-2xl">✓</span>
                     )}
                   </div>
                 </Card>
@@ -199,18 +201,20 @@ function GameSetup() {
           {!goalkeeper && players.filter(p => p.isStartingPlayer).length > 0 && (
             <div className="bg-yellow-100 dark:bg-yellow-900 border border-yellow-400 dark:border-yellow-700 text-yellow-700 dark:text-yellow-300 px-4 py-3 rounded mb-4">
               <p className="font-bold">Please select a goalkeeper</p>
-              <p className="text-sm">You must select a goalkeeper before starting the game.</p>
+              <p className="text-xs md:text-sm">You must select a goalkeeper before starting the game.</p>
             </div>
           )}
           
-          <StartGameButton
-            players={players}
-            startingPlayersCount={startingPlayersCount}
-            goalkeeper={goalkeeper}
-            includeGKPlaytime={includeGKPlaytime}
-            setErrorMessage={setErrorMessage}
-            onStartGame={handleStartGame}
-          />
+          <div className="flex justify-center md:justify-start">
+            <StartGameButton
+              players={players}
+              startingPlayersCount={startingPlayersCount}
+              goalkeeper={goalkeeper}
+              includeGKPlaytime={includeGKPlaytime}
+              setErrorMessage={setErrorMessage}
+              onStartGame={handleStartGame}
+            />
+          </div>
         </>
       )}
     </div>

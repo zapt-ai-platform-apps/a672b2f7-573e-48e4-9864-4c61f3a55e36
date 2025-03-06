@@ -9,14 +9,14 @@ import * as Sentry from '@sentry/browser';
 function SquadItem({ squad, onSelect }) {
   return (
     <Card className="mb-4 cursor-pointer hover:shadow-lg transition-shadow duration-300" onClick={() => onSelect(squad)}>
-      <div className="flex justify-between items-center p-4">
-        <div>
-          <h3 className="text-xl font-semibold text-green-600">{squad.name}</h3>
-          <p className="text-gray-600 dark:text-gray-300 text-sm">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center p-4">
+        <div className="mb-3 md:mb-0">
+          <h3 className="text-lg md:text-xl font-semibold text-green-600">{squad.name}</h3>
+          <p className="text-gray-600 dark:text-gray-300 text-xs md:text-sm">
             Created on {new Date(squad.createdAt).toLocaleDateString()}
           </p>
         </div>
-        <Button variant="outline" className="cursor-pointer">Select</Button>
+        <Button variant="outline" size="small" className="self-start md:self-auto cursor-pointer">Select</Button>
       </div>
     </Card>
   );
@@ -47,10 +47,10 @@ function CreateSquadForm({ onCreate, isOpen, setIsOpen }) {
 
   return (
     <div className="mt-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-      <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">Create New Squad</h3>
+      <h3 className="text-lg md:text-xl font-semibold mb-4 text-gray-800 dark:text-white">Create New Squad</h3>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="squadName" className="block text-gray-700 dark:text-gray-300 mb-2">
+          <label htmlFor="squadName" className="block text-gray-700 dark:text-gray-300 mb-2 text-sm md:text-base">
             Squad Name
           </label>
           <input
@@ -58,16 +58,17 @@ function CreateSquadForm({ onCreate, isOpen, setIsOpen }) {
             id="squadName"
             value={squadName}
             onChange={(e) => setSquadName(e.target.value)}
-            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white box-border"
+            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white box-border text-sm md:text-base"
             placeholder="Enter squad name"
             required
           />
         </div>
-        <div className="flex justify-end space-x-2">
+        <div className="flex flex-col sm:flex-row sm:justify-end sm:space-x-2 space-y-2 sm:space-y-0">
           <Button 
             variant="outline" 
             onClick={() => setIsOpen(false)}
             className="cursor-pointer"
+            size="small"
           >
             Cancel
           </Button>
@@ -76,6 +77,7 @@ function CreateSquadForm({ onCreate, isOpen, setIsOpen }) {
             type="submit" 
             disabled={!squadName.trim() || isSubmitting}
             className="cursor-pointer"
+            size="small"
           >
             {isSubmitting ? 'Creating...' : 'Create Squad'}
           </Button>
@@ -109,23 +111,23 @@ function SquadsScreen() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-green-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-green-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-6">
       <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-800 dark:text-white">My Squads</h1>
-            <p className="text-gray-600 dark:text-gray-300">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 md:mb-8">
+          <div className="mb-4 md:mb-0">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">My Squads</h1>
+            <p className="text-gray-600 dark:text-gray-300 text-sm md:text-base">
               Welcome back, {user?.email}
             </p>
           </div>
-          <div className="flex space-x-2">
-            <Button onClick={() => setIsFormOpen(!isFormOpen)} className="cursor-pointer">
+          <div>
+            <Button onClick={() => setIsFormOpen(!isFormOpen)} size="small" className="cursor-pointer">
               {isFormOpen ? 'Cancel' : 'Create Squad'}
             </Button>
           </div>
@@ -138,23 +140,23 @@ function SquadsScreen() {
         />
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm">
             {error}
           </div>
         )}
 
         {squads.length === 0 ? (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center">
-            <h2 className="text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 md:p-8 text-center">
+            <h2 className="text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-4">
               No Squads Yet
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm md:text-base">
               Create your first squad to get started managing your team.
             </p>
             <Button
               variant="success"
               size="large"
-              onClick={() => setIsFormOpen(true)}
+              onClick={() => setIsOpen(true)}
               className="cursor-pointer"
             >
               Create Your First Squad

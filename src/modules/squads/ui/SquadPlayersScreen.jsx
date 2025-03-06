@@ -180,33 +180,32 @@ function SquadPlayersScreen() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-white p-8">
-        <div className="flex justify-center items-center h-full">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-500"></div>
-        </div>
+      <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-white p-4 md:p-8 flex justify-center items-center">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-brand-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-white p-8">
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-white p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-brand-500">{squadName || 'Squad'} Players</h1>
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-brand-500 mb-4 md:mb-0">{squadName || 'Squad'} Players</h1>
           <Button
             onClick={() => navigate('/squads')}
             variant="secondary"
+            size="small"
           >
             Back to Squads
           </Button>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md mb-8">
-          <h2 className="text-2xl font-bold mb-4 text-brand-500">Add New Player</h2>
-          <form onSubmit={handleAddPlayer} className="flex flex-col sm:flex-row gap-4">
+        <div className="bg-white dark:bg-gray-800 p-4 md:p-8 rounded-lg shadow-md mb-6 md:mb-8">
+          <h2 className="text-xl md:text-2xl font-bold mb-4 text-brand-500">Add New Player</h2>
+          <form onSubmit={handleAddPlayer} className="flex flex-col sm:flex-row gap-3 md:gap-4">
             <input
               type="text"
-              className="sm:flex-1 p-4 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:rounded-l-md rounded-t-md sm:rounded-tr-none sm:rounded-bl-md focus:outline-none focus:ring-2 focus:ring-brand-400 box-border text-lg"
+              className="flex-1 p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md sm:rounded-r-none focus:outline-none focus:ring-2 focus:ring-brand-400 box-border text-base"
               placeholder="Player Name"
               value={newPlayerName}
               onChange={(e) => setNewPlayerName(e.target.value)}
@@ -215,26 +214,28 @@ function SquadPlayersScreen() {
             <Button
               type="submit"
               disabled={isAdding}
-              className="sm:px-8 px-4 py-4 sm:rounded-r-md rounded-b-md sm:rounded-bl-none cursor-pointer"
+              className="sm:rounded-l-none cursor-pointer"
+              size="small"
             >
               {isAdding ? 'Adding...' : 'Add Player'}
             </Button>
           </form>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md mb-8">
-          <h2 className="text-2xl font-bold mb-4 text-brand-500">Squad Players</h2>
+        <div className="bg-white dark:bg-gray-800 p-4 md:p-8 rounded-lg shadow-md mb-6 md:mb-8">
+          <h2 className="text-xl md:text-2xl font-bold mb-4 text-brand-500">Squad Players</h2>
           {players.length === 0 ? (
             <p className="text-gray-500 dark:text-gray-400">No players added yet. Add your first player above.</p>
           ) : (
-            <ul className="space-y-4">
+            <ul className="space-y-3 md:space-y-4">
               {players.map((player) => (
-                <li key={player.id} className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 last:border-0">
-                  <span className="text-lg">{player.name}</span>
+                <li key={player.id} className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 md:p-4 border-b border-gray-200 dark:border-gray-700 last:border-0">
+                  <span className="text-base md:text-lg mb-2 sm:mb-0">{player.name}</span>
                   <Button
                     onClick={() => handleRemovePlayer(player.id)}
                     variant="danger"
                     size="small"
+                    className="self-start sm:self-auto"
                   >
                     Remove
                   </Button>
@@ -245,9 +246,9 @@ function SquadPlayersScreen() {
         </div>
 
         {players.length > 0 && (
-          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4 text-brand-500">Use Squad for Match</h2>
-            <p className="mb-4 text-gray-600 dark:text-gray-300">
+          <div className="bg-white dark:bg-gray-800 p-4 md:p-8 rounded-lg shadow-md">
+            <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-brand-500">Use Squad for Match</h2>
+            <p className="mb-4 text-gray-600 dark:text-gray-300 text-sm md:text-base">
               Set up your starting lineup and goalie for your match.
             </p>
             <Button 
@@ -268,7 +269,7 @@ function SquadPlayersScreen() {
           href="https://www.zapt.ai" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="text-sm text-gray-500 hover:text-brand-500 transition-colors"
+          className="text-xs md:text-sm text-gray-500 hover:text-brand-500 transition-colors"
         >
           Made on ZAPT
         </a>
