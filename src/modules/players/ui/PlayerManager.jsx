@@ -2,14 +2,7 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import StartingLineupSelector from '@/modules/players/ui/StartingLineupSelector.jsx';
 
-function PlayerManager({ players, deletePlayer, toggleStartingPlayer, startingPlayersCount }) {
-  const handleDeletePlayer = (playerNameToDelete) => {
-    const success = deletePlayer(playerNameToDelete);
-    if (success) {
-      toast.success('Player removed from match squad');
-    }
-  };
-
+function PlayerManager({ players, toggleStartingPlayer, startingPlayersCount }) {
   return (
     <div className="bg-white dark:bg-gray-800 p-4 md:p-8 rounded-lg shadow-md mb-6 md:mb-8">
       <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-brand-500">Select Starting Line-up</h2>
@@ -23,7 +16,6 @@ function PlayerManager({ players, deletePlayer, toggleStartingPlayer, startingPl
           players={players}
           startingPlayersCount={startingPlayersCount}
           toggleStartingPlayer={toggleStartingPlayer}
-          handleDeletePlayer={handleDeletePlayer}
         />
       )}
     </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-function StartingLineupSelector({ players, startingPlayersCount, toggleStartingPlayer, handleDeletePlayer }) {
+function StartingLineupSelector({ players, startingPlayersCount, toggleStartingPlayer }) {
   return (
     <ul className="space-y-2 md:space-y-3">
       {players.map((player, index) => (
@@ -18,13 +18,6 @@ function StartingLineupSelector({ players, startingPlayersCount, toggleStartingP
           >
             {player.name}
           </label>
-          <button
-            className="ml-2 text-red-500 hover:text-red-700 cursor-pointer text-xl md:text-2xl"
-            onClick={() => handleDeletePlayer(player.name)}
-            aria-label={`Remove ${player.name} from match squad`}
-          >
-            &#128465;
-          </button>
         </li>
       ))}
     </ul>
