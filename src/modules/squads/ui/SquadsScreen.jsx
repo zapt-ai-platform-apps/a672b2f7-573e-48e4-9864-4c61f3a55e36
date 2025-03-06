@@ -153,10 +153,10 @@ function SquadsScreen() {
             <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm md:text-base">
               Create your first squad to get started managing your team.
             </p>
-            <Button
-              variant="success"
-              size="large"
-              onClick={() => setIsOpen(true)}
+            <Button 
+              variant="success" 
+              size="large" 
+              onClick={() => setIsFormOpen(true)}
               className="cursor-pointer"
             >
               Create Your First Squad
