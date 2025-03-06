@@ -9,6 +9,7 @@ import AuthScreen from '@/modules/auth/ui/AuthScreen.jsx';
 import SquadsScreen from '@/modules/squads/ui/SquadsScreen.jsx';
 import SquadPlayersScreen from '@/modules/squads/ui/SquadPlayersScreen.jsx';
 import SquadSelectForMatchScreen from '@/modules/squads/ui/SquadSelectForMatchScreen.jsx';
+import ChatWidget from '@/modules/support/ui/ChatWidget.jsx';
 import { ProtectedRoute, PublicRoute, useAuthContext } from '@/modules/auth/context/AuthProvider';
 
 function App() {
@@ -59,6 +60,9 @@ function App() {
           </ProtectedRoute>
         } />
       </Routes>
+      
+      {/* Add the Chat Widget component */}
+      <ChatWidget />
     </>
   );
 }

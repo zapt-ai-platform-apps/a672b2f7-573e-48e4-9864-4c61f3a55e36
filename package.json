@@ -22,9 +22,11 @@
     "zod": "^3.24.2",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/auth-ui-shared": "^0.1.8",
-    "@zapt/zapt-js": "^1.0.20",
+    "@zapt/zapt-js": "^1.0.21",
     "drizzle-orm": "^0.33.0",
-    "postgres": "^3.4.5"
+    "postgres": "^3.4.5",
+    "stream-chat": "^8.56.0",
+    "stream-chat-react": "^12.11.1"
   },
   "devDependencies": {
     "vite": "^4.1.0",
