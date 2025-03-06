@@ -1,7 +1,7 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { squads } from '../drizzle/schema.js';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { authenticateUser } from './_apiUtils.js';
 import * as Sentry from '@sentry/node';
 
@@ -66,6 +66,39 @@ export default async function handler(req, res) {
 
       console.log('Squad created successfully:', JSON.stringify(result, null, 2));
       return res.status(201).json(result);
+    } else if (req.method === 'PUT' || req.method === 'PATCH') {
+      console.log('Updating squad');
+      const { id, name } = req.body;
+      if (!id || !name) {
+        console.log('Squad ID and name are required but were not provided');
+        return res.status(400).json({ error: 'Squad ID and name are required' });
+      }
+
+      console.log(`Updating squad with ID: ${id} to name: ${name} for user: ${user.id}`);
+      
+      // Verify the squad belongs to the user
+      const squadRecord = await db.select()
+        .from(squads)
+        .where(and(
+          eq(squads.id, id),
+          eq(squads.userId, user.id)
+        ));
+
+      if (squadRecord.length === 0) {
+        console.log(`Squad not found or access denied: id=${id}, userId=${user.id}`);
+        return res.status(404).json({ error: 'Squad not found or access denied' });
+      }
+      
+      const [result] = await db.update(squads)
+        .set({ name })
+        .where(and(
+          eq(squads.id, id),
+          eq(squads.userId, user.id)
+        ))
+        .returning();
+
+      console.log('Squad updated successfully:', JSON.stringify(result, null, 2));
+      return res.status(200).json(result);
     } else {
       console.log(`Method not allowed: ${req.method}`);
       return res.status(405).json({ error: 'Method not allowed' });

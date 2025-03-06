@@ -77,6 +77,41 @@ export function useSquads() {
     }
   }, [user, session]);
   
+  // Update a squad
+  const updateSquad = useCallback(async (id, name) => {
+    if (!user || !id || !name.trim()) {
+      throw new Error('Authentication, squad ID, and squad name required');
+    }
+    
+    try {
+      const response = await fetch('/api/squads', {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${session?.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id, name: name.trim() }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update squad');
+      }
+      
+      const updatedSquad = await response.json();
+      
+      // Update the local state
+      setSquads(prev => prev.map(squad => 
+        squad.id === id ? updatedSquad : squad
+      ));
+      
+      return updatedSquad;
+    } catch (err) {
+      console.error('Error updating squad:', err);
+      Sentry.captureException(err);
+      throw err;
+    }
+  }, [user, session]);
+  
   // Get players for a specific squad
   const getSquadPlayers = useCallback(async (squadId) => {
     if (!user || !squadId) {
@@ -177,6 +212,7 @@ export function useSquads() {
     loading,
     error,
     createSquad,
+    updateSquad,
     getSquadPlayers,
     addPlayerToSquad,
     removePlayerFromSquad

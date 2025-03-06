@@ -5,10 +5,11 @@ import { Button } from '@/modules/ui/components/Button';
 import { Card } from '@/modules/ui/components/Card';
 import { useAuthContext } from '@/modules/auth/context/AuthProvider';
 import * as Sentry from '@sentry/browser';
+import EditSquadNameModal from './EditSquadNameModal';
 
-function SquadItem({ squad, onSelect }) {
+function SquadItem({ squad, onSelect, onEdit }) {
   return (
-    <Card className="mb-4 cursor-pointer hover:shadow-lg transition-shadow duration-300" onClick={() => onSelect(squad)}>
+    <Card className="mb-4 hover:shadow-lg transition-shadow duration-300">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center p-4">
         <div className="mb-3 md:mb-0">
           <h3 className="text-lg md:text-xl font-semibold text-green-600">{squad.name}</h3>
@@ -16,7 +17,24 @@ function SquadItem({ squad, onSelect }) {
             Created on {new Date(squad.createdAt).toLocaleDateString()}
           </p>
         </div>
-        <Button variant="outline" size="small" className="self-start md:self-auto cursor-pointer">Select</Button>
+        <div className="flex space-x-2">
+          <Button 
+            variant="outline" 
+            size="small" 
+            className="self-start md:self-auto cursor-pointer"
+            onClick={() => onEdit(squad)}
+          >
+            Edit Name
+          </Button>
+          <Button 
+            variant="primary" 
+            size="small" 
+            className="self-start md:self-auto cursor-pointer"
+            onClick={() => onSelect(squad)}
+          >
+            Select
+          </Button>
+        </div>
       </div>
     </Card>
   );
@@ -88,8 +106,10 @@ function CreateSquadForm({ onCreate, isOpen, setIsOpen }) {
 }
 
 function SquadsScreen() {
-  const { squads, loading, error, createSquad } = useSquads();
+  const { squads, loading, error, createSquad, updateSquad } = useSquads();
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [squadToEdit, setSquadToEdit] = useState(null);
   const { user } = useAuthContext();
   const navigate = useNavigate();
 
@@ -106,6 +126,15 @@ function SquadsScreen() {
 
   const handleSelectSquad = (squad) => {
     navigate(`/squads/${squad.id}/players`);
+  };
+
+  const handleEditSquad = (squad) => {
+    setSquadToEdit(squad);
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdateSquad = async (id, name) => {
+    await updateSquad(id, name);
   };
 
   if (loading) {
@@ -165,11 +194,24 @@ function SquadsScreen() {
         ) : (
           <div>
             {squads.map((squad) => (
-              <SquadItem key={squad.id} squad={squad} onSelect={handleSelectSquad} />
+              <SquadItem 
+                key={squad.id} 
+                squad={squad} 
+                onSelect={handleSelectSquad}
+                onEdit={handleEditSquad}
+              />
             ))}
           </div>
         )}
       </div>
+
+      {/* Edit Squad Modal */}
+      <EditSquadNameModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        squad={squadToEdit}
+        onUpdate={handleUpdateSquad}
+      />
     </div>
   );
 }

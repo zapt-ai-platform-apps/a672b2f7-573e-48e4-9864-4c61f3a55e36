@@ -5,16 +5,21 @@ import { useAuthContext } from '@/modules/auth/context/AuthProvider';
 import * as Sentry from '@sentry/browser';
 import { supabase } from '@/supabaseClient';
 import { Button } from '@/modules/ui/components/Button';
+import { useSquads } from '@/modules/squads/api';
+import EditSquadNameModal from './EditSquadNameModal';
 
 function SquadPlayersScreen() {
   const { squadId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuthContext();
+  const { updateSquad } = useSquads();
   const [squadName, setSquadName] = useState('');
   const [players, setPlayers] = useState([]);
   const [newPlayerName, setNewPlayerName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [squadData, setSquadData] = useState(null);
 
   useEffect(() => {
     if (!squadId) return;
@@ -60,6 +65,7 @@ function SquadPlayersScreen() {
         const squad = squads.find(s => s.id === squadId);
         if (squad) {
           setSquadName(squad.name);
+          setSquadData(squad);
         }
       }
     } catch (error) {
@@ -178,6 +184,21 @@ function SquadPlayersScreen() {
     toast.success('Squad loaded for match!');
   };
 
+  const handleOpenEditModal = () => {
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdateSquad = async (id, name) => {
+    try {
+      const updatedSquad = await updateSquad(id, name);
+      setSquadName(updatedSquad.name);
+      setSquadData(updatedSquad);
+    } catch (error) {
+      Sentry.captureException(error);
+      throw error;
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-white p-4 md:p-8 flex justify-center items-center">
@@ -190,11 +211,22 @@ function SquadPlayersScreen() {
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-white p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 md:mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-brand-500 mb-4 md:mb-0">{squadName || 'Squad'} Players</h1>
+          <div className="flex items-center mb-4 md:mb-0">
+            <h1 className="text-2xl md:text-3xl font-bold text-brand-500 mr-3">{squadName || 'Squad'} Players</h1>
+            <Button
+              variant="outline"
+              size="small"
+              onClick={handleOpenEditModal}
+              className="cursor-pointer"
+            >
+              Edit Name
+            </Button>
+          </div>
           <Button
             onClick={() => navigate('/squads')}
             variant="secondary"
             size="small"
+            className="cursor-pointer"
           >
             Back to Squads
           </Button>
@@ -235,7 +267,7 @@ function SquadPlayersScreen() {
                     onClick={() => handleRemovePlayer(player.id)}
                     variant="danger"
                     size="small"
-                    className="self-start sm:self-auto"
+                    className="self-start sm:self-auto cursor-pointer"
                   >
                     Remove
                   </Button>
@@ -256,6 +288,7 @@ function SquadPlayersScreen() {
               variant="success"
               size="large"
               fullWidth
+              className="cursor-pointer"
             >
               Set Up Match with This Squad
             </Button>
@@ -274,6 +307,14 @@ function SquadPlayersScreen() {
           Made on ZAPT
         </a>
       </div>
+
+      {/* Edit Squad Modal */}
+      <EditSquadNameModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        squad={squadData}
+        onUpdate={handleUpdateSquad}
+      />
     </div>
   );
 }
