@@ -3,37 +3,68 @@ export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
-      // New or refined color palette
+      // Refined color palette
       colors: {
-        // Example brand colors; adjust to fit your identity
         brand: {
-          50: '#f5faff',
-          100: '#e0f2ff',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9', // Primary accent
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
+          50: '#eefaff',
+          100: '#dcf5ff',
+          200: '#b3ecff',
+          300: '#85ddff',
+          400: '#42c9ff',
+          500: '#2aa8eb', // Primary accent - slightly warmer blue
+          600: '#1c85c8',
+          700: '#1a6ca3',
+          800: '#1d5886',
+          900: '#1e4a71',
         },
-        // Refine or replace neutral grays as needed for better contrast
+        green: {
+          50: '#effdf4',
+          100: '#d7f7e2',
+          200: '#b0ecc7',
+          300: '#7fdca5',
+          400: '#4bc47f',
+          500: '#33ab66', // Success - warmer green
+          600: '#208a51',
+          700: '#1d6e44',
+          800: '#1b583a',
+          900: '#194832',
+        },
+        red: {
+          50: '#fef2f2',
+          100: '#fee2e2',
+          200: '#fecaca',
+          300: '#fca5a5',
+          400: '#f87171',
+          500: '#e05252', // Error - warmer red
+          600: '#dc2626',
+          700: '#b91c1c',
+          800: '#991b1b',
+          900: '#7f1d1d',
+        },
+        yellow: {
+          50: '#fffbeb',
+          100: '#fef3c7',
+          200: '#fde68a',
+          300: '#fcd34d',
+          400: '#fbbf24',
+          500: '#f59e0b', // Warning
+          600: '#d97706',
+          700: '#b45309',
+          800: '#92400e',
+          900: '#78350f',
+        },
         gray: {
-          50: '#fafafa',
-          100: '#f4f4f5',
-          200: '#e4e4e7',
-          300: '#d4d4d8',
-          400: '#a1a1aa',
-          500: '#71717a',
-          600: '#52525b',
-          700: '#3f3f46',
-          800: '#27272a',
-          900: '#18181b',
+          50: '#f9fafb',
+          100: '#f3f4f6',
+          200: '#e5e7eb',
+          300: '#d1d5db',
+          400: '#9ca3af',
+          500: '#6b7280',
+          600: '#4b5563',
+          700: '#374151',
+          800: '#1f2937',
+          900: '#111827',
         },
-        // Success/error states
-        success: '#22c55e',
-        error: '#ef4444',
       },
       // Refined spacing scale
       spacing: {
@@ -48,34 +79,41 @@ export default {
         12: '48px',
         14: '56px',
         16: '64px',
-        // Add or adjust to achieve a more harmonious vertical rhythm
       },
-      // Subtle, consistent box-shadows for cards, modals, etc.
+      // Improved box-shadows
       boxShadow: {
         sm: '0 1px 2px rgba(0,0,0,0.05)',
-        DEFAULT: '0 2px 4px rgba(0,0,0,0.1)',
-        md: '0 4px 6px rgba(0,0,0,0.1)',
-        lg: '0 10px 15px rgba(0,0,0,0.1)',
+        DEFAULT: '0 2px 4px rgba(0,0,0,0.08)',
+        md: '0 4px 6px rgba(0,0,0,0.08)',
+        lg: '0 8px 16px rgba(0,0,0,0.08)',
+        xl: '0 12px 24px rgba(0,0,0,0.12)',
       },
-      // Transition timing presets for smoother micro-interactions
-      transitionDuration: {
-        200: '200ms',
-        300: '300ms',
-        500: '500ms',
-      },
-      transitionTimingFunction: {
-        'ease-in-out-custom': 'cubic-bezier(0.4, 0, 0.2, 1)',
-      },
-      // Slightly reduce default border-radius for a refined feel
+      // Refined border radius
       borderRadius: {
         DEFAULT: '6px',
         md: '8px',
         lg: '12px',
+        xl: '16px',
+        '2xl': '24px',
         full: '9999px',
       },
-      // Font families or sizes if you want to refine typography
+      // Improved font family
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: [
+          'Inter',
+          'system-ui',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'Roboto',
+          'Helvetica Neue',
+          'Arial',
+          'sans-serif',
+        ],
+      },
+      // Animation effects
+      animation: {
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
     },
   },

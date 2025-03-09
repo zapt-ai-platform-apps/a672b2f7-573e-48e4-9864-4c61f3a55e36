@@ -5,19 +5,26 @@ import { Button } from '@/modules/ui/components/Button';
 import { Card } from '@/modules/ui/components/Card';
 import { useAuthContext } from '@/modules/auth/context/AuthProvider';
 import * as Sentry from '@sentry/browser';
+import { HiOutlinePencil, HiOutlineUserGroup, HiOutlineChevronRight } from 'react-icons/hi';
 
 function SquadItem({ squad, onSelect }) {
   return (
     <Card 
-      className="mb-4 hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+      className="mb-4 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 cursor-pointer border border-gray-200 dark:border-gray-700"
       onClick={() => onSelect(squad)}
     >
-      <div className="flex flex-col md:flex-row md:justify-between md:items-center p-4">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center">
         <div className="mb-3 md:mb-0">
-          <h3 className="text-lg md:text-xl font-semibold text-green-600">{squad.name}</h3>
-          <p className="text-gray-600 dark:text-gray-300 text-xs md:text-sm">
+          <h3 className="text-xl font-semibold text-brand-500 dark:text-brand-400 flex items-center">
+            <HiOutlineUserGroup className="mr-2" /> {squad.name}
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
             Created on {new Date(squad.createdAt).toLocaleDateString()}
           </p>
+        </div>
+        <div className="flex items-center text-gray-500 dark:text-gray-400">
+          <span className="mr-2">View squad</span>
+          <HiOutlineChevronRight />
         </div>
       </div>
     </Card>
@@ -48,11 +55,11 @@ function CreateSquadForm({ onCreate, isOpen, setIsOpen }) {
   if (!isOpen) return null;
 
   return (
-    <div className="mt-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-      <h3 className="text-lg md:text-xl font-semibold mb-4 text-gray-800 dark:text-white">Create New Squad</h3>
+    <Card className="mb-6 border border-brand-200 dark:border-brand-800 bg-brand-50 dark:bg-gray-800">
       <form onSubmit={handleSubmit}>
+        <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">Create New Squad</h3>
         <div className="mb-4">
-          <label htmlFor="squadName" className="block text-gray-700 dark:text-gray-300 mb-2 text-sm md:text-base">
+          <label htmlFor="squadName" className="block text-gray-700 dark:text-gray-300 mb-2 text-sm font-medium">
             Squad Name
           </label>
           <input
@@ -60,32 +67,34 @@ function CreateSquadForm({ onCreate, isOpen, setIsOpen }) {
             id="squadName"
             value={squadName}
             onChange={(e) => setSquadName(e.target.value)}
-            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:text-white box-border text-sm md:text-base"
+            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-400 dark:bg-gray-700 dark:text-white box-border"
             placeholder="Enter squad name"
             required
+            autoFocus
           />
         </div>
-        <div className="flex flex-col sm:flex-row sm:justify-end sm:space-x-2 space-y-2 sm:space-y-0">
+        <div className="flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3">
           <Button 
-            variant="outline" 
+            variant="secondary" 
             onClick={() => setIsOpen(false)}
             className="cursor-pointer"
-            size="small"
+            size="medium"
+            type="button"
           >
             Cancel
           </Button>
           <Button 
-            variant="success" 
+            variant="primary" 
             type="submit" 
             disabled={!squadName.trim() || isSubmitting}
             className="cursor-pointer"
-            size="small"
+            size="medium"
           >
             {isSubmitting ? 'Creating...' : 'Create Squad'}
           </Button>
         </div>
       </form>
-    </div>
+    </Card>
   );
 }
 
@@ -112,27 +121,37 @@ function SquadsScreen() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-green-500"></div>
+      <div className="page-container flex items-center justify-center">
+        <div className="loading-spinner"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 md:mb-8">
+    <div className="page-container">
+      <div className="content-container">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
           <div className="mb-4 md:mb-0">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">My Squads</h1>
-            <p className="text-gray-600 dark:text-gray-300 text-sm md:text-base">
-              Welcome back, {user?.email}
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-white">My Squads</h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              Manage your football teams in one place
             </p>
           </div>
-          <div>
-            <Button onClick={() => setIsFormOpen(!isFormOpen)} size="small" className="cursor-pointer">
-              {isFormOpen ? 'Cancel' : 'Create Squad'}
-            </Button>
-          </div>
+          <Button 
+            onClick={() => setIsFormOpen(!isFormOpen)} 
+            variant={isFormOpen ? "secondary" : "primary"}
+            size="medium" 
+            className="cursor-pointer flex items-center"
+          >
+            {isFormOpen ? 'Cancel' : (
+              <>
+                <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Create Squad
+              </>
+            )}
+          </Button>
         </div>
 
         <CreateSquadForm
@@ -142,28 +161,33 @@ function SquadsScreen() {
         />
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {error}
           </div>
         )}
 
         {squads.length === 0 ? (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 md:p-8 text-center">
-            <h2 className="text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-4">
+          <Card className="text-center p-8">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center">
+                <HiOutlineUserGroup className="w-8 h-8 text-brand-500 dark:text-brand-400"/>
+              </div>
+            </div>
+            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-3">
               No Squads Yet
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm md:text-base">
-              Create your first squad to get started managing your team.
+            <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
+              Create your first squad to start managing your team, track player playtime, and run smoother games.
             </p>
             <Button 
-              variant="success" 
+              variant="primary" 
               size="large" 
               onClick={() => setIsFormOpen(true)}
-              className="cursor-pointer"
+              className="cursor-pointer shadow-md"
             >
               Create Your First Squad
             </Button>
-          </div>
+          </Card>
         ) : (
           <div>
             {squads.map((squad) => (

@@ -22,14 +22,14 @@ function ThemeToggle() {
 
   return (
     <button
-      className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 cursor-pointer"
+      className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer transition-colors duration-200 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-400"
       onClick={toggleTheme}
-      aria-label="Toggle Dark Mode"
+      aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
     >
       {theme === 'light' ? (
-        <HiMoon size={24} className="text-gray-800" />
+        <HiMoon size={20} className="text-gray-700" />
       ) : (
-        <HiSun size={24} className="text-yellow-500" />
+        <HiSun size={20} className="text-yellow-400" />
       )}
     </button>
   );

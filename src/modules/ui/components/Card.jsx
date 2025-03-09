@@ -8,16 +8,39 @@ export function Card({
   title,
   className = '',
   titleClass = '',
+  footerContent = null,
+  onClick = null,
   ...props
 }) {
+  const cardClasses = `bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-shadow duration-200 ${onClick ? 'cursor-pointer hover:shadow-lg' : ''} ${className}`;
+  
   return (
-    <div className={`bg-white dark:bg-gray-800 p-6 rounded-md shadow-md ${className}`} {...props}>
+    <div 
+      className={cardClasses} 
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      {...props}
+    >
       {title && (
-        <h2 className={`text-2xl font-bold mb-4 text-brand-500 dark:text-brand-400 ${titleClass}`}>
-          {title}
-        </h2>
+        <div className="px-5 pt-5 pb-0">
+          <h3 className={`text-xl font-semibold text-gray-800 dark:text-white ${titleClass}`}>
+            {title}
+          </h3>
+        </div>
       )}
-      {children}
+      
+      <div className="p-5">
+        {children}
+      </div>
+      
+      {footerContent && (
+        <div className="px-5 py-4 bg-gray-50 dark:bg-gray-750 border-t border-gray-200 dark:border-gray-700">
+          {footerContent}
+        </div>
+      )}
     </div>
   );
 }
+
+export default Card;

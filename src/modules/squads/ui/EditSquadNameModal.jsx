@@ -40,7 +40,7 @@ function EditSquadNameModal({ isOpen, onClose, squad, onUpdate }) {
       title="Edit Squad Name"
       size="medium"
       footer={
-        <div className="flex justify-end space-x-4">
+        <div className="flex justify-end space-x-3">
           <Button
             variant="secondary"
             onClick={onClose}
@@ -62,7 +62,7 @@ function EditSquadNameModal({ isOpen, onClose, squad, onUpdate }) {
     >
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="squadName" className="block text-gray-700 dark:text-gray-300 mb-2">
+          <label htmlFor="squadName" className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
             Squad Name
           </label>
           <input
@@ -73,6 +73,7 @@ function EditSquadNameModal({ isOpen, onClose, squad, onUpdate }) {
             className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-400 dark:bg-gray-700 dark:text-white box-border"
             placeholder="Enter squad name"
             required
+            autoFocus
           />
         </div>
       </form>

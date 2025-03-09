@@ -5,8 +5,10 @@ import { useAuthContext } from '@/modules/auth/context/AuthProvider';
 import * as Sentry from '@sentry/browser';
 import { supabase } from '@/supabaseClient';
 import { Button } from '@/modules/ui/components/Button';
+import { Card } from '@/modules/ui/components/Card';
 import { useSquads } from '@/modules/squads/api';
 import EditSquadNameModal from './EditSquadNameModal';
+import { HiOutlineUserRemove, HiOutlineUserAdd, HiOutlinePencil, HiOutlineChevronLeft, HiOutlinePlay } from 'react-icons/hi';
 
 function SquadPlayersScreen() {
   const { squadId } = useParams();
@@ -201,43 +203,56 @@ function SquadPlayersScreen() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-white p-4 md:p-8 flex justify-center items-center">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-brand-500"></div>
+      <div className="page-container flex justify-center items-center">
+        <div className="loading-spinner"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-white p-4 md:p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 md:mb-8">
+    <div className="page-container">
+      <div className="content-container">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
           <div className="flex items-center mb-4 md:mb-0">
-            <h1 className="text-2xl md:text-3xl font-bold text-brand-500 mr-3">{squadName || 'Squad'} Players</h1>
             <Button
               variant="outline"
               size="small"
-              onClick={handleOpenEditModal}
-              className="cursor-pointer"
+              onClick={() => navigate('/squads')}
+              className="mr-3 cursor-pointer"
             >
-              Edit Name
+              <HiOutlineChevronLeft className="mr-1" /> Back
             </Button>
+            <h1 className="text-2xl md:text-3xl font-bold text-brand-500 truncate max-w-[200px] md:max-w-xs">
+              {squadName || 'Squad'}
+            </h1>
+            <button
+              onClick={handleOpenEditModal}
+              className="ml-2 p-1 text-gray-500 hover:text-brand-500 dark:text-gray-400 dark:hover:text-brand-400 focus:outline-none rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+              aria-label="Edit squad name"
+            >
+              <HiOutlinePencil className="w-5 h-5" />
+            </button>
           </div>
+          
           <Button
-            onClick={() => navigate('/squads')}
-            variant="secondary"
-            size="small"
+            onClick={handleUseSquadForMatch}
+            variant="success"
+            size="medium"
             className="cursor-pointer"
+            disabled={players.length === 0}
           >
-            Back to Squads
+            <HiOutlinePlay className="mr-1" /> Start Match
           </Button>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-4 md:p-8 rounded-lg shadow-md mb-6 md:mb-8">
-          <h2 className="text-xl md:text-2xl font-bold mb-4 text-brand-500">Add New Player</h2>
-          <form onSubmit={handleAddPlayer} className="flex flex-col sm:flex-row gap-3 md:gap-4">
+        <Card className="mb-6">
+          <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white flex items-center">
+            <HiOutlineUserAdd className="mr-2" /> Add New Player
+          </h2>
+          <form onSubmit={handleAddPlayer} className="flex flex-col sm:flex-row gap-3">
             <input
               type="text"
-              className="flex-1 p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md sm:rounded-r-none focus:outline-none focus:ring-2 focus:ring-brand-400 box-border text-base"
+              className="flex-1 p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md sm:rounded-r-none focus:outline-none focus:ring-2 focus:ring-brand-400 box-border"
               placeholder="Player Name"
               value={newPlayerName}
               onChange={(e) => setNewPlayerName(e.target.value)}
@@ -245,54 +260,64 @@ function SquadPlayersScreen() {
             />
             <Button
               type="submit"
-              disabled={isAdding}
+              disabled={isAdding || !newPlayerName.trim()}
               className="sm:rounded-l-none cursor-pointer"
-              size="small"
+              size="medium"
+              variant="primary"
             >
               {isAdding ? 'Adding...' : 'Add Player'}
             </Button>
           </form>
-        </div>
+        </Card>
 
-        <div className="bg-white dark:bg-gray-800 p-4 md:p-8 rounded-lg shadow-md mb-6 md:mb-8">
-          <h2 className="text-xl md:text-2xl font-bold mb-4 text-brand-500">Squad Players</h2>
+        <Card className="mb-6">
+          <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white flex items-center">
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+            Squad Players ({players.length})
+          </h2>
           {players.length === 0 ? (
-            <p className="text-gray-500 dark:text-gray-400">No players added yet. Add your first player above.</p>
+            <div className="text-center py-8 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg">
+              <div className="text-gray-500 dark:text-gray-400 mb-2">No players added yet</div>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Add your first player using the form above
+              </p>
+            </div>
           ) : (
-            <ul className="space-y-3 md:space-y-4">
+            <ul className="divide-y divide-gray-200 dark:divide-gray-700">
               {players.map((player) => (
-                <li key={player.id} className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 md:p-4 border-b border-gray-200 dark:border-gray-700 last:border-0">
-                  <span className="text-base md:text-lg mb-2 sm:mb-0">{player.name}</span>
+                <li key={player.id} className="py-3 flex flex-row justify-between items-center">
+                  <span className="text-gray-800 dark:text-white font-medium">{player.name}</span>
                   <Button
                     onClick={() => handleRemovePlayer(player.id)}
                     variant="danger"
                     size="small"
-                    className="self-start sm:self-auto cursor-pointer"
+                    className="cursor-pointer flex items-center"
                   >
-                    Remove
+                    <HiOutlineUserRemove className="mr-1" /> Remove
                   </Button>
                 </li>
               ))}
             </ul>
           )}
-        </div>
+        </Card>
 
         {players.length > 0 && (
-          <div className="bg-white dark:bg-gray-800 p-4 md:p-8 rounded-lg shadow-md">
-            <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-brand-500">Use Squad for Match</h2>
-            <p className="mb-4 text-gray-600 dark:text-gray-300 text-sm md:text-base">
-              Set up your starting lineup and goalie for your match.
+          <Card className="text-center p-6">
+            <h2 className="text-xl font-semibold mb-3 text-gray-800 dark:text-white">Ready to Start a Match?</h2>
+            <p className="mb-4 text-gray-600 dark:text-gray-300">
+              Use this squad to set up a starting lineup and manage substitutions.
             </p>
             <Button 
               onClick={handleUseSquadForMatch}
               variant="success"
               size="large"
-              fullWidth
               className="cursor-pointer"
             >
-              Set Up Match with This Squad
+              <HiOutlinePlay className="mr-2" /> Set Up Match With This Squad
             </Button>
-          </div>
+          </Card>
         )}
       </div>
       

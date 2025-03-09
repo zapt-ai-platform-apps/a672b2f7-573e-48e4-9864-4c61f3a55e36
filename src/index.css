@@ -1,3 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  body {
+    @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
+  }
+
+  h1 {
+    @apply text-3xl md:text-4xl mb-6;
+  }
+  
+  h2 {
+    @apply text-2xl md:text-3xl mb-4;
+  }
+  
+  h3 {
+    @apply text-xl md:text-2xl mb-3;
+  }
+  
+  p {
+    @apply mb-4;
+  }
+}
+
+@layer components {
+  .page-container {
+    @apply min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-6;
+  }
+  
+  .content-container {
+    @apply max-w-4xl mx-auto;
+  }
+  
+  .card {
+    @apply bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-md mb-6;
+  }
+  
+  .form-input {
+    @apply w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md 
+           focus:outline-none focus:ring-2 focus:ring-brand-400 dark:bg-gray-700
+           dark:text-white box-border;
+  }
+  
+  .field-label {
+    @apply block text-gray-700 dark:text-gray-300 mb-2 font-medium;
+  }
+  
+  .loading-spinner {
+    @apply w-8 h-8 border-4 border-t-transparent border-brand-500 rounded-full animate-spin;
+  }
+}
+
+/* Smooth transitions */
+* {
+  @apply transition-colors duration-200;
+}
+
+/* Focus state improvements */
+button:focus, a:focus, input:focus, select:focus, textarea:focus {
+  @apply outline-none ring-2 ring-brand-400;
+}
