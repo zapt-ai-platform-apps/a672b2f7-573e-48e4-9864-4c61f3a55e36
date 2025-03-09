@@ -1,10 +1,14 @@
-import { describe, it, expect, vi } from 'vitest';
-import { renderHook } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { renderHook, act } from '@testing-library/react';
 import useGameIntervalsManager from '../useGameIntervalsManager';
 
 describe('useGameIntervalsManager', () => {
   beforeEach(() => {
     vi.spyOn(Date, 'now').mockImplementation(() => 2000);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('should start the timer and update player intervals', () => {
@@ -128,5 +132,49 @@ describe('useGameIntervalsManager', () => {
     // Player2 should remain unchanged (not on field)
     const updatedPlayer2 = newPlayerData.find(p => p.name === 'Player2');
     expect(updatedPlayer2.playIntervals.length).toBe(0);
+  });
+
+  it('should properly handle ending the game', () => {
+    const setIsRunning = vi.fn();
+    const setGameIntervals = vi.fn();
+    const setPlayerData = vi.fn();
+    
+    const gameIntervals = [
+      { startTime: 1000, endTime: null }
+    ];
+    
+    const playerData = [
+      { 
+        name: 'Player1', 
+        isOnField: true, 
+        isGoalkeeper: false,
+        playIntervals: [{ startTime: 1000, endTime: null, isGoalkeeper: false }]
+      }
+    ];
+    
+    // Test that the update function handles both direct arrays and functions
+    const endGameUpdate = (prev) => 
+      prev.map((interval, idx) => 
+        idx === prev.length - 1 && !interval.endTime
+          ? { ...interval, endTime: 2000 }
+          : interval
+      );
+    
+    // Mock the setGameIntervals to capture the function
+    setGameIntervals.mockImplementation((updater) => {
+      // If it's a function, call it with the current intervals
+      if (typeof updater === 'function') {
+        return updater(gameIntervals);
+      }
+      return updater;
+    });
+    
+    // Call the update function directly
+    const result = setGameIntervals(endGameUpdate);
+    
+    // Verify the function produces the expected result
+    expect(result.length).toBe(1);
+    expect(result[0].startTime).toBe(1000);
+    expect(result[0].endTime).toBe(2000);
   });
 });

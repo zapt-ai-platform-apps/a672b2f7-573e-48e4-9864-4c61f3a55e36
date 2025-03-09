@@ -18,7 +18,19 @@ export function useGameState() {
   // Update game intervals with validation
   const updateGameIntervals = useCallback((newIntervals) => {
     try {
-      const validatedIntervals = validateGameIntervals(newIntervals);
+      // Handle the case where newIntervals is a function
+      const intervalsToValidate = typeof newIntervals === 'function' 
+        ? newIntervals(gameIntervals)
+        : newIntervals;
+      
+      const validatedIntervals = validateGameIntervals(intervalsToValidate, {
+        actionName: 'updateGameIntervals',
+        location: 'game/internal/state.js:updateGameIntervals',
+        direction: 'internal',
+        moduleFrom: 'game',
+        moduleTo: 'game'
+      });
+      
       setGameIntervals(validatedIntervals);
       return validatedIntervals;
     } catch (error) {
