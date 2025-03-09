@@ -51,15 +51,6 @@ function LandingPage() {
             >
               {user ? 'Manage My Teams' : 'Get Started'}
             </Button>
-            
-            <Button
-              onClick={() => window.open('https://www.zapt.ai', '_blank')}
-              size="large"
-              variant="outline"
-              className="px-8 py-4 text-lg font-medium"
-            >
-              Learn More
-            </Button>
           </div>
         </div>
         
